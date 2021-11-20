@@ -1,0 +1,286 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="DebugDevelop|Win32">
+      <Configuration>DebugDevelop</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugDevelop|x64">
+      <Configuration>DebugDevelop</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A628EC70-38E3-40E1-96D4-D2BBA707A20E}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>MemoryDB</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\ProjectEnv2017.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\ProjectEnv2017.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(COMMON_BASE_LIB)\</OutDir>
+    <IntDir>$(Server_Int_Dir)\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_d</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IntDir>$(Server_Int_Dir)\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(COMMON_BASE_LIB)\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;MEMORYDB_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;MEMORYDB_EXPORTS;__WINDOWS__;__SERVER__;DEVELOP_MODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Server\Base;..\Server\SMU;.\Main;.\DB;.\ShareData;..\Server\Other;.\;$(CODE_COMMON_DIR)/BaseCommon;$(CODE_COMMON_DIR)\EventCore\Core;$(CODE_COMMON_DIR)\EventCore\LogicSystem;$(CODE_COMMON_DIR)/LuaPlus;./Base;../;$(CODE_COMMON_DIR)/NetDll/Net;$(CODE_COMMON_DIR)/NetNode;../MemoryDB;$(CODE_COMMON_DIR)\MySQLLib\Code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(CODE_COMMON_DIR)/MySQLLib/Code/MySql/lib/libmysql.lib</AdditionalDependencies>
+      <OutputFile>$(Server_Out_Dir)\$(TargetName)$(TargetExt)</OutputFile>
+      <ProgramDatabaseFile>$(Server_Out_Dir)\$(TargetName).pdb</ProgramDatabaseFile>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;MEMORYDB_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>Disabled</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;MEMORYDB_EXPORTS;__WINDOWS__;__SERVER__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Server\Base;..\Server\SMU;.\Main;.\DB;.\ShareData;..\Server\Other;.\;$(CODE_COMMON_DIR)/BaseCommon;$(CODE_COMMON_DIR)\EventCore\Core;$(CODE_COMMON_DIR)\EventCore\LogicSystem;$(CODE_COMMON_DIR)/LuaPlus;./Base;../;$(CODE_COMMON_DIR)/NetDll/Net;$(CODE_COMMON_DIR)/NetNode;../MemoryDB;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>$(CODE_COMMON_DIR)/MemoryDB\MySql\lib/libmysql.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(Server_Out_Dir)\$(TargetName)$(TargetExt)</OutputFile>
+      <ProgramDatabaseFile>$(Server_Out_Dir)\$(TargetName).pdb</ProgramDatabaseFile>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\MemoryDB\Core\BackupsDBLoader.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\BackupsDBTable.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\BaseMemoryDB.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\CoolDBTable.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\DataSource.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\DataSourceOperate.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\DBClientForNode.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\DBClientRequest.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\DBLog.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\DBNetPacket.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\DBNiceData.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\DBNodeEvent.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\DBNodeManager.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\DBNodeOperate.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\DBOperateMsg.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\DBServerOperate.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\DBShareMemoryPool.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\DBShareMemoryPoolSQL.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\DBUnit.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\ExtDBNodeOperate.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\KeyDistributionInfo.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\KeyValueTable.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\LocalFileDBSaver.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\MemoryDB.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\MemoryDBClient.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\MemoryDBIndexTable.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\MemoryDBManager.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\MemoryDBNode.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\MemoryDBRecord.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\MemoryDBTable.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\MySqlDBSaver.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\NetCloudDB.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\NiceCoolDBTable.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\RecordShareMemoryPool.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\ShareMemSQL.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\ShareMemSQLMsg.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\SqlDBTable.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\SqlLog.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\SQLWorkThread.cpp" />
+    <ClCompile Include="..\MemoryDB\Core\TableTypeIndexUnit.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\MemoryDB\Core\BackupsDBLoader.h" />
+    <ClInclude Include="..\MemoryDB\Core\BackupsDBTable.h" />
+    <ClInclude Include="..\MemoryDB\Core\BaseMemoryDB.h" />
+    <ClInclude Include="..\MemoryDB\Core\CloudDBCall.h" />
+    <ClInclude Include="..\MemoryDB\Core\CoolDBTable.h" />
+    <ClInclude Include="..\MemoryDB\Core\CRC16.h" />
+    <ClInclude Include="..\MemoryDB\Core\DataSource.h" />
+    <ClInclude Include="..\MemoryDB\Core\DataSourceOperate.h" />
+    <ClInclude Include="..\MemoryDB\Core\DBCallBack.h" />
+    <ClInclude Include="..\MemoryDB\Core\DBClientForNode.h" />
+    <ClInclude Include="..\MemoryDB\Core\DBClientRequest.h" />
+    <ClInclude Include="..\MemoryDB\Core\DBLog.h" />
+    <ClInclude Include="..\MemoryDB\Core\DBManager.h" />
+    <ClInclude Include="..\MemoryDB\Core\DBNetPacket.h" />
+    <ClInclude Include="..\MemoryDB\Core\DBNiceData.h" />
+    <ClInclude Include="..\MemoryDB\Core\DBNodeEvent.h" />
+    <ClInclude Include="..\MemoryDB\Core\DBNodeManager.h" />
+    <ClInclude Include="..\MemoryDB\Core\DBNodeOperate.h" />
+    <ClInclude Include="..\MemoryDB\Core\DBOperate.h" />
+    <ClInclude Include="..\MemoryDB\Core\DBOperateMsg.h" />
+    <ClInclude Include="..\MemoryDB\Core\DBSaver.h" />
+    <ClInclude Include="..\MemoryDB\Core\DBServerOperate.h" />
+    <ClInclude Include="..\MemoryDB\Core\DBShareMemoryPool.h" />
+    <ClInclude Include="..\MemoryDB\Core\DBShareMemoryPoolSQL.h" />
+    <ClInclude Include="..\MemoryDB\Core\DBTool.h" />
+    <ClInclude Include="..\MemoryDB\Core\DBUnit.h" />
+    <ClInclude Include="..\MemoryDB\Core\ExtDBNodeOperate.h" />
+    <ClInclude Include="..\MemoryDB\Core\KeyDistributionInfo.h" />
+    <ClInclude Include="..\MemoryDB\Core\KeyValueTable.h" />
+    <ClInclude Include="..\MemoryDB\Core\LoadDBCallBack.h" />
+    <ClInclude Include="..\MemoryDB\Core\LocalFileDBSaver.h" />
+    <ClInclude Include="..\MemoryDB\Core\MemoryDB.h" />
+    <ClInclude Include="..\MemoryDB\Core\MemoryDBClient.h" />
+    <ClInclude Include="..\MemoryDB\Core\MemoryDBHead.h" />
+    <ClInclude Include="..\MemoryDB\Core\MemoryDBIndexTable.h" />
+    <ClInclude Include="..\MemoryDB\Core\MemoryDBManager.h" />
+    <ClInclude Include="..\MemoryDB\Core\MemoryDBNode.h" />
+    <ClInclude Include="..\MemoryDB\Core\MemoryDBRecord.h" />
+    <ClInclude Include="..\MemoryDB\Core\MemoryDBTable.h" />
+    <ClInclude Include="..\MemoryDB\Core\MySqlDBSaver.h" />
+    <ClInclude Include="..\MemoryDB\Core\NetCloudDB.h" />
+    <ClInclude Include="..\MemoryDB\Core\NiceCoolDBTable.h" />
+    <ClInclude Include="..\MemoryDB\Core\Operate.h" />
+    <ClInclude Include="..\MemoryDB\Core\RecordShareMemoryPool.h" />
+    <ClInclude Include="..\MemoryDB\Core\ShareMemoryFieldIndex.h" />
+    <ClInclude Include="..\MemoryDB\Core\ShareMemSQL.h" />
+    <ClInclude Include="..\MemoryDB\Core\ShareMemSQLMsg.h" />
+    <ClInclude Include="..\MemoryDB\Core\SqlDBTable.h" />
+    <ClInclude Include="..\MemoryDB\Core\SqlLog.h" />
+    <ClInclude Include="..\MemoryDB\Core\SQLWorkThread.h" />
+    <ClInclude Include="..\MemoryDB\Core\TableTypeIndexUnit.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MySQLLib\MySQLLib.vcxproj">
+      <Project>{00f61d01-7ae6-44d3-b83d-c4c91db33d80}</Project>
+    </ProjectReference>
+    <ProjectReference Include="BaseCommon.vcxproj">
+      <Project>{7b59c823-5459-4c17-8022-fab40d42766b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="EventCore.vcxproj">
+      <Project>{8fd22748-0005-4b29-9136-bd5e8512b1bd}</Project>
+    </ProjectReference>
+    <ProjectReference Include="Net.vcxproj">
+      <Project>{381212ea-3ff5-40dd-a666-8ee4d026b880}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

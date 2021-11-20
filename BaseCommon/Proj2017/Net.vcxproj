@@ -1,0 +1,762 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="DebugDevelop|Win32">
+      <Configuration>DebugDevelop</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugDevelop|x64">
+      <Configuration>DebugDevelop</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugMode|Win32">
+      <Configuration>DebugMode</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugMode|x64">
+      <Configuration>DebugMode</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugServer|Win32">
+      <Configuration>DebugServer</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugServer|x64">
+      <Configuration>DebugServer</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="GameRelease|Win32">
+      <Configuration>GameRelease</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="GameRelease|x64">
+      <Configuration>GameRelease</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>NetDll</ProjectName>
+    <ProjectGuid>{381212EA-3FF5-40DD-A666-8EE4D026B880}</ProjectGuid>
+    <RootNamespace>Net</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='GameRelease|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugMode|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugServer|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='GameRelease|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugMode|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugServer|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\ProjectEnv2017.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\ProjectEnv2017.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\ProjectEnv2017.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='GameRelease|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\ProjectEnv2017.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugMode|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\ProjectEnv2017.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugServer|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\ProjectEnv2017.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\ProjectEnv2017.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\ProjectEnv2017.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='GameRelease|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\ProjectEnv2017.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugMode|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\ProjectEnv2017.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugServer|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\ProjectEnv2017.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\ProjectEnv2017.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|Win32'">$(COMMON_BASE_LIB)_Win32\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='GameRelease|Win32'">$(COMMON_BASE_LIB)_Win32\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugMode|Win32'">$(COMMON_BASE_LIB)_Win32\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugServer|Win32'">$(COMMON_BASE_LIB)_Win32\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(COMMON_BASE_LIB)_Win32\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|x64'">$(COMMON_BASE_LIB)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='GameRelease|x64'">$(COMMON_BASE_LIB)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugMode|x64'">$(COMMON_BASE_LIB)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugServer|x64'">$(COMMON_BASE_LIB)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Server_Out_Dir)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|Win32'">$(Server_Int_Dir)\$(ProjectName)\$(Configuration)_win32\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='GameRelease|Win32'">$(Server_Int_Dir)\$(ProjectName)\$(Configuration)_win32\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugMode|Win32'">$(Server_Int_Dir)\$(ProjectName)\$(Configuration)_win32\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugServer|Win32'">$(Server_Int_Dir)\$(ProjectName)\$(Configuration)_win32\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Server_Int_Dir)\$(ProjectName)\$(Configuration)_win32\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|x64'">$(Server_Int_Dir)\$(ProjectName)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='GameRelease|x64'">$(Server_Int_Dir)\$(ProjectName)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugMode|x64'">$(Server_Int_Dir)\$(ProjectName)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugServer|x64'">$(Server_Int_Dir)\$(ProjectName)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Server_Int_Dir)\$(ProjectName)\$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|Win32'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='GameRelease|Win32'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='DebugMode|Win32'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='DebugServer|Win32'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|x64'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='GameRelease|x64'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='DebugMode|x64'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='DebugServer|x64'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(COMMON_BASE_LIB)_Win32\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(COMMON_BASE_LIB)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(CLIENT_OBJ_DIR)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Server_Int_Dir)\$(ProjectName)\$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|x64'">false</GenerateManifest>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='GameRelease|x64'">false</GenerateManifest>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='DebugMode|x64'">false</GenerateManifest>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='DebugServer|x64'">false</GenerateManifest>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</GenerateManifest>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|x64'">$(ProjectName)_d</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='GameRelease|x64'">$(ProjectName)</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='DebugMode|x64'">$(ProjectName)</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='DebugServer|x64'">$(ProjectName)_d</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectName)_d</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|Win32'">
+    <TargetName>$(ProjectName)_d86</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='GameRelease|Win32'">
+    <TargetName>$(ProjectName)_d86</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugMode|Win32'">
+    <TargetName>$(ProjectName)_d86</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugServer|Win32'">
+    <TargetName>$(ProjectName)_d86</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <TargetName>$(ProjectName)_d86</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <TargetName>$(ProjectName)86</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;NET_EXPORTS;__WINDOWS__;__SERVER__;DEVELOP_MODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableSpecificWarnings>4215;4251;4018;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <EnablePREfast>true</EnablePREfast>
+      <AdditionalIncludeDirectories>$(CODE_COMMON_DIR)/BaseCommon;$(CODE_COMMON_DIR)/NetDll;./;../;$(CODE_COMMON_DIR)/EventCore/core;$(CODE_COMMON_DIR)/NetDll/WebSocket;$(CODE_COMMON_DIR)/NetDll/Net;$(CODE_COMMON_DIR)/NetNode;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <ImportLibrary>$(OutDir)$(ProjectName)_d.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(COMMON_BASE_LIB)_Win32\$(TargetName)$(TargetExt) $(Server_Out_Dir)_Win32\  /y
+xcopy $(COMMON_BASE_LIB)_Win32\$(TargetName).pdb $(Server_Out_Dir)_Win32\  /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='GameRelease|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;NET_EXPORTS;__WINDOWS__;__SERVER__;DEVELOP_MODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableSpecificWarnings>4215;4251;4018;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <EnablePREfast>true</EnablePREfast>
+      <AdditionalIncludeDirectories>$(CODE_COMMON_DIR)/BaseCommon;$(CODE_COMMON_DIR)/NetDll;./;../;$(CODE_COMMON_DIR)/EventCore/core;$(CODE_COMMON_DIR)/NetDll/WebSocket;$(CODE_COMMON_DIR)/NetDll/Net;$(CODE_COMMON_DIR)/NetNode;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <ImportLibrary>$(OutDir)$(ProjectName)_d.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(COMMON_BASE_LIB)_Win32\$(TargetName)$(TargetExt) $(Server_Out_Dir)_Win32\  /y
+xcopy $(COMMON_BASE_LIB)_Win32\$(TargetName).pdb $(Server_Out_Dir)_Win32\  /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugMode|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;NET_EXPORTS;__WINDOWS__;__SERVER__;DEVELOP_MODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableSpecificWarnings>4215;4251;4018;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <EnablePREfast>true</EnablePREfast>
+      <AdditionalIncludeDirectories>$(CODE_COMMON_DIR)/BaseCommon;$(CODE_COMMON_DIR)/NetDll;./;../;$(CODE_COMMON_DIR)/EventCore/core;$(CODE_COMMON_DIR)/NetDll/WebSocket;$(CODE_COMMON_DIR)/NetDll/Net;$(CODE_COMMON_DIR)/NetNode;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <ImportLibrary>$(OutDir)$(ProjectName)_d.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(COMMON_BASE_LIB)_Win32\$(TargetName)$(TargetExt) $(Server_Out_Dir)_Win32\  /y
+xcopy $(COMMON_BASE_LIB)_Win32\$(TargetName).pdb $(Server_Out_Dir)_Win32\  /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugServer|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;NET_EXPORTS;__WINDOWS__;__SERVER__;DEVELOP_MODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableSpecificWarnings>4215;4251;4018;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <EnablePREfast>true</EnablePREfast>
+      <AdditionalIncludeDirectories>$(CODE_COMMON_DIR)/BaseCommon;$(CODE_COMMON_DIR)/NetDll;./;../;$(CODE_COMMON_DIR)/EventCore/core;$(CODE_COMMON_DIR)/NetDll/WebSocket;$(CODE_COMMON_DIR)/NetDll/Net;$(CODE_COMMON_DIR)/NetNode;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <ImportLibrary>$(OutDir)$(ProjectName)_d.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(COMMON_BASE_LIB)_Win32\$(TargetName)$(TargetExt) $(Server_Out_Dir)_Win32\  /y
+xcopy $(COMMON_BASE_LIB)_Win32\$(TargetName).pdb $(Server_Out_Dir)_Win32\  /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;NET_EXPORTS;__WINDOWS__;__SERVER__;DEVELOP_MODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableSpecificWarnings>4215;4251;4018;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <EnablePREfast>true</EnablePREfast>
+      <AdditionalIncludeDirectories>$(CODE_COMMON_DIR)/BaseCommon;$(CODE_COMMON_DIR)/NetDll;./;../;$(CODE_COMMON_DIR)/EventCore/core;$(CODE_COMMON_DIR)/NetDll/WebSocket;$(CODE_COMMON_DIR)/NetDll/Net;$(CODE_COMMON_DIR)/NetNode;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <ImportLibrary>$(OutDir)$(ProjectName)_d.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(COMMON_BASE_LIB)_Win32\$(TargetName)$(TargetExt) $(Server_Out_Dir)_Win32\  /y
+xcopy $(COMMON_BASE_LIB)_Win32\$(TargetName).pdb $(Server_Out_Dir)_Win32\  /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(CODE_COMMON_DIR)/BaseCommon;$(CODE_COMMON_DIR)/NetDll;./;../;$(CODE_COMMON_DIR)/EventCore/core;$(CODE_COMMON_DIR)/NetDll/WebSocket;$(CODE_COMMON_DIR)/NetDll/Net;$(CODE_COMMON_DIR)/NetNode;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NET_EXPORTS;__WINDOWS__;__SERVER__;DEVELOP_MODE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableSpecificWarnings>4215;4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <EnablePREfast>true</EnablePREfast>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <ImportLibrary>$(OutDir)$(ProjectName)_d.lib</ImportLibrary>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(COMMON_BASE_LIB)\$(TargetName)$(TargetExt) $(Server_Out_Dir)\  /y
+xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
+xcopy $(CODE_COMMON_DIR)\NetDll\Net\*.h $(INCLUDE_DIR)\  /y
+xcopy $(CODE_COMMON_DIR)\NetDll\IOCP\*.h $(INCLUDE_DIR)\  /y
+xcopy $(CODE_COMMON_DIR)\NetDll\WebSocket\*.h $(INCLUDE_DIR)\  /y
+xcopy $(CODE_COMMON_DIR)\NetNode\*.h $(INCLUDE_DIR)\  /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='GameRelease|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(CODE_COMMON_DIR)/BaseCommon;$(CODE_COMMON_DIR)/NetDll;./;../;$(CODE_COMMON_DIR)/EventCore/core;$(CODE_COMMON_DIR)/NetDll/WebSocket;$(CODE_COMMON_DIR)/NetDll/Net;$(CODE_COMMON_DIR)/NetNode;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NET_EXPORTS;__WINDOWS__;__SERVER__;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableSpecificWarnings>4215;4251;6053%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <EnablePREfast>true</EnablePREfast>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <ImportLibrary>$(OutDir)$(ProjectName).lib</ImportLibrary>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(COMMON_BASE_LIB)\$(TargetName)$(TargetExt) $(Server_Out_Dir)_Release\  /y
+xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)_Release\  /y
+xcopy $(CODE_COMMON_DIR)\NetDll\Net\*.h $(INCLUDE_DIR)\  /y
+xcopy $(CODE_COMMON_DIR)\NetDll\IOCP\*.h $(INCLUDE_DIR)\  /y
+xcopy $(CODE_COMMON_DIR)\NetDll\WebSocket\*.h $(INCLUDE_DIR)\  /y
+xcopy $(CODE_COMMON_DIR)\NetNode\*.h $(INCLUDE_DIR)\  /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugMode|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(CODE_COMMON_DIR)/BaseCommon;$(CODE_COMMON_DIR)/NetDll;./;../;$(CODE_COMMON_DIR)/EventCore/core;$(CODE_COMMON_DIR)/NetDll/WebSocket;$(CODE_COMMON_DIR)/NetDll/Net;$(CODE_COMMON_DIR)/NetNode;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NET_EXPORTS;__WINDOWS__;__SERVER__;NDEBUG;DEVELOP_MODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableSpecificWarnings>4215;4251;8159;6053%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <EnablePREfast>true</EnablePREfast>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <ImportLibrary>$(OutDir)$(ProjectName).lib</ImportLibrary>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(COMMON_BASE_LIB)\$(TargetName)$(TargetExt) $(Server_Out_Dir)_Release\  /y
+xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)_Release\  /y
+xcopy $(CODE_COMMON_DIR)\NetDll\Net\*.h $(INCLUDE_DIR)\  /y
+xcopy $(CODE_COMMON_DIR)\NetDll\IOCP\*.h $(INCLUDE_DIR)\  /y
+xcopy $(CODE_COMMON_DIR)\NetDll\WebSocket\*.h $(INCLUDE_DIR)\  /y
+xcopy $(CODE_COMMON_DIR)\NetNode\*.h $(INCLUDE_DIR)\  /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugServer|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(CODE_COMMON_DIR)/BaseCommon;$(CODE_COMMON_DIR)/NetDll;./;../;$(CODE_COMMON_DIR)/EventCore/core;$(CODE_COMMON_DIR)/NetDll/WebSocket;$(CODE_COMMON_DIR)/NetDll/Net;$(CODE_COMMON_DIR)/NetNode;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NET_EXPORTS;__WINDOWS__;__SERVER__;DEVELOP_MODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableSpecificWarnings>4215;4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <EnablePREfast>true</EnablePREfast>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;Kernel32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <ImportLibrary>$(OutDir)$(ProjectName)_d.lib</ImportLibrary>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(COMMON_BASE_LIB)\$(TargetName)$(TargetExt) $(Server_Out_Dir)\  /y
+xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
+xcopy $(CODE_COMMON_DIR)\NetDll\Net\*.h $(INCLUDE_DIR)\  /y
+xcopy $(CODE_COMMON_DIR)\NetDll\IOCP\*.h $(INCLUDE_DIR)\  /y
+xcopy $(CODE_COMMON_DIR)\NetDll\WebSocket\*.h $(INCLUDE_DIR)\  /y
+xcopy $(CODE_COMMON_DIR)\NetNode\*.h $(INCLUDE_DIR)\  /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(CODE_COMMON_DIR)/BaseCommon;$(CODE_COMMON_DIR)/NetDll;./;../;$(CODE_COMMON_DIR)/EventCore/core;$(CODE_COMMON_DIR)/NetDll/WebSocket;$(CODE_COMMON_DIR)/NetDll/Net;$(CODE_COMMON_DIR)/NetNode;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NET_EXPORTS;__WINDOWS__;__SERVER__;DEVELOP_MODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableSpecificWarnings>4215;4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <EnablePREfast>true</EnablePREfast>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <ImportLibrary>$(OutDir)$(ProjectName)_d.lib</ImportLibrary>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(CODE_COMMON_DIR)/BaseCommon;$(CODE_COMMON_DIR)/NetDll;./;../;$(CODE_COMMON_DIR)/EventCore/core;$(CODE_COMMON_DIR)/NetDll/WebSocket;$(CODE_COMMON_DIR)/NetDll/Net;$(CODE_COMMON_DIR)/NetNode;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;NET_EXPORTS;__WINDOWS__;USE_UTF8;__SERVER__;SAVE_DEBUG_LOG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <DisableSpecificWarnings>4251;4215;4018</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(COMMON_BASE_LIB)_Win32\$(TargetName)$(TargetExt) $(Server_Out_Dir)_Win32\  /y
+xcopy $(COMMON_BASE_LIB)_Win32\$(TargetName).pdb $(Server_Out_Dir)_Win32\  /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(CODE_COMMON_DIR)/BaseCommon;$(CODE_COMMON_DIR)/NetDll;./;../;$(CODE_COMMON_DIR)/EventCore/core;$(CODE_COMMON_DIR)/NetDll/WebSocket;$(CODE_COMMON_DIR)/NetDll/Net;$(CODE_COMMON_DIR)/NetNode;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;NET_EXPORTS;__WINDOWS__;__SERVER__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <DisableSpecificWarnings>4251;4215</DisableSpecificWarnings>
+      <ExceptionHandling>Async</ExceptionHandling>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(COMMON_BASE_LIB)\$(TargetName)$(TargetExt) $(Server_Out_Dir)\  /y
+xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\NetDll\Net.cpp" />
+    <ClCompile Include="..\NetDll\Net\BaseEventNet.cpp" />
+    <ClCompile Include="..\NetDll\Net\BaseNetHandle.cpp" />
+    <ClCompile Include="..\NetDll\Net\BaseServer.cpp" />
+    <ClCompile Include="..\NetDll\Net\BaseThread.cpp" />
+    <ClCompile Include="..\NetDll\Net\BigDataEvent.cpp" />
+    <ClCompile Include="..\NetDll\Net\BigMsgPacket.cpp" />
+    <ClCompile Include="..\NetDll\Net\EventData.cpp" />
+    <ClCompile Include="..\NetDll\Net\EventPacket.cpp" />
+    <ClCompile Include="..\NetDll\Net\EventProtocol.cpp" />
+    <ClCompile Include="..\NetDll\Net\FileDataReceive.cpp" />
+    <ClCompile Include="..\NetDll\Net\FileNetTansfer.cpp" />
+    <ClCompile Include="..\NetDll\Net\InputThread.cpp" />
+    <ClCompile Include="..\NetDll\Net\IOCPClientSetNet.cpp" />
+    <ClCompile Include="..\NetDll\Net\IOCPCommon.cpp" />
+    <ClCompile Include="..\NetDll\Net\IOCPConnect.cpp" />
+    <ClCompile Include="..\NetDll\Net\IOCPServerNet.cpp" />
+    <ClCompile Include="..\NetDll\Net\IOCPUDPNet.cpp" />
+    <ClCompile Include="..\NetDll\Net\MeshedNetNodeData.cpp" />
+    <ClCompile Include="..\NetDll\Net\MeshedNodeNet.cpp" />
+    <ClCompile Include="..\NetDll\Net\NetAddress.cpp" />
+    <ClCompile Include="..\NetDll\Net\NodeNetEvent.cpp" />
+    <ClCompile Include="..\NetDll\Net\Object.cpp" />
+    <ClCompile Include="..\NetDll\Net\ObjectManager.cpp" />
+    <ClCompile Include="..\NetDll\Net\ShareMemMsg.cpp" />
+    <ClCompile Include="..\NetDll\Net\SystemInfo.cpp" />
+    <ClCompile Include="..\NetDll\Net\UDPbroadcast.cpp" />
+    <ClCompile Include="..\NetDll\Net\UDPByTcpNet.cpp" />
+    <ClCompile Include="..\NetDll\Net\UDPMessage.cpp" />
+    <ClCompile Include="..\NetDll\Net\UDPNet.cpp" />
+    <ClCompile Include="..\NetDll\Net\UDPServerClientNet.cpp" />
+    <ClCompile Include="..\NetDll\Net\UDPThreadNet.cpp" />
+    <ClCompile Include="..\NetDll\Net\WebGameNet.cpp" />
+    <ClCompile Include="..\NetDll\stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='GameRelease|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugMode|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugServer|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='GameRelease|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugMode|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugServer|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\NetDll\Net\Socket.cpp" />
+    <ClCompile Include="..\NetDll\Net\SocketAPI.cpp" />
+    <ClCompile Include="..\NetDll\Net\SocketInputStream.cpp" />
+    <ClCompile Include="..\NetDll\Net\SocketOutputStream.cpp" />
+    <ClCompile Include="..\NetDll\Net\ServerNetThread.cpp" />
+    <ClCompile Include="..\NetDll\WebSocket\sha1.cpp" />
+    <ClCompile Include="..\NetDll\WebSocket\WebProtocol.cpp" />
+    <ClCompile Include="..\NetDll\WebSocket\WebServerProtocol.cpp" />
+    <ClCompile Include="..\NetNode\MeshNetGate.cpp" />
+    <ClCompile Include="..\NetNode\MeshNetNode.cpp" />
+    <ClCompile Include="..\NetNode\NetCommon.cpp" />
+    <ClCompile Include="..\NetNode\NetNode.cpp" />
+    <ClCompile Include="..\NetNode\NetUnit.cpp" />
+    <ClCompile Include="..\NetNode\RequestPacket.cpp" />
+    <ClCompile Include="..\NetNode\ResponsePacket.cpp" />
+    <ClCompile Include="..\NetNode\UnitComponent.cpp" />
+    <ClCompile Include="..\NetNode\WaitRequestManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\NetDll\Net\BaseEventNet.h" />
+    <ClInclude Include="..\NetDll\Net\BaseNetHandle.h" />
+    <ClInclude Include="..\NetDll\Net\BaseServer.h" />
+    <ClInclude Include="..\NetDll\Net\BaseThread.h" />
+    <ClInclude Include="..\NetDll\Net\BigDataEvent.h" />
+    <ClInclude Include="..\NetDll\Net\BigMsgPacket.h" />
+    <ClInclude Include="..\NetDll\Net\DefinePacketFactory.h" />
+    <ClInclude Include="..\NetDll\Net\EventData.h" />
+    <ClInclude Include="..\NetDll\Net\EventPacket.h" />
+    <ClInclude Include="..\NetDll\Net\EventProtocol.h" />
+    <ClInclude Include="..\NetDll\Net\FileDataReceive.h" />
+    <ClInclude Include="..\NetDll\Net\FileNetTransfer.h" />
+    <ClInclude Include="..\NetDll\Net\InputThread.h" />
+    <ClInclude Include="..\NetDll\Net\IOCPClientSetNet.h" />
+    <ClInclude Include="..\NetDll\Net\IOCPCommon.h" />
+    <ClInclude Include="..\NetDll\Net\IOCPConnect.h" />
+    <ClInclude Include="..\NetDll\Net\IOCPServerNet.h" />
+    <ClInclude Include="..\NetDll\Net\IOCPUDPNet.h" />
+    <ClInclude Include="..\NetDll\Net\MeshedNetNodeData.h" />
+    <ClInclude Include="..\NetDll\Net\MeshedNodeNet.h" />
+    <ClInclude Include="..\NetDll\Net\NetAddress.h" />
+    <ClInclude Include="..\NetDll\Net\NetConfig.h" />
+    <ClInclude Include="..\NetDll\Net\NetDataBuffer.h" />
+    <ClInclude Include="..\NetDll\Net\NetHead.h" />
+    <ClInclude Include="..\NetDll\Net\NetIndexPacket.h" />
+    <ClInclude Include="..\NetDll\Net\NodeNetEvent.h" />
+    <ClInclude Include="..\NetDll\Net\Object.h" />
+    <ClInclude Include="..\NetDll\Net\ObjectFactory.h" />
+    <ClInclude Include="..\NetDll\Net\ObjectID.h" />
+    <ClInclude Include="..\NetDll\Net\ObjectManager.h" />
+    <ClInclude Include="..\NetDll\Net\ShareMemMsg.h" />
+    <ClInclude Include="..\NetDll\Net\SystemInfo.h" />
+    <ClInclude Include="..\NetDll\Net\UDPbroadcast.h" />
+    <ClInclude Include="..\NetDll\Net\UDPByTcpNet.h" />
+    <ClInclude Include="..\NetDll\Net\UDPMessage.h" />
+    <ClInclude Include="..\NetDll\Net\UDPNet.h" />
+    <ClInclude Include="..\NetDll\Net\UDPServerClientNet.h" />
+    <ClInclude Include="..\NetDll\Net\UDPThreadNet.h" />
+    <ClInclude Include="..\NetDll\Net\Socket.h" />
+    <ClInclude Include="..\NetDll\Net\SocketAPI.h" />
+    <ClInclude Include="..\NetDll\Net\SocketInputStream.h" />
+    <ClInclude Include="..\NetDll\Net\SocketOutputStream.h" />
+    <ClInclude Include="..\NetDll\Net\NetSafeCheck.h" />
+    <ClInclude Include="..\NetDll\Net\ServerNetThread.h" />
+    <ClInclude Include="..\NetDll\Net\WebGameNet.h" />
+    <ClInclude Include="..\NetDll\stdafx.h" />
+    <ClInclude Include="..\NetDll\WebSocket\sha1.h" />
+    <ClInclude Include="..\NetDll\WebSocket\WebProtocol.h" />
+    <ClInclude Include="..\NetDll\WebSocket\WebServerProtocol.h" />
+    <ClInclude Include="..\NetNode\AsyncRequestPacket.h" />
+    <ClInclude Include="..\NetNode\Gate.h" />
+    <ClInclude Include="..\NetNode\MeshNetGate.h" />
+    <ClInclude Include="..\NetNode\MeshNetNode.h" />
+    <ClInclude Include="..\NetNode\NetCommon.h" />
+    <ClInclude Include="..\NetNode\NetNode.h" />
+    <ClInclude Include="..\NetNode\NetUnit.h" />
+    <ClInclude Include="..\NetNode\NodeMsgEvent.h" />
+    <ClInclude Include="..\NetNode\RequestPacket.h" />
+    <ClInclude Include="..\NetNode\ResponsePacket.h" />
+    <ClInclude Include="..\NetNode\UnitComponent.h" />
+    <ClInclude Include="..\NetNode\UnitNetProcess.h" />
+    <ClInclude Include="..\NetNode\WaitRequestManager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="BaseCommon.vcxproj">
+      <Project>{7b59c823-5459-4c17-8022-fab40d42766b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="EventCore.vcxproj">
+      <Project>{8fd22748-0005-4b29-9136-bd5e8512b1bd}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

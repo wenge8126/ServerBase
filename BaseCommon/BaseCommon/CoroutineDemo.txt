@@ -1,0 +1,156 @@
+// 特别注意
+1 放在DLL中进行共享使用时, 必须把全局对象, 放在 CPP中, 以分配在dll中, 唯一一份
+2 MFC 处理完成后才可以释放协程	
+3 协程内可以创建新的协程, 但是不允许启动 resume 其他协程, 所以协程内将新创建协程追加到新建列表中, 在检查清理时, 统一进行开启
+
+
+#include "coroutine.h"
+#include <iostream>
+#include <chrono>
+
+coroutine::Channel<int> channel;
+
+string async_func()
+{
+	std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+	return "22";
+}
+
+void routine_func1()
+{
+	int i = channel.pop();
+	std::cout << i << std::endl;
+
+	i = channel.pop();
+	std::cout << i << std::endl;
+}
+
+void Test()
+{
+	coroutine::yield();
+}
+
+void routine_func2(int i)
+{
+	std::cout << "20" << std::endl;
+	Test();//coroutine::yield();
+
+	std::cout << "21" << std::endl;
+
+	//run function async
+	//yield current routine if result not returned
+	string str = coroutine::await(async_func);
+	std::cout << str << std::endl;
+}
+
+void thread_func()
+{
+	//create routine with callback like std::function<void()>
+	coroutine::routine_t rt1 = coroutine::create(routine_func1);
+	coroutine::routine_t rt2 = coroutine::create(std::bind(routine_func2, 2));
+
+	std::cout << "00" << std::endl;
+	coroutine::resume(rt1);
+
+	std::cout << "01" << std::endl;
+	coroutine::resume(rt2);
+
+	std::cout << "02" << std::endl;
+	channel.push(10);
+
+	std::cout << "03" << std::endl;
+	coroutine::resume(rt2);
+
+	std::cout << "04" << std::endl;
+	channel.push(11);
+
+	std::cout << "05" << std::endl;
+
+	std::this_thread::sleep_for(std::chrono::milliseconds(6000));
+	coroutine::resume(rt2);
+
+	//destroy routine, free resouce allocated
+	//Warning: don't destroy routine by itself
+	coroutine::destroy(rt1);
+	coroutine::destroy(rt2);
+}
+
+int main()
+{
+	std::thread t1(thread_func);
+	std::thread t2([]() {
+		//unsupport coordinating routine crossing threads
+	});
+	t1.join();
+	t2.join();
+	return 0;
+}
+
+
+class MM : public AutoBase
+{
+public:
+	void AsyncTest(DCORO)
+	{
+		NOTE_LOG("== start test * %u", CORO);
+		YIELD;
+		NOTE_LOG("** finish test * %u", CORO);
+	}
+
+public:
+	MM()
+	{
+
+	}
+
+	~MM()
+	{
+
+	}
+};
+
+
+class TT : public CoroutineTool
+{
+public:
+	virtual bool Do(void *) override
+	{
+		//Auto<MM>  d = MEM_NEW MM();
+		for (int i = 0; i < 5; ++i)
+		{
+			NOTE_LOG(" i = %d", i);
+			yield();
+		}
+		return true;
+	}
+
+public:
+
+};
+
+void CloudDBThread::OnStart(void*)
+{
+	Auto<MM> m = MEM_NEW MM();
+	auto co = ASYNCAUTO(&MM::AsyncTest, m.getPtr());
+	NOTE_LOG("sleep 3 sec ...");
+	TimeManager::Sleep(3000);
+	co->resume();
+	NOTE_LOG(" end ====== ");
+
+	TT *p = NULL;
+	{
+		Auto<TT> t = MEM_NEW TT();
+		t->AsyncDo();
+
+		t->finish();
+
+		p = t.getPtr();
+		while (t->resume())
+		{
+			std::this_thread::sleep_for(std::chrono::milliseconds(100));
+			//t->resume();
+		}
+		
+		PRINT("Finish test\r\n");
+	}
+	}
