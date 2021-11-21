@@ -1,0 +1,261 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="libuv">
+      <UniqueIdentifier>{96a6f2b0-b3be-4aed-b183-7bdcc836b05e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libuv\src">
+      <UniqueIdentifier>{ca6a465f-f755-4424-afe5-a8da5efff0ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libuv\src\linux">
+      <UniqueIdentifier>{580a6132-128e-4d28-9f15-59d15ec93d12}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="libuv\include\uv.h">
+      <Filter>libuv</Filter>
+    </ClInclude>
+    <ClInclude Include="libuv\include\uv\sunos.h">
+      <Filter>libuv</Filter>
+    </ClInclude>
+    <ClInclude Include="libuv\include\uv\threadpool.h">
+      <Filter>libuv</Filter>
+    </ClInclude>
+    <ClInclude Include="libuv\include\uv\tree.h">
+      <Filter>libuv</Filter>
+    </ClInclude>
+    <ClInclude Include="libuv\include\uv\unix.h">
+      <Filter>libuv</Filter>
+    </ClInclude>
+    <ClInclude Include="libuv\include\uv\version.h">
+      <Filter>libuv</Filter>
+    </ClInclude>
+    <ClInclude Include="libuv\include\uv\win.h">
+      <Filter>libuv</Filter>
+    </ClInclude>
+    <ClInclude Include="libuv\include\uv\stdint-msvc2008.h">
+      <Filter>libuv</Filter>
+    </ClInclude>
+    <ClInclude Include="libuv\include\uv\posix.h">
+      <Filter>libuv</Filter>
+    </ClInclude>
+    <ClInclude Include="libuv\include\uv\aix.h">
+      <Filter>libuv</Filter>
+    </ClInclude>
+    <ClInclude Include="libuv\include\uv\android-ifaddrs.h">
+      <Filter>libuv</Filter>
+    </ClInclude>
+    <ClInclude Include="libuv\include\uv\bsd.h">
+      <Filter>libuv</Filter>
+    </ClInclude>
+    <ClInclude Include="libuv\include\uv\darwin.h">
+      <Filter>libuv</Filter>
+    </ClInclude>
+    <ClInclude Include="libuv\include\uv\errno.h">
+      <Filter>libuv</Filter>
+    </ClInclude>
+    <ClInclude Include="libuv\include\uv\linux.h">
+      <Filter>libuv</Filter>
+    </ClInclude>
+    <ClInclude Include="libuv\include\uv\os390.h">
+      <Filter>libuv</Filter>
+    </ClInclude>
+    <ClInclude Include="libuv\src\heap-inl.h">
+      <Filter>libuv\src</Filter>
+    </ClInclude>
+    <ClInclude Include="libuv\src\idna.h">
+      <Filter>libuv\src</Filter>
+    </ClInclude>
+    <ClInclude Include="libuv\src\queue.h">
+      <Filter>libuv\src</Filter>
+    </ClInclude>
+    <ClInclude Include="libuv\src\strscpy.h">
+      <Filter>libuv\src</Filter>
+    </ClInclude>
+    <ClInclude Include="libuv\src\uv-common.h">
+      <Filter>libuv\src</Filter>
+    </ClInclude>
+    <ClInclude Include="libuv\src\unix\atomic-ops.h">
+      <Filter>libuv\src\linux</Filter>
+    </ClInclude>
+    <ClInclude Include="libuv\src\unix\internal.h">
+      <Filter>libuv\src\linux</Filter>
+    </ClInclude>
+    <ClInclude Include="libuv\src\unix\linux-syscalls.h">
+      <Filter>libuv\src\linux</Filter>
+    </ClInclude>
+    <ClInclude Include="libuv\src\unix\os390-syscalls.h">
+      <Filter>libuv\src\linux</Filter>
+    </ClInclude>
+    <ClInclude Include="libuv\src\unix\spinlock.h">
+      <Filter>libuv\src\linux</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="libuv\src\fs-poll.c">
+      <Filter>libuv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\idna.c">
+      <Filter>libuv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\inet.c">
+      <Filter>libuv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\strscpy.c">
+      <Filter>libuv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\threadpool.c">
+      <Filter>libuv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\timer.c">
+      <Filter>libuv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\uv-common.c">
+      <Filter>libuv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\uv-data-getter-setters.c">
+      <Filter>libuv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\version.c">
+      <Filter>libuv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\aix.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\aix-common.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\android-ifaddrs.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\async.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\bsd-ifaddrs.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\bsd-proctitle.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\core.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\cygwin.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\darwin.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\darwin-proctitle.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\dl.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\freebsd.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\fs.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\fsevents.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\getaddrinfo.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\getnameinfo.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\ibmi.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\kqueue.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\linux-core.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\linux-inotify.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\linux-syscalls.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\loop.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\loop-watcher.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\netbsd.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\no-fsevents.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\no-proctitle.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\openbsd.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\os390.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\os390-syscalls.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\pipe.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\poll.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\posix-hrtime.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\posix-poll.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\process.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\procfs-exepath.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\proctitle.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\pthread-fixes.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\signal.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\stream.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\sunos.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\sysinfo-loadavg.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\sysinfo-memory.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\tcp.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\thread.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\tty.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="libuv\src\unix\udp.c">
+      <Filter>libuv\src\linux</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

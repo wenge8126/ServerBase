@@ -1,0 +1,133 @@
+
+于 2019/11/29 全部调试成功
+
+~  ~
+  v
+
+VS2017 开发linux 动态库创建及运行调试
+
+特别注意:
+Linux strncpy_s  使用  strncpy 替代 如果拷贝的字符大于指定的长度后, 不会将最后字符值为0;
+正确替代功能为:
+	void strncpy_s(char *szDest, int maxDest, const char *source, int scrMaxLen)
+	{
+		strncpy(szDest, source, scrMaxLen<maxDest ? scrMaxLen:maxDest);
+		szDest[maxDest - 1] = '\0';
+	}
+
+MySql
+https://www.cnblogs.com/wunaozai/p/3618383.html
+sudo apt-get install libmysqlclient-dev
+
+
+Int64格式化字符串
+
+Int64
+linux %lld
+win32 %I64d
+
+
+ubuntu libmysqlclient.so文件在什么地方
+安装apt-file
+运行sudo apt-file update
+然后运行sudo apt-file search libmysqlclient.so
+就找到那个软件包包含 libmysqlclient.so，同时也告诉了你相应的路径
+
+epoll 使用 
+https://www.cnblogs.com/fnlingnzb-learner/p/5835573.html
+
+netstat -atunp|more 6000(端口)
+
+VMware Workstation 15 Pro 
+CG392-4PX5J-H816Z-HYZNG-PQRG2
+
+解决/proc/sys/kernel/yama/ptrace_scope to 0的问题
+(1)切换目录
+cd /etc/sysctl.d/
+(2)打开文件，修改参数为0，并保存
+sudo vim 10-ptrace.conf
+(3)应用
+sudo sysctl --system -a -p|grep yama
+(4)执行
+man sysctl
+
+https://www.cnblogs.com/dongc/p/6599461.html
+1 Ubuntu 需要安装Gcc g++ ssh  需要Ubuntu 18.0版本 VMWare 15
+ssh 使用 root登陆
+https://blog.csdn.net/xiaoaiqi/article/details/78661695
+如果安装出错:
+
+命令：sudo apt-get install openssh-client=1:7.2p2-4
+成功了，接着执行:sudo apt-get install openssh-server
+
+
+
+直接安装rsync  >apt-get install rsync
+
+2 直接运行程序,需要指定SO路径, 如下 :
+----2.环境变量LD_LIBRARY_PATH指定的动态库搜索路径；
+3.配置文件/etc/ld.so.conf中指定的动态库搜索路径；
+4.默认的动态库搜索路径/lib；
+5.默认的动态库搜索路径/usr/lib。
+二、Shell可执行程序命令文件搜索路径：
+1.查看所有的搜索路径：echo $PATH
+2.添加新的路径：
+1)只对当前shell窗口有效:
+export LD_LIBRARY_PATH=$PATH:/new path
+
+3 特别注意,在链接的 命令行中, 其他选项中 必须加上 
+-Wl,-rpath=运行的Ubuntu上的动态库路径 如: /home/wenge/projects/1/bin/x64/Debug 
+必须指定绝对路径
+如果还是存在找不到的情况, 可能包含库未被增加在项目工程内, 特别是生成库又包含其他SO的情况
+
+对于 .so.20 库后面带有版本号的, 运行时找不到时, 必须使用 软链接, 将库链接到 /usr/lib 中
+
+4 链接 输入依赖项, 要指定SO名, 不加lib  和 .so
+且 附加库目录, 需要指定开发目录中生成的so 文件目录
+引用库目录 ,必须指定在 VC目录中, 才可以链接成功, 不出现 找不到 库
+
+5 特别注意: 引用库.h文件和lib文件, 必须添加到项目中, 且指定正确的路径
+
+6 链接错误 : 出现 路径中含有非法字符 的难处理的问题 (修改后必须删除目标机器上的编译运行目录,生新生成)
+大至 和 模版物化函数有关, 不扶持模版函数特化
+去掉之下代码即可, 第二次包含定义就会出现
+template<>
+Auto<BaseRecord>::operator bool() const
+{
+	return m_pBase!=NULL && !m_pBase->IsNull();
+}
+
+7 编译错误
+error : An exception has occured, please see InnerException for more details.
+链接 时 出现 异常中止, 有可能需要链接的库未指定依赖, 然后Debug Release 切换重编译
+没有 .h 文件时, 把.h添加到工程, 然后,需要重新生成
+一般为 库目录未指定, 必须在VC目录中进行设置
+
+8 模版继承问题, 如下:
+template<typename T>
+class ArrayIndex : public Array<T*>
+{
+
+public:
+	// NOTE: Alway delete already val
+	void Append(int id, T *pVal)
+	{
+		if (id>ARRAY_INDEX_MAX_ID)
+		{
+			ERROR_LOG("数组索引超过最大允许ID [%d]", ARRAY_INDEX_MAX_ID);
+			return;
+		}
+
+		if (id>=size())		
+error : there are no arguments to ‘size’ that depend on a template parameter, so a declaration of ‘size’ must be available [-fpermissive]
+需要 指定父类空间
+typedef Array<T*> Base;
+Base::Size();
+
+9 增加代码文件, 都必须重新生成
+
+10 Release 时, pthread 链接不成功, 还是报告, 线程函数未定义
+
+11 找不到.h  使用绝对目录测试, 相对目录不可以, 可以使用宏目录
+12 库目录必须设置在VC目录用
+13 调试库断点，必须在目标机器上运行后，然后附加方式调试

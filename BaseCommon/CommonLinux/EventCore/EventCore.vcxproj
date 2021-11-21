@@ -1,0 +1,249 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|ARM64">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM64">
+      <Configuration>Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x86">
+      <Configuration>Debug</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x86">
+      <Configuration>Release</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\EventCore\Core\CEvent.cpp" />
+    <ClCompile Include="..\..\EventCore\Core\ClientEvent.cpp" />
+    <ClCompile Include="..\..\EventCore\Core\Event.cpp" />
+    <ClCompile Include="..\..\EventCore\Core\EventCenter.cpp" />
+    <ClCompile Include="..\..\EventCore\Core\EventFactory.cpp" />
+    <ClCompile Include="..\..\EventCore\Core\FixedTimeManager.cpp" />
+    <ClCompile Include="..\..\EventCore\Core\LogicEvent.cpp" />
+    <ClCompile Include="..\..\EventCore\Core\LogicNode.cpp" />
+    <ClCompile Include="..\..\EventCore\Core\NetHandle.cpp" />
+    <ClCompile Include="..\..\EventCore\Core\Packet.cpp" />
+    <ClCompile Include="..\..\EventCore\Core\ResponseEvent.cpp" />
+    <ClCompile Include="..\..\EventCore\Core\ServerEvent.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\BaseCommon\AData.h" />
+    <ClInclude Include="..\..\BaseCommon\AES.h" />
+    <ClInclude Include="..\..\BaseCommon\AnyData.h" />
+    <ClInclude Include="..\..\BaseCommon\Array.h" />
+    <ClInclude Include="..\..\BaseCommon\ArrayIndex.h" />
+    <ClInclude Include="..\..\BaseCommon\ArrayList.h" />
+    <ClInclude Include="..\..\BaseCommon\Assertx.h" />
+    <ClInclude Include="..\..\BaseCommon\AsyncAutoFunction.h" />
+    <ClInclude Include="..\..\BaseCommon\AsyncFunction.h" />
+    <ClInclude Include="..\..\BaseCommon\Auto.h" />
+    <ClInclude Include="..\..\BaseCommon\AutoDebug.h" />
+    <ClInclude Include="..\..\BaseCommon\AutoKey.h" />
+    <ClInclude Include="..\..\BaseCommon\AutoObjectFieldInfo.h" />
+    <ClInclude Include="..\..\BaseCommon\AutoPtr.h" />
+    <ClInclude Include="..\..\BaseCommon\AutoString.h" />
+    <ClInclude Include="..\..\BaseCommon\BaseCommon.h" />
+    <ClInclude Include="..\..\BaseCommon\BaseFieldInfo.h" />
+    <ClInclude Include="..\..\BaseCommon\BaseRecord.h" />
+    <ClInclude Include="..\..\BaseCommon\BaseTable.h" />
+    <ClInclude Include="..\..\BaseCommon\CallBack.h" />
+    <ClInclude Include="..\..\BaseCommon\CFileAPI.h" />
+    <ClInclude Include="..\..\BaseCommon\Common.h" />
+    <ClInclude Include="..\..\BaseCommon\ConfigTable.h" />
+    <ClInclude Include="..\..\BaseCommon\CoroutineTool.h" />
+    <ClInclude Include="..\..\BaseCommon\CSVReader.h" />
+    <ClInclude Include="..\..\BaseCommon\CSVTableLoader.h" />
+    <ClInclude Include="..\..\BaseCommon\Data.h" />
+    <ClInclude Include="..\..\BaseCommon\DataBuffer.h" />
+    <ClInclude Include="..\..\BaseCommon\DataProtocol.h" />
+    <ClInclude Include="..\..\BaseCommon\DataStream.h" />
+    <ClInclude Include="..\..\BaseCommon\DBCallBack.h" />
+    <ClInclude Include="..\..\BaseCommon\DBFieldTable.h" />
+    <ClInclude Include="..\..\BaseCommon\DBNice.h" />
+    <ClInclude Include="..\..\BaseCommon\DBResultCallBack.h" />
+    <ClInclude Include="..\..\BaseCommon\DBSqlManager.h" />
+    <ClInclude Include="..\..\BaseCommon\DBTool.h" />
+    <ClInclude Include="..\..\BaseCommon\Dump.h" />
+    <ClInclude Include="..\..\BaseCommon\EasyHash.h" />
+    <ClInclude Include="..\..\BaseCommon\EasyHashEx.h" />
+    <ClInclude Include="..\..\BaseCommon\EasyList.h" />
+    <ClInclude Include="..\..\BaseCommon\EasyMap.h" />
+    <ClInclude Include="..\..\BaseCommon\EasySet.h" />
+    <ClInclude Include="..\..\BaseCommon\EasyStack.h" />
+    <ClInclude Include="..\..\BaseCommon\ExtFieldInfo.h" />
+    <ClInclude Include="..\..\BaseCommon\FactoryTemplate.h" />
+    <ClInclude Include="..\..\BaseCommon\FastHash.h" />
+    <ClInclude Include="..\..\BaseCommon\FieldIndex.h" />
+    <ClInclude Include="..\..\BaseCommon\FieldInfo.h" />
+    <ClInclude Include="..\..\BaseCommon\FieldSubTable.h" />
+    <ClInclude Include="..\..\BaseCommon\FieldTypeDefine.h" />
+    <ClInclude Include="..\..\BaseCommon\FileDataStream.h" />
+    <ClInclude Include="..\..\BaseCommon\GenerateCodeTool.h" />
+    <ClInclude Include="..\..\BaseCommon\Hand.h" />
+    <ClInclude Include="..\..\BaseCommon\IDNiceData.h" />
+    <ClInclude Include="..\..\BaseCommon\IFunction.h" />
+    <ClInclude Include="..\..\BaseCommon\IndexBaseTable.h" />
+    <ClInclude Include="..\..\BaseCommon\IndexDBRecord.h" />
+    <ClInclude Include="..\..\BaseCommon\Int64HashIndex.h" />
+    <ClInclude Include="..\..\BaseCommon\Int64MapIndex.h" />
+    <ClInclude Include="..\..\BaseCommon\IntEasyHashIndex.h" />
+    <ClInclude Include="..\..\BaseCommon\IntEasyMapIndex.h" />
+    <ClInclude Include="..\..\BaseCommon\ListRecordIndex.h" />
+    <ClInclude Include="..\..\BaseCommon\LoadDataCallBack.h" />
+    <ClInclude Include="..\..\BaseCommon\LoadDBCallBack.h" />
+    <ClInclude Include="..\..\BaseCommon\Lock.h" />
+    <ClInclude Include="..\..\BaseCommon\LogEvent.h" />
+    <ClInclude Include="..\..\BaseCommon\LogThread.h" />
+    <ClInclude Include="..\..\BaseCommon\LoopDataStream.h" />
+    <ClInclude Include="..\..\BaseCommon\LoopList.h" />
+    <ClInclude Include="..\..\BaseCommon\PoolLoop.h" />
+    <ClInclude Include="..\..\BaseCommon\StringDataStream.h" />
+    <ClInclude Include="..\..\BaseCommon\StringEasyHashIndex.h" />
+    <ClInclude Include="..\..\BaseCommon\StringHashIndex.h" />
+    <ClInclude Include="..\..\BaseCommon\StringTool.h" />
+    <ClInclude Include="..\..\BaseCommon\TableFieldInfo.h" />
+    <ClInclude Include="..\..\BaseCommon\TableLog.h" />
+    <ClInclude Include="..\..\BaseCommon\TableManager.h" />
+    <ClInclude Include="..\..\BaseCommon\TableUpdateLoader.h" />
+    <ClInclude Include="..\..\BaseCommon\Task.h" />
+    <ClInclude Include="..\..\BaseCommon\TaskFactory.h" />
+    <ClInclude Include="..\..\BaseCommon\TaskManager.h" />
+    <ClInclude Include="..\..\BaseCommon\ThreadEvent.h" />
+    <ClInclude Include="..\..\BaseCommon\TimeManager.h" />
+    <ClInclude Include="..\..\BaseCommon\Timer.h" />
+    <ClInclude Include="..\..\BaseCommon\WorkThread.h" />
+    <ClInclude Include="..\..\BaseCommon\Zip\crc32.h" />
+    <ClInclude Include="..\..\BaseCommon\Zip\deflate.h" />
+    <ClInclude Include="..\..\BaseCommon\Zip\inffast.h" />
+    <ClInclude Include="..\..\BaseCommon\Zip\inffixed.h" />
+    <ClInclude Include="..\..\BaseCommon\Zip\inflate.h" />
+    <ClInclude Include="..\..\BaseCommon\Zip\inftrees.h" />
+    <ClInclude Include="..\..\EventCore\Core\AI.h" />
+    <ClInclude Include="..\..\EventCore\Core\CEvent.h" />
+    <ClInclude Include="..\..\EventCore\Core\ClientEvent.h" />
+    <ClInclude Include="..\..\EventCore\Core\Event.h" />
+    <ClInclude Include="..\..\EventCore\Core\EventCallBack.h" />
+    <ClInclude Include="..\..\EventCore\Core\EventCenter.h" />
+    <ClInclude Include="..\..\EventCore\Core\EventCore.h" />
+    <ClInclude Include="..\..\EventCore\Core\EventFactory.h" />
+    <ClInclude Include="..\..\EventCore\Core\ExeEvent.h" />
+    <ClInclude Include="..\..\EventCore\Core\FixedTimeManager.h" />
+    <ClInclude Include="..\..\EventCore\Core\LogicEvent.h" />
+    <ClInclude Include="..\..\EventCore\Core\LogicNode.h" />
+    <ClInclude Include="..\..\EventCore\Core\NetHandle.h" />
+    <ClInclude Include="..\..\EventCore\Core\NiceDataProtocol.h" />
+    <ClInclude Include="..\..\EventCore\Core\Packet.h" />
+    <ClInclude Include="..\..\EventCore\Core\PacketFactory.h" />
+    <ClInclude Include="..\..\EventCore\Core\ResponseEvent.h" />
+    <ClInclude Include="..\..\EventCore\Core\ScriptFace.h" />
+    <ClInclude Include="..\..\EventCore\Core\ServerEvent.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\BaseCommon\DataStream.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\CommonLib\libBaseCommon_d.so" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{17fa507e-d451-43ab-a01c-2de8781e74fa}</ProjectGuid>
+    <Keyword>Linux</Keyword>
+    <RootNamespace>EventCore</RootNamespace>
+    <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
+    <ApplicationType>Linux</ApplicationType>
+    <ApplicationTypeRevision>1.0</ApplicationTypeRevision>
+    <TargetLinuxPlatform>Generic</TargetLinuxPlatform>
+    <LinuxProjectType>{2238F9CD-F817-4ECC-BD14-2524D2669B35}</LinuxProjectType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <RemoteRootDir>~/Build</RemoteRootDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="..\..\ProjectEnvLinux.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LibraryPath>$(COMMON_BASE_LIB);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <OutDir>$(COMMON_BASE_LIB)</OutDir>
+    <RemoteProjectDir>$(RemoteRootDir)/$(ProjectName)</RemoteProjectDir>
+    <TargetName>lib$(ProjectName)_d</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>../../BaseCommon;</IncludePath>
+    <LibraryPath>../BaseCommon/bin/x64/Debug;</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>__LINUX__;__SERVER__;DEVELOP_MODE</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(CODE_COMMON_DIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <AdditionalOptions>-fpermissive </AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <LibraryDependencies>BaseCommon_d</LibraryDependencies>
+      <SharedLibrarySearchPath>%(SharedLibrarySearchPath)</SharedLibrarySearchPath>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>../BaseCommon;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <LibraryDependencies>BaseCommon</LibraryDependencies>
+      <SharedLibrarySearchPath>../BaseCommon/bin/x64/Debug;%(SharedLibrarySearchPath)</SharedLibrarySearchPath>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

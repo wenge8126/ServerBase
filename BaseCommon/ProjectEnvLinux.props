@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <COMMON_BASE_LIB>../CommonLib/</COMMON_BASE_LIB>
+    <COMMON_ROOT>D:\ServerBase\BaseCommon</COMMON_ROOT>
+    <CODE_COMMON_DIR>$(COMMON_ROOT)\BaseCommon</CODE_COMMON_DIR>
+    <LIB_COMMON_PATH>$(COMMON_ROOT)\CommonLinux\CommonLib</LIB_COMMON_PATH>
+    <CODE_EVENT_DIR>$(COMMON_ROOT)\EventCore\Core</CODE_EVENT_DIR>
+    <CODE_NET_DIR>$(COMMON_ROOT)\NetDll\Net</CODE_NET_DIR>
+    <RUN_DIR>~/Build/CommonLib</RUN_DIR>
+    <CODE_DB_DIR>$(COMMON_ROOT)\MemoryDB\Core</CODE_DB_DIR>
+    <CODE_LIBCO_DIR>$(COMMON_ROOT)\Libco</CODE_LIBCO_DIR>
+    <CLOUD_NET_DIR>$(COMMON_ROOT)\NetNode</CLOUD_NET_DIR>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup />
+  <ItemGroup>
+    <BuildMacro Include="COMMON_BASE_LIB">
+      <Value>$(COMMON_BASE_LIB)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="COMMON_ROOT">
+      <Value>$(COMMON_ROOT)</Value>
+    </BuildMacro>
+    <BuildMacro Include="CODE_COMMON_DIR">
+      <Value>$(CODE_COMMON_DIR)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="LIB_COMMON_PATH">
+      <Value>$(LIB_COMMON_PATH)</Value>
+    </BuildMacro>
+    <BuildMacro Include="CODE_EVENT_DIR">
+      <Value>$(CODE_EVENT_DIR)</Value>
+    </BuildMacro>
+    <BuildMacro Include="CODE_NET_DIR">
+      <Value>$(CODE_NET_DIR)</Value>
+    </BuildMacro>
+    <BuildMacro Include="RUN_DIR">
+      <Value>$(RUN_DIR)</Value>
+    </BuildMacro>
+    <BuildMacro Include="CODE_DB_DIR">
+      <Value>$(CODE_DB_DIR)</Value>
+    </BuildMacro>
+    <BuildMacro Include="CODE_LIBCO_DIR">
+      <Value>$(CODE_LIBCO_DIR)</Value>
+    </BuildMacro>
+    <BuildMacro Include="CLOUD_NET_DIR">
+      <Value>$(CLOUD_NET_DIR)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

@@ -11,3 +11,9 @@
 /.vs/ServerBase/v17/.suo
 /.vs/VSWorkspaceState.json
 /BaseCommon/Proj2017/.vs/BaseCommon/v15/.suo
+/.vs
+/BaseCommon/CommonLinux/AsyncDB
+/BaseCommon/CommonLinux/Async
+*.gitignore
+/BaseCommon/CommonLinux/JsonLib/libuv/include/build/gyp/.travis.yml
+/BaseCommon/Proj2017/.vs/BaseCommon/v17

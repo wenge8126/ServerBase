@@ -1,0 +1,659 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Code">
+      <UniqueIdentifier>{7857a6fd-94e3-4e61-a671-da754dc4170a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseInclude">
+      <UniqueIdentifier>{fbc4294f-6dea-471e-b63c-62375b35e4d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EventInclude">
+      <UniqueIdentifier>{5f14c7a1-35ec-4eac-b78e-9170884bbc04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetInclude">
+      <UniqueIdentifier>{2316a067-ec15-4740-ace4-828bf0ce9b83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include">
+      <UniqueIdentifier>{d033e428-3706-42e2-9783-2be657b0bcc8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\NetNode\NetNode.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetNode\MeshNetNode.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\BaseCommon.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\WorkThread.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\Common.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\CSVTableLoader.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\DataBuffer.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\FileDataStream.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\LogThread.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\MemBase.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\BackThreadMgr.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\EasyHash.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\IntEasyMapIndex.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\Int64HashIndex.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\AutoString.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\Lock.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\NiceData.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\Data.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\Md5Tool.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\DataStream.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\LoopDataStream.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\MemoryTableFieldIndex.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\FieldIndex.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\IndexBaseTable.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\IndexDBRecord.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\ExtFieldInfo.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\ShareMemAO.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\AData.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\DBNice.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\FieldInfo.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\GenerateCodeTool.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\BaseRecord.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\NiceDataFieldInfo.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\IDNiceData.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\BaseFieldInfo.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\EasyMap.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\ShareMemoryPool.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\Zip\zconf.in.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\Zip\zconf.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\Assertx.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\BaseTable.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\RecordMemPool.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\ShareMemAPI.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\TableManager.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\ArrayIndex.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\Array.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\AutoPtr.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\EasyList.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\FieldTypeDefine.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\TimeManager.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\AutoDebug.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\StringTool.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\CallBack.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\EasyStack.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\ArrayList.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\LoopList.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\StringEasyHashIndex.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\RecordIndex.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\Auto.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\RecordTool.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\StringHashIndex.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\Dump.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\EasyHashEx.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\CFileAPI.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\Int64MapIndex.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\MultipleInt64MapIndex.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\MultipleStringIndex.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\PoolList.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\IntEasyHashIndex.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\ListRecordIndex.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\AutoObjectFieldInfo.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\LoadDBCallBack.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\DBFieldTable.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\SqlDataFieldInfo.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\FieldSubTable.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\LogEvent.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\DBTool.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\TableFieldInfo.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\RecordFieldInfo.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\ConfigTable.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\FactoryTemplate.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\Hand.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\TableUpdateLoader.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\ResoursePack.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\IDArrayIndex.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\CSVReader.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\DataProtocol.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\AES.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\AnyData.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\AutoKey.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\BackTask.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\DBCallBack.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\DBResultCallBack.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\DBSqlManager.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\EasySet.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\IFunction.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\LoadDataCallBack.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\RandTool.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\StringDataStream.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\TableLog.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\Task.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\TaskFactory.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\TaskManager.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\ThreadEvent.h">
+      <Filter>BaseInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EventCore\Core\Event.h">
+      <Filter>EventInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EventCore\Core\EventCore.h">
+      <Filter>EventInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EventCore\Core\NetHandle.h">
+      <Filter>EventInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EventCore\Core\ClientEvent.h">
+      <Filter>EventInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EventCore\Core\CEvent.h">
+      <Filter>EventInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EventCore\Core\Packet.h">
+      <Filter>EventInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EventCore\Core\PacketFactory.h">
+      <Filter>EventInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EventCore\Core\FixedTimeManager.h">
+      <Filter>EventInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EventCore\Core\EventCenter.h">
+      <Filter>EventInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EventCore\Core\ServerEvent.h">
+      <Filter>EventInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EventCore\Core\EventFactory.h">
+      <Filter>EventInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EventCore\Core\ExeEvent.h">
+      <Filter>EventInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EventCore\Core\LogicEvent.h">
+      <Filter>EventInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EventCore\Core\LogicNode.h">
+      <Filter>EventInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EventCore\Core\ResponseEvent.h">
+      <Filter>EventInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EventCore\Core\AI.h">
+      <Filter>EventInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EventCore\Core\DataCenter.h">
+      <Filter>EventInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EventCore\Core\EventCallBack.h">
+      <Filter>EventInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EventCore\Core\EventDllFace.h">
+      <Filter>EventInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EventCore\Core\EventDllPlugin.h">
+      <Filter>EventInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EventCore\Core\NiceDataProtocol.h">
+      <Filter>EventInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EventCore\Core\ScriptFace.h">
+      <Filter>EventInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\EventPacket.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\MeshedNodeNet.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\IOCPCommon.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\NetConfig.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\BaseThread.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\ShareMemMsg.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\IOCPConnect.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\IOCPServerNet.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\NetHead.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\Socket.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\BigMsgPacket.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\IOCPClientSetNet.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\ServerSocket_NoUse.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\NetPlayer_NoUse.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\NetConnect__NoUse.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\ClientNet_NoUse.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\TestServer_NoUse.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\EventProtocol.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\DefinePacketFactory.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\UDPByTcpNet.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\NetIndexPacket.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\BaseNetManager.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\InputThread.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\BaseServer.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\Object.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\ObjectManager.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\IOCPThreadServerNet.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\SocketAPI.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\FileNetTransfer.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\EventData.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\NodeNetEvent.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\UDPbroadcast.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\UDPMessage.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\WebGameNet.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\NetTest_NoUse.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\FileDataReceive.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\NetDataBuffer.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\BaseEventNet.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\BaseNetHandle.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\TCPThreadNet.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\ObjectFactory.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\UDPServerClientNet.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\IOCPUDPNet.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\A_CommonData.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\CommonMsgManager.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\MeshedNetNodeData.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\NetSafeCheck.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\ObjectID.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\ServerNetThread.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\SocketInputStream.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\SocketOutputStream.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\SubPro.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\TCPListenThread.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\TCPReceiveThread.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\UDPNet.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\UDPSocket.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\UDPThreadNet.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetNode\Gate.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetNode\NetUnit.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetNode\MeshNetGate.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetNode\NetCommon.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetNode\UnitComponent.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetNode\UnitNetProcess.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetDll\Net\NetAddress.h">
+      <Filter>NetInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetNode\RequestPacket.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetNode\ResponsePacket.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetNode\WaitRequestManager.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetNode\AsyncRequestPacket.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\AsyncAutoFunction.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\AsyncFunction.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\coroutine.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\CoroutineTool.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\DynamicLoopBuffer.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\LoopDataBuffer.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BaseCommon\Timer.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\BaseCommon\DataStream.inl">
+      <Filter>BaseInclude</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\NetNode\MeshNetGate.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetNode\MeshNetNode.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetNode\NetNode.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetNode\NetUnit.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetNode\RequestPacket.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetNode\ResponsePacket.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetNode\WaitRequestManager.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetNode\NetCommon.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetNode\UnitComponent.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

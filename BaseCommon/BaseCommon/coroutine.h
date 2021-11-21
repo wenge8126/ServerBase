@@ -378,6 +378,27 @@ inline int resume(routine_t id)
 	return 0;
 }
 
+inline int getCount()
+{
+	int count = 0;
+	for (int i = 0; i < ordinator.routines.size(); ++i)
+	{
+		if (ordinator.routines[i] != nullptr)
+			++count;
+	}
+	return count;
+}
+
+inline bool empty()
+{
+	for (int i = 0; i < ordinator.routines.size(); ++i)
+	{
+		if (ordinator.routines[i] != nullptr)
+			return false;
+	}
+	return true;
+}
+
 inline void yield()
 {
 	routine_t id = ordinator.current;

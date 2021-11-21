@@ -1,0 +1,216 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|ARM64">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM64">
+      <Configuration>Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x86">
+      <Configuration>Debug</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x86">
+      <Configuration>Release</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{a867361e-5578-4f42-a173-d2592fd6e1dd}</ProjectGuid>
+    <Keyword>Linux</Keyword>
+    <RootNamespace>Test</RootNamespace>
+    <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
+    <ApplicationType>Linux</ApplicationType>
+    <ApplicationTypeRevision>1.0</ApplicationTypeRevision>
+    <TargetLinuxPlatform>Generic</TargetLinuxPlatform>
+    <LinuxProjectType>{D51BCBC9-82E9-4017-911E-C93873C4EA2B}</LinuxProjectType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <RemoteRootDir>~/Build</RemoteRootDir>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="..\..\ProjectEnvLinux.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>./</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\BaseCommon\AData.h" />
+    <ClInclude Include="..\..\BaseCommon\AES.h" />
+    <ClInclude Include="..\..\BaseCommon\AnyData.h" />
+    <ClInclude Include="..\..\BaseCommon\Array.h" />
+    <ClInclude Include="..\..\BaseCommon\ArrayIndex.h" />
+    <ClInclude Include="..\..\BaseCommon\ArrayList.h" />
+    <ClInclude Include="..\..\BaseCommon\Assertx.h" />
+    <ClInclude Include="..\..\BaseCommon\AsyncProcess.h" />
+    <ClInclude Include="..\..\BaseCommon\Auto.h" />
+    <ClInclude Include="..\..\BaseCommon\AutoDebug.h" />
+    <ClInclude Include="..\..\BaseCommon\AutoKey.h" />
+    <ClInclude Include="..\..\BaseCommon\AutoObjectFieldInfo.h" />
+    <ClInclude Include="..\..\BaseCommon\AutoPtr.h" />
+    <ClInclude Include="..\..\BaseCommon\AutoString.h" />
+    <ClInclude Include="..\..\BaseCommon\BackTask.h" />
+    <ClInclude Include="..\..\BaseCommon\BackThreadMgr.h" />
+    <ClInclude Include="..\..\BaseCommon\BaseCommon.h" />
+    <ClInclude Include="..\..\BaseCommon\BaseFieldInfo.h" />
+    <ClInclude Include="..\..\BaseCommon\BaseRecord.h" />
+    <ClInclude Include="..\..\BaseCommon\BaseTable.h" />
+    <ClInclude Include="..\..\BaseCommon\CallBack.h" />
+    <ClInclude Include="..\..\BaseCommon\CFileAPI.h" />
+    <ClInclude Include="..\..\BaseCommon\Common.h" />
+    <ClInclude Include="..\..\BaseCommon\ConfigTable.h" />
+    <ClInclude Include="..\..\BaseCommon\CSVReader.h" />
+    <ClInclude Include="..\..\BaseCommon\CSVTableLoader.h" />
+    <ClInclude Include="..\..\BaseCommon\Data.h" />
+    <ClInclude Include="..\..\BaseCommon\DataBuffer.h" />
+    <ClInclude Include="..\..\BaseCommon\DataProtocol.h" />
+    <ClInclude Include="..\..\BaseCommon\DataStream.h" />
+    <ClInclude Include="..\..\BaseCommon\DBCallBack.h" />
+    <ClInclude Include="..\..\BaseCommon\DBFieldTable.h" />
+    <ClInclude Include="..\..\BaseCommon\DBNice.h" />
+    <ClInclude Include="..\..\BaseCommon\DBResultCallBack.h" />
+    <ClInclude Include="..\..\BaseCommon\DBSqlManager.h" />
+    <ClInclude Include="..\..\BaseCommon\DBTool.h" />
+    <ClInclude Include="..\..\BaseCommon\EasyHash.h" />
+    <ClInclude Include="..\..\BaseCommon\EasyHashEx.h" />
+    <ClInclude Include="..\..\BaseCommon\EasyList.h" />
+    <ClInclude Include="..\..\BaseCommon\EasyMap.h" />
+    <ClInclude Include="..\..\BaseCommon\EasySet.h" />
+    <ClInclude Include="..\..\BaseCommon\EasyStack.h" />
+    <ClInclude Include="..\..\BaseCommon\ExtFieldInfo.h" />
+    <ClInclude Include="..\..\BaseCommon\FactoryTemplate.h" />
+    <ClInclude Include="..\..\BaseCommon\FieldIndex.h" />
+    <ClInclude Include="..\..\BaseCommon\FieldInfo.h" />
+    <ClInclude Include="..\..\BaseCommon\FieldSubTable.h" />
+    <ClInclude Include="..\..\BaseCommon\FieldTypeDefine.h" />
+    <ClInclude Include="..\..\BaseCommon\FileDataStream.h" />
+    <ClInclude Include="..\..\BaseCommon\GenerateCodeTool.h" />
+    <ClInclude Include="..\..\BaseCommon\Hand.h" />
+    <ClInclude Include="..\..\BaseCommon\IDArrayIndex.h" />
+    <ClInclude Include="..\..\BaseCommon\IDNiceData.h" />
+    <ClInclude Include="..\..\BaseCommon\IFunction.h" />
+    <ClInclude Include="..\..\BaseCommon\IndexBaseTable.h" />
+    <ClInclude Include="..\..\BaseCommon\IndexDBRecord.h" />
+    <ClInclude Include="..\..\BaseCommon\Int64HashIndex.h" />
+    <ClInclude Include="..\..\BaseCommon\Int64MapIndex.h" />
+    <ClInclude Include="..\..\BaseCommon\IntEasyHashIndex.h" />
+    <ClInclude Include="..\..\BaseCommon\IntEasyMapIndex.h" />
+    <ClInclude Include="..\..\BaseCommon\LibcoAsync.h" />
+    <ClInclude Include="..\..\BaseCommon\ListRecordIndex.h" />
+    <ClInclude Include="..\..\BaseCommon\LoadDataCallBack.h" />
+    <ClInclude Include="..\..\BaseCommon\LoadDBCallBack.h" />
+    <ClInclude Include="..\..\BaseCommon\Lock.h" />
+    <ClInclude Include="..\..\BaseCommon\LogEvent.h" />
+    <ClInclude Include="..\..\BaseCommon\LogThread.h" />
+    <ClInclude Include="..\..\BaseCommon\LoopData.h" />
+    <ClInclude Include="..\..\BaseCommon\LoopDataStream.h" />
+    <ClInclude Include="..\..\BaseCommon\LoopList.h" />
+    <ClInclude Include="..\..\BaseCommon\Md5Tool.h" />
+    <ClInclude Include="..\..\BaseCommon\MemBase.h" />
+    <ClInclude Include="..\..\BaseCommon\MemoryTableFieldIndex.h" />
+    <ClInclude Include="..\..\BaseCommon\MultipleInt64MapIndex.h" />
+    <ClInclude Include="..\..\BaseCommon\MultipleStringIndex.h" />
+    <ClInclude Include="..\..\BaseCommon\NiceData.h" />
+    <ClInclude Include="..\..\BaseCommon\NiceDataFieldInfo.h" />
+    <ClInclude Include="..\..\BaseCommon\PoolList.h" />
+    <ClInclude Include="..\..\BaseCommon\RandTool.h" />
+    <ClInclude Include="..\..\BaseCommon\RecordFieldInfo.h" />
+    <ClInclude Include="..\..\BaseCommon\RecordIndex.h" />
+    <ClInclude Include="..\..\BaseCommon\RecordMemPool.h" />
+    <ClInclude Include="..\..\BaseCommon\RecordTool.h" />
+    <ClInclude Include="..\..\BaseCommon\ResoursePack.h" />
+    <ClInclude Include="..\..\BaseCommon\ShareMemAO.h" />
+    <ClInclude Include="..\..\BaseCommon\ShareMemAPI.h" />
+    <ClInclude Include="..\..\BaseCommon\ShareMemoryPool.h" />
+    <ClInclude Include="..\..\BaseCommon\SqlDataFieldInfo.h" />
+    <ClInclude Include="..\..\BaseCommon\SqlLog.h" />
+    <ClInclude Include="..\..\BaseCommon\StringDataStream.h" />
+    <ClInclude Include="..\..\BaseCommon\StringEasyHashIndex.h" />
+    <ClInclude Include="..\..\BaseCommon\StringHashIndex.h" />
+    <ClInclude Include="..\..\BaseCommon\StringTool.h" />
+    <ClInclude Include="..\..\BaseCommon\TableFieldInfo.h" />
+    <ClInclude Include="..\..\BaseCommon\TableLog.h" />
+    <ClInclude Include="..\..\BaseCommon\TableManager.h" />
+    <ClInclude Include="..\..\BaseCommon\TableUpdateLoader.h" />
+    <ClInclude Include="..\..\BaseCommon\Task.h" />
+    <ClInclude Include="..\..\BaseCommon\TaskFactory.h" />
+    <ClInclude Include="..\..\BaseCommon\TaskManager.h" />
+    <ClInclude Include="..\..\BaseCommon\ThreadEvent.h" />
+    <ClInclude Include="..\..\BaseCommon\TimeManager.h" />
+    <ClInclude Include="..\..\BaseCommon\WorkThread.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\CommonLib\libBaseCommon_d.a" />
+    <Library Include="..\CommonLib\libcolib.a" />
+    <Library Include="..\CommonLib\libEventCore_d.a" />
+    <Library Include="..\CommonLib\libMemoryDB_d.a" />
+    <Library Include="..\CommonLib\libmysqlclient.so" />
+    <Library Include="..\CommonLib\libServerNet_d.a" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\CommonLib\libmysqlclient.so.20" />
+    <None Include="..\CommonLib\libmysqlclient.so.20.3.15" />
+  </ItemGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Link>
+      <LibraryDependencies>pthread;dl</LibraryDependencies>
+      <AdditionalOptions>-Wl,-rpath=/root/Build/CommonLib %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(CODE_COMMON_DIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

@@ -1,0 +1,7 @@
+
+一 BaseCommon 必须编译为动态库 so
+
+二 其他静态库时, 最终 执行程序必须 输入依赖库要全面, 否则会出现
+An exception has occured, please see InnerException for more details
+
+各种扯蛋弄不明白的事情
