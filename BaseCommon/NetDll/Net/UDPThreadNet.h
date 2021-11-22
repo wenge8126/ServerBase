@@ -13,7 +13,7 @@
 
 #include "LoopDataStream.h"
 #include "UDPNet.h"
-#include "LoopList.h"
+#include "PoolLoop.h"
 #include "WorkThread.h"
 #include "Lock.h"
 #include "DataBuffer.h"

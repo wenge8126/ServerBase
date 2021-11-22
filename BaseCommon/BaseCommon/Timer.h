@@ -7,7 +7,7 @@
 #include "PoolList.h"
 #include "AsyncAutoFunction.h"
 #include "AsyncFunction.h"
-#include "LoopList.h"
+#include "PoolLoop.h"
 #include <vector>
 //-------------------------------------------------------------------------
 class TimerCenter;

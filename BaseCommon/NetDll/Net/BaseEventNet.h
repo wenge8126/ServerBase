@@ -72,7 +72,7 @@ public:
 	virtual void StartWeb(int port, const AString &keyPem, const AString &certPem, const AString &pass) = 0;
 	virtual bool StartNet(const AString &wssServerIP, int serverPort, const AString &keyPemFile = "", const AString &pfxFileName = "", const AString &pfxPassword = "") = 0;
 	virtual bool AsyncStart(const AString &wssServerIP, int serverPort, const AString &keyPemFile = "", const AString &pfxFileName = "", const AString &pfxPassword = "") = 0;
-	virtual void OnResponse(const AString &requestData, AString &response, bool bPost, const AString &requestAddress) = 0;
+	//virtual void OnResponse(const AString &requestData, AString &response, bool bPost, const AString &requestAddress) = 0;
 	virtual void RegisterMsg(int eventIndex, Logic::AutoEventFactory factory) = 0;
 	virtual void  ReadyConnect(Int64 oldid, Int64 id, tNetConnect *pConnect) = 0;
 	virtual HandConnect GetConnect(Int64 playerID) = 0;

@@ -18,7 +18,7 @@
 #include "EventFactory.h"
 #include "EasyMap.h"
 #include "EasyList.h"
-#include "LoopList.h"
+#include "PoolLoop.h"
 #include "AutoString.h"
 #include "NetHandle.h"
 #include "AutoKey.h"
