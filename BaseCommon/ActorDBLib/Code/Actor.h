@@ -50,6 +50,8 @@ namespace NetCloud
 		friend class Component;
 
 	public:
+		virtual void Init() {}
+
 		AComponent AddComponent(const AString &compName);
 
 		bool RemoveComponent(const AString &compName);
@@ -125,7 +127,9 @@ namespace NetCloud
 			for (int i = 0; i < pActor->mComponentList.size(); ++i)
 			{
 				AComponent c = pActor->mComponentList.get(i);
-				if (typeid(T) == typeid(c.getPtr()))
+				const char *p = typeid(T).name();
+				const char *p2 = typeid(*c.getPtr()).name();
+				if ( strcmp(typeid(T).name(), typeid(*c.getPtr()).name())==0)
 				{
 					comp = c;
 					break;

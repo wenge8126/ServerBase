@@ -9,18 +9,45 @@ class DDCom : public NetCloud::Component
 public:
 	void On(RQ_CheckAndCreateAccount &msg, RS_CheckAndCreateAccount &resp, UnitID senderID)
 	{
-
+		resp.mbNew = true;
+		resp.mResult = 88;
+		resp.mID = 999;
 	}
 
 	virtual void RegisterMsg(ActorManager *pActorMgr) override
 	{
 		REG_COMP_MSG(DDCom, RQ_CheckAndCreateAccount, RS_CheckAndCreateAccount);
 	}
+
+
+	// 实例后, 加入到Actor之后即执行Awake
+	virtual void Awake() { LOG("%s awake", Type()); }
+
+	// 实例后, 在下次循环中执行一次Start()
+	//virtual void Start() override { LOG("%s start", Type()); }
+
+	virtual void AsyncStart() { LOG("%s async start", Type()); }
+
+	// StartUpdate 开启后执行 Update, StopUpdate() 结束Update
+	//virtual void Update(float onceTime) override { LOG("%s Update", Type()); }
+
+	// 低速Update
+	virtual void LowUpdate() { LOG("%s Low update", Type()); }
+
+	// 释放之前执行 OnDestory
+	virtual void OnDestory() { LOG("%s on destory", Type()); }
+
+	
 };
 
 class AccountActor : public NetCloud::Actor
 {
 public:
+	virtual void Init() override
+	{
+		AddComponent("DDCom");
+	}
+
 	void On(RQ_CheckAndCreateAccount &msg, RS_CheckAndCreateAccount &resp, UnitID senderID)
 	{
 		t_account accountRe = mAccountList.find(msg.mAccount);

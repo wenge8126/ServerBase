@@ -28,6 +28,7 @@ namespace NetCloud
 				Hand<Actor> actor = fact->_NewActor();
 				actor->SetID(actorType, id);
 				mNetNode->AppendUnit(actor.getPtr());
+				actor->Init();
 				return actor;
 			}
 

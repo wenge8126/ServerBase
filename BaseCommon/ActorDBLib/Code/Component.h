@@ -55,6 +55,8 @@ namespace NetCloud
 	public:
 		virtual void Release() override;
 
+		const char* Type() { return typeid(*this).name(); }
+
 	protected:
 		Actor			*mpActor = NULL;
 	};

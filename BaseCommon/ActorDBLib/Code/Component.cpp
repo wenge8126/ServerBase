@@ -14,13 +14,15 @@ void NetCloud::Component::Start()
 
 void NetCloud::Component::Release()
 {
-	OnDestory();
+	if (mpActor != NULL)
+	{
+		OnDestory();
 
-	AComponent comp = mpActor->GetComponent(GetEventName());
-	if (comp.getPtr() == this)
-		mpActor->mComponentList.erase(GetEventName());
+		AComponent comp = mpActor->GetComponent(GetEventName());
+		if (comp.getPtr() == this)
+			mpActor->mComponentList.erase(GetEventName());
 
-	mpActor = NULL;
-
+		mpActor = NULL;
+	}
 	BaseEvent::Release();
 }

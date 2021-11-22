@@ -43,7 +43,7 @@ public:
 	// 每秒1万次Loop
     virtual int OnceTime(void) const { return 20; }
 	// 低速每秒约100次
-    virtual int OnceLowTime() const { return 10000; }
+    virtual int OnceLowTime() const { return 2000000; }
 
     virtual bool NotifyThreadClose();
 
