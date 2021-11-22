@@ -14,6 +14,7 @@ namespace NetCloud
 		friend class Actor;
 
 	public:
+		Actor* GetActor() { return mpActor; }
 		virtual void Destory();
 
 	protected:
