@@ -4,6 +4,20 @@
 #include "MsgData.h"
 #include "t_account.h"
 
+class DDCom : public NetCloud::Component
+{
+public:
+	void On(RQ_CheckAndCreateAccount &msg, RS_CheckAndCreateAccount &resp, UnitID senderID)
+	{
+
+	}
+
+	virtual void RegisterMsg(ActorManager *pActorMgr) override
+	{
+		REG_COMP_MSG(DDCom, RQ_CheckAndCreateAccount, RS_CheckAndCreateAccount);
+	}
+};
+
 class AccountActor : public NetCloud::Actor
 {
 public:
@@ -64,8 +78,15 @@ public:
 	}
 
 	virtual void RegisterMsg(ActorManager *pActorMgr) 
-	{
+	{	
 		REG_ACTOR_MSG(AccountActor, RQ_CheckAndCreateAccount, RS_CheckAndCreateAccount);
+
+		//REG_COMP_MSG(DDCom, RQ_CheckAndCreateAccount, RS_CheckAndCreateAccount);
+
+		//pActorMgr->RegisterActorMsg("RQ_CheckAndCreateAccount", &Actor::OnMsg<AccountActor, RQ_CheckAndCreateAccount, RS_CheckAndCreateAccount>);
+
+		//pActorMgr->RegisterActorMsg("RQ_CheckAndCreateAccount", &Actor::OnComponentMsg<DDCom, RQ_CheckAndCreateAccount, RS_CheckAndCreateAccount>);
+
 	}
 
 public:

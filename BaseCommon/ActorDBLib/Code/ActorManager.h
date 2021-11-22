@@ -42,6 +42,8 @@ namespace NetCloud
 			mFactoryList.insert(actorType, factory);
 		}
 
+		void RegisterComponect(const char *szName, Hand<tEventFactory> factory);
+
 		void RegisterMsg()
 		{
 			ActorRequestPacket::RegisterDBPacket(mNetNode.getPtr());

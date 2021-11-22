@@ -4,14 +4,17 @@
 #define _INCLUDE_COMPONENT_H_
 
 #include "CEvent.h"
+#include "ActorDBLib.h"
 
 namespace NetCloud
 {
 	class Actor;
+	class ActorManager;
 
-	class Component : public Logic::BaseEvent
+	class ActorDBLib_Export Component : public Logic::BaseEvent
 	{
 		friend class Actor;
+		friend class ActorManager;
 
 	public:
 		Actor* GetActor() { return mpActor; }
@@ -35,11 +38,19 @@ namespace NetCloud
 		// 释放之前执行 OnDestory
 		virtual void OnDestory() {}
 
+		virtual void RegisterMsg(ActorManager *pActorMgr) {}
+
 	protected:
 		virtual bool _DoEvent() override
 		{
 			Start();
+			return true;
 		}	
+
+		virtual void SetData(AutoNice &scrData) {}
+		virtual size_t AppendData(const tNiceData &scrData, bool bReplace) { return 0; }
+		virtual tNiceData& GetData(void) { static NiceData s; return s; }
+		virtual const tNiceData& GetData(void) const { static NiceData s; return s;  }
 
 	public:
 		virtual void Release() override;

@@ -193,6 +193,7 @@ void LogicActorThread::OnStart(void*)
 
 	// 账号对象
 	mActorManager->RegisterActor(Actor_Account, MEM_NEW DefineActorFactory< AccountActor>());
+	mActorManager->RegisterComponect("DDCom", MEM_NEW EventFactory<DDCom>());
 	mAccountActor = mActorManager->CreateActor(Actor_Account, 1);
 
 	// 1区游戏对象

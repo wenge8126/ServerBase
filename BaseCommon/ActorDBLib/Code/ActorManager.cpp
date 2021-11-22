@@ -1,6 +1,14 @@
 #include "ActorManager.h"
 #include "MeshNetNode.h"
+#include "Component.h"
 
+
+void NetCloud::ActorManager::RegisterComponect(const char *szName, Hand<tEventFactory> factory)
+{
+	AComponent comp = factory->NewEvent();
+	comp->RegisterMsg(this);
+	mNetNode->GetEventCenter()->RegisterEvent(szName, factory);
+}
 
 void NetCloud::ActorManager::LowProcess()
 {

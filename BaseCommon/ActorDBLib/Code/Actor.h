@@ -127,7 +127,7 @@ namespace NetCloud
 				AComponent c = pActor->mComponentList.get(i);
 				if (typeid(T) == typeid(c.getPtr()))
 				{
-					comp = pActor->mComponentList.get(i);
+					comp = c;
 					break;
 				}
 			}

@@ -97,8 +97,9 @@ namespace Logic
 		//virtual void SetDataProtocol(ANiceDataProtocol protocol){}
 		//virtual ANiceDataProtocol& GetDataProtocol(){ static ANiceDataProtocol p; return p; }
 
-	protected:
 		virtual AutoEvent NewEvent() = 0; 
+
+	protected:
 		virtual void FreeEvent(tEvent *event);
 		virtual bool _HasRelation(AutoEvent &hEvent) { return false; }
 		virtual bool SaveEventName(DataStream *destData);
