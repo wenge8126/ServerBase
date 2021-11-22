@@ -235,7 +235,7 @@
     <PostBuildEvent>
       <Command>xcopy $(COMMON_BASE_LIB)\$(TargetName)$(TargetExt) $(Server_Out_Dir)\  /y
 xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
-xcopy $(CODE_COMMON_DIR)\ShareMemCloudDB\Code\*.h $(INCLUDE_DIR)\  /y</Command>
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

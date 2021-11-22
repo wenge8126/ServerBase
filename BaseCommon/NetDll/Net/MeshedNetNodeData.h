@@ -35,7 +35,7 @@ public:
 		return true;
 	}
 
-	virtual bool Update(float t);
+	virtual void Update(float t) override;
 
 	virtual bool _OnTimeOver();
 

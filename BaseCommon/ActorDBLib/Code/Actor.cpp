@@ -10,6 +10,44 @@ NetCloud::AUnit NetCloud::ActorFactory::_NewActor()
 	return actor;
 }
 
+NetCloud::AComponent NetCloud::Actor::AddComponent(const AString &compName)
+{
+	AComponent existComp = mComponentList.find(compName);
+
+	AComponent comp = GetEventCenter()->StartEvent(compName);
+	if (comp)
+	{
+		if (existComp)
+		{
+			// 不会立即释放, 支持循环执行此处
+			WARN_LOG("Now already exist componect <%s>", compName);
+			existComp->Free();
+		}
+
+		comp->mpActor = this;
+		mComponentList.insert(compName, comp);
+		comp->Awake();
+		comp->DoEvent(false);
+	}
+	else
+		ERROR_LOG("No register componect <%s>", compName);
+
+	return comp;
+}
+
+bool NetCloud::Actor::RemoveComponent(const AString &compName)
+{
+	AComponent existComp = mComponentList.find(compName);
+	if (existComp)
+	{
+		// 不会立即释放, 支持循环执行此处
+		LOG("Now remove componect <%s>", compName);
+		existComp->Free();
+		return true;
+	}
+	return false;
+}
+
 NetCloud::AutoDBManager NetCloud::Actor::GetDBMgr()
 {
 	ActorManager *pMgr = GetMgr();

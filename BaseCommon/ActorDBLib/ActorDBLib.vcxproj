@@ -234,7 +234,7 @@
     <PostBuildEvent>
       <Command>xcopy $(COMMON_BASE_LIB)\$(TargetName)$(TargetExt) $(Server_Out_Dir)\  /y
 xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
-xcopy $(CODE_COMMON_DIR)\ShareMemCloudDB\Code\*.h $(INCLUDE_DIR)\  /y</Command>
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -242,6 +242,7 @@ xcopy $(CODE_COMMON_DIR)\ShareMemCloudDB\Code\*.h $(INCLUDE_DIR)\  /y</Command>
     <ClCompile Include="Code\ActorGate.cpp" />
     <ClCompile Include="Code\ActorManager.cpp" />
     <ClCompile Include="Code\ActorMsg.cpp" />
+    <ClCompile Include="Code\Component.cpp" />
     <ClCompile Include="Code\DBTable.cpp" />
     <ClCompile Include="Code\DBTableManager.cpp" />
     <ClCompile Include="Code\LogicDBTable.cpp" />
@@ -255,6 +256,7 @@ xcopy $(CODE_COMMON_DIR)\ShareMemCloudDB\Code\*.h $(INCLUDE_DIR)\  /y</Command>
     <ClInclude Include="Code\ActorManager.h" />
     <ClInclude Include="Code\ActorMsg.h" />
     <ClInclude Include="Code\BaseMsg.h" />
+    <ClInclude Include="Code\Component.h" />
     <ClInclude Include="Code\DBTableLoadSQL.h" />
     <ClInclude Include="Code\DBTable.h" />
     <ClInclude Include="Code\DBTableManager.h" />

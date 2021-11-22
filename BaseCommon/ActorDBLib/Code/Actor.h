@@ -9,6 +9,7 @@
 #include "ActorMsg.h"
 #include "ArrayList.h"
 #include "DBTableManager.h"
+#include "Component.h"
 
 #define ACTOR_UPDATE_DATA_SECOND		(10)
 
@@ -44,6 +45,18 @@ namespace NetCloud
 
 	class ActorDBLib_Export Actor : public BigMsgUnit
 	{
+		friend class Component;
+
+	public:
+		AComponent AddComponent(const AString &compName);
+
+		bool RemoveComponent(const AString &compName);
+
+		AComponent GetComponent(const AString &compName)
+		{
+			return mComponentList.find(compName);
+		}
+
 	public:
 		template<typename RespMsg>
 		Auto<RespMsg> Await(tBaseMsg &reqestMsg, UnitID targetID,  int waitMilSecond)
@@ -114,6 +127,12 @@ namespace NetCloud
 
 		virtual void LowProcess()
 		{
+			for (int i = 0; i < mComponentList.size(); ++i)
+			{
+				AComponent comp = mComponentList.get(i);
+				if (comp)
+					comp->LowUpdate();
+			}
 			if (TimeManager::Now() - mLastUpdateDataTimeSec >= ACTOR_UPDATE_DATA_SECOND)
 			{
 				mLastUpdateDataTimeSec = TimeManager::Now();
@@ -132,6 +151,8 @@ namespace NetCloud
 		Auto<ActorFactory>	mActorFactory;
 		ArrayList<ARecord> mDataRecordList;
 		UInt64						mLastUpdateDataTimeSec = 0;
+
+		EasyMap<AString, AComponent> mComponentList;
 	};
 
 	typedef Hand<Actor>		HandActor;

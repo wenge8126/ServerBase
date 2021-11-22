@@ -2,10 +2,13 @@
 #include "MeshedNetNodeData.h"
 #include "NetAddress.h"
 
-bool NetNodeConnectData::Update( float t )
+void NetNodeConnectData::Update( float t )
 {
-	if (mConnectNodeNetThread==NULL)
-		return false;
+	if (mConnectNodeNetThread == NULL)
+	{
+		StopUpdate();
+		return;
+	}
 
 	if (mConnectNodeNetThread->IsConnectFinish())
 	{
@@ -53,9 +56,9 @@ bool NetNodeConnectData::Update( float t )
 
 	}
 	else
-		return true;
+		return;
 
-	return false;
+	StopUpdate();
 }
 
 bool NetNodeConnectData::_OnTimeOver()

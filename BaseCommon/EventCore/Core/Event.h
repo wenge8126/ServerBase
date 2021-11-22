@@ -131,7 +131,7 @@ namespace Logic
 	public:
 		virtual bool Begin() = 0;
 		virtual void Wait() = 0;
-		virtual bool Update(float onceTime) = 0;	
+		virtual void Update(float onceTime) = 0;	
 		virtual bool WaitTime(float waitTime) = 0;
 
 		virtual bool StartUpdate(float spaceSecond) = 0;

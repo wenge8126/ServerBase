@@ -57,7 +57,7 @@ namespace Logic
 	public:
 		virtual bool Begin(){ _OnBegin(); return true; }
 		virtual void Wait();
-		virtual bool Update(float onceTime) { return true; }
+		virtual void Update(float onceTime) override { StopUpdate(); }
 		virtual bool WaitTime(float waitTimeSecond) override;
 		
 		virtual bool StartUpdate(float spaceSecond);

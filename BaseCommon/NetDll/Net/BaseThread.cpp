@@ -301,10 +301,10 @@ public:
 	virtual tNiceData& GetData(void) { static NiceData d; return d; }
 	virtual const tNiceData& GetData(void) const { static NiceData d;  return d; }
 
-	virtual bool Update(float onceTime) override
+	virtual void Update(float onceTime) override
 	{
 		mProcessFunction(onceTime, true);
-		return true;
+		
 	}
 
 	virtual bool _OnTimeOver() override

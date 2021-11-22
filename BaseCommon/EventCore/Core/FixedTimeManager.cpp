@@ -316,11 +316,12 @@ namespace Logic
 					{
 						up.mTotalMilSecond -= up.mSpaceMilSecond;
 
-						if ( !up.mUpdateEvent->Update( up.mSpaceMilSecond * 0.001f ) )
+						up.mUpdateEvent->Update(up.mSpaceMilSecond * 0.001f);
+						if (!up.mUpdateEvent || up.mUpdateEvent->getUpdateInfo() == NULL)
 						{
 							// NOTE: 有可能在Update中把智能对象强行释放掉
-							if (up.mUpdateEvent)
-								up.mUpdateEvent->setUpdateInfo(NULL);
+							//if (up.mUpdateEvent)
+							//	up.mUpdateEvent->setUpdateInfo(NULL);
 							it = mUpdateEventList.erase(it);
 							continue;
 						}
@@ -329,12 +330,8 @@ namespace Logic
                     if (up.mWaitSecond>currentTime)
                         break;
 
-					if ( !up.mUpdateEvent->Update(up.mSpaceMilSecond* 0.001f) )
-					{
-                        if (up.mUpdateEvent)
-                            up.mUpdateEvent->setUpdateInfo(NULL);                       
-					}
-                    else
+					up.mUpdateEvent->Update(up.mSpaceMilSecond* 0.001f);
+					if (up.mUpdateEvent && up.mUpdateEvent->getUpdateInfo()!=NULL)
                     {
                         //NOTE_LOG("append will >%s", up.mUpdateEvent->GetEventName());
                         ++up.mAlreayCount;

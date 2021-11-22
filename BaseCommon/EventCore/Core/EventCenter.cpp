@@ -54,9 +54,10 @@ namespace Logic
 		friend class tEventCenter;
 
 	public:
-		virtual bool Update(float onceTime)
+		virtual void Update(float onceTime)
 		{
-			return mUpdateCall(this);
+			if (!mUpdateCall(this))
+				StopUpdate();
 		}
 
 		virtual bool _OnTimeOver() override
