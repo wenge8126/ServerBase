@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Actor">
+      <UniqueIdentifier>{2d112c49-6733-4ac8-8e30-171dce4c3510}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DBCode">
+      <UniqueIdentifier>{17a1cc35-5c86-42ae-b600-8bc5d3a05dd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gate">
+      <UniqueIdentifier>{170a00ab-c666-49e5-9eb5-6c7698323efb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{e8800f96-e102-4c50-9f43-7e7c215e3c0c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Actor.cpp">
+      <Filter>Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ActorManager.cpp">
+      <Filter>Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ActorMsg.cpp">
+      <Filter>Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\DBTableManager.cpp">
+      <Filter>DBCode</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\LogicDBTable.cpp">
+      <Filter>DBCode</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ActorGate.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\DBTable.cpp">
+      <Filter>DBCode</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\SQLThread.cpp">
+      <Filter>DBCode</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Code\LogicDBTable.h">
+      <Filter>DBCode</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ActorDBLib.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\DBTableManager.h">
+      <Filter>DBCode</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Actor.h">
+      <Filter>Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ActorManager.h">
+      <Filter>Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ActorMsg.h">
+      <Filter>Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\BaseMsg.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ActorGate.h">
+      <Filter>Gate</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\DBTable.h">
+      <Filter>DBCode</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\SQLThread.h">
+      <Filter>DBCode</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\DBTableLoadSQL.h">
+      <Filter>DBCode</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Code">
+      <UniqueIdentifier>{822885d0-56a4-4b4e-97a4-1a614c98cb49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\uWebSockets">
+      <UniqueIdentifier>{07a3954c-9b12-4383-b479-1f0f7e9cfeec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\uWebSockets\f2">
+      <UniqueIdentifier>{669ce85b-ec08-48ee-af21-6d0ca071de93}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\App.h">
+      <Filter>头文件\uWebSockets</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\AsyncSocket.h">
+      <Filter>头文件\uWebSockets</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\AsyncSocketData.h">
+      <Filter>头文件\uWebSockets</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\BloomFilter.h">
+      <Filter>头文件\uWebSockets</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\HttpContext.h">
+      <Filter>头文件\uWebSockets</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\HttpContextData.h">
+      <Filter>头文件\uWebSockets</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\HttpParser.h">
+      <Filter>头文件\uWebSockets</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\HttpResponse.h">
+      <Filter>头文件\uWebSockets</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\HttpResponseData.h">
+      <Filter>头文件\uWebSockets</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\HttpRouter.h">
+      <Filter>头文件\uWebSockets</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Loop.h">
+      <Filter>头文件\uWebSockets</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\LoopData.h">
+      <Filter>头文件\uWebSockets</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\MessageParser.h">
+      <Filter>头文件\uWebSockets</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Multipart.h">
+      <Filter>头文件\uWebSockets</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\PerMessageDeflate.h">
+      <Filter>头文件\uWebSockets</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ProxyParser.h">
+      <Filter>头文件\uWebSockets</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\QueryParser.h">
+      <Filter>头文件\uWebSockets</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\TopicTree.h">
+      <Filter>头文件\uWebSockets</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Utilities.h">
+      <Filter>头文件\uWebSockets</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\WebSocket.h">
+      <Filter>头文件\uWebSockets</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\WebSocketContext.h">
+      <Filter>头文件\uWebSockets</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\WebSocketContextData.h">
+      <Filter>头文件\uWebSockets</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\WebSocketData.h">
+      <Filter>头文件\uWebSockets</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\WebSocketExtensions.h">
+      <Filter>头文件\uWebSockets</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\WebSocketHandshake.h">
+      <Filter>头文件\uWebSockets</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\WebSocketProtocol.h">
+      <Filter>头文件\uWebSockets</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\f2\function2.hpp">
+      <Filter>头文件\uWebSockets\f2</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\WebServerNet.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\WebServerNet.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

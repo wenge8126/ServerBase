@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Code">
+      <UniqueIdentifier>{e55391dc-3384-4e0b-af30-c904c5e8ec4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\crpto">
+      <UniqueIdentifier>{8f517d8d-2cad-4145-85b3-4b92e10393db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\eventing">
+      <UniqueIdentifier>{c08476ef-f20f-470c-a79f-e60f448c3059}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\internal">
+      <UniqueIdentifier>{510c508b-40f3-4382-8e89-53fa5b9d2485}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\internal\eventing">
+      <UniqueIdentifier>{bbe147a1-72b3-4bb8-b103-d30b51d13b65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\internal\networking">
+      <UniqueIdentifier>{20cd4815-29fc-407e-9432-028c4ffc9955}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\libusockets.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\internal\internal.h">
+      <Filter>Code\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\internal\loop_data.h">
+      <Filter>Code\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\internal\eventing\epoll_kqueue.h">
+      <Filter>Code\internal\eventing</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\internal\eventing\gcd.h">
+      <Filter>Code\internal\eventing</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\internal\eventing\libuv.h">
+      <Filter>Code\internal\eventing</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\internal\networking\bsd.h">
+      <Filter>Code\internal\networking</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="LibuSockets.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\bsd.c">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\context.c">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\loop.c">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\socket.c">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\crypto\openssl.c">
+      <Filter>Code\crpto</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\crypto\sni_tree.cpp">
+      <Filter>Code\crpto</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\crypto\wolfssl.c">
+      <Filter>Code\crpto</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\eventing\epoll_kqueue.c">
+      <Filter>Code\eventing</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\eventing\gcd.c">
+      <Filter>Code\eventing</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\eventing\libuv.c">
+      <Filter>Code\eventing</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
