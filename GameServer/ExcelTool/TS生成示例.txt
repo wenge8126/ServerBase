@@ -1,0 +1,190 @@
+//Auto generate from ExcelTool 1.00.00
+//2020/10/ 1  0:15:25
+
+import {BaseRecord, BaseTable } from "../Base/BaseTable"
+
+import DataBuffer from "../Base/Base"
+import NiceData from "../Base/NiceData"
+import NetTool from "../Base/NetTool"
+import { tEvent, tEventFactory, CEvent, EventCenter, tServerEvent, tClientEvent, AsyncServerEvent, AsyncServerEventFactory } from "../Base/Event"
+import {BaseManager, BaseFactory} from "../Base/BaseManager"
+
+export class RegisterBase
+{
+	public constructor(baseClass)
+	{
+		let baseName = baseClass["name"];
+		com.msMgr.Register(baseName, new BaseFactory(baseClass));
+	}
+}
+
+export class SceneConfig
+{
+	public ID : number = 0;
+	public NAME : string = "";
+	public RES : string = "";
+	public INFO  = [];
+
+	public static msTable:BaseTable = null;   
+
+	public constructor(key:any)
+	{ 
+		if (SceneConfig.msTable==null)
+		{
+			LOG.LogError("SceneConfig config no exist >"+key.toString());
+			return;
+		}
+		let record:BaseRecord = SceneConfig.msTable.GetRecord(key);
+		if (record!=null)
+			record.FullConfig(this);
+		else
+			LOG.LogError("SceneConfig config table no exist record > "+key.toString());
+	}
+
+	public static GetConfig(key:any) : SceneConfig
+	{
+		return new SceneConfig(key);
+	}
+
+	public static Init(table:BaseTable)
+	{
+		SceneConfig.msTable = table;
+		if (table==null)
+			LOG.LogError("SceneConfig table is null");
+		return table!=null;
+	}
+
+}
+
+export class ServerList
+{
+	public INDEX : number = 0;
+	public IP : string = "";
+	public PORT : number = 0;
+
+	public static msTable:BaseTable = null;   
+
+	public constructor(key:any)
+	{ 
+		if (ServerList.msTable==null)
+		{
+			LOG.LogError("ServerList config no exist >"+key.toString());
+			return;
+		}
+		let record:BaseRecord = ServerList.msTable.GetRecord(key);
+		if (record!=null)
+			record.FullConfig(this);
+		else
+			LOG.LogError("ServerList config table no exist record > "+key.toString());
+	}
+
+	public static GetConfig(key:any) : ServerList
+	{
+		return new ServerList(key);
+	}
+
+	public static Init(table:BaseTable)
+	{
+		ServerList.msTable = table;
+		if (table==null)
+			LOG.LogError("ServerList table is null");
+		return table!=null;
+	}
+
+}
+
+export class WindowConfig
+{
+	public WIN_NAME : number = 0;
+	public RES : string = "";
+	public INFO : string = "";
+
+	public static msTable:BaseTable = null;   
+
+	public constructor(key:any)
+	{ 
+		if (WindowConfig.msTable==null)
+		{
+			LOG.LogError("WindowConfig config no exist >"+key.toString());
+			return;
+		}
+		let record:BaseRecord = WindowConfig.msTable.GetRecord(key);
+		if (record!=null)
+			record.FullConfig(this);
+		else
+			LOG.LogError("WindowConfig config table no exist record > "+key.toString());
+	}
+
+	public static GetConfig(key:any) : WindowConfig
+	{
+		return new WindowConfig(key);
+	}
+
+	public static Init(table:BaseTable)
+	{
+		WindowConfig.msTable = table;
+		if (table==null)
+			LOG.LogError("WindowConfig table is null");
+		return table!=null;
+	}
+
+}
+
+export default class com 
+{
+	public static msMgr:BaseManager = new BaseManager();
+	public static NiceData = NiceData
+	public static DataBuffer = DataBuffer
+	public static BaseRecord = BaseRecord
+	public static BaseTable = BaseTable
+	public static tEvent = tEvent
+	public static CEvent = CEvent
+	public static tEventFactory = tEventFactory
+	public static EventCenter = EventCenter
+	public static NetTool = NetTool
+	public static RegisterBase = RegisterBase
+	public static BaseManager = BaseManager;
+
+	// All Config
+	public static SceneConfig = SceneConfig;
+	public static ServerList = ServerList;
+	public static WindowConfig = WindowConfig;
+
+	public static Init(tableList: Object)
+	{
+		 let bReadyCheck = true
+			&& SceneConfig.Init(tableList["SceneConfig"])
+			&& ServerList.Init(tableList["ServerList"])
+			&& WindowConfig.Init(tableList["WindowConfig"])
+			;
+		LOG.LogError("Config ready > "+bReadyCheck?"succeed":"fail");
+	}
+
+	 // 注意使用 await 调用
+	public static async Await(waitSce:number): Promise<void> {
+		var promise = new Promise<void>(resolve => {
+			setTimeout(()=>{ resolve();}, waitSce*1000);
+			});
+		return promise;
+	}
+
+	// 动态加载资源 (resources)
+	public static async Load(res: string): Promise<any> {
+		var promise = new Promise<any>(resolve => {
+			var onResourceLoaded = function (errorMessage, loadedResource) {
+				if (errorMessage) {
+					LOG.Log('Prefab error:' + errorMessage);
+					resolve(null);
+					return;
+				}
+				else
+					resolve(loadedResource);
+			};
+			cc.resources.load('ui/login', onResourceLoaded);
+
+		});
+		return promise;
+	}
+}
+
+export { com }

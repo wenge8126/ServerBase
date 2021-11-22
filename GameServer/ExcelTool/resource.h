@@ -1,0 +1,84 @@
+﻿//{{NO_DEPENDENCIES}}
+// Microsoft Visual C++ 生成的包含文件。
+// 供 ExcelTool.rc 使用
+//
+#define IDD_EXCELTOOL_DIALOG            102
+#define IDR_MAINFRAME                   128
+#define IDC_BUTTON1                     1000
+#define IDC_EDIT_CONFIG_PATH            1001
+#define IDC_EDIT_LOG                    1002
+#define IDC_BUTTON_SELECT_CONFIG        1003
+#define IDC_EDIT_TS_PATH                1004
+#define IDC_BUTTON_SELECT_CONFIG2       1005
+#define IDC_EDIT_C_PATH                 1006
+#define IDC_BUTTON_SELECT_CONFIG3       1007
+#define IDC_EDIT_TARGET_CONFIG_PATH     1008
+#define IDC_BUTTON_SELECT_CONFIG4       1009
+#define IDC_BUTTON_UPLOAD               1010
+#define IDC_BUTTON_GENERATE_SQL_DB      1011
+#define IDC_BUTTON_GENERATE_PROTOC      1012
+#define IDC_BUTTON_RELOAD_PLUGIN_DLL    1013
+#define IDC_BUTTON_RECONNECT            1014
+#define IDC_BUTTON_GENERATE_DB_STRUCT   1015
+#define IDC_BUTTON_GENERATE_PROTOC2     1015
+#define IDC_EDIT_DB_WORKER_ID           1016
+#define IDC_BUTTON_CREATE_ACCOUNT_DB    1018
+#define IDC_EDIT_IP                     1019
+#define IDC_EDIT_PORT                   1020
+#define IDC_BUTTON_GENRATE_RUNCONFIG    1021
+#define IDC_BUTTON_UPDATE_RUNCONFIG     1022
+#define IDC_MAKE_CONFIG_PACKET          1023
+#define IDC_EDIT_HTTP_PARAM             1024
+#define IDC_BUTTON_HTTP_TEST            1025
+#define IDC_BUTTON_APPLY_CONFIG         1026
+#define IDC_BUTTON_UPLOAD_PLUGIN_DLL    1027
+#define IDC_BUTTON_APPLY_PLUGIN_DLL     1028
+#define IDC_EDIT_SERVER_PATH            1029
+#define IDC_BUTTON_CREATE_SERVER        1030
+#define IDC_BUTTON_SELECT_RUN_PATH      1031
+#define IDC_EDIT_WSS_ADDRESS            1032
+#define IDC_BUTTON_GENERATE_SQL_DB3     1033
+#define IDC_EDIT_SERVER_NAME            1034
+#define IDC_BUTTON_GENERATE_SQL_DB4     1035
+#define IDC_BUTTON_MAKE_RUN_PACKET      1036
+#define IDC_BUTTON_UPLOAD_RUN_PACKET    1037
+#define IDC_EDIT_SAFT_CODE              1038
+#define IDC_EDIT_LOCAL_IP               1039
+#define IDC_BUTTON_GENERATE_SQL_DB5     1040
+#define IDC_EDIT_MYSQL_PASSWORD         1041
+#define IDC_BUTTON_GENERATE_SQL_DB6     1042
+#define IDC_EDIT_MYSQL_USER             1043
+#define IDC_BUTTON_GENERATE_SQL_DB7     1044
+#define IDC_EDIT_MYSQL_IP               1045
+#define IDC_BUTTON_GENERATE_SQL_DB8     1046
+#define IDC_BUTTON_CREATE_SERVER2       1047
+#define IDC_EDIT_SSL_CRT                1048
+#define IDC_BUTTON_RECONNECT_ACCOUNT    1049
+#define IDC_EDIT_ACCOUNT_IP             1050
+#define IDC_EDIT_ACCOUNT_PORT           1051
+#define IDC_EDIT_ACCOUNT_SAFT_CODE      1052
+#define IDC_BUTTON_UPLOAD_GLOBAL_CONFIG 1053
+#define IDC_BUTTON_UPDATE_SERVER        1054
+#define IDC_SELECT_HTTPS                1055
+#define IDC_EDIT_UPDATE_PASSWORD        1056
+#define IDC_BUTTON_GENERATE_SQL_DB9     1057
+#define IDC_EDIT_ACCOUNT_DNS            1058
+#define IDC_BUTTON_SEND_NOTIC           1059
+#define IDC_EDIT_LOGIP                  1060
+#define IDC_BUTTON_RECONNECT_ACCOUNT2   1061
+#define IDC_BUTTON_CONNECT_DB_INFO      1062
+#define IDC_BUTTON_GENERATE_LOG         1063
+#define IDC_EDIT_MYSQL_IP2              1064
+#define IDC_EDIT_MYSQL_BACK_IP          1064
+#define IDC_BUTTON_GENERATE_SQL_DB10    1065
+
+// Next default values for new objects
+// 
+#ifdef APSTUDIO_INVOKED
+#ifndef APSTUDIO_READONLY_SYMBOLS
+#define _APS_NEXT_RESOURCE_VALUE        130
+#define _APS_NEXT_COMMAND_VALUE         32771
+#define _APS_NEXT_CONTROL_VALUE         1056
+#define _APS_NEXT_SYMED_VALUE           101
+#endif
+#endif

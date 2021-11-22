@@ -1,0 +1,10 @@
+如:
+1 将生成输出 设置到 $(COMMON_BASE_LIB)\Bin\
+2 生成后事件
+xcopy $(COMMON_BASE_LIB)\Bin\$(TargetName)$(TargetExt) $(Server_Out_Dir)\  /y
+xcopy $(COMMON_BASE_LIB)\Bin\$(TargetName).pdb $(Server_Out_Dir)\  /y
+
+3 直接调试运行, 出现中断异常
+
+4 只能直接输出到调试运行目录中, 则正常调试, 原因, 可能引用了 相对路径的 WebNet.dll C#库
+

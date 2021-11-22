@@ -1,0 +1,9 @@
+﻿  ExcelTool.cpp
+d:\work\server\gameserver\exceltool\exceltool.cpp(111): fatal error C1010: 在查找预编译头时遇到意外的文件结尾。是否忘记了向源中添加“#include "pch.h"”?
+  ExcelToolDlg.cpp
+d:\work\server\gameserver\exceltool\exceltooldlg.cpp(1503): fatal error C1010: 在查找预编译头时遇到意外的文件结尾。是否忘记了向源中添加“#include "pch.h"”?
+  GenerateCodeTS.cpp
+d:\work\server\gameserver\exceltool\generatecodets.cpp(224): fatal error C1010: 在查找预编译头时遇到意外的文件结尾。是否忘记了向源中添加“#include "pch.h"”?
+  XlsxTableLoader.cpp
+d:\work\server\gameserver\exceltool\xlsxtableloader.cpp(237): fatal error C1010: 在查找预编译头时遇到意外的文件结尾。是否忘记了向源中添加“#include "pch.h"”?
+  正在生成代码...

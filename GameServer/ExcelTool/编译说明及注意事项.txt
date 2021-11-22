@@ -1,0 +1,171 @@
+特别注意:
+1 由于 64 Excel 驱动默认不会被安装, 所以目前仅支持 x86
+
+
+//Auto genereate msg data code
+
+#include "NiceData.h"
+
+#define CheckGet(d, dest) { Data v = d[#dest]; if (v.empty()) ERROR_LOG("%s no exist data", #dest) else dest = v; }
+
+#define DEFINE_MSG(req, resp) 		req		param; \
+	param.Full(paramData); \
+	resp result; \
+	_msgTool  _t(&result, resultData);
+
+struct tBaseMsg
+{
+public:
+	virtual ~tBaseMsg() {}
+	virtual void Full(AutoNice scrData) = 0;
+	virtual void ToData(AutoNice destData) = 0;
+};
+
+struct _msgTool
+{
+	tBaseMsg *mpRsultData;
+	AutoNice  mResultData;
+
+	_msgTool(tBaseMsg *pData, AutoNice resultData) {
+		mpRsultData = pData;
+		mResultData = resultData;
+	}
+
+	~_msgTool()
+	{
+		mpRsultData->ToData(mResultData);
+	}
+};
+
+struct MsgProtocol
+{
+    template<typename T>
+    static void FullArray(AutoNice scrData, Array<T> &dest, const char *szName)
+    {
+        AutoNice d = (tNiceData*)scrData[szName];
+        if (d)
+        {
+            int i = 0; dest.resize(d->count());
+           for (auto m = d->begin(); m; ++m)
+           {
+              dest[i++] = m.get();
+            }
+        }
+    }
+
+    template<typename T>
+    static void FullStuctArray(AutoNice scrData, Array<T> &dest, const char *szName)
+    {
+        AutoNice d = (tNiceData*)scrData[szName];
+        if (d)
+        {
+            int i = 0; dest.resize(d->count());
+           for (auto m = d->begin(); m; ++m)
+           {
+              AutoNice subData; m.get().get(&subData, typeid(subData));
+                if (subData) dest[i++].Full(subData); else ERROR_LOG("%s is not NiceData", m.key().c_str());
+            }
+        }
+    }
+
+    template<typename T>
+	static void ArrayToData(AutoNice destData, Array<T> &scrArray, const char *szName)
+	{
+		AutoArrayData d = MEM_NEW ArrayNiceData();
+		if (d)
+		{
+			for (int i = 0; i < scrArray.size(); ++i)
+			{
+				d[i] = scrArray[i]; i++;
+			}
+		}
+		destData[szName].set(&d, typeid(AutoArrayData));
+	}
+	template<typename T>
+	static void StuctArrayToData(AutoNice destData, Array<T> &scrArray, const char *szName)
+	{
+		AutoArrayData d = MEM_NEW ArrayNiceData(); 
+		if (d)
+		{
+			for (int i = 0; i < scrArray.size(); ++i)
+			{
+				AutoNice val = MEM_NEW NiceData(); 
+				scrArray[i].ToData(val); 
+				d[i++] = val.getPtr(); 
+			}
+		}
+		destData[szName].set(&d, typeid(AutoArrayData)); 
+	}
+};
+
+
+
+struct BaseData : public tBaseMsg
+{
+    AString NAME;
+    int LEVEL;
+
+    void Full(AutoNice scrData)
+    {
+        CheckGet(scrData, NAME);
+        CheckGet(scrData, LEVEL);
+    }
+
+    void ToData(AutoNice destData)
+    {
+        destData["NAME"] = NAME;
+        destData["LEVEL"] = LEVEL;
+    }
+
+};
+
+struct ReqestGameData : public tBaseMsg
+{
+    int KKK;
+    Array<BaseData> CCC;
+    Array<int> MMM;
+    AString ZZZ;
+
+    void Full(AutoNice scrData)
+    {
+        CheckGet(scrData, KKK);
+        MsgProtocol::FullStuctArray(scrData, CCC, "CCC");
+        MsgProtocol::FullArray(scrData, MMM, "MMM");
+        CheckGet(scrData, ZZZ);
+    }
+
+    void ToData(AutoNice destData)
+    {
+        destData["KKK"] = KKK;
+        MsgProtocol::StuctArrayToData(destData, CCC, "CCC");
+        MsgProtocol::ArrayToData(destData, MMM, "MMM");
+        destData["ZZZ"] = ZZZ;
+    }
+
+};
+
+struct ResponeGameData : public tBaseMsg
+{
+    ReqestGameData TEST;
+    bool RESULT;
+
+    void Full(AutoNice scrData)
+    {
+        {
+            AutoNice d = (tNiceData*)scrData["TEST"];
+            if (d) TEST.Full(d); else ERROR_LOG("No exist data TEST");
+        }
+        CheckGet(scrData, RESULT);
+    }
+
+    void ToData(AutoNice destData)
+    {
+        {
+            AutoNice d = MEM_NEW NiceData(); TEST.ToData(d);
+            destData["TEST"] = d.getPtr();
+        }
+        destData["RESULT"] = RESULT;
+    }
+
+};
+
