@@ -10,10 +10,12 @@
 #include "ArrayList.h"
 #include "DBTableManager.h"
 #include "Component.h"
+#include "EasyMap.h"
 
 #define ACTOR_UPDATE_DATA_SECOND		(10)
 
 #define REG_ACTOR_MSG(ActorClass, RQ, RS)		pActorMgr->RegisterActorMsg(#RQ, &Actor::OnMsg<ActorClass, RQ, RS>);
+#define REG_COMP_MSG(ComponentClass, RQ, RS)		pActorMgr->RegisterActorMsg(#RQ, &Actor::OnComponentMsg<ComponentClass, RQ, RS>);
 
 namespace NetCloud
 {
@@ -96,6 +98,49 @@ namespace NetCloud
 			if (p == NULL)
 			{
 				ERROR_LOG("%s parent class is not Actor", typeid(T).name());
+				return eSourceCodeError;
+			}
+			p->On(pMsg, respMsg, pResponse->mSenderID);
+			pResponse->mResultType = eNoneError;
+			//LOG("Respons msg %s:\r\n%s", respMsg.GetMsgName(), respMsg.dump().c_str());
+			pResponse->mResultData->clear();
+			respMsg.serialize(pResponse->mResultData.getPtr());
+
+			return pResponse->mResultType;
+		}
+
+		template<typename T, typename ReqMsg, typename RespMsg>
+		static int OnComponentMsg(Actor *pActor, DataStream *pReqestMsgData, ActorResponResultPacket *pResponse)
+		{
+			ReqMsg pMsg;
+			pReqestMsgData->seek(0);
+			if (!pMsg.restore(pReqestMsgData))
+			{
+				ERROR_LOG("%s restore fail", pMsg.GetMsgName());
+				return eSourceCodeError;
+			}
+			RespMsg respMsg;
+
+			AComponent comp;
+			for (int i = 0; i < pActor->mComponentList.size(); ++i)
+			{
+				AComponent c = pActor->mComponentList.get(i);
+				if (typeid(T) == typeid(c.getPtr()))
+				{
+					comp = pActor->mComponentList.get(i);
+					break;
+				}
+			}
+			if (!comp)
+			{
+				ERROR_LOG("No exist componect <%s>", typeid(T).name());
+				return 0;
+			}
+
+			T *p = dynamic_cast<T*>(comp.getPtr());
+			if (p == NULL)
+			{
+				ERROR_LOG("%s parent class is not Componect", typeid(T).name());
 				return eSourceCodeError;
 			}
 			p->On(pMsg, respMsg, pResponse->mSenderID);
