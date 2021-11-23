@@ -28,6 +28,8 @@
 #include <WS2tcpip.h>
 #endif
 
+#include "Dump.h"
+
 //-------------------------------------------------------------------------
 bool IOCPListenThread::InitStart( const char* szIp, int nPort )
 {
@@ -78,10 +80,15 @@ bool IOCPListenThread::InitStart( const char* szIp, int nPort )
 #endif
 	if (mListenSocket == INVALID_SOCKET)
 	{
-		ERROR_LOG("[%s:%d]创建监听Socket失败", szIp, nPort);
+		ERROR_LOG("[%s:%d]创建监听Socket失败, 可能端口被占用", szIp, nPort);
 		ErrorExit("WSASocket");
+
+		tProcessException(NULL);
 		return false;   
 	}
+
+	NOTE_LOG("========== [%s : %d] listen ===========", szIp, nPort);
+
 	INT opt = 1;
 	SocketAPI::setsockopt_ex( mListenSocket , SOL_SOCKET , SO_REUSEADDR , &opt , sizeof(opt) );
 

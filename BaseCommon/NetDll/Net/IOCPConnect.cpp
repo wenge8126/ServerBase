@@ -354,6 +354,7 @@ void IOCPConnect::ProcessPing()
 		HandPacket pingPacket = GetNetHandle()->GetNetProtocol()->CreatePacket(eNotifyHeartBeat);
 
 		Send(pingPacket.getPtr(), false);
+
 		//int port = 0;
 		//AString ip = GetRemoteAddr(port);
 		//NOTE_LOG(" = Send heart beat :  [%s:%d] > remote [%s:%d] ", GetLocalIP().c_str(), GetLocalPort(), ip.c_str(), port);

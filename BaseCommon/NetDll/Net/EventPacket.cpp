@@ -48,6 +48,8 @@ int EventPacket::SetEvent(AutoEvent &hEvent)
 		SetState(eEventDataPacket);
 	if ( hEvent->GetEventCenter()->SerializeMsg(hEvent, mData.getPtr()) )
 	{
+		DEBUG_LOG("Send event %s : %d", hEvent->GetEventName(), hEvent->GetEventFactory()->GetNameIndex());
+
 		mData->setDataSize(mData->tell());
 		return mData->tell();
 	}

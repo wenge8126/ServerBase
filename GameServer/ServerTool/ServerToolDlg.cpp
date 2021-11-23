@@ -141,7 +141,7 @@ BOOL CServerToolDlg::OnInitDialog()
 
 	mActorManager->RegisterActor(Actor_ToolWorker, MEM_NEW DefineActorFactory<ToolActor>());
 	mActorManager->RegisterComponect("HttpReqeustComponent", MEM_NEW EventFactory< HttpReqeustComponent>());
-	mToolActor = mActorManager->CreateActor(Actor_ToolWorker, 11);
+	mToolActor = mActorManager->CreateActor(Actor_ToolWorker, 12);
 
 	SetTimer(1, 10, NULL);
 
@@ -350,7 +350,7 @@ void CServerToolDlg::OnBnClickedTestCreateAccount()
 {
 	CoroutineTool::AsyncCall(_RunTestHttp, this);
 
-	
+	CoroutineTool::AsyncCall(_RunTestAccount, this);
 
 }
 

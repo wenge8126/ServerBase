@@ -110,7 +110,7 @@ void GateThread::OnStart(void*)
 
 	ServerThread::OnStart(NULL);
 
-	mGate = MEM_NEW CGate(this, 1, 0, config.gate_node.address.ip.c_str(), config.gate_node.address.port, config.gate_node.address.saft_code);
+	mGate = MEM_NEW CGate(this, config.gate_node.fix_count, config.gate_node.gate_code, config.gate_node.address.ip.c_str(), config.gate_node.address.port, config.gate_node.address.saft_code);
 
 	mGate->Init(NetCloud::Address(config.gate_server.ip.c_str(), config.gate_server.port), NetCloud::Address(config.main_gate.ip.c_str(), config.main_gate.port));
 
