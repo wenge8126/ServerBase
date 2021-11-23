@@ -10,6 +10,8 @@
 #include "HttpClient.h"
 #include "CallBack.h"
 
+#include "Component.h"
+
 //  区别开发账号还是平台账号
 #define SDK_KEY "_sdk_" 
 // 支付码
@@ -70,6 +72,48 @@ protected:
 //	Dllfun mCheckLoginFun;
 //	DllNotifyFun mNotifyFun;
 };
+
+//-------------------------------------------------------------------------
+// 异步请求组件
+class HttpReqeustComponent : public NetCloud::Component
+{
+public:
+	bool AwaitRequest(const char *szHttpAddr, AString &response, const char *postString = NULL)
+	{
+		return mSDK.AwaitRequest(szHttpAddr, response, postString);
+	}
+
+public:
+	void RequestPost(const char *szHttpAddr, const char *postString, CallBack<const std::string&> mCallBack)
+	{
+		mSDK.RequestPost(szHttpAddr, postString, mCallBack);
+	}
+	void RequestGet(const char *requestString, CallBack<const std::string&> mCallBack)
+	{
+		mSDK.RequestGet(requestString, mCallBack);
+	}
+
+public:
+	void Start() override
+	{
+		mSDK.InitThread();
+		StartUpdate(0.001);
+	}
+
+	void Update(float onceTime) override
+	{
+		mSDK.Process();
+	}
+
+	virtual void OnDestory() override
+	{
+		mSDK.Close();
+	}
+
+protected:
+	SDK				mSDK;
+};
+//-------------------------------------------------------------------------
 //-------------------------------------------------------------------------*/
 class TaskCheckUCLogic : public Task
 {

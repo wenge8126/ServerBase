@@ -507,6 +507,7 @@ xcopy $(COMMON_BASE_LIB)\Bin\$(TargetName).pdb $(Server_Out_Dir)\  /y
   <ItemGroup>
     <ClCompile Include="..\Common\SDK\HttpClient.cpp" />
     <ClCompile Include="..\Common\SDK\SDK.cpp" />
+    <ClCompile Include="Code\HttpComponect.cpp" />
     <ClCompile Include="Code\WebLoginThread.cpp" />
     <ClCompile Include="Code\WebMsg.cpp" />
     <ClCompile Include="WebLogin.cpp" />
@@ -514,6 +515,7 @@ xcopy $(COMMON_BASE_LIB)\Bin\$(TargetName).pdb $(Server_Out_Dir)\  /y
   <ItemGroup>
     <ClInclude Include="..\Common\SDK\HttpClient.h" />
     <ClInclude Include="..\Common\SDK\SDK.h" />
+    <ClInclude Include="Code\HttpComponect.h" />
     <ClInclude Include="Code\WebLoginThread.h" />
     <ClInclude Include="Code\WebMsg.h" />
     <ClInclude Include="Code\CWssServerNet.h" />

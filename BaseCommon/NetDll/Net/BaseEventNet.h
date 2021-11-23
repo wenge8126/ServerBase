@@ -77,9 +77,9 @@ public:
 	virtual void  ReadyConnect(Int64 oldid, Int64 id, tNetConnect *pConnect) = 0;
 	virtual HandConnect GetConnect(Int64 playerID) = 0;
 
-	virtual bool SendToClient(Int64 playerID, Logic::tEvent *pEvent) = 0;
-	virtual void BroatcastMsg(Logic::tEvent *pMsg, Int64 excludeID) = 0;
-	virtual void InitClearAllPlayer() = 0;
+	virtual bool SendToClient(Int64 playerID, Logic::tEvent *pEvent) { ERROR_LOG("No override code"); return false; }
+	virtual void BroatcastMsg(Logic::tEvent *pMsg, Int64 excludeID) { ERROR_LOG("No override code"); }
+	virtual void InitClearAllPlayer() { ERROR_LOG("No override code"); }
 	virtual AString GetRunInfo() { return "None"; }
 };
 

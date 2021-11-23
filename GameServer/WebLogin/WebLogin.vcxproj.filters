@@ -36,6 +36,9 @@
     <ClCompile Include="..\Common\SDK\SDK.cpp">
       <Filter>SDK</Filter>
     </ClCompile>
+    <ClCompile Include="Code\HttpComponect.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\WebLoginThread.h">
@@ -60,6 +63,9 @@
       <Filter>SDK</Filter>
     </ClInclude>
     <ClInclude Include="Code\CWssServerNet.inl">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\HttpComponect.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

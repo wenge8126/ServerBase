@@ -19,6 +19,8 @@ namespace NetCloud
 
 	class ActorDBLib_Export  ActorManager : public AutoBase
 	{
+		friend class ProcessComponect;
+
 	public:
 		Hand<Actor> CreateActor(int actorType, Int64 id)
 		{
@@ -66,6 +68,18 @@ namespace NetCloud
 		{
 			mShareDBManager->Process();
 			mNetNode->Process();
+
+			for (int i=0; i<mProcessComponectList.size(); )
+			{
+				AProcessComponect comp = mProcessComponectList[i];
+				if (comp)
+				{
+					comp->Process();
+					++i;
+				}
+				else
+					mProcessComponectList.removeAt(i);
+			}
 		}
 
 		virtual void LowProcess();
@@ -85,6 +99,9 @@ namespace NetCloud
 		Auto<ActorDBMgr>									mShareDBManager;
 
 		FastHash<AString, pActorMsgCall>			mOnMsgFunctionList;
+
+	protected:
+		ArrayList<AProcessComponect>				mProcessComponectList;	//Actor组件, 需要高速Process的列表
 	};
 
 }

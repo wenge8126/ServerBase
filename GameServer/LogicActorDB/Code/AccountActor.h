@@ -32,7 +32,7 @@ public:
 	//virtual void Update(float onceTime) override { LOG("%s Update", Type()); }
 
 	// 低速Update
-	virtual void LowUpdate() { LOG("%s Low update", Type()); }
+	//virtual void LowUpdate() { LOG("%s Low update", Type()); }
 
 	// 释放之前执行 OnDestory
 	virtual void OnDestory() { LOG("%s on destory", Type()); }

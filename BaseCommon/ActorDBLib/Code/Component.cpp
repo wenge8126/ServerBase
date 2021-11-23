@@ -1,6 +1,7 @@
 #include "Component.h"
 #include "Actor.h"
 #include "CoroutineTool.h"
+#include "ActorManager.h"
 
 void NetCloud::Component::Destory()
 {
@@ -26,3 +27,36 @@ void NetCloud::Component::Release()
 	}
 	BaseEvent::Release();
 }
+//-------------------------------------------------------------------------
+bool NetCloud::ProcessComponect::_DoEvent()
+{
+	Component::_DoEvent();
+	// Start 之后, 才会加入到高速循环列表内, 才会执行Process
+	if (mpActor != NULL)
+	{
+		for (int i = 0; i < mpActor->GetMgr()->mProcessComponectList.size(); ++i)
+		{
+			if (mpActor->GetMgr()->mProcessComponectList[i].getPtr() == this)
+				return true;
+		}
+		mpActor->GetMgr()->mProcessComponectList.push_back(GetSelf());
+	}
+	return true;
+}
+
+void NetCloud::ProcessComponect::RemoveProcess()
+{
+	if (mpActor != NULL)
+	{
+		for (int i = 0; i < mpActor->GetMgr()->mProcessComponectList.size(); ++i)
+		{
+			if (mpActor->GetMgr()->mProcessComponectList[i].getPtr() == this)
+			{
+				mpActor->GetMgr()->mProcessComponectList.removeAt(i);
+				break;
+			}
+		}
+	}
+}
+
+//-------------------------------------------------------------------------

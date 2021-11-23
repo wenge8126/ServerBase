@@ -13,6 +13,7 @@
 #include "CRunConfig.h"
 #include "TaskSystem.h"
 #include "ActorManager.h"
+#include "HttpComponect.h"
 
 using namespace NetCloud;
 
@@ -144,6 +145,12 @@ public:
 	{
 		Auto<LoginActorManager> mgr = GetMgr();
 		return mgr->mpThread;
+	}
+
+	virtual void Init() override
+	{
+		Hand<HttpComponect> comp = AddComponent("HttpComponect");
+		comp->mPort = 5000;		
 	}
 };
 

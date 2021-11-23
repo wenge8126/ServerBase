@@ -16,6 +16,9 @@
     <Filter Include="Code">
       <UniqueIdentifier>{0d49c78c-61bd-4561-b42c-76cb14b6b0b6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{23c2a80a-006e-4966-bd17-8b24cec8ccf5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ServerTool.h">
@@ -42,6 +45,12 @@
     <ClInclude Include="ExportBase.h">
       <Filter>Code</Filter>
     </ClInclude>
+    <ClInclude Include="..\Common\SDK\HttpClient.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\SDK\SDK.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ServerTool.cpp">
@@ -52,6 +61,12 @@
     </ClCompile>
     <ClCompile Include="XlsxTableLoader.cpp">
       <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\SDK\HttpClient.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\SDK\SDK.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

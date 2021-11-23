@@ -203,6 +203,7 @@ void WebLoginThread::OnStart(void*)
 		pNet->StartNet(config.ws_ip.c_str(), config.ws_port, config.key_file, config.cert_file, config.password);
 
 		mActorManager->RegisterActor(Unit_Login, MEM_NEW DefineActorFactory<LoginActor>());
+		mActorManager->RegisterComponect("HttpComponect", MEM_NEW EventFactory<HttpComponect>());
 
 		mLoginActor = mActorManager->CreateActor(Unit_Login, config.login_id);
 		
@@ -225,9 +226,11 @@ bool WebLoginThread::NotifyThreadClose()
 	mSdkMgr.Close();
 
 	if (mWebWsNet)
+	{
 		mWebWsNet->StopNet();
-	mWebWsNet->Process();
-	mWebWsNet._free();
+		mWebWsNet->Process();
+		mWebWsNet._free();
+	}
 
 	for (int i = 0; i < 100; ++i)
 	{

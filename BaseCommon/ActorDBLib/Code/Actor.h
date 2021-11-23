@@ -48,6 +48,8 @@ namespace NetCloud
 	class ActorDBLib_Export Actor : public BigMsgUnit
 	{
 		friend class Component;
+		friend class ProcessComponect;
+		friend class ActorFactory;
 
 	public:
 		virtual void Init() {}
@@ -197,11 +199,32 @@ namespace NetCloud
 		ARecord LoadRecord(const char *szTableName, Int64 nKey);
 
 	public:
+		Actor() {}
+		~Actor()
+		{
+
+		}
+
+		virtual void Release() override
+		{
+			if (!mComponentList.empty())
+			{
+				int lastPos = mComponentList.size()-1;
+				AComponent comp = mComponentList.get(lastPos);
+				mComponentList._remove(lastPos);
+				comp._free();
+			}
+
+			BigMsgUnit::Release();
+		}
+
+	protected:
 		Auto<ActorFactory>	mActorFactory;
 		ArrayList<ARecord> mDataRecordList;
 		UInt64						mLastUpdateDataTimeSec = 0;
 
 		EasyMap<AString, AComponent> mComponentList;
+		
 	};
 
 	typedef Hand<Actor>		HandActor;

@@ -286,6 +286,8 @@ xcopy $(COMMON_BASE_LIB)\Bin\$(TargetName).pdb $(Server_Out_Dir)\  /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Common\SDK\HttpClient.h" />
+    <ClInclude Include="..\Common\SDK\SDK.h" />
     <ClInclude Include="ExportBase.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -296,6 +298,8 @@ xcopy $(COMMON_BASE_LIB)\Bin\$(TargetName).pdb $(Server_Out_Dir)\  /y</Command>
     <ClInclude Include="XlsxTableLoader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Common\SDK\HttpClient.cpp" />
+    <ClCompile Include="..\Common\SDK\SDK.cpp" />
     <ClCompile Include="ServerTool.cpp" />
     <ClCompile Include="ServerToolDlg.cpp" />
     <ClCompile Include="XlsxTableLoader.cpp" />
@@ -312,6 +316,9 @@ xcopy $(COMMON_BASE_LIB)\Bin\$(TargetName).pdb $(Server_Out_Dir)\  /y</Command>
   <ItemGroup>
     <ProjectReference Include="..\..\BaseCommon\ActorDBLib\ActorDBLib.vcxproj">
       <Project>{607e65e3-973d-4425-8e4e-e04b8b413c36}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\BaseCommon\curl-7.53.1\projects\Windows\VC14\lib\libcurl.vcxproj">
+      <Project>{da6f56b4-06a4-441d-ad70-ac5a7d51fadb}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\BaseCommon\Proj2017\BaseCommon.vcxproj">
       <Project>{7b59c823-5459-4c17-8022-fab40d42766b}</Project>

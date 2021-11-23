@@ -75,6 +75,5 @@ public:
 	virtual void OnResponse(const AString &requestData, AString &response, bool bPost, const AString &requestAddress) override;
 };
 
-//-------------------------------------------------------------------------
 
 #endif //_INCLUDE_WSSERVERNET_H_

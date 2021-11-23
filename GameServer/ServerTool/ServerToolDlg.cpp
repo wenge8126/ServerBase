@@ -12,6 +12,8 @@
 #include "ExportBase.h"
 #include "FileDataStream.h"
 
+#include "SDK.h"
+
 #ifdef _DEBUG
 //#define new DEBUG_NEW
 #endif
@@ -138,7 +140,7 @@ BOOL CServerToolDlg::OnInitDialog()
 	mActorManager = MEM_NEW NetCloud::ActorManager("127.0.0.1", 11003, 10, 2);
 
 	mActorManager->RegisterActor(Actor_ToolWorker, MEM_NEW DefineActorFactory<ToolActor>());
-
+	mActorManager->RegisterComponect("HttpReqeustComponent", MEM_NEW EventFactory< HttpReqeustComponent>());
 	mToolActor = mActorManager->CreateActor(Actor_ToolWorker, 11);
 
 	SetTimer(1, 10, NULL);
@@ -336,9 +338,20 @@ void _RunTestAccount(CServerToolDlg *p)
 		ERROR_LOG("Reqest account fail");
 }
 
+void _RunTestHttp(CServerToolDlg *p)
+{
+	Hand< HttpReqeustComponent> http = p->mToolActor->GetComponent("HttpReqeustComponent");
+	AString resp;
+	http->AwaitRequest("http://127.0.0.1:5000?x=99&y=66", resp);
+	LOG("Http result : %s", resp.c_str());
+}
+
 void CServerToolDlg::OnBnClickedTestCreateAccount()
 {
-	CoroutineTool::AsyncCall(_RunTestAccount, this);
+	CoroutineTool::AsyncCall(_RunTestHttp, this);
+
+	
+
 }
 
 
