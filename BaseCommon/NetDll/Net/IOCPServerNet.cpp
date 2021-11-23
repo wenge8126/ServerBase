@@ -10,6 +10,7 @@
 #include "NetIndexPacket.h"
 #if __WINDOWS__
 #	include <MSTcpip.h>
+#include <process.h>
 #else
 #include <sys/socket.h>
 #include <sys/epoll.h>
@@ -29,6 +30,8 @@
 #endif
 
 #include "Dump.h"
+#include "UDPNet.h"
+#include "NetAddress.h"
 
 //-------------------------------------------------------------------------
 bool IOCPListenThread::InitStart( const char* szIp, int nPort )
@@ -88,6 +91,17 @@ bool IOCPListenThread::InitStart( const char* szIp, int nPort )
 	}
 
 	NOTE_LOG("========== [%s : %d] listen ===========", szIp, nPort);
+	UDPNet	tempUDP;
+	
+	NiceData info;
+	info["PID"] = (int)getpid();
+	info["TID"] = (UInt64)GetCurrentThreadId();
+	info["IP"] = szIp;
+	info["PORT"] = nPort;
+	info["LOCAL"] = NetAddress::GetLocalIP();
+
+	AString strSend = info.ToJSON();
+	tempUDP.Send("127.0.0.1", 2020, strSend.c_str(), strSend.length());
 
 	INT opt = 1;
 	SocketAPI::setsockopt_ex( mListenSocket , SOL_SOCKET , SO_REUSEADDR , &opt , sizeof(opt) );

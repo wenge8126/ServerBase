@@ -5,10 +5,18 @@
 #pragma once
 
 #include "ActorManager.h"
+#include "UDPNet.h"
+#include "FastHash.h"
 
 // CServerToolDlg 对话框
 class CServerToolDlg : public CDialogEx
 {
+	UDPNet		mUPDNet;
+	DataBuffer	mReceiveData;
+
+	FastHash<UInt64, AutoNice>	mNetInfoList;
+	Array<AutoNice>	mAllNetList;
+
 // 构造
 public:
 	CServerToolDlg(CWnd* pParent = nullptr);	// 标准构造函数

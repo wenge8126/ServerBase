@@ -121,6 +121,9 @@ BOOL CServerToolDlg::OnInitDialog()
 
 	new TableManager();
 
+	mReceiveData.resize(2048);
+	mUPDNet.Bind("0.0.0.0", 2020);
+
 	mToolConfig = TableManager::getSingleton().CreateNewTable("Config");
 	mToolConfig->LoadCSV("./RunConfig/ServerToolConfig.csv");
 
@@ -299,6 +302,25 @@ void CServerToolDlg::OnTimer(UINT_PTR nIDEvent)
 		mActorManager->Process();
 		mActorManager->LowProcess();
 		CoroutineTool::CheckFinish();
+		UInt64 addr;
+		mReceiveData.clear();
+		if (mUPDNet.ProcessReceive(&mReceiveData, addr, false))
+		{
+			AutoNice d = MEM_NEW NiceData();
+			d->FullJSON((char*)mReceiveData.data());
+			AString localIP = d["LOCAL"];
+			int port = d["PORT"];
+			NetAddress addr(localIP.c_str(), port);
+			UInt64 key = addr;
+			if (mNetInfoList.exist(key))
+			{
+				LOG("严重错误, IP端口重复 :\r\n%s===============\r\n%s", mNetInfoList.find(key)->dump().c_str(), d->dump().c_str());
+			}
+			else
+				LOG("%s", d->dump().c_str());
+			mNetInfoList.insert(key, d);
+			mAllNetList.push_back(d);
+		}
 	}
 
 	CDialogEx::OnTimer(nIDEvent);
