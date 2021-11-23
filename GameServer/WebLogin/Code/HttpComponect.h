@@ -8,7 +8,7 @@
 
 //-------------------------------------------------------------------------
 // Https 组件, 可继承实现需要的功能
-class HttpComponect : public NetCloud::ProcessComponect
+class HttpComponect : public NetCloud::ProcessComponent
 {
 public:
 	virtual void Awake() override

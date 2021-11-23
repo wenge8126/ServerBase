@@ -48,7 +48,7 @@ namespace NetCloud
 	class ActorDBLib_Export Actor : public BigMsgUnit
 	{
 		friend class Component;
-		friend class ProcessComponect;
+		friend class ProcessComponent;
 		friend class ActorFactory;
 
 	public:

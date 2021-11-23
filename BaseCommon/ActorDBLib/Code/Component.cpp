@@ -28,7 +28,7 @@ void NetCloud::Component::Release()
 	BaseEvent::Release();
 }
 //-------------------------------------------------------------------------
-bool NetCloud::ProcessComponect::_DoEvent()
+bool NetCloud::ProcessComponent::_DoEvent()
 {
 	Component::_DoEvent();
 	// Start 之后, 才会加入到高速循环列表内, 才会执行Process
@@ -44,7 +44,7 @@ bool NetCloud::ProcessComponect::_DoEvent()
 	return true;
 }
 
-void NetCloud::ProcessComponect::RemoveProcess()
+void NetCloud::ProcessComponent::RemoveProcess()
 {
 	if (mpActor != NULL)
 	{

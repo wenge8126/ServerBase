@@ -19,7 +19,7 @@ namespace NetCloud
 
 	class ActorDBLib_Export  ActorManager : public AutoBase
 	{
-		friend class ProcessComponect;
+		friend class ProcessComponent;
 
 	public:
 		Hand<Actor> CreateActor(int actorType, Int64 id)

@@ -65,7 +65,7 @@ namespace NetCloud
 
 	//-------------------------------------------------------------------------
 	// 需要高速 Update(与逻辑线程循环一至), 必须继承ProcessComponect
-	class ActorDBLib_Export ProcessComponect : public Component
+	class ActorDBLib_Export ProcessComponent : public Component
 	{
 	public:
 		virtual void Process() { WARN_LOG("No override Process, then check need ProcessComponect type"); };
@@ -88,7 +88,7 @@ namespace NetCloud
 
 		void RemoveProcess();
 	};
-	typedef Hand< ProcessComponect> AProcessComponect;
+	typedef Hand< ProcessComponent> AProcessComponect;
 	//-------------------------------------------------------------------------
 }
 
