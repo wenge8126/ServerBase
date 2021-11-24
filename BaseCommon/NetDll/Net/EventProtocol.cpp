@@ -342,7 +342,8 @@ HandPacket EventNetProtocol::GenerateEventPacket(tNetConnect *pConnect,  Logic::
 	Auto<EventPacket> sendPacket = CreatePacket(PACKET_EVENT);
 	AssertEx(sendPacket, "消息包获取失败");
     OnBeforeSendEvent(pConnect, sendEvent);
-	int eventDataSize = sendPacket->SetEvent(sendEvent->GetSelf());
+	AutoEvent evt = sendEvent->GetSelf();
+	int eventDataSize = sendPacket->SetEvent(evt);
 	if (eventDataSize<=0)
 	{
 		ERROR_LOG("[%s]事件数据流化失败", sendEvent->GetEventName());

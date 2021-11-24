@@ -6,8 +6,34 @@
 #include "Component.h"
 #include "IOCPServerNet.h"
 #include "IOCPConnect.h"
+#include "NetWorkerComponent.h"
 
-class TcpComponent : public NetCloud::ProcessComponent
+//-------------------------------------------------------------------------
+//网络界面组件, 继承实现网络功能 (Tcp WebSocket kcp ...)
+class SocketComponent : public NetCloud::ProcessComponent
+{
+public:
+	// 这是组件主动注册
+	virtual void RegisterMsg(const AString &msgName, AutoEventFactory msgFactory) = 0;
+	virtual AutoNet GetNet() = 0;
+
+public:
+	AComponent GetNetWorkerComponent()
+	{
+		if (!mNetLogicComponent)
+			mNetLogicComponent = mpActor->GetComponent<NetWorkerComponent>();
+
+		return mNetLogicComponent;
+	}
+
+
+protected:
+	AComponent	mNetLogicComponent;
+};
+//-------------------------------------------------------------------------
+
+
+class TcpComponent : public SocketComponent
 {
 public:
 	int		mMaxConnectCount = 16;
@@ -56,7 +82,6 @@ public:
 protected:
 	AutoNet		mTcpNet;
 
-private:
 };
 
 class ComponentNet : public DefaultServerNet
@@ -79,6 +104,12 @@ public:
 	virtual void OnCloseConnect(tNetConnect *pConnect) override
 	{
 		mpComponent->OnDisconnect(pConnect);
+	}
+
+	virtual AutoAny GetAttachData() override
+	{
+		AutoAny comp = mpComponent;
+		return comp;
 	}
 
 public:

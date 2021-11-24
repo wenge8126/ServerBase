@@ -124,7 +124,8 @@ public:
 
 		MeshedNodeNet *p = dynamic_cast<MeshedNodeNet*>( net.getPtr() );
 		AssertEx (p!=NULL, "必定 MeshedNodeNet");
-		p->OnRequestNode(dynamic_cast<NodeRequestConnect*>(mNetConnect.getPtr())->mNetNodeConnectData, GetSelf());
+		AutoEvent evt = GetSelf();
+		p->OnRequestNode(dynamic_cast<NodeRequestConnect*>(mNetConnect.getPtr())->mNetNodeConnectData, evt);
 		set("SERVER_KEY", p->mServerNetKey);			
 		 
 		return true;
@@ -137,7 +138,8 @@ public:
 		DEBUG_LOG("成功连接到 [%s:%d]", mNetConnect->GetIp(), mNetConnect->GetPort());
 
 		Hand<MeshedNodeNet> net = GetMeshedNodeNet();
-		net->OnReceiveResponse(dynamic_cast<NodeRequestConnect*>(mNetConnect.getPtr())->mNetNodeConnectData, GetSelf(), resp);
+		AutoEvent evt = GetSelf();
+		net->OnReceiveResponse(dynamic_cast<NodeRequestConnect*>(mNetConnect.getPtr())->mNetNodeConnectData, evt, resp);
 		net->DumpAllConnect();
 		int count = resp->get("COUNT");
 		DEBUG_LOG(" ------------- Net [%s :%d] Get current all node : [%s : %d] count %d ---------------", mNetConnect->GetNetHandle()->GetIp(), mNetConnect->GetNetHandle()->GetPort(), mNetConnect->GetIp(), mNetConnect->GetPort(), count);
@@ -171,7 +173,8 @@ public:
 		// 加入到网络
 		GetMeshedNodeNet()->OnOtherNodeRequestConnect(mNetConnect, serverKey);
 		AutoEvent respEvt = GetResponseEvent();
-		GetMeshedNodeNet()->OnResponseNode(serverKey, GetSelf(), respEvt);
+		AutoEvent evt = GetSelf();
+		GetMeshedNodeNet()->OnResponseNode(serverKey, evt, respEvt);
 
 		NetNodeList &list = GetMeshedNodeNet()->GetNetNodeList();
 		for (size_t i=0; i<list.size(); ++i)

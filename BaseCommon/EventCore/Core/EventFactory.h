@@ -109,7 +109,7 @@ namespace Logic
 	public:		
 		virtual AutoEvent StartEvent(void);
 
-		virtual void _OnEvent(AutoEvent &hEvent) = 0;
+		virtual void _OnEvent(AutoEvent hEvent) = 0;
 		virtual bool _NeedWaitTrigger(void) = 0;
 		virtual void _OnWaitEvent(AutoEvent hEvent) = 0; 
 		virtual void _RemoveWaitEvent(EVENT_ID) = 0;
@@ -182,7 +182,7 @@ namespace Logic
 
 		virtual void _NodifyEventFinish(AutoEvent hEvent);
 
-		virtual void _OnEvent(AutoEvent &hEvent);
+		virtual void _OnEvent(AutoEvent hEvent);
 
 		void RemoveTriggerEvent(AutoEvent &event);
 

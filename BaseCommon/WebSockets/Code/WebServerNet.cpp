@@ -652,7 +652,8 @@ namespace uWS
 	{
 		thread_local DataBuffer  sTempBuffer(16 * 1024);
 		sTempBuffer.clear(false);
-		bool b = pEvent->GetEventCenter()->SerializeMsg(pEvent->GetSelf(), &sTempBuffer);
+		AutoEvent evt = pEvent->GetSelf();
+		bool b = pEvent->GetEventCenter()->SerializeMsg(evt, &sTempBuffer);
 		if (b)
 			return SendMsgData(&sTempBuffer, WS_BINARY_FRAME);
 		return false;

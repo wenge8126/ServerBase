@@ -138,6 +138,8 @@ public:
 	// 低频循环(间隔1秒一次)
 	virtual void LowProcess(int spaceTime) { }
 
+	virtual AutoAny GetAttachData() { return AutoAny(); }
+
 public:
 	//virtual bool StartNet(void) = 0;
 	virtual void StopNet(void){}

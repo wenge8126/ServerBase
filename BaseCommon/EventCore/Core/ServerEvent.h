@@ -120,7 +120,7 @@ namespace Logic
 
 	public:		
 		virtual bool DoEvent(bool bImmediately = true);
-		virtual bool _OnEvent(AutoEvent &hEvent);
+		virtual bool _OnEvent(AutoEvent hEvent);
 		// 指令执行完后,接收到回复后的处理
 		virtual void _OnResp(AutoEvent &respEvent){}
 

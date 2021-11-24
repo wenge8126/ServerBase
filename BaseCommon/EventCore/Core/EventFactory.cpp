@@ -236,7 +236,7 @@ namespace Logic
 	}
 	//-------------------------------------------------------------------
 
-	void CEventFactory::_OnEvent(AutoEvent &hEvent)
+	void CEventFactory::_OnEvent(AutoEvent hEvent)
 	{
 #if SHOW_EVENT_TICK
 		UInt64 tickDiff = TimeManager::NowTick() - mStartTick;

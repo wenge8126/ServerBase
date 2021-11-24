@@ -26,7 +26,7 @@ namespace Logic
 			GetEventCenter()->GetResponseEventFactory()->FreeServerEvent(this);
 	}
 
-	bool tServerEvent::_OnEvent( AutoEvent &hEvent )
+	bool tServerEvent::_OnEvent( AutoEvent hEvent )
 	{
 #if DEVELOP_MODE
 		mResponseTime = TimeManager::Now();

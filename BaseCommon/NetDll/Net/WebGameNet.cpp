@@ -110,7 +110,8 @@ void WebPlayerConnect::OnReceiveFrame(DataStream *revFrameData, int frameType, b
 bool WebPlayerConnect::SendEvent(Logic::tEvent *pEvent)
 {
     mSendMsgBuffer.clear(false);
-    bool b = pEvent->GetEventCenter()->SerializeMsg(pEvent->GetSelf(), &mSendMsgBuffer);
+	AutoEvent evt = pEvent->GetSelf();
+    bool b = pEvent->GetEventCenter()->SerializeMsg(evt, &mSendMsgBuffer);
     if (b)
         return SendMsgData(&mSendMsgBuffer, WS_BINARY_FRAME);
     return false;

@@ -63,6 +63,18 @@ namespace NetCloud
 			return mComponentList.find(compName);
 		}
 
+		template<typename T>
+		Hand<T> GetComponent()
+		{
+			for (int i=0; i<mComponentList.size(); ++i)
+			{
+				Hand<T> comp = mComponentList[i];
+				if (comp)
+					return comp;
+			}
+			return Hand<T>();
+		}
+
 	public:
 		template<typename RespMsg>
 		Auto<RespMsg> Await(tBaseMsg &reqestMsg, UnitID targetID,  int waitMilSecond)

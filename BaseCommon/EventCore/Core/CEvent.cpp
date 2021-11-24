@@ -390,17 +390,17 @@ namespace Logic
 
 	//------------------------------------------------------------------------------
 
-	void* BaseEvent::_GetScriptObject( void )
-	{
-		return GetEventCenter()->getOrMakeLuaEventObject(GetSelf());
-		return NULL;
-	}
-	//------------------------------------------------------------------------------
+	//void* BaseEvent::_GetScriptObject( void )
+	//{
+	//	return GetEventCenter()->getOrMakeLuaEventObject(GetSelf());
+	//	return NULL;
+	//}
+	////------------------------------------------------------------------------------
 
-	void BaseEvent::_FreeScriptObject( void )
-	{
-		GetData().remove(SCRIPT_VALUE_NAME);
-	}
+	//void BaseEvent::_FreeScriptObject( void )
+	//{
+	//	GetData().remove(SCRIPT_VALUE_NAME);
+	//}
 
 	bool BaseEvent::WaitTime( float waitTime )
 	{

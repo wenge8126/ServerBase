@@ -22,6 +22,7 @@
 #include "EventCore.h"
 
 #include "Hand.h"
+#include "AnyData.h"
 #include "AutoString.h"
 #include "DataBuffer.h"
 #include "BaseTable.h"
@@ -88,7 +89,7 @@ namespace Logic
 		RUN_NOTHING,
 	};
 	//-------------------------------------------------------------------------*
-	class EventCoreDll_Export tEvent : public Base<tEvent>
+	class EventCoreDll_Export tEvent : public AnyData
 	{		
 	public:		
 		typedef Hand<tEvent>	AutoEvent;
@@ -174,7 +175,7 @@ namespace Logic
 		virtual bool _DoEvent() = 0;
 		virtual void _Process(void*) = 0;
 		virtual bool _OnTimeOver(void) = 0;
-		virtual bool _OnEvent(AutoEvent &hEvent) = 0;
+		virtual bool _OnEvent(AutoEvent hEvent) = 0;
 		virtual bool _OnEvent(void *pData, const type_info &dataType){ return true; }
 		virtual void _OnBegin() = 0;
 		virtual void _OnFinish() = 0;
@@ -225,8 +226,8 @@ namespace Logic
 		// for hand [] operate
 		virtual Data _getData(const char *szKey) const override { return ((tEvent*)(this))->GetData()._getData(szKey); }
 		virtual Data _getData(int nKey) const override { return ((tEvent*)(this))->GetData()._getData(nKey); }
-		virtual void* _GetScriptObject( void ) = 0;
-		virtual void _FreeScriptObject(void) = 0;
+		//virtual void* _GetScriptObject( void ) = 0;
+		//virtual void _FreeScriptObject(void) = 0;
 		virtual void _OnEventFinishNodify(AutoEvent event) = 0;
 
 		virtual void NotifyAction(void *pAction, const type_info &) = 0;

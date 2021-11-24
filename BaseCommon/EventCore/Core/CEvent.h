@@ -87,7 +87,7 @@ namespace Logic
 		virtual bool _DoEvent();
 		virtual void _Process(void*){}
 		virtual bool _OnTimeOver(void);
-		virtual bool _OnEvent(AutoEvent &hEvent) { return true; }
+		virtual bool _OnEvent(AutoEvent hEvent) { return true; }
 		virtual void _OnBegin() {}
 		virtual void _OnFinish() {}
 		virtual bool _AutoFinish() { return true; }
@@ -126,8 +126,8 @@ namespace Logic
 		virtual bool get(const char* szKey, void *obj, const type_info &typeInfo);
 
 	public:
-		virtual void* _GetScriptObject( void );
-		virtual void _FreeScriptObject(void);
+		//virtual void* _GetScriptObject( void );
+		//virtual void _FreeScriptObject(void);
 		virtual void _OnEventFinishNodify(AutoEvent event);
 		virtual AutoEvent NextAction(){ return AutoEvent(); };
 
