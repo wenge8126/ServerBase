@@ -2,7 +2,7 @@
 
 #include "Actor.h"
 
-class PlayerActor : public NetCloud::Actor
+class PlayerActor : public NetCloud::DBActor
 {
 public:
 	void On(RQ_PlayerBaseData &msg, RS_PlayerBaseData &resp, UnitID)
@@ -32,7 +32,7 @@ public:
 
 
 // 游戏服务区, 一个游戏区一个此对象
-class GameServerActor : public NetCloud::Actor
+class GameServerActor : public NetCloud::DBActor
 {
 public:
 	void On(RQ_CreatePlayerData &msg, RS_CreatePlayerData &resp, UnitID senderID)

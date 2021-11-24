@@ -52,13 +52,13 @@ NetCloud::AutoDBManager NetCloud::Actor::GetDBMgr()
 {
 	ActorManager *pMgr = GetMgr();
 	if (pMgr != NULL)
-		return pMgr->mShareDBManager;
+		return pMgr->GetDBMgr();
 	return AutoDBManager();
 }
-
-ARecord NetCloud::Actor::LoadRecord(const char *szTableName, const char *szKey)
+//-------------------------------------------------------------------------
+ARecord NetCloud::DBActor::LoadRecord(const char *szTableName, const char *szKey)
 {
-	AutoTable t = GetMgr()->mShareDBManager->GetTable(szTableName);
+	AutoTable t = GetDBMgr()->GetTable(szTableName);
 	if (t)
 	{
 		ARecord re = t->GetRecord(szKey);
@@ -74,9 +74,9 @@ ARecord NetCloud::Actor::LoadRecord(const char *szTableName, const char *szKey)
 	return ARecord();
 }
 
-ARecord NetCloud::Actor::LoadRecord(const char *szTableName, Int64 nKey)
+ARecord NetCloud::DBActor::LoadRecord(const char *szTableName, Int64 nKey)
 {
-	AutoTable t = GetMgr()->mShareDBManager->GetTable(szTableName);
+	AutoTable t = GetDBMgr()->GetTable(szTableName);
 	if (t)
 	{
 		ARecord re = t->GetRecord(nKey);

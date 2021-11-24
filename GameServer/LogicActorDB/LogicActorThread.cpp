@@ -21,7 +21,7 @@ using namespace NetCloud;
 DEFINE_RUN_CONFIG(LogicActorDBConfig)
 //-------------------------------------------------------------------------
 
-class WorkerActor : public Actor
+class WorkerActor : public DBActor
 {
 public:
 	// ´´½¨Íæ¼Ò
@@ -43,7 +43,7 @@ public:
 			it.get().get(&configTable, typeid(AutoTable));
 			if (configTable)
 			{
-				if (GetMgr()->mShareDBManager->CreateDBTable(it.key().c_str(), configTable, info))
+				if (GetDBMgr()->CreateDBTable(it.key().c_str(), configTable, info))
 				{
 					info.Format("Succeed create table %s", it.key().c_str());
 				}			
@@ -56,7 +56,7 @@ public:
 			resp.mResultInfo += "\r\n";
 		}
 
-		auto &list = GetMgr()->mShareDBManager->GetTableList();
+		auto &list = GetDBMgr()->GetTableList();
 
 		GenerateCodeTool::generateDBManager(list, msg.mExportCodePath, "DB"); 
 	}		

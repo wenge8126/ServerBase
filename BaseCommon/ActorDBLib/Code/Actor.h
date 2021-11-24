@@ -196,19 +196,10 @@ namespace NetCloud
 				if (comp)
 					comp->LowUpdate();
 			}
-			if (TimeManager::Now() - mLastUpdateDataTimeSec >= ACTOR_UPDATE_DATA_SECOND)
-			{
-				mLastUpdateDataTimeSec = TimeManager::Now();
-				for (int i=0; i<mDataRecordList.size(); ++i)
-				{
-					mDataRecordList[i]->SaveUpdate();
-				}
-			}
 		}
 
-		ARecord LoadRecord(const char *szTableName, const char *szKey);
-
-		ARecord LoadRecord(const char *szTableName, Int64 nKey);
+		virtual ARecord LoadRecord(const char *szTableName, const char *szKey) { AssertNote(0, "Must inherit DBActor"); return ARecord(); }
+		virtual ARecord LoadRecord(const char *szTableName, Int64 nKey) { AssertNote(0, "Must inherit DBActor"); return ARecord(); }
 
 	public:
 		Actor() {}
@@ -240,6 +231,39 @@ namespace NetCloud
 	};
 
 	typedef Hand<Actor>		HandActor;
+
+	//-------------------------------------------------------------------------
+	class ActorDBLib_Export DBActor : public Actor
+	{
+	public:
+		ARecord LoadRecord(const char *szTableName, const char *szKey);
+		ARecord LoadRecord(const char *szTableName, Int64 nKey);
+
+	public:
+		DBActor() {}
+		~DBActor()
+		{
+
+		}
+
+		virtual void LowProcess() override
+		{
+			Actor::LowProcess();
+			if (TimeManager::Now() - mLastUpdateDataTimeSec >= ACTOR_UPDATE_DATA_SECOND)
+			{
+				mLastUpdateDataTimeSec = TimeManager::Now();
+				for (int i = 0; i < mDataRecordList.size(); ++i)
+				{
+					mDataRecordList[i]->SaveUpdate();
+				}
+			}
+		}
+
+	protected:
+		ArrayList<ARecord> mDataRecordList;
+
+	};
+	//-------------------------------------------------------------------------
 }
 
 template<typename T>

@@ -11,10 +11,10 @@ namespace NetCloud
 	class ActorDBMgr : public DBTableManager
 	{
 	public:
-		ActorManager *mpThread;
+		ActorManager *mpActorMgr;
 
 		ActorDBMgr(ActorManager *pThread)
-			: mpThread(pThread) {}
+			: mpActorMgr(pThread) {}
 	};
 
 	class ActorDBLib_Export  ActorManager : public AutoBase
@@ -58,15 +58,8 @@ namespace NetCloud
 		}
 
 
-		void Close()
-		{
-			mShareDBManager->Close();
-		
-		}
-
 		virtual void Process()
 		{
-			mShareDBManager->Process();
 			mNetNode->Process();
 
 			for (int i=0; i<mProcessComponectList.size(); )
@@ -91,18 +84,61 @@ namespace NetCloud
 			mSelfPtr->mpMgr = nullptr;
 		}
 
+		virtual Auto<ActorDBMgr> GetDBMgr() { return Auto<ActorDBMgr>(); }
+
 	public:
 		FastHash<int, Auto<ActorFactory> >			mFactoryList;
 
 		AutoActorMsgPtr										mSelfPtr;
 		ANetNode													mNetNode;
-		Auto<ActorDBMgr>									mShareDBManager;
 
 		FastHash<AString, pActorMsgCall>			mOnMsgFunctionList;
 
 	protected:
 		ArrayList<AProcessComponect>				mProcessComponectList;	//Actor组件, 需要高速Process的列表
 	};
+
+	// 具有DB功能的ActorManager
+	class ActorDBLib_Export  DBActorManager : public ActorManager
+	{
+	public:
+		void Close()
+		{
+			if (mShareDBManager)
+				mShareDBManager->Close();
+		}
+
+		virtual void Process()
+		{
+			mShareDBManager->Process();
+			
+			ActorManager::Process();
+		}
+
+		virtual void LowProcess() override
+		{
+			mShareDBManager->LowProcess();
+			ActorManager::LowProcess();
+		}
+
+	public:
+		DBActorManager(const char *szCloudNodeIp, int nCloudNodePort, int nSafeCheck, int threadNum = 2)
+			: ActorManager(szCloudNodeIp, nCloudNodePort, nSafeCheck, threadNum)
+		{
+			mShareDBManager = MEM_NEW ActorDBMgr(this);
+		}
+		~DBActorManager()
+		{
+			Close();
+		}
+
+		virtual Auto<ActorDBMgr> GetDBMgr() { return mShareDBManager; }
+
+	public:
+		Auto<ActorDBMgr>									mShareDBManager;
+
+	};
+	//-------------------------------------------------------------------------
 
 }
 

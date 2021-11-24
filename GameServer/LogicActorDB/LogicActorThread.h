@@ -55,13 +55,13 @@ public:
 
 
 public:
-	class CDBMgr : public NetCloud::ActorManager
+	class CDBMgr : public NetCloud::DBActorManager
 	{
 	public:
 		LogicActorThread *mpThread;
 
 		CDBMgr(LogicActorThread *pThread, const char *szCloudNodeIp, int nCloudNodePort, int nSafeCheck, int threadNum = 2)
-			: NetCloud::ActorManager(szCloudNodeIp, nCloudNodePort, nSafeCheck, threadNum)
+			: NetCloud::DBActorManager(szCloudNodeIp, nCloudNodePort, nSafeCheck, threadNum)
 			, mpThread(pThread) {}
 	};
 	Auto<CDBMgr>			mActorManager;

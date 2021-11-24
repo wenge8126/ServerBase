@@ -40,7 +40,7 @@ public:
 	
 };
 
-class AccountActor : public NetCloud::Actor
+class AccountActor : public NetCloud::DBActor
 {
 public:
 	virtual void Init() override
