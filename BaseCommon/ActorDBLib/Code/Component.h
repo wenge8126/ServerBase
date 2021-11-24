@@ -68,7 +68,7 @@ namespace NetCloud
 	class ActorDBLib_Export ProcessComponent : public Component
 	{
 	public:
-		virtual void Process() { WARN_LOG("No override Process, then check need ProcessComponect type"); };
+		virtual void Process() { WARN_LOG("No override Process, then check need ProcessComponect type by %s", typeid(*this).name()); };
 
 	protected:
 		virtual bool _DoEvent() override;

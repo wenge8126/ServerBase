@@ -40,6 +40,7 @@ public:
 	int		mMaxThreadCount = 2;
 	AString mServerIp;
 	int		mServerPort = 0;
+	int		mSafeCode = 0;
 
 public:
 	virtual bool OnConnected(HandConnect connect)
@@ -56,6 +57,19 @@ public:
 	virtual HandConnect CreateConnect();
 
 	virtual void RegisterMsg(Logic::tEventCenter *pCenter) {}
+
+	virtual void RegisterMsg(const AString &msgName, AutoEventFactory msgFactory) override
+	{
+		if (mTcpNet)
+			mTcpNet->GetEventCenter()->RegisterEvent(msgName, msgFactory);
+		else
+			ERROR_LOG("Now no exist tcp net");
+	}
+
+	virtual AutoNet GetNet() override
+	{
+		return mTcpNet;
+	}
 
 public:
 	void Awake() override
@@ -89,7 +103,7 @@ class TcpComponentNet : public DefaultServerNet
 public:
 	TcpComponentNet(TcpComponent *pComp, int nMaxCount, int nMaxThreadCount)
 		: DefaultServerNet(nMaxCount, nMaxThreadCount)
-		, mpComponent(pComp)
+		, mpComponent(pComp)		
 	{}
 
 	HandConnect CreateConnect()
@@ -110,6 +124,11 @@ public:
 	{
 		AutoAny comp = mpComponent;
 		return comp;
+	}
+
+	virtual int GetSafeCode() override
+	{
+		return mpComponent->mSafeCode;
 	}
 
 public:

@@ -156,6 +156,8 @@ void AsyncReadyDB(LogicActorThread *pThread)
 		return;
 	}
 
+	return;
+
 	AutoNice param = MEM_NEW NiceData();
 	param[DBBASE] = config.sql_db.mDBBASE;
 	param[DBIP] = config.sql_db.mDBIP;

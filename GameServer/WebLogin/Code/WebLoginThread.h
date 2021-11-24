@@ -14,6 +14,7 @@
 #include "TaskSystem.h"
 #include "ActorManager.h"
 #include "HttpComponect.h"
+#include "TcpComponent.h"
 
 using namespace NetCloud;
 
@@ -151,6 +152,12 @@ public:
 	{
 		Hand<HttpComponect> comp = AddComponent("HttpComponect");
 		comp->mPort = 5000;		
+
+		Hand<TcpComponent> tcpNet = AddComponent("TcpComponent");
+		tcpNet->mServerIp = "127.0.0.1";
+		tcpNet->mServerPort = 4001;
+		tcpNet->mSafeCode = 11;
+		AddComponent("ActorNetMsgComponent");
 	}
 };
 

@@ -84,7 +84,7 @@ namespace NetCloud
 			mSelfPtr->mpMgr = nullptr;
 		}
 
-		virtual Auto<ActorDBMgr> GetDBMgr() { return Auto<ActorDBMgr>(); }
+		virtual Auto<ActorDBMgr> GetDBMgr() { AssertNote(0, "This is not DBActorManager"); return Auto<ActorDBMgr>(); }
 
 	public:
 		FastHash<int, Auto<ActorFactory> >			mFactoryList;
@@ -108,7 +108,7 @@ namespace NetCloud
 				mShareDBManager->Close();
 		}
 
-		virtual void Process()
+		virtual void Process() override
 		{
 			mShareDBManager->Process();
 			
@@ -132,7 +132,7 @@ namespace NetCloud
 			Close();
 		}
 
-		virtual Auto<ActorDBMgr> GetDBMgr() { return mShareDBManager; }
+		virtual Auto<ActorDBMgr> GetDBMgr() override { return mShareDBManager; }
 
 	public:
 		Auto<ActorDBMgr>									mShareDBManager;

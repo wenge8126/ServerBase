@@ -48,13 +48,25 @@ bool NetCloud::Actor::RemoveComponent(const AString &compName)
 	return false;
 }
 
-NetCloud::AutoDBManager NetCloud::Actor::GetDBMgr()
+
+AutoNice NetCloud::Actor::Await(const AString &requestMsgName, tNiceData &reqestMsg, UnitID targetID, int waitMilSecond)
 {
-	ActorManager *pMgr = GetMgr();
-	if (pMgr != NULL)
-		return pMgr->GetDBMgr();
-	return AutoDBManager();
+	Auto< ActorRequestPacket> requestPak = GetMgr()->mNetNode->CreatePacket(eMsgRequest);
+	requestPak->mNetUnit = this;
+	Auto<ActorResponResultPacket> resultPak = requestPak->Await(requestMsgName, reqestMsg, targetID, waitMilSecond);
+	if (resultPak)
+	{
+		AutoNice msg = MEM_NEW NiceData();
+		resultPak->mResultData->seek(0);
+		if (!msg->restore(resultPak->mResultData.getPtr()))
+		{
+			ERROR_LOG("Restore %s fail", requestMsgName.c_str());
+		}
+		return msg;
+	}
+	return AutoNice();
 }
+
 //-------------------------------------------------------------------------
 ARecord NetCloud::DBActor::LoadRecord(const char *szTableName, const char *szKey)
 {
@@ -72,6 +84,14 @@ ARecord NetCloud::DBActor::LoadRecord(const char *szTableName, const char *szKey
 	else
 		ERROR_LOG("No exist table %s", szTableName);
 	return ARecord();
+}
+
+NetCloud::AutoDBManager NetCloud::DBActor::GetDBMgr()
+{
+	ActorManager *pMgr = GetMgr();
+	if (pMgr != NULL)
+		return pMgr->GetDBMgr();
+	return AutoDBManager();
 }
 
 ARecord NetCloud::DBActor::LoadRecord(const char *szTableName, Int64 nKey)

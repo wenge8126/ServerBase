@@ -165,6 +165,41 @@ void _ConnectGate(WebLoginThread *pThread)
 	}
 	pThread->mbStartOk = true;
 }
+//-------------------------------------------------------------------------
+class CS_ActorMsg : public ComponectResponseMsg
+{
+public:
+	virtual bool _DoEvent() override
+	{
+		ASYNC(&CS_ActorMsg::Async, this);
+		return true;
+	}
+
+	void Async()
+	{
+		AString msgName = get("MSG_NAME");
+		int type = get("UNIT_TYPE");
+		Int64 id = get("UNIT_ID");
+
+		GetResponseEvent()["RESP"] = GetActor()->Await(msgName, GetData(), { type, id }, 6000).getPtr();
+		Finish();
+	}
+
+protected:
+private:
+};
+
+//-------------------------------------------------------------------------
+// 实现客户端直接消息交互系统内所有Actor (中转Actor消息请求)
+class ActorNetMsgComponent : public NetWorkerComponent
+{
+public:
+	// 注册中转需要的事件
+	virtual void _RegisterMsg(Logic::tEventCenter *pCenter) override
+	{
+		REGISTER_EVENT(pCenter, CS_ActorMsg);
+	}
+};
 
 //-------------------------------------------------------------------------
 void WebLoginThread::OnStart(void*)
@@ -204,6 +239,8 @@ void WebLoginThread::OnStart(void*)
 
 		mActorManager->RegisterActor(Unit_Login, MEM_NEW DefineActorFactory<LoginActor>());
 		mActorManager->RegisterComponect("HttpComponect", MEM_NEW EventFactory<HttpComponect>());
+		mActorManager->RegisterComponect("TcpComponent", MEM_NEW EventFactory< TcpComponent>());
+		mActorManager->RegisterComponect("ActorNetMsgComponent", MEM_NEW EventFactory< ActorNetMsgComponent>());
 
 		mLoginActor = mActorManager->CreateActor(Unit_Login, config.login_id);
 		

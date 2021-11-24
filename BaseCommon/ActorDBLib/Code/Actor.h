@@ -68,7 +68,7 @@ namespace NetCloud
 		{
 			for (int i=0; i<mComponentList.size(); ++i)
 			{
-				Hand<T> comp = mComponentList[i];
+				Hand<T> comp = mComponentList.get(i);
 				if (comp)
 					return comp;
 			}
@@ -94,6 +94,8 @@ namespace NetCloud
 			}
 			return Auto<RespMsg>();
 		}
+	
+		AutoNice Await(const AString &requestMsgName, tNiceData &reqestMsg, UnitID targetID, int waitMilSecond);
 
 		// 处理消息函数
 		//template<typename ReqMsg, typename RespMsg>
@@ -186,7 +188,11 @@ namespace NetCloud
 			return NULL;
 		}
 
-		AutoDBManager GetDBMgr();
+		virtual AutoDBManager GetDBMgr()
+		{
+			AssertNote(0, "Must inherit DBActor");
+			return NULL;
+		}
 
 		virtual void LowProcess()
 		{
@@ -238,6 +244,8 @@ namespace NetCloud
 	public:
 		ARecord LoadRecord(const char *szTableName, const char *szKey);
 		ARecord LoadRecord(const char *szTableName, Int64 nKey);
+
+		virtual AutoDBManager GetDBMgr() override;
 
 	public:
 		DBActor() {}

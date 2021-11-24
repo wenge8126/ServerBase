@@ -10,11 +10,28 @@ using namespace Logic;
 using namespace NetCloud;
 //-------------------------------------------------------------------------
 // 使用网络功能的组件, 关于网络逻辑组件可以继承此组件直接使用网络服务功能
-class NetWorkerComponent : public ProcessComponent
+class NetWorkerComponent : public Component
 {
 public:
+	virtual void _RegisterMsg(Logic::tEventCenter *pCenter) {}
+
+
+public:
 	AutoNet GetNet();
-	void RegisterMsg(const AString &msgName, AutoEventFactory msgFactory);
+	//void RegisterMsg(const AString &msgName, AutoEventFactory msgFactory);
+
+public:
+	void Start() override
+	{
+		if (!GetNet())
+			StartUpdate(0.01);
+	}
+
+	void Update(float t) override
+	{
+		if (GetNet())
+			StopUpdate();
+	}
 
 public:
 	AutoNet	mNet;		// 互相引用后, 必定使用Destory, 才可以解除

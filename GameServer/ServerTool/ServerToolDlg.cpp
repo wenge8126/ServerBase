@@ -321,6 +321,8 @@ void CServerToolDlg::OnTimer(UINT_PTR nIDEvent)
 			mNetInfoList.insert(key, d);
 			mAllNetList.push_back(d);
 		}
+
+		TimerCenter::GetMe()->Process();
 	}
 
 	CDialogEx::OnTimer(nIDEvent);
@@ -360,19 +362,95 @@ void _RunTestAccount(CServerToolDlg *p)
 		ERROR_LOG("Reqest account fail");
 }
 
+//-------------------------------------------------------------------------
+class Net_Export_H DefaultClientNet : public IOCPClientNet
+{
+public:
+	DefaultClientNet(int threadNum = _IOCP_THREAD_NUM)
+		: IOCPClientNet()
+	{
+		mEventCenter = MEM_NEW Logic::EventCenter();
+	}
+	~DefaultClientNet()
+	{
+		mEventCenter._free();
+	}
+
+	virtual Logic::tEventCenter* GetEventCenter(void) const { return ((DefaultClientNet*)this)->mEventCenter.getPtr(); }
+
+	virtual void Process() override
+	{
+		mEventCenter->ProcessEvent();
+		IOCPClientNet::Process();
+	}
+
+	int GetSafeCode() override { return 11; }
+
+public:
+	AutoEventCenter			mEventCenter;
+};
+
+bool gbTag = false;
+
+class TestServerEvent : public Logic::tServerEvent
+{
+public:
+	virtual void _OnResp(AutoEvent &respEvent) override
+	{
+		LOG("********** Test\r\n%s", respEvent->GetData().dump().c_str());
+		gbTag = true;
+	}
+
+protected:
+private:
+};
+
 void _RunTestHttp(CServerToolDlg *p)
 {
-	Hand< HttpReqeustComponent> http = p->mToolActor->GetComponent("HttpReqeustComponent");
-	AString resp;
-	http->AwaitRequest("http://127.0.0.1:5000?x=99&y=66", resp);
-	LOG("Http result : %s", resp.c_str());
+	//Hand< HttpReqeustComponent> http = p->mToolActor->GetComponent("HttpReqeustComponent");
+	//AString resp;
+	//http->AwaitRequest("http://127.0.0.1:5000?x=99&y=66", resp);
+	//LOG("Http result : %s", resp.c_str());
+
+	AutoNet testNet = MEM_NEW DefaultClientNet();
+	Hand<IOCPClientNet> net = testNet;
+	net->Connect("127.0.0.1", 4001, 10000);
+
+	net->GetEventCenter()->RegisterEvent("CS_ActorMsg", MEM_NEW Logic::EventFactory< TestServerEvent>());
+
+	while (true)
+	{
+		net->Process();
+		net->LowProcess(100);
+		if (net->IsConnected())
+			break;
+		
+		TimerCenter::GetMe()->Process();
+	}
+
+	AutoEvent evt = net->GetClientConnect()->StartEvent("CS_ActorMsg");
+	evt["MSG_NAME"] = "RQ_CheckAndCreateAccount";
+	evt["UNIT_TYPE"] = (int)Actor_Account;
+	evt["UNIT_ID"] = 1;
+	evt->DoEvent();
+
+	while (true)
+	{
+		net->Process();
+		//tTimer::AWaitTime(100);
+		net->LowProcess(1);
+		TimeManager::Sleep(10);
+		if (gbTag)
+			break;
+	}
+	gbTag = false;
 }
 
 void CServerToolDlg::OnBnClickedTestCreateAccount()
 {
 	CoroutineTool::AsyncCall(_RunTestHttp, this);
 
-	CoroutineTool::AsyncCall(_RunTestAccount, this);
+	//CoroutineTool::AsyncCall(_RunTestAccount, this);
 
 }
 

@@ -56,6 +56,15 @@ namespace NetCloud
 			return AwaitRequest(targetID, overTimeSecond);
 		}
 
+		Auto<tResponseResultPacket> Await(const AString &requestMsgMame, const  tNiceData &requestMsg, UnitID targetID, int overTimeSecond)
+		{
+			mMsgName = requestMsgMame;
+			mRequestData->clear(false);
+			if (!requestMsg.serialize(mRequestData.getPtr()))
+				ERROR_LOG("Msg seralize fail : \r\n%s", requestMsg.dump().c_str())
+			return AwaitRequest(targetID, overTimeSecond);
+		}
+
 		virtual	PacketID_t	GetPacketID() const override { return eMsgResponse; }
 
 	public:

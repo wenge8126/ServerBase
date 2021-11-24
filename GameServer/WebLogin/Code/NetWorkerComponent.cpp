@@ -10,17 +10,23 @@ AutoNet NetWorkerComponent::GetNet()
 	{
 		Hand<SocketComponent> comp = mpActor->GetComponent<SocketComponent>();
 		if (comp)
+		{
 			mNet = comp->GetNet();
+			if (mNet)
+			{
+				_RegisterMsg(mNet->GetEventCenter());
+			}
+		}
 	}
 	return mNet;
 }
 
-void NetWorkerComponent::RegisterMsg(const AString &msgName, AutoEventFactory msgFactory)
-{
-	AutoNet net = GetNet();
-	if (net)
-		net->GetEventCenter()->RegisterEvent(msgName, msgFactory);
-}
+//void NetWorkerComponent::RegisterMsg(const AString &msgName, AutoEventFactory msgFactory)
+//{
+//	AutoNet net = GetNet();
+//	if (net)
+//		net->GetEventCenter()->RegisterEvent(msgName, msgFactory);
+//}
 
 //-------------------------------------------------------------------------
 NetCloud::HandActor ComponectNetMsg::GetActor()
@@ -28,7 +34,9 @@ NetCloud::HandActor ComponectNetMsg::GetActor()
 	if (!mNetConnect || mNetConnect->GetNetHandle() == NULL)
 		return HandActor();
 	Hand<SocketComponent> comp = mNetConnect->GetNetHandle()->GetAttachData();
-	return comp;
+	if (comp)
+		return comp->GetActor();
+	return NetCloud::HandActor();
 }
 
 Hand< NetWorkerComponent> ComponectNetMsg::GetNetWorker()
@@ -47,7 +55,9 @@ NetCloud::HandActor ComponectResponseMsg::GetActor()
 	if (!mNetConnect || mNetConnect->GetNetHandle() == NULL)
 		return HandActor();
 	Hand<SocketComponent> comp = mNetConnect->GetNetHandle()->GetAttachData();
-	return comp;
+	if (comp)
+		return comp->GetActor();
+	return NetCloud::HandActor();
 }
 
 Hand< NetWorkerComponent> ComponectResponseMsg::GetNetWorker()
@@ -68,7 +78,9 @@ NetCloud::HandActor ComponectRequestMsg::GetActor()
 	if (!mNetConnect || mNetConnect->GetNetHandle() == NULL)
 		return HandActor();
 	Hand<SocketComponent> comp = mNetConnect->GetNetHandle()->GetAttachData();
-	return comp;
+	if (comp)
+		return comp->GetActor();
+	return NetCloud::HandActor();
 }
 
 
