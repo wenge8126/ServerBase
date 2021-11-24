@@ -50,9 +50,19 @@ public:
 class ComponectResponseMsg : public Logic::tClientEvent
 {
 public:
+	virtual void Async() {}
+		
+public:
 	HandActor GetActor();
 
 	Hand< NetWorkerComponent> GetNetWorker();
+
+
+	virtual bool _DoEvent() override
+	{
+		ASYNC(&ComponectResponseMsg::Async, this);
+		return true;
+	}
 };
 
 
