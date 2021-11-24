@@ -84,10 +84,10 @@ protected:
 
 };
 
-class ComponentNet : public DefaultServerNet
+class TcpComponentNet : public DefaultServerNet
 {
 public:
-	ComponentNet(TcpComponent *pComp, int nMaxCount, int nMaxThreadCount)
+	TcpComponentNet(TcpComponent *pComp, int nMaxCount, int nMaxThreadCount)
 		: DefaultServerNet(nMaxCount, nMaxThreadCount)
 		, mpComponent(pComp)
 	{}
@@ -116,14 +116,14 @@ public:
 	TcpComponent		*mpComponent;
 };
 
-class ComponentConnect : public IOCPServerConnect
+class TcpComponentConnect : public IOCPServerConnect
 {
 public:
 	TcpComponent* GetComponent()
 	{
-		Hand<ComponentNet> net = GetNetHandle();
+		Hand<TcpComponentNet> net = GetNetHandle();
 		return net->mpComponent;
 	}
 };
-
+//-------------------------------------------------------------------------
 #endif //_INCLUDE_TCPCOMPONECT_H_

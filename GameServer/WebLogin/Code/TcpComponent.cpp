@@ -4,12 +4,12 @@
 
 HandConnect TcpComponent::CreateConnect()
 {
-	return MEM_NEW ComponentConnect();
+	return MEM_NEW TcpComponentConnect();
 }
 
 void TcpComponent::Start()
 {
-	mTcpNet = MEM_NEW ComponentNet(this, mMaxConnectCount, mMaxThreadCount);
+	mTcpNet = MEM_NEW TcpComponentNet(this, mMaxConnectCount, mMaxThreadCount);
 	if (mServerIp.empty() || mServerPort <= 0)
 	{
 		ERROR_LOG("Error ip or port [%s : %d]", mServerIp.c_str(), mServerPort);
