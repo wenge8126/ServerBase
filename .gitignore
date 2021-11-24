@@ -18,3 +18,5 @@
 /BaseCommon/CommonLinux/JsonLib/libuv/include/build/gyp/.travis.yml
 /BaseCommon/Proj2017/.vs/BaseCommon/v17
 .vs
+ServerRun
+ServerRun2
