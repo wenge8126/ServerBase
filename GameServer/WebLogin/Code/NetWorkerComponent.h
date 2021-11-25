@@ -29,6 +29,10 @@ public:
 public:
 	AutoNet GetNet();
 	//void RegisterMsg(const AString &msgName, AutoEventFactory msgFactory);
+	HandConnect FindConnect(Int64 id)
+	{
+		return mConnectList.find(id);
+	}
 
 public:
 	void Start() override
@@ -45,6 +49,7 @@ public:
 
 public:
 	AutoNet	mNet;		// 互相引用后, 必定使用Destory, 才可以解除
+	FastHash<Int64, HandConnect> mConnectList;
 };
 
 //-------------------------------------------------------------------------

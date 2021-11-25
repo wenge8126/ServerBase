@@ -13,6 +13,10 @@
 class SocketComponent : public NetCloud::ProcessComponent
 {
 public:
+	AString mServerIp;
+	int		mServerPort = 0;
+
+public:
 	// 这是组件主动注册
 	virtual void RegisterMsg(const AString &msgName, AutoEventFactory msgFactory) = 0;
 	virtual AutoNet GetNet() = 0;	
@@ -46,8 +50,7 @@ class TcpComponent : public SocketComponent
 public:
 	int		mMaxConnectCount = 16;
 	int		mMaxThreadCount = 2;
-	AString mServerIp;
-	int		mServerPort = 0;
+
 	int		mSafeCode = 0;
 
 public:
@@ -85,10 +88,7 @@ public:
 		mTcpNet->LowProcess(1);
 	}
 
-	void OnDestory() override
-	{
-		mTcpNet._free();
-	}
+	void OnDestory() override;
 
 protected:
 	AutoNet		mTcpNet;

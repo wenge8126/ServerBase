@@ -59,11 +59,6 @@ namespace uWS
 	public:
 		virtual HandConnect CreateConnect();
 
-		virtual HandConnect GetConnect(Int64 playerID) override
-		{
-			return mConnectHash.find(playerID);
-		}
-
 	public:
 		tWssServerNet();
 		virtual ~tWssServerNet();
@@ -77,7 +72,6 @@ namespace uWS
 	public:
 		virtual bool StartNet(const AString &wssServerIP, int serverPort, const AString &keyPemFile = "", const AString &pfxFileName = "", const AString &pfxPassword = "") override;
 
-		virtual void  ReadyConnect(Int64 oldid, Int64 id, tNetConnect *pConnect) override;
 
 		virtual void StopNet(void) override {
 			_stopNet();
@@ -103,7 +97,6 @@ namespace uWS
 		virtual const char* GetIp(void) const override { return mIP.c_str(); }
 		virtual int		GetPort(void) const override { return mPort; }
 
-		virtual int GetConnectCount() override { return mConnectHash.size(); }
 
 		virtual AString GetRunInfo() override;
 
@@ -131,9 +124,6 @@ namespace uWS
 
 		uv_loop_s								*mpLoop;
 		void										*mpListen;
-
-	public:
-		EasyHash<Int64, HandConnect>		mConnectHash;
 
 	public:
 		UInt64									mBeginTotalMilTime;
@@ -183,7 +173,7 @@ namespace uWS
 		{
 			return true;
 		}
-		virtual void ProcessPing() {}
+		
 
 		// NOTE: bNeedRemove = true 表示需要关闭C#层连接
 		virtual void SetRemove(bool bNeedRemove)  override;
@@ -196,7 +186,10 @@ namespace uWS
 
 		virtual bool SendMsgData(DataStream *pSendMsgData, int frameType);
 		virtual bool SendEvent(Logic::tEvent *pEvent) override;
+		virtual bool Send(const Packet  *msgPacket, bool bEncrypt) override;
 	};
+
+
 
 	//typedef Hand<tWssConnect> HandWssConnect;
 

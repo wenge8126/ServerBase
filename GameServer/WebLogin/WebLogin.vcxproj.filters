@@ -42,12 +42,12 @@
     <ClCompile Include="Code\NetWorkerComponent.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Code\WssWebComponent.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\WebLoginThread.h">
-      <Filter>Code</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\CWssServerNet.h">
       <Filter>Code</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
@@ -61,9 +61,6 @@
     </ClInclude>
     <ClInclude Include="..\Common\SDK\SDK.h">
       <Filter>SDK</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\CWssServerNet.inl">
-      <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Code\HttpComponect.h">
       <Filter>头文件</Filter>

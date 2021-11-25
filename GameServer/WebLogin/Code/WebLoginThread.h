@@ -15,6 +15,7 @@
 #include "ActorManager.h"
 #include "HttpComponect.h"
 #include "TcpComponent.h"
+#include "WssWebComponent.h"
 
 using namespace NetCloud;
 
@@ -58,9 +59,6 @@ public:
 	{
 		ServerThread::LowProcess(spaceTime);
 
-		if (mWebWsNet)
-			mWebWsNet->LowProcess(spaceTime);
-
 		mActorManager->LowProcess();
 	}
 
@@ -78,8 +76,6 @@ public:
 
 	void ReadyUpdate()
 	{
-		if (mWebWsNet)
-			mWebWsNet->StopNet();
 		mbStartOk = false;
 	}
 
@@ -106,8 +102,6 @@ public:
 
 
 public:
-	AutoNet						mWebWsNet;
-
 	HandActor					mLoginActor;
 
 	SDK								mSdkMgr;
@@ -153,11 +147,16 @@ public:
 		Hand<HttpComponect> comp = AddComponent("HttpComponect");
 		comp->mPort = 5000;		
 
-		Hand<TcpComponent> tcpNet = AddComponent("TcpComponent");
+		Hand<SocketComponent> tcpNet = AddComponent("WssWebComponent");
 		tcpNet->mServerIp = "127.0.0.1";
 		tcpNet->mServerPort = 4001;
-		tcpNet->mSafeCode = 11;
+		//tcpNet->mSafeCode = 11;
 		AddComponent("ActorNetMsgComponent");
+	}
+
+	void RegisterMsg(ActorManager *pActorMgr)
+	{
+		REG_COMPONENT(pActorMgr, WssWebComponent);
 	}
 };
 

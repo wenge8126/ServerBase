@@ -72,14 +72,9 @@ public:
 	virtual void StartWeb(int port, const AString &keyPem, const AString &certPem, const AString &pass) = 0;
 	virtual bool StartNet(const AString &wssServerIP, int serverPort, const AString &keyPemFile = "", const AString &pfxFileName = "", const AString &pfxPassword = "") = 0;
 	virtual bool AsyncStart(const AString &wssServerIP, int serverPort, const AString &keyPemFile = "", const AString &pfxFileName = "", const AString &pfxPassword = "") = 0;
-	//virtual void OnResponse(const AString &requestData, AString &response, bool bPost, const AString &requestAddress) = 0;
+	
 	virtual void RegisterMsg(int eventIndex, Logic::AutoEventFactory factory) = 0;
-	virtual void  ReadyConnect(Int64 oldid, Int64 id, tNetConnect *pConnect) = 0;
-	virtual HandConnect GetConnect(Int64 playerID) = 0;
 
-	virtual bool SendToClient(Int64 playerID, Logic::tEvent *pEvent) { ERROR_LOG("No override code"); return false; }
-	virtual void BroatcastMsg(Logic::tEvent *pMsg, Int64 excludeID) { ERROR_LOG("No override code"); }
-	virtual void InitClearAllPlayer() { ERROR_LOG("No override code"); }
 	virtual AString GetRunInfo() { return "None"; }
 };
 
@@ -88,6 +83,8 @@ class Net_Export BaseWebConnect : public tNetConnect
 public:
 	virtual void InitNetUnit(Int64 dbID) { mDBID = dbID; }
 	virtual void ForeClose() { ERROR_LOG("No write code"); }
+	virtual void ProcessPing() {}
+	virtual void OnSucceedSendEvent(Logic::tEvent *pEvent, Packet *p) {}
 
 public:
 	Int64 mDBID = 0;

@@ -364,13 +364,6 @@ namespace uWS
 	}
 
 	template<bool bUSE_SSL>
-	void tWssServerNet<bUSE_SSL>::ReadyConnect(Int64 oldid, Int64 id, tNetConnect *pConnect)
-	{
-		mConnectHash.erase(oldid);
-		mConnectHash.insert(id, pConnect);
-	}
-
-	template<bool bUSE_SSL>
 	void tWssServerNet<bUSE_SSL>::_stopNet(void)
 	{
 		if (mpWsApp != NULL)
@@ -379,19 +372,6 @@ namespace uWS
 			if (mpListen != NULL)
 				us_listen_socket_close(bUSE_SSL ? 1 : 0, (us_listen_socket_t*)mpListen);
 			mpListen = NULL;
-
-			for (auto it = mConnectHash.begin(); it; )
-			{
-				HandConnect conn = it.get();				
-				it.erase();
-				if (conn)
-				{
-					conn->SetRemove(true);
-					conn._free();
-				}
-			}
-
-			mConnectHash.clear(true);
 
 			for (int i = 0; i < 10; ++i)
 			{
@@ -449,13 +429,6 @@ namespace uWS
 			mSendSizeBySecond = 0;
 			mReceiveSizeBySecond = 0;
 			mBeginTotalMilTime = TimeManager::NowTick();
-		}
-
-		for (auto it = mConnectHash.begin(); it; ++it)
-		{
-			Hand<tWssConnect<bUSE_SSL>> conn = it.get();
-			if (conn)
-				conn->ProcessPing();
 		}
 	}
 
@@ -530,6 +503,7 @@ namespace uWS
 		conn->Init(this, pWs->getRemoteAddressAsText().data(), 0);
 		conn->mpWebSocket = pWs;
 		((PerSocketData*)pWs->getUserData())->mConnect = conn;
+		OnAddConnect(conn.getPtr());
 	}
 
 	template<bool bUSE_SSL>
@@ -576,13 +550,6 @@ namespace uWS
 		HandConnect conn = ((PerSocketData*)pWs->getUserData())->mConnect;
 		conn->OnDisconnect();
 		OnCloseConnect(conn.getPtr());
-		for (auto it = mConnectHash.begin(); it; )
-		{
-			if (it.get() == conn)
-				it.erase();
-			else
-				++it;
-		}
 
 		conn._free();
 	}
@@ -592,7 +559,7 @@ namespace uWS
 	{
 		AString info;
 		info.Format("Count: %d, Send: %.2fK/S T %.2fM %llu, Rev: %.2fK/S T %.2fM %llu"
-			, mConnectHash.size()
+			, 1
 			, mSendSizeBySecond/1024.0f
 			, mSendSize/1024/1024.0f
 			, mSendMsgCount
@@ -657,6 +624,16 @@ namespace uWS
 		if (b)
 			return SendMsgData(&sTempBuffer, WS_BINARY_FRAME);
 		return false;
+	}
+
+	template<bool bUSE_SSL>
+	bool uWS::tWssConnect<bUSE_SSL>::Send(const Packet *msgPacket, bool bEncrypt)
+	{
+		static thread_local DataBuffer  sTempBuffer(16 * 1024);
+		sTempBuffer.clear(false);
+		msgPacket->Write(sTempBuffer);
+
+		return SendMsgData(&sTempBuffer, WS_BINARY_FRAME);
 	}
 	//-------------------------------------------------------------------------
 

@@ -1,6 +1,6 @@
 #include "WebLoginThread.h"
 
-#include "CWssServerNet.h"
+
 #include "CommonDefine.h"
 
 #include "TaskManager.h"
@@ -10,8 +10,7 @@
 
 #include "ConfigEnum.h"
 #include "Vesion.h"
-//#include "WebPlayer.inl"
-#include "CWssServerNet.inl"
+
 #include <io.h>
 #include "Dump.h"
 #include "BaseServer.h"
@@ -250,15 +249,8 @@ void WebLoginThread::OnStart(void*)
 		}
 		// Á¬½ÓLogicDB
 
-		BaseWebServer *pNet = NULL;
-		if (IsWss())
-			pNet = MEM_NEW CWssServerNet<true>(this);
-		else
-			pNet = MEM_NEW CWssServerNet<false>(this);
-		mWebWsNet = pNet;
-		
-		pNet->StartNet(config.ws_ip.c_str(), config.ws_port, config.key_file, config.cert_file, config.password);
 
+		
 		mActorManager->RegisterActor(Unit_Login, MEM_NEW DefineActorFactory<LoginActor>());
 		mActorManager->RegisterComponect("HttpComponect", MEM_NEW EventFactory<HttpComponect>());
 		mActorManager->RegisterComponect("TcpComponent", MEM_NEW EventFactory< TcpComponent>());
@@ -284,12 +276,6 @@ bool WebLoginThread::NotifyThreadClose()
 
 	mSdkMgr.Close();
 
-	if (mWebWsNet)
-	{
-		mWebWsNet->StopNet();
-		mWebWsNet->Process();
-		mWebWsNet._free();
-	}
 
 	for (int i = 0; i < 100; ++i)
 	{
@@ -312,9 +298,6 @@ bool WebLoginThread::NotifyThreadClose()
 void WebLoginThread::Process(void*)
 {
 	mSdkMgr.Process();
-
-	if (mWebWsNet)
-		mWebWsNet->Process();
 
 	mTaskSystem->Process();
 	mActorManager->Process();
@@ -439,8 +422,6 @@ void WebLoginThread::OnLoginDBStart(int dbCode)
 {
 	NOTE_LOG("DB %d start, now clear all player");
 
-	Hand<BaseWebServer> net = mWebWsNet;
-	net->InitClearAllPlayer();
 }
 
 
@@ -451,12 +432,8 @@ StateDataType WebLoginThread::GetRunStateInfo(tNiceData &info)
 	{
 		info["SERVER_ID"] = mServerInfo.SERVER_ID;
 
-		//info["WSS_IP"] = mServerInfo.WSS_IP;
-		//info["WSS_PORT"] = mServerInfo.WSS_PORT;
-		//info["GATE_PORT"] = CRunConfig<LoginConfig>::mConfig.data_db_node.gate.port;
-		Hand< BaseWebServer> net = mWebWsNet;
-		AString netInfo = net ? net->GetRunInfo() : "Null net";
-		strInfo.Format("Wss: %s, %s://%s:%d Login: %d", netInfo.c_str(), IsWss() ? "wss" : "ws", mServerInfo.WSS_IP.c_str(), mServerInfo.WSS_PORT, 1);
+
+		//strInfo.Format("Wss: %s, %s://%s:%d Login: %d", netInfo.c_str(), IsWss() ? "wss" : "ws", mServerInfo.WSS_IP.c_str(), mServerInfo.WSS_PORT, 1);
 	}
 	info["INFO"] = strInfo;
 	info["VER"] = SERVER_VERSION_FLAG;
