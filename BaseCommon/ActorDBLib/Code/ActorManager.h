@@ -57,7 +57,7 @@ namespace NetCloud
 			mOnMsgFunctionList.insert(msgName, pFun);
 		}
 
-		void RegisterActorMsg(const AString &notifyMsgName, pActorNotifyMsgCall  pFun)
+		void RegisterNotifyMsg(const AString &notifyMsgName, pActorNotifyMsgCall  pFun)
 		{
 			mOnNotifyMsgFunctionList.insert(notifyMsgName, pFun);
 		}

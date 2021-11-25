@@ -21,8 +21,18 @@ Actor
 //-------------------------------------------------------------------------*/
 #define ACTOR_UPDATE_DATA_SECOND		(10)
 
+// 注册Actor
+#define REG_ACTOR(pActorMgr, actorType, ActorClass) pActorMgr->RegisterActor(actorType, MEM_NEW DefineActorFactory<ActorClass>());
+
+// 注册组件
+#define REG_COMPONENT(pActorMgr, ComponentClass) pActorMgr->RegisterComponect(#ComponentClass, MEM_NEW Logic::EventFactory<ComponentClass>());
+
+// 注册Actor消息处理
 #define REG_ACTOR_MSG(ActorClass, RQ, RS)		pActorMgr->RegisterActorMsg(#RQ, &Actor::OnMsg<ActorClass, RQ, RS>);
+#define REG_NOTIFY_MSG(ActorClass, MSG)		pActorMgr->RegisterNotifyMsg(#MSG, &Actor::OnNotify<ActorClass, MSG>);
+// 注册组件消息处理
 #define REG_COMP_MSG(ComponentClass, RQ, RS)		pActorMgr->RegisterActorMsg(#RQ, &Actor::OnComponentMsg<ComponentClass, RQ, RS>);
+#define REG_COMP_NOTIFY(ComponentClass, MSG)		pActorMgr->RegisterNotifyMsg(#MSG, &Actor::OnComponentNotify<ComponentClass, MSG>);
 //-------------------------------------------------------------------------
 namespace NetCloud
 {
@@ -116,6 +126,7 @@ namespace NetCloud
 		// 处理RPC消息函数
 		//template<typename ReqMsg, typename RespMsg>
 		//virtual void On(ReqMsg &reqest, RespMsg &resp) = 0;		
+		// 注册 pActorMgr->RegisterActorMsg(#RQ, &Actor::OnMsg<ActorClass, RQ, RS>);
 		template<typename T, typename ReqMsg, typename RespMsg>
 		static int OnMsg(Actor *pActor, DataStream *pReqestMsgData, ActorResponResultPacket *pResponse)
 		{			
@@ -143,12 +154,13 @@ namespace NetCloud
 		}
 
 		// 处理一般通知消息
-		template<typename T, typename ReqMsg>
-		static void OnNotify(Actor *pActor, DataStream *pReqestMsgData, UnitID senderID)
+		// 注册 pActorMgr->RegisterActorMsg(#RQ, &Actor::OnNotify<ActorClass, RQ>);
+		template<typename T, typename Msg>
+		static void OnNotify(Actor *pActor, DataStream *pMsgData, UnitID senderID)
 		{
-			ReqMsg pMsg;
-			pReqestMsgData->seek(0);
-			if (!pMsg.restore(pReqestMsgData))
+			Msg pMsg;
+			pMsgData->seek(0);
+			if (!pMsg.restore(pMsgData))
 			{
 				ERROR_LOG("%s restore fail", pMsg.GetMsgName());
 				return;
@@ -162,12 +174,13 @@ namespace NetCloud
 			p->Notify(pMsg, senderID);			
 		}
 
-		template<typename T, typename ReqMsg>
-		static void OnComponentNotify(Actor *pActor, DataStream *pReqestMsgData, UnitID senderID)
+		// 注册 pActorMgr->RegisterActorMsg(#RQ, &Actor::OnComponentNotify<ComponentClass, RQ>);
+		template<typename T, typename Msg>
+		static void OnComponentNotify(Actor *pActor, DataStream *pMsgData, UnitID senderID)
 		{
-			ReqMsg pMsg;
-			pReqestMsgData->seek(0);
-			if (!pMsg.restore(pReqestMsgData))
+			Msg pMsg;
+			pMsgData->seek(0);
+			if (!pMsg.restore(pMsgData))
 			{
 				ERROR_LOG("%s restore fail", pMsg.GetMsgName());
 				return;
@@ -181,6 +194,7 @@ namespace NetCloud
 			comp->Notify(pMsg, senderID);
 		}
 
+		// 注册 pActorMgr->RegisterActorMsg(#RQ, &Actor::OnComponentMsg<ComponentClass, RQ, RS>);
 		template<typename T, typename ReqMsg, typename RespMsg>
 		static int OnComponentMsg(Actor *pActor, DataStream *pReqestMsgData, ActorResponResultPacket *pResponse)
 		{
