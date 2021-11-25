@@ -23,3 +23,13 @@ void TcpComponent::Start()
 		ERROR_LOG("Server start fail : [%s:%d]", mServerIp.c_str(), mServerPort);
 	}
 }
+
+bool SocketComponent::OnConnected(HandConnect connect)
+{
+	LOG("Connected [%s:%d]", connect->GetIp(), connect->GetPort());
+	Hand<NetWorkerComponent> comp = GetNetWorkerComponent();
+	if (comp)
+		return comp->OnConnected(connect);
+
+	return true;
+}

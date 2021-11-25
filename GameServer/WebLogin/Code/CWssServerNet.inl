@@ -1,6 +1,6 @@
 
 #include "CWssServerNet.h"
-#include "WebMsg.h"
+
 #include "EventFactory.h"
 //#include "BigMsgEvent.h"
 #include "CommonDefine.h"
@@ -9,7 +9,7 @@
 template<bool bSSL>
 CWssServerNet<bSSL>::CWssServerNet(WebLoginThread *pThread) : mpLoginThread(pThread)
 {
-	WebMsg::Register(this);
+	//WebMsg::Register(this);
 	Base::RegisterMsg(WEB_MSG_RESPONSE_MSG, MEM_NEW ResponseEventFactory());
 	//Base::RegisterMsg(WEB_SEND_BIG_MSG, MEM_NEW Logic::EventFactory<WEB_SendDataPartEvent>());
 	//Base::RegisterMsg(WEB_REV_BIG_MSG, MEM_NEW Logic::EventFactory<WEB_RevDataPartEvent>());
@@ -31,14 +31,12 @@ bool CWssServerNet<bSSL>::SendToClient(Int64 playerID, Logic::tEvent *pEvent)
 template<bool bSSL>
 void CWssServerNet<bSSL>::BroatcastMsg(Logic::tEvent *pMsg, Int64 excludeID)
 {
-
 	for (auto it = Base::mConnectHash.begin(); it; ++it)
 	{
 		Hand<WebPlayer<bSSL>> conn = it.get();
 		if (conn && !conn->IsRemove() && conn->mDBID!=excludeID)
 			conn->SendEvent(pMsg);
 	}
-
 }
 
 template<bool bSSL>

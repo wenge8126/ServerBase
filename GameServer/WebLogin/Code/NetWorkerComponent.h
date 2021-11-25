@@ -8,6 +8,10 @@
 
 using namespace Logic;
 using namespace NetCloud;
+
+//-------------------------------------------------------------------------
+
+
 //-------------------------------------------------------------------------
 // 使用网络功能的组件, 关于网络逻辑组件可以继承此组件直接使用网络服务功能
 class NetWorkerComponent : public Component
@@ -15,6 +19,12 @@ class NetWorkerComponent : public Component
 public:
 	virtual void _RegisterMsg(Logic::tEventCenter *pCenter) {}
 
+	virtual bool OnConnected(HandConnect connect) 
+	{
+		connect->SetUserData(this);
+		return true;
+	}
+	virtual void OnDisconnect(HandConnect connect) {}
 
 public:
 	AutoNet GetNet();

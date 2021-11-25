@@ -35,6 +35,13 @@ class tSafeCheck;
 //-------------------------------------------------------------------------
 class tNetHandle;
 class Packet;
+class tNetConnect;
+class _ConnectPtr : public AutoBase
+{
+public:
+	tNetConnect *mpConnect;
+};
+typedef Auto<_ConnectPtr> ConnectPtr;
 
 class EventCoreDll_Export tNetConnect : public Base<tNetConnect>
 {
@@ -50,6 +57,9 @@ public:
 public:
 	virtual void SetNetID(int netID) = 0;
 	virtual int GetNetID() const = 0;
+
+	// 避免死锁相互引用包含
+	virtual ConnectPtr GetPtr() { return ConnectPtr(); }
 
 public:
 	virtual bool SendEvent(Logic::tEvent *pEvent) = 0;
@@ -77,7 +87,8 @@ public:
 
 	virtual uint GetSendDataSize(){ return 0; }
 	virtual uint GetReceiveDataSize(){ return 0; }
-    virtual void* GetUserData() { return NULL; }
+    virtual AutoAny GetUserData() { return AutoAny(); }
+	virtual void SetUserData(AutoAny userData) {}
 
 public:
     ArrayMap<int> mInfoData;

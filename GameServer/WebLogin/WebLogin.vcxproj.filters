@@ -21,9 +21,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Code\WebMsg.cpp">
-      <Filter>Code</Filter>
-    </ClCompile>
     <ClCompile Include="Code\WebLoginThread.cpp">
       <Filter>Code</Filter>
     </ClCompile>
@@ -50,9 +47,6 @@
     <ClInclude Include="Code\WebLoginThread.h">
       <Filter>Code</Filter>
     </ClInclude>
-    <ClInclude Include="Code\WebMsg.h">
-      <Filter>Code</Filter>
-    </ClInclude>
     <ClInclude Include="Code\CWssServerNet.h">
       <Filter>Code</Filter>
     </ClInclude>
@@ -75,6 +69,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Code\TcpComponent.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\WssWebComponent.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Code\NetWorkerComponent.h">

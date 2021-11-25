@@ -108,7 +108,7 @@ void WebLoginThread::SetTitle(const AString &title)
 	if (mbStartOk)
 	{
 		AString str;
-		str.Format("%s Login: %d", title.c_str(), CL_LoginEvent::msTotalNowLogin);
+		str.Format("%s Login: %d", title.c_str(), 1); // CL_LoginEvent::msTotalNowLogin);
 		SetConsoleTitle(str.c_str());
 	}
 	else
@@ -191,9 +191,31 @@ private:
 
 //-------------------------------------------------------------------------
 // 实现客户端直接消息交互系统内所有Actor (中转Actor消息请求)
+// 连接流程, 实现逻辑与逻辑层的Actor(LogicActor)
+// 1 HTTP 验证, 是否新建, 存在准备连接验证数据
+// 2 存在直接分配Actor
+// 3 新建时, 根据数据库, 新建记录, 然后以记录ID, 为UnitID 新建Actor
+// 4 Actor 内绑定 ConnectPtr, Connect 设置数据为对应 的Actor
 class ActorNetMsgComponent : public NetWorkerComponent
 {
 public:
+	virtual bool OnConnected(HandConnect connect)
+	{
+		NetWorkerComponent::OnConnected(connect);
+
+		CoroutineTool::AsyncCall(AsyncCreateConnectActor, connect);
+		return true;
+	}
+
+	static void AsyncCreateConnectActor(HandConnect connect)
+	{
+		Hand<NetWorkerComponent> comp = connect->GetUserData();
+		// 验证
+		// 获取数据
+		// 新建记录
+		// 新建
+	}
+
 	// 注册中转需要的事件
 	virtual void _RegisterMsg(Logic::tEventCenter *pCenter) override
 	{
@@ -206,7 +228,7 @@ void WebLoginThread::OnStart(void*)
 {
 	NiceData lineParam;
 
-	mTaskSystem->RegisterTask(MEM_NEW DefineTaskFactory<BackZipMsgTask, eDBMsgTask_ZipData>());
+	//mTaskSystem->RegisterTask(MEM_NEW DefineTaskFactory<BackZipMsgTask, eDBMsgTask_ZipData>());
 
 	mActorManager = MEM_NEW LoginActorManager(this, config.login_node.node.ip.c_str(), config.login_node.node.port, config.login_node.node.saft_code, 2);
 
@@ -434,7 +456,7 @@ StateDataType WebLoginThread::GetRunStateInfo(tNiceData &info)
 		//info["GATE_PORT"] = CRunConfig<LoginConfig>::mConfig.data_db_node.gate.port;
 		Hand< BaseWebServer> net = mWebWsNet;
 		AString netInfo = net ? net->GetRunInfo() : "Null net";
-		strInfo.Format("Wss: %s, %s://%s:%d Login: %d", netInfo.c_str(), IsWss() ? "wss" : "ws", mServerInfo.WSS_IP.c_str(), mServerInfo.WSS_PORT, CL_LoginEvent::msTotalNowLogin);
+		strInfo.Format("Wss: %s, %s://%s:%d Login: %d", netInfo.c_str(), IsWss() ? "wss" : "ws", mServerInfo.WSS_IP.c_str(), mServerInfo.WSS_PORT, 1);
 	}
 	info["INFO"] = strInfo;
 	info["VER"] = SERVER_VERSION_FLAG;

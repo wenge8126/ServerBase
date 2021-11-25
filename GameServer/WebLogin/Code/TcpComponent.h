@@ -15,7 +15,7 @@ class SocketComponent : public NetCloud::ProcessComponent
 public:
 	// 这是组件主动注册
 	virtual void RegisterMsg(const AString &msgName, AutoEventFactory msgFactory) = 0;
-	virtual AutoNet GetNet() = 0;
+	virtual AutoNet GetNet() = 0;	
 
 public:
 	AComponent GetNetWorkerComponent()
@@ -26,6 +26,14 @@ public:
 		return mNetLogicComponent;
 	}
 
+	bool OnConnected(HandConnect connect);
+	void OnDisconnect(HandConnect connect)
+	{
+		LOG("Disconnected [%s:%d]", connect->GetIp(), connect->GetPort());
+		Hand<NetWorkerComponent> comp = GetNetWorkerComponent();
+		if (comp)
+			comp->OnDisconnect(connect);
+	}
 
 protected:
 	AComponent	mNetLogicComponent;
@@ -43,17 +51,6 @@ public:
 	int		mSafeCode = 0;
 
 public:
-	virtual bool OnConnected(HandConnect connect)
-	{
-		LOG("Connected [%s:%d]", connect->GetIp(), connect->GetPort());
-		return true;
-	}
-
-	virtual void OnDisconnect(HandConnect connect)
-	{
-		LOG("Disconnected [%s:%d]", connect->GetIp(), connect->GetPort());
-	}
-
 	virtual HandConnect CreateConnect();
 
 	virtual void RegisterMsg(Logic::tEventCenter *pCenter) {}
@@ -143,6 +140,26 @@ public:
 		Hand<TcpComponentNet> net = GetNetHandle();
 		return net->mpComponent;
 	}
+
+	virtual AutoAny GetUserData() override { return mUserData; }
+	virtual void SetUserData(AutoAny userData) override { mUserData = userData; }
+
+	virtual ConnectPtr GetPtr() { return ConnectPtr(); }
+
+public:
+	TcpComponentConnect()
+	{
+		mSelfPtr = MEM_NEW _ConnectPtr();
+		mSelfPtr->mpConnect = this;
+	}
+	~TcpComponentConnect()
+	{
+		mSelfPtr->mpConnect = NULL;
+	}
+
+protected:
+	AutoAny		mUserData;
+	ConnectPtr	mSelfPtr;
 };
 //-------------------------------------------------------------------------
 #endif //_INCLUDE_TCPCOMPONECT_H_
