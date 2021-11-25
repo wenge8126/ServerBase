@@ -448,9 +448,9 @@ void _RunTestHttp(CServerToolDlg *p)
 
 void CServerToolDlg::OnBnClickedTestCreateAccount()
 {
-	CoroutineTool::AsyncCall(_RunTestHttp, this);
+	//CoroutineTool::AsyncCall(_RunTestHttp, this);
 
-	//CoroutineTool::AsyncCall(_RunTestAccount, this);
+	CoroutineTool::AsyncCall(_RunTestAccount, this);
 
 }
 

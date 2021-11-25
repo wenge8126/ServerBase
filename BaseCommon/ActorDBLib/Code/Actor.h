@@ -12,11 +12,18 @@
 #include "Component.h"
 #include "EasyMap.h"
 
+/*/-------------------------------------------------------------------------
+Actor
+1 异步请求消息RPC
+2 通知消息, 支持广播(全部, 按类型)
+3 支持异步DB, 结合ShareSQLUpdate 可以实现安全落地
+4 在节点中跳转
+//-------------------------------------------------------------------------*/
 #define ACTOR_UPDATE_DATA_SECOND		(10)
 
 #define REG_ACTOR_MSG(ActorClass, RQ, RS)		pActorMgr->RegisterActorMsg(#RQ, &Actor::OnMsg<ActorClass, RQ, RS>);
 #define REG_COMP_MSG(ComponentClass, RQ, RS)		pActorMgr->RegisterActorMsg(#RQ, &Actor::OnComponentMsg<ComponentClass, RQ, RS>);
-
+//-------------------------------------------------------------------------
 namespace NetCloud
 {
 	class ActorManager;
@@ -27,7 +34,7 @@ namespace NetCloud
 	};
 
 	typedef Auto<ActorMgrPtr>	AutoActorMsgPtr;
-
+	//-------------------------------------------------------------------------
 	class ActorDBLib_Export ActorFactory : public AutoBase
 	{
 	public:
@@ -45,6 +52,7 @@ namespace NetCloud
 		int								mActorType = 0;
 	};
 
+	//-------------------------------------------------------------------------
 	class ActorDBLib_Export Actor : public BigMsgUnit
 	{
 		friend class Component;
@@ -76,6 +84,7 @@ namespace NetCloud
 		}
 
 	public:
+		// RPC request msg
 		template<typename RespMsg>
 		Auto<RespMsg> Await(tBaseMsg &reqestMsg, UnitID targetID,  int waitMilSecond)
 		{
@@ -97,10 +106,16 @@ namespace NetCloud
 	
 		AutoNice Await(const AString &requestMsgName, tNiceData &reqestMsg, UnitID targetID, int waitMilSecond);
 
-		// 处理消息函数
+		bool SendMsg(tBaseMsg &msg, UnitID targetID, BROADCAST_MODE eMode = eBroadcastNone)
+		{
+			return SendMsg(msg.GetMsgName(),msg, targetID, eMode);
+		}
+
+		bool SendMsg(const AString &msgName, tNiceData &msg, UnitID targetID, BROADCAST_MODE eMode = eBroadcastNone);
+
+		// 处理RPC消息函数
 		//template<typename ReqMsg, typename RespMsg>
 		//virtual void On(ReqMsg &reqest, RespMsg &resp) = 0;		
-
 		template<typename T, typename ReqMsg, typename RespMsg>
 		static int OnMsg(Actor *pActor, DataStream *pReqestMsgData, ActorResponResultPacket *pResponse)
 		{			
@@ -127,6 +142,45 @@ namespace NetCloud
 			return pResponse->mResultType;
 		}
 
+		// 处理一般通知消息
+		template<typename T, typename ReqMsg>
+		static void OnNotify(Actor *pActor, DataStream *pReqestMsgData, UnitID senderID)
+		{
+			ReqMsg pMsg;
+			pReqestMsgData->seek(0);
+			if (!pMsg.restore(pReqestMsgData))
+			{
+				ERROR_LOG("%s restore fail", pMsg.GetMsgName());
+				return;
+			}
+			T *p = dynamic_cast<T*>(pActor);
+			if (p == NULL)
+			{
+				ERROR_LOG("%s parent class is not Actor", typeid(T).name());
+				return;
+			}
+			p->Notify(pMsg, senderID);			
+		}
+
+		template<typename T, typename ReqMsg>
+		static void OnComponentNotify(Actor *pActor, DataStream *pReqestMsgData, UnitID senderID)
+		{
+			ReqMsg pMsg;
+			pReqestMsgData->seek(0);
+			if (!pMsg.restore(pReqestMsgData))
+			{
+				ERROR_LOG("%s restore fail", pMsg.GetMsgName());
+				return;
+			}
+			Hand<T> comp = pActor->GetComponent<T>();
+			if (!comp)
+			{
+				ERROR_LOG("%s parent class is not Componect %s", typeid(*pActor).name(), typeid(T).name());
+				return;
+			}
+			comp->Notify(pMsg, senderID);
+		}
+
 		template<typename T, typename ReqMsg, typename RespMsg>
 		static int OnComponentMsg(Actor *pActor, DataStream *pReqestMsgData, ActorResponResultPacket *pResponse)
 		{
@@ -139,31 +193,13 @@ namespace NetCloud
 			}
 			RespMsg respMsg;
 
-			AComponent comp;
-			for (int i = 0; i < pActor->mComponentList.size(); ++i)
-			{
-				AComponent c = pActor->mComponentList.get(i);
-				const char *p = typeid(T).name();
-				const char *p2 = typeid(*c.getPtr()).name();
-				if ( strcmp(typeid(T).name(), typeid(*c.getPtr()).name())==0)
-				{
-					comp = c;
-					break;
-				}
-			}
+			Hand<T> comp = pActor->GetComponent<T>();		
 			if (!comp)
 			{
-				ERROR_LOG("No exist componect <%s>", typeid(T).name());
-				return 0;
-			}
-
-			T *p = dynamic_cast<T*>(comp.getPtr());
-			if (p == NULL)
-			{
-				ERROR_LOG("%s parent class is not Componect", typeid(T).name());
+				ERROR_LOG("%s parent class is not Componect %s", typeid(*pActor).name(), typeid(T).name());
 				return eSourceCodeError;
 			}
-			p->On(pMsg, respMsg, pResponse->mSenderID);
+			comp->On(pMsg, respMsg, pResponse->mSenderID);
 			pResponse->mResultType = eNoneError;
 			//LOG("Respons msg %s:\r\n%s", respMsg.GetMsgName(), respMsg.dump().c_str());
 			pResponse->mResultData->clear();

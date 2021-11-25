@@ -18,12 +18,14 @@ namespace NetCloud
 		eMsgRequest = PACKET_MAX+1,
 		eMsgResponse,
 		eMsgResult,
+		eMsgNotify,
 	};
 
 	class Actor;
 	class ActorResponResultPacket;
 
 	typedef int (*pActorMsgCall)(Actor*, DataStream*, ActorResponResultPacket*);
+	typedef void(*pActorNotifyMsgCall)(Actor*, DataStream*, UnitID);
 
 	class ActorDBLib_Export ActorRequestPacket :  public AsyncRequestPacket
 	{
@@ -216,7 +218,7 @@ namespace NetCloud
 			iStream.read(mResultType);
 			mResultData->clear(false);
 			if (iStream.readData(mResultData.getPtr()))
-				return tResponseResultPacket::Read(iStream, packetSize - mResultData->dataSize() - sizeof(DSIZE));
+				return tResponseResultPacket::Read(iStream, packetSize - mResultData->dataSize() - sizeof(DSIZE)-sizeof(mResultType));
 			return FALSE;
 		}
 
@@ -243,6 +245,86 @@ namespace NetCloud
 	public:
 		AutoData				mResultData;
 		int						mResultType = eNoneError;
+	};
+
+	//-------------------------------------------------------------------------
+	// Ò»°ãÏûÏ¢
+	class ActorNotifyPacket : public tCloudPacket
+	{
+	public:
+		bool SendMsg(AUnit localUnit, UnitID targetID, const  tBaseMsg &msg)
+		{
+			return SendMsg(localUnit, targetID, msg.GetMsgName(), msg);
+		}
+		bool SendMsg(AUnit localUnit, UnitID targetID, const AString &requestMsgMame, const  tNiceData &msg)
+		{
+			mNetUnit = localUnit;
+			mMsgName = requestMsgMame;
+			mMsgData->clear(false);
+			if (!msg.serialize(mMsgData.getPtr()))
+				ERROR_LOG("Msg seralize fail : \r\n%s", msg.dump().c_str())
+
+			return SendPacket(targetID, this);
+		}
+
+		virtual bool		SendPacket(UnitID target, Packet *pPacket) override
+		{
+			if (mNetUnit)
+				return mNetUnit->SendPacket(target, pPacket, (BROADCAST_MODE)mNotifyType);
+			ERROR_LOG("Packet %d send fail, No exist net base", pPacket->GetPacketID());
+			return false;
+		}
+
+		void _AsyncDo();
+
+	public:
+		virtual PacketID_t GetPacketID() const override { return  eMsgNotify; }
+
+		virtual UINT		Execute(tNetConnect* pConnect) override
+		{
+			tCloudPacket::Execute(pConnect);
+			ASYNCAUTO(&ActorNotifyPacket::_AsyncDo, this);
+			return 0;
+		}
+
+	public:
+		virtual UINT GetPacketSize() const { return tCloudPacket::GetPacketSize() + mMsgData->dataSize() + sizeof(DSIZE) + sizeof(mNotifyType) + sizeof(StrLenType) + mMsgName.length(); }
+		virtual BOOL Read(DataStream& iStream, size_t packetSize)
+		{
+			iStream.read(mNotifyType);
+			iStream.readString(mMsgName);
+			mMsgData->clear(false);
+			if (iStream.readData(mMsgData.getPtr()))
+				return tCloudPacket::Read(iStream, packetSize - mMsgData->dataSize() - sizeof(DSIZE) - sizeof(mNotifyType) -  sizeof(StrLenType) - mMsgName.length());
+			return FALSE;
+		}
+
+		virtual BOOL Write(DataStream& oStream)const
+		{
+			oStream.write(mNotifyType);
+			oStream.writeString(mMsgName);
+			oStream.writeData((DataStream*)mMsgData.getPtr(), mMsgData->dataSize());
+			return tCloudPacket::Write(oStream);
+		}
+
+	public:
+		ActorNotifyPacket()
+		{
+			mMsgData = MEM_NEW DataBuffer();
+		}
+
+		virtual void InitData() override
+		{
+			tCloudPacket::InitData();
+			mMsgData->clear(false);
+			mMsgName.setNull();
+			mNotifyType = eNoneError;
+		}
+
+	public:
+		AutoData				mMsgData;
+		AString					mMsgName;
+		int						mNotifyType = eNoneError;
 	};
 }
 

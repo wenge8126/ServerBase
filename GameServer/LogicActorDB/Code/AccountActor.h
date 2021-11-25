@@ -12,6 +12,10 @@ public:
 		resp.mbNew = true;
 		resp.mResult = 88;
 		resp.mID = 999;
+
+		msg.mAccount = "pppp";
+
+		GetActor()->SendMsg(msg, senderID);
 	}
 
 	virtual void RegisterMsg(ActorManager *pActorMgr) override

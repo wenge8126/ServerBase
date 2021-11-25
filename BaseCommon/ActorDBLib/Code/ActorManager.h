@@ -57,6 +57,11 @@ namespace NetCloud
 			mOnMsgFunctionList.insert(msgName, pFun);
 		}
 
+		void RegisterActorMsg(const AString &notifyMsgName, pActorNotifyMsgCall  pFun)
+		{
+			mOnNotifyMsgFunctionList.insert(notifyMsgName, pFun);
+		}
+
 
 		virtual void Process()
 		{
@@ -93,6 +98,7 @@ namespace NetCloud
 		ANetNode													mNetNode;
 
 		FastHash<AString, pActorMsgCall>			mOnMsgFunctionList;
+		FastHash<AString, pActorNotifyMsgCall>	mOnNotifyMsgFunctionList;
 
 	protected:
 		ArrayList<AProcessComponect>				mProcessComponectList;	//Actor组件, 需要高速Process的列表

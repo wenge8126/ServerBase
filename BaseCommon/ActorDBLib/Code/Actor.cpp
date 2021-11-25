@@ -67,6 +67,13 @@ AutoNice NetCloud::Actor::Await(const AString &requestMsgName, tNiceData &reqest
 	return AutoNice();
 }
 
+bool NetCloud::Actor::SendMsg(const AString &msgName, tNiceData &msg, UnitID targetID, BROADCAST_MODE eMode /*= eBroadcastNone*/)
+{
+	Auto<ActorNotifyPacket> msgPak = GetMgr()->mNetNode->CreatePacket(eMsgNotify);
+	msgPak->mNotifyType = eBroadcastNone;
+	return msgPak->SendMsg(this, targetID, msgName, msg);
+}
+
 //-------------------------------------------------------------------------
 ARecord NetCloud::DBActor::LoadRecord(const char *szTableName, const char *szKey)
 {
