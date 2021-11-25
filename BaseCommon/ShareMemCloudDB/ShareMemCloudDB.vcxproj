@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="DebugDevelop|Win32">
+      <Configuration>DebugDevelop</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugDevelop|x64">
+      <Configuration>DebugDevelop</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugMode|Win32">
+      <Configuration>DebugMode</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugMode|x64">
+      <Configuration>DebugMode</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugServer|Win32">
+      <Configuration>DebugServer</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugServer|x64">
+      <Configuration>DebugServer</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="GameRelease|Win32">
+      <Configuration>GameRelease</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="GameRelease|x64">
+      <Configuration>GameRelease</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{3F6F9ECC-C683-4520-A975-A5EFF6C33EC4}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>ShareMemCouldDB</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <ProjectName>ShareMemDBLib</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='GameRelease|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugMode|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugServer|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='GameRelease|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugMode|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugServer|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\ProjectEnv2017.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\ProjectEnv2017.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='GameRelease|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\ProjectEnv2017.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugMode|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\ProjectEnv2017.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugServer|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\ProjectEnv2017.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\ProjectEnv2017.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\ProjectEnv2017.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\ProjectEnv2017.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='GameRelease|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\ProjectEnv2017.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugMode|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\ProjectEnv2017.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugServer|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\ProjectEnv2017.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\ProjectEnv2017.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(Server_Out_Dir)\</OutDir>
+    <IntDir>$(Server_Int_Dir)\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_d</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(COMMON_BASE_LIB)\</OutDir>
+    <IntDir>$(Server_Int_Dir)\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_d</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='GameRelease|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(COMMON_BASE_LIB)\</OutDir>
+    <IntDir>$(Server_Int_Dir)\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugMode|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(COMMON_BASE_LIB)\</OutDir>
+    <IntDir>$(Server_Int_Dir)\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugServer|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(COMMON_BASE_LIB)\</OutDir>
+    <IntDir>$(Server_Int_Dir)\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_d</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(COMMON_BASE_LIB)_Win32\</OutDir>
+    <IntDir>$(Server_Int_Dir)\$(ProjectName)\$(Configuration)_win32\</IntDir>
+    <TargetName>$(ProjectName)_d86</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(COMMON_BASE_LIB)_Win32\</OutDir>
+    <IntDir>$(Server_Int_Dir)\$(ProjectName)\$(Configuration)_win32\</IntDir>
+    <TargetName>$(ProjectName)_d86</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='GameRelease|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(COMMON_BASE_LIB)_Win32\</OutDir>
+    <IntDir>$(Server_Int_Dir)\$(ProjectName)\$(Configuration)_win32\</IntDir>
+    <TargetName>$(ProjectName)_d86</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugMode|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(COMMON_BASE_LIB)_Win32\</OutDir>
+    <IntDir>$(Server_Int_Dir)\$(ProjectName)\$(Configuration)_win32\</IntDir>
+    <TargetName>$(ProjectName)_d86</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugServer|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(COMMON_BASE_LIB)_Win32\</OutDir>
+    <IntDir>$(Server_Int_Dir)\$(ProjectName)\$(Configuration)_win32\</IntDir>
+    <TargetName>$(ProjectName)_d86</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(COMMON_BASE_LIB)_Win32\</OutDir>
+    <IntDir>$(Server_Int_Dir)\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)86</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(COMMON_BASE_LIB)\</OutDir>
+    <IntDir>$(Server_Int_Dir)\$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>SHAREMEMCLOUDDB_EXPORTS;_DEBUG;_CONSOLE;__WINDOWS__;__SERVER__;DEVELOP_MODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>.\;$(CODE_COMMON_DIR)/BaseCommon;$(CODE_COMMON_DIR)\EventCore\Core;$(CODE_COMMON_DIR)\EventCore\LogicSystem;$(CODE_COMMON_DIR)/LuaPlus;../;$(CODE_COMMON_DIR)/NetDll/Net;$(CODE_COMMON_DIR)/NetNode;./Code;$(CODE_COMMON_DIR)/MySQLLib/Code;$(CODE_COMMON_DIR)/ShareDBLib/Code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>$(CODE_COMMON_DIR)\MySQLLib\Code\MySql\lib\libmysql.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>SHAREMEMCLOUDDB_EXPORTS;_DEBUG;_CONSOLE;__WINDOWS__;__SERVER__;DEVELOP_MODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>.\;$(CODE_COMMON_DIR)/BaseCommon;$(CODE_COMMON_DIR)\EventCore\Core;$(CODE_COMMON_DIR)\EventCore\LogicSystem;$(CODE_COMMON_DIR)/LuaPlus;../;$(CODE_COMMON_DIR)/NetDll/Net;$(CODE_COMMON_DIR)/NetNode;./Code;$(CODE_COMMON_DIR)/ShareDBLib/Code;$(CODE_COMMON_DIR)/ShareSQLUpdateLib/Code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(COMMON_BASE_LIB)\$(TargetName)$(TargetExt) $(Server_Out_Dir)\  /y
+xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
+xcopy $(CODE_COMMON_DIR)\ShareMemCloudDB\Code\*.h $(INCLUDE_DIR)\  /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='GameRelease|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>SHAREMEMCLOUDDB_EXPORTS;_CONSOLE;__WINDOWS__;__SERVER__;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>.\;$(CODE_COMMON_DIR)/BaseCommon;$(CODE_COMMON_DIR)\EventCore\Core;$(CODE_COMMON_DIR)\EventCore\LogicSystem;$(CODE_COMMON_DIR)/LuaPlus;../;$(CODE_COMMON_DIR)/NetDll/Net;$(CODE_COMMON_DIR)/NetNode;./Code;$(CODE_COMMON_DIR)/ShareDBLib/Code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <SupportJustMyCode>true</SupportJustMyCode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(COMMON_BASE_LIB)\$(TargetName)$(TargetExt) $(Server_Out_Dir)_Release\  /y
+xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)_Release\  /y
+xcopy $(CODE_COMMON_DIR)\ShareMemCloudDB\Code\*.h $(INCLUDE_DIR)\  /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugMode|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>SHAREMEMCLOUDDB_EXPORTS;_CONSOLE;__WINDOWS__;__SERVER__;NDEBUG;DEVELOP_MODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>.\;$(CODE_COMMON_DIR)/BaseCommon;$(CODE_COMMON_DIR)\EventCore\Core;$(CODE_COMMON_DIR)\EventCore\LogicSystem;$(CODE_COMMON_DIR)/LuaPlus;../;$(CODE_COMMON_DIR)/NetDll/Net;$(CODE_COMMON_DIR)/NetNode;./Code;$(CODE_COMMON_DIR)/ShareDBLib/Code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <SupportJustMyCode>true</SupportJustMyCode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(COMMON_BASE_LIB)\$(TargetName)$(TargetExt) $(Server_Out_Dir)_Release\  /y
+xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)_Release\  /y
+xcopy $(CODE_COMMON_DIR)\ShareMemCloudDB\Code\*.h $(INCLUDE_DIR)\  /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugServer|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>SHAREMEMCLOUDDB_EXPORTS;_DEBUG;_CONSOLE;__WINDOWS__;__SERVER__;DEVELOP_MODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>.\;$(CODE_COMMON_DIR)/BaseCommon;$(CODE_COMMON_DIR)\EventCore\Core;$(CODE_COMMON_DIR)\EventCore\LogicSystem;$(CODE_COMMON_DIR)/LuaPlus;../;$(CODE_COMMON_DIR)/NetDll/Net;$(CODE_COMMON_DIR)/NetNode;./Code;$(CODE_COMMON_DIR)/MySQLLib/Code;$(CODE_COMMON_DIR)/ShareDBLib/Code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>$(CODE_COMMON_DIR)\ShareDBLib\Code\MySql\lib\libmysql.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(COMMON_BASE_LIB)\$(TargetName)$(TargetExt) $(Server_Out_Dir)\  /y
+xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
+xcopy $(CODE_COMMON_DIR)\ShareMemCloudDB\Code\*.h $(INCLUDE_DIR)\  /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;__WINDOWS__;__SERVER__;DEVELOP_MODE;SHAREMEMCLOUDDB_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>..\Server\Base;..\Server\SMU;.\Main;.\DB;.\ShareData;..\Server\Other;.\;$(CODE_COMMON_DIR)/BaseCommon;$(CODE_COMMON_DIR)\EventCore\Core;$(CODE_COMMON_DIR)\EventCore\LogicSystem;$(CODE_COMMON_DIR)/LuaPlus;../;$(CODE_COMMON_DIR)/NetDll/Net;$(CODE_COMMON_DIR)/NetNode;./Code;$(CODE_COMMON_DIR)/ShareDBLib/Code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4018</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(COMMON_BASE_LIB)_Win32\$(TargetName)$(TargetExt) $(Server_Out_Dir)_Win32\  /y
+xcopy $(COMMON_BASE_LIB)_Win32\$(TargetName).pdb $(Server_Out_Dir)_Win32\  /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;__WINDOWS__;__SERVER__;DEVELOP_MODE;SHAREMEMCLOUDDB_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>..\Server\Base;..\Server\SMU;.\Main;.\DB;.\ShareData;..\Server\Other;.\;$(CODE_COMMON_DIR)/BaseCommon;$(CODE_COMMON_DIR)\EventCore\Core;$(CODE_COMMON_DIR)\EventCore\LogicSystem;$(CODE_COMMON_DIR)/LuaPlus;../;$(CODE_COMMON_DIR)/NetDll/Net;$(CODE_COMMON_DIR)/NetNode;./Code;$(CODE_COMMON_DIR)/ShareDBLib/Code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4018</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(COMMON_BASE_LIB)_Win32\$(TargetName)$(TargetExt) $(Server_Out_Dir)_Win32\  /y
+xcopy $(COMMON_BASE_LIB)_Win32\$(TargetName).pdb $(Server_Out_Dir)_Win32\  /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='GameRelease|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;__WINDOWS__;__SERVER__;DEVELOP_MODE;SHAREMEMCLOUDDB_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>..\Server\Base;..\Server\SMU;.\Main;.\DB;.\ShareData;..\Server\Other;.\;$(CODE_COMMON_DIR)/BaseCommon;$(CODE_COMMON_DIR)\EventCore\Core;$(CODE_COMMON_DIR)\EventCore\LogicSystem;$(CODE_COMMON_DIR)/LuaPlus;../;$(CODE_COMMON_DIR)/NetDll/Net;$(CODE_COMMON_DIR)/NetNode;./Code;$(CODE_COMMON_DIR)/MySQLLib/Code;$(CODE_COMMON_DIR)/ShareDBLib/Code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4018</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>$(CODE_COMMON_DIR)\MySQLLib\Code\MySqlWin32\Lib\libmysql.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(COMMON_BASE_LIB)_Win32\$(TargetName)$(TargetExt) $(Server_Out_Dir)_Win32\  /y
+xcopy $(COMMON_BASE_LIB)_Win32\$(TargetName).pdb $(Server_Out_Dir)_Win32\  /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugMode|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;__WINDOWS__;__SERVER__;DEVELOP_MODE;SHAREMEMCLOUDDB_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>..\Server\Base;..\Server\SMU;.\Main;.\DB;.\ShareData;..\Server\Other;.\;$(CODE_COMMON_DIR)/BaseCommon;$(CODE_COMMON_DIR)\EventCore\Core;$(CODE_COMMON_DIR)\EventCore\LogicSystem;$(CODE_COMMON_DIR)/LuaPlus;../;$(CODE_COMMON_DIR)/NetDll/Net;$(CODE_COMMON_DIR)/NetNode;./Code;$(CODE_COMMON_DIR)/MySQLLib/Code;$(CODE_COMMON_DIR)/ShareDBLib/Code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4018</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>$(CODE_COMMON_DIR)\MySQLLib\Code\MySqlWin32\Lib\libmysql.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(COMMON_BASE_LIB)_Win32\$(TargetName)$(TargetExt) $(Server_Out_Dir)_Win32\  /y
+xcopy $(COMMON_BASE_LIB)_Win32\$(TargetName).pdb $(Server_Out_Dir)_Win32\  /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugServer|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;__WINDOWS__;__SERVER__;DEVELOP_MODE;SHAREMEMCLOUDDB_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>..\Server\Base;..\Server\SMU;.\Main;.\DB;.\ShareData;..\Server\Other;.\;$(CODE_COMMON_DIR)/BaseCommon;$(CODE_COMMON_DIR)\EventCore\Core;$(CODE_COMMON_DIR)\EventCore\LogicSystem;$(CODE_COMMON_DIR)/LuaPlus;../;$(CODE_COMMON_DIR)/NetDll/Net;$(CODE_COMMON_DIR)/NetNode;./Code;$(CODE_COMMON_DIR)/MySQLLib/Code;$(CODE_COMMON_DIR)/ShareDBLib/Code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4018</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>$(CODE_COMMON_DIR)\ShareDBLib\Code\MySqlWin32\Lib\libmysql.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(COMMON_BASE_LIB)_Win32\$(TargetName)$(TargetExt) $(Server_Out_Dir)_Win32\  /y
+xcopy $(COMMON_BASE_LIB)_Win32\$(TargetName).pdb $(Server_Out_Dir)_Win32\  /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;__WIN32__;__WINDOWS__;__SERVER__;SHAREMEMCLOUDDB_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>..\Server\Base;..\Server\SMU;.\Main;.\DB;.\ShareData;..\Server\Other;.\;$(CODE_COMMON_DIR)/BaseCommon;$(CODE_COMMON_DIR)\EventCore\Core;$(CODE_COMMON_DIR)\EventCore\LogicSystem;$(CODE_COMMON_DIR)/LuaPlus;../;$(CODE_COMMON_DIR)/NetDll/Net;$(CODE_COMMON_DIR)/NetNode;./Code;$(CODE_COMMON_DIR)/ShareDBLib/Code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4018</DisableSpecificWarnings>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(COMMON_BASE_LIB)_Win32\$(TargetName)$(TargetExt) $(Server_Out_Dir)_Win32\  /y
+xcopy $(COMMON_BASE_LIB)_Win32\$(TargetName).pdb $(Server_Out_Dir)_Win32\  /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;SHAREMEMCLOUDDB_EXPORTS;_WINDOWS;_USRDLL;__WINDOWS__;__SERVER__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>.\;$(CODE_COMMON_DIR)/BaseCommon;$(CODE_COMMON_DIR)\EventCore\Core;$(CODE_COMMON_DIR)\EventCore\LogicSystem;$(CODE_COMMON_DIR)/LuaPlus;../;$(CODE_COMMON_DIR)/NetDll/Net;$(CODE_COMMON_DIR)/NetNode;./Code;$(CODE_COMMON_DIR)/MySQLLib/Code;$(CODE_COMMON_DIR)/ShareDBLib/Code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>$(CODE_COMMON_DIR)\MySQLLib\Code\MySql\lib\libmysql.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(COMMON_BASE_LIB)\$(TargetName)$(TargetExt) $(Server_Out_Dir)\  /y
+xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="Code\CloudDBCall.h" />
+    <ClInclude Include="Code\CloudDBTable.h" />
+    <ClInclude Include="Code\DBShareMemMsgEvent.h" />
+    <ClInclude Include="Code\ShareMemCloudDBNode.h" />
+    <ClInclude Include="Code\ShareMemCloudDB.h" />
+    <ClInclude Include="Code\ShareMemDBTable.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Code\CloudDBTable.cpp" />
+    <ClCompile Include="Code\ShareMemCloudDBNode.cpp" />
+    <ClCompile Include="Code\ShareMemDBTable.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MySQLLib\MySQLLib.vcxproj">
+      <Project>{00f61d01-7ae6-44d3-b83d-c4c91db33d80}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Proj2017\BaseCommon.vcxproj">
+      <Project>{7b59c823-5459-4c17-8022-fab40d42766b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Proj2017\EventCore.vcxproj">
+      <Project>{8fd22748-0005-4b29-9136-bd5e8512b1bd}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Proj2017\Net.vcxproj">
+      <Project>{381212ea-3ff5-40dd-a666-8ee4d026b880}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ShareDBLib\ShareDBLib.vcxproj">
+      <Project>{169f7dbf-3c7d-411e-9dde-cdc062a57eb0}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
