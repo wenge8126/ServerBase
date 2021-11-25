@@ -1,4 +1,5 @@
 # ServerBase
+编译环境 VS2017, 编译配置DebugMode x64
 一 BaseCommon 
 	1 内存管理: MemBase
 	2 基本容器 : AString, Array, ArrayList, IndexArray, EasyList, PoolList, LoopList, PoolLoop, EasyMap, EasySet, EasyHash, FastHash, EasyStack
@@ -9,4 +10,4 @@
 	7 二进制: DataBuffer, LoopDataBuffer
 	8 文件: FileDataStream
 
-	二 EventCore
+二 EventCore
