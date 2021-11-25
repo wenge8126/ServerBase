@@ -154,6 +154,8 @@ namespace Logic
 		virtual bool  SerializeMsg(AutoEvent &hEvent, DataStream *destData);
 		virtual AutoEvent RestoreMsg(DataStream *scrData);
 
+		virtual void RegisterMsg(int eventIndex, Logic::AutoEventFactory factory) {}
+
 		virtual bool ComeOnThread(AutoEvent &hEvent)
 		{
 #ifndef __LINUX__

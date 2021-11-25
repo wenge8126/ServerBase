@@ -219,6 +219,7 @@ public:
 	virtual void _RegisterMsg(Logic::tEventCenter *pCenter) override
 	{
 		REGISTER_EVENT(pCenter, CS_ActorMsg);
+		pCenter->RegisterMsg(200, MEM_NEW Logic::EventFactory<CS_ActorMsg>());
 	}
 };
 

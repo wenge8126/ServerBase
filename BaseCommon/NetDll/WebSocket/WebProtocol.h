@@ -98,7 +98,7 @@ public:
 class Net_Export WebNetEventCenter : public Logic::EventCenter
 {
 public:
-	void RegisterMsg(int eventIndex, Logic::AutoEventFactory factory);
+	void RegisterMsg(int eventIndex, Logic::AutoEventFactory factory) override;
 	void RegisterMsg(Logic::AutoEventFactory hFactory);
 	virtual AutoEvent StartEvent(int nEventNameIndex) override
 	{

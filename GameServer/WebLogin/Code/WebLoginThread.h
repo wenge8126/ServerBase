@@ -149,7 +149,8 @@ public:
 
 		Hand<SocketComponent> tcpNet = AddComponent("WssWebComponent");
 		tcpNet->mServerIp = "127.0.0.1";
-		tcpNet->mServerPort = 4001;
+		tcpNet->mServerPort = 4001;		
+		
 		//tcpNet->mSafeCode = 11;
 		AddComponent("ActorNetMsgComponent");
 	}
