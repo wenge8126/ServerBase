@@ -2796,10 +2796,10 @@
 <XPD:ATTR name="FillColor" type="string">$00B9FFFF</XPD:ATTR>
 <XPD:ATTR name="Left" type="integer">1016</XPD:ATTR>
 <XPD:ATTR name="Top" type="integer">900</XPD:ATTR>
-<XPD:ATTR name="Width" type="integer">154</XPD:ATTR>
+<XPD:ATTR name="Width" type="integer">263</XPD:ATTR>
 <XPD:ATTR name="Height" type="integer">83</XPD:ATTR>
-<XPD:ATTR name="Text" type="string">type为 -10000 - HashCode,
- id 为 表名StringHash
+<XPD:ATTR name="Text" type="string">type为 -10000,
+ id 为 表名低32位StringHash + 高16位 HashCode
 先查询是否存在相同type
 再进行创建注册
 可手动配置分库
@@ -2808,7 +2808,7 @@
 <XPD:OBJ name="OwnedViews[63]" type="UMLNoteLinkView" guid="4N0une1AgE+ZnYZhaavQjAAA">
 <XPD:ATTR name="LineColor" type="string">clMaroon</XPD:ATTR>
 <XPD:ATTR name="FillColor" type="string">$00B9FFFF</XPD:ATTR>
-<XPD:ATTR name="Points" type="Points">869,794;1030,900</XPD:ATTR>
+<XPD:ATTR name="Points" type="Points">869,789;1072,900</XPD:ATTR>
 <XPD:REF name="Head">xeIdbY5OYU2IKCp+Jan2qwAA</XPD:REF>
 <XPD:REF name="Tail">iPUZJf/xRkGqAejPeZm+VQAA</XPD:REF>
 </XPD:OBJ>

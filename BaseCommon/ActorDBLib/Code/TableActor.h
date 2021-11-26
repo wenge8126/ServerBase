@@ -3,9 +3,19 @@
 #include "MemoryDBTable.h"
 #include "Actor.h"
 #include "ActorDBLib.h"
+#include "ActorManager.h"
+
+#define TableActorType			(-10000)
 
 namespace NetCloud
 {
+	enum EActorTableType
+	{
+		eATable_MYSQL,
+		eATable_ShareSQL,
+		eATable_ShareMem,
+	};
+
 	class ActorDBLib_Export TableActor : public Actor
 	{
 	public:
@@ -15,13 +25,46 @@ namespace NetCloud
 		}
 
 	public:
+		struct InitParam
+		{
+			Auto<ActorManager> mgr;
+			AutoNice	mSQLParam;
+		};
+		static void InitDB(Auto<ActorManager> mgr, AutoNice sqlParam)
+		{
+			InitParam p = { mgr, sqlParam };
+			CoroutineTool::AsyncCall(&TableActor::_AsyncInitDB, p);
+		}
+
+		static void _AsyncInitDB(InitParam p);
+
+	public:
 		Auto<MemoryDBTable> GetTable() { return mDBTable; }
 
-		void InitSQLTable();
+		void StartDB(EActorTableType type, AutoNice param)
+		{
+			switch (type)
+			{
+			case NetCloud::eATable_MYSQL:
+				InitSQLTable(param);
+				break;
+			case NetCloud::eATable_ShareSQL:
+				InitShareSQL(param);
+				break;
+			case NetCloud::eATable_ShareMem:
+				InitShareTable(param);
+				break;
+			default:
+				ERROR_LOG("No exist type %d", type);
+				break;
+			}
+		}
 
-		void InitShareSQL();
+		void InitSQLTable(AutoNice param);
 
-		void InitShareTable()
+		void InitShareSQL(AutoNice param);
+
+		void InitShareTable(AutoNice param)
 		{
 			//mDBTable = ShareDBTable(this);
 		}
@@ -33,4 +76,18 @@ namespace NetCloud
 		Auto<MemoryDBTable> mDBTable;
 	};
 
+	//-------------------------------------------------------------------------
+	struct TableActorID
+	{
+		union
+		{
+			struct {
+				Int64				hash : 16;
+				Int64				type : 16;
+				Int64				id : 32;
+			};
+			UInt64			value;
+		};
+	};
+	//-------------------------------------------------------------------------
 }
