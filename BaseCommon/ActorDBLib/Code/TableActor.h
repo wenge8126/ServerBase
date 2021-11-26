@@ -82,12 +82,24 @@ namespace NetCloud
 		union
 		{
 			struct {
+				Int64				id : 32;
 				Int64				hash : 16;
 				Int64				type : 16;
-				Int64				id : 32;
 			};
 			UInt64			value;
 		};
 	};
+	/* 使用如下
+	NetCloud::TableActorID  x;
+	x.id = 123456789;
+	x.type = 222;
+	x.hash = 55;
+
+	UnitID z(33, 888);
+	z.id = x.value;
+
+	NetCloud::TableActorID cc;
+	cc.value = z.id;
+	*/
 	//-------------------------------------------------------------------------
 }

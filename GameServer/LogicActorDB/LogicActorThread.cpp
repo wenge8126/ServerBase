@@ -188,7 +188,7 @@ void AsyncReadyDB(LogicActorThread *pThread)
 		//LOG("====== %s", x.ID().c_str());
 	}
 }
-
+#include "TableActor.h"
 void LogicActorThread::OnStart(void*)
 {
 	mActorManager = MEM_NEW CDBMgr(this, "127.0.0.1", 10001, 10, 2);

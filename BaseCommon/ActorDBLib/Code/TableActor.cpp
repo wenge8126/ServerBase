@@ -21,8 +21,9 @@ void NetCloud::TableActor::_AsyncInitDB(InitParam param)
 	TableActorID tID;
 	tID.id = MAKE_INDEX_ID(tableName.c_str());
 	tID.hash = hashKey;
+	tID.type = 0;
 	
-	Hand<TableActor> actor = param.mgr->CreateActor(TableActorType, tID.value);
+	Hand<TableActor> actor = param.mgr->CreateActor(TableActorType, (Int64)tID.value);
 	actor->StartDB(tableType, param.mSQLParam);
 }
 
