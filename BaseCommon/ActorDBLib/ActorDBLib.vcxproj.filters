@@ -25,6 +25,9 @@
     <Filter Include="Common">
       <UniqueIdentifier>{e8800f96-e102-4c50-9f43-7e7c215e3c0c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MemoryDB">
+      <UniqueIdentifier>{86b5b6b2-4f86-4fc5-88b1-63ce36b48864}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -45,9 +48,6 @@
     <ClCompile Include="Code\LogicDBTable.cpp">
       <Filter>DBCode</Filter>
     </ClCompile>
-    <ClCompile Include="Code\ActorGate.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Code\DBTable.cpp">
       <Filter>DBCode</Filter>
     </ClCompile>
@@ -56,6 +56,18 @@
     </ClCompile>
     <ClCompile Include="Code\Component.cpp">
       <Filter>Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\MemoryDBTable.cpp">
+      <Filter>MemoryDB</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\TableActor.cpp">
+      <Filter>MemoryDB</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ActorGate.cpp">
+      <Filter>Gate</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\SQLComponect.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -95,5 +107,22 @@
     <ClInclude Include="Code\Component.h">
       <Filter>Actor</Filter>
     </ClInclude>
+    <ClInclude Include="Code\MemoryDBTable.h">
+      <Filter>MemoryDB</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\SQLComponect.h">
+      <Filter>MemoryDB</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\TableActor.h">
+      <Filter>MemoryDB</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ActorDB说明.txt">
+      <Filter>DBCode</Filter>
+    </Text>
+    <Text Include="MemoryDB说明.txt">
+      <Filter>MemoryDB</Filter>
+    </Text>
   </ItemGroup>
 </Project>

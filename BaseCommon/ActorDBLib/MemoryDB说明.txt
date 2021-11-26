@@ -1,0 +1,14 @@
+通过Actor ID分布特性组建分散式DB集群
+
+1 一个Actor 对应一张表的一个HASH key, UnitID.type = -1000-key, id = MAKE_INDEX_ID(表名)
+	这样实现了去中心方式组件集群
+
+2 MYSQL 库中, 保存 表名, HASH key
+
+3 启动时, 读取MYSQL库, 自动进行创建, 加载
+
+4 使用组件模式, 定制三种表类型
+	(1) MYSQL 直接加载及落地
+	(2) 通过共享内存通道加载及落地
+	(3) 安全型共享内存表
+	(5) NoSQL 二进制结构表

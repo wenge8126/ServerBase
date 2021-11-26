@@ -246,7 +246,10 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
     <ClCompile Include="Code\DBTable.cpp" />
     <ClCompile Include="Code\DBTableManager.cpp" />
     <ClCompile Include="Code\LogicDBTable.cpp" />
+    <ClCompile Include="Code\MemoryDBTable.cpp" />
+    <ClCompile Include="Code\SQLComponect.cpp" />
     <ClCompile Include="Code\SQLThread.cpp" />
+    <ClCompile Include="Code\TableActor.cpp" />
     <ClCompile Include="dllmain.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -261,7 +264,10 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
     <ClInclude Include="Code\DBTable.h" />
     <ClInclude Include="Code\DBTableManager.h" />
     <ClInclude Include="Code\LogicDBTable.h" />
+    <ClInclude Include="Code\MemoryDBTable.h" />
+    <ClInclude Include="Code\SQLComponect.h" />
     <ClInclude Include="Code\SQLThread.h" />
+    <ClInclude Include="Code\TableActor.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Proj2017\BaseCommon.vcxproj">
@@ -276,6 +282,10 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
     <ProjectReference Include="..\ShareSQLUpdateLib\ShareSQLUpdateLib.vcxproj">
       <Project>{8aed06af-78cf-4641-88e4-8ee0724faa15}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ActorDB说明.txt" />
+    <Text Include="MemoryDB说明.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

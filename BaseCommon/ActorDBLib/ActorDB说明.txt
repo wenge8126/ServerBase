@@ -1,0 +1,4 @@
+
+1 Actor 中LoadRecord, 会组合在Actor中, 不会保存在Table或DBManager中, 用完后, 直接丢弃
+2 Record保存更新中Actor中完成
+3 不具备索引等表格的一些功能

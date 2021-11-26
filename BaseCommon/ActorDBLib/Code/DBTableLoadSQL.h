@@ -13,7 +13,7 @@
 namespace NetCloud
 {
 
-	class DBTableLoadSQL : public MemBase
+	class DBTableLoadSQL : public AutoBase
 	{
 	public:
 		DBTableLoadSQL()
@@ -21,8 +21,11 @@ namespace NetCloud
 		{}
 
 	public:
-		// 如果在协和内自动启动异步加载, 否则同步加载
-		bool AwaitLoadRecord(const char *szKey, ARecord targetRecord)
+		virtual bool SaveRecord(ARecord record) { AssertNote(0, "No override SaveRecord");  return false; }
+
+	public:
+		// 如果在协程内自动启动异步加载, 否则同步加载
+		virtual bool AwaitLoadRecord(const char *szKey, ARecord targetRecord)
 		{
 			if (IN_CORO)
 			{
