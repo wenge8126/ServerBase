@@ -1,5 +1,5 @@
 #include "SQLComponect.h"
-#include "TableActor.h"
+
 #include "DBTableManager.h"
 
 namespace NetCloud
@@ -7,8 +7,7 @@ namespace NetCloud
 
 	void NetCloud::SQLComponect::Start()
 	{
-		Hand<TableActor> actor = GetActor();
-		actor->GetTable()->InitSQL(GetSelf());
+
 	}
 
 	bool NetCloud::MySQLComponect::SaveRecord(DBTableManager *pDBMgr, BaseRecord *targetRecord, bool bInsert)
