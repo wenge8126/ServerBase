@@ -30,7 +30,7 @@ namespace NetCloud
 			return AutoTable();
 		}
 
-		Auto<LogicDBTable> table = MEM_NEW LogicDBTable();
+		Auto<LogicDBTable> table = MEM_NEW LogicDBTable(mbUseShareSQL);
 		table->SetTableName(tableName.c_str());
 		bool b = table->GetField()->FullFromString(tableInfo["FIELD_INFO"].string());
 		table->GetField()->_updateInfo();
@@ -343,6 +343,13 @@ namespace NetCloud
 			ERROR_LOG("Init load DB fail : %s", resultInfo.c_str());
 			return false;
 		}
+
+		if (!mbUseShareSQL)
+		{
+			LOG("Now without share SQL mode");
+			return true;
+		}
+
 
 		if (!mSQLUpdate.Init(updateShareKey))
 		{

@@ -13,6 +13,7 @@ namespace NetCloud
 	public:
 		ActorManager *mpActorMgr;
 
+	public:
 		ActorDBMgr(ActorManager *pThread)
 			: mpActorMgr(pThread) {}
 	};

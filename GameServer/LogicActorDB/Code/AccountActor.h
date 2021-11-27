@@ -20,7 +20,7 @@ public:
 
 	virtual void RegisterMsg(ActorManager *pActorMgr) override
 	{
-		REG_COMP_MSG(DDCom, RQ_CheckAndCreateAccount, RS_CheckAndCreateAccount);
+		//REG_COMP_MSG(DDCom, RQ_CheckAndCreateAccount, RS_CheckAndCreateAccount);
 	}
 
 
@@ -49,7 +49,7 @@ class AccountActor : public NetCloud::DBActor
 public:
 	virtual void Init() override
 	{
-		AddComponent("DDCom");
+		//AddComponent("DDCom");
 	}
 
 	void On(RQ_CheckAndCreateAccount &msg, RS_CheckAndCreateAccount &resp, UnitID senderID)

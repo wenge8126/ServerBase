@@ -156,8 +156,6 @@ void AsyncReadyDB(LogicActorThread *pThread)
 		return;
 	}
 
-	return;
-
 	AutoNice param = MEM_NEW NiceData();
 	param[DBBASE] = config.sql_db.mDBBASE;
 	param[DBIP] = config.sql_db.mDBIP;
@@ -166,8 +164,7 @@ void AsyncReadyDB(LogicActorThread *pThread)
 	param[DBUSER] = config.sql_db.mDBUSER;
 	param[TABLE_LIST] = config.sql_db.mTABLE_LIST;
 	param[DBPACKET_SIZE] = 16 * 1024 * 1024;
-
-
+	
 	// Update共享缓存key使用 Actor_进行ID_线程ID 组成的字符串, 生成哈希的整数
 	AString keyString;
 	int proID = _getpid();

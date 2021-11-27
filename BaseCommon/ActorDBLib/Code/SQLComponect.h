@@ -6,51 +6,29 @@
 
 namespace NetCloud
 {
-	class ActorDBLib_Export SQLComponect : public Component
+	class ActorDBLib_Export SQLComponect : public DBTableLoadSQL
 	{
 	public:
 		void Start() override;
 
-	public:
-		virtual Auto<DBTableLoadSQL> GetSQL() = 0;
-	};
-
-	class ActorDBLib_Export MySQLTableTool : public DBTableLoadSQL
-	{
-	public:
-		virtual bool SaveRecord(ARecord targetRecord)
-		{ 
-			//???
-			AString sqlString;			
-			//if (!mMainThreadSQLTool._MakeSaveSqlData())
-			if (mMainThreadSQLTool.exeSql(sqlString, true))
-				return mMainThreadSQLTool.LoadRecord(targetRecord);
-			else
-				ERROR_LOG("SQL run fail > %s \r\n %s", sqlString.c_str(), mMainThreadSQLTool._getErrorMsg());
-			AssertNote(0, "No override SaveRecord");  return false; 
-		}
 	};
 
 	class ActorDBLib_Export MySQLComponect : public SQLComponect
 	{
 	public:
-		virtual void Awake()
-		{
-			mSQL = MEM_NEW MySQLTableTool();
-		}
+		SaveSQLTask	mSaveTask;
 
-		virtual Auto<DBTableLoadSQL> GetSQL() override { return mSQL; }
-
-	protected:
-		Auto<DBTableLoadSQL> mSQL;
+	public:
+		virtual bool SaveRecord(DBTableManager *pDBMgr, BaseRecord *targetRecord, bool bInsert);
 	};
+
 
 	class ActorDBLib_Export ShareSQLComponect : public SQLComponect
 	{
 	public:
-		virtual Auto<DBTableLoadSQL> GetSQL() override { return mSQL; }
+		AString mSQLString;
 
-	protected:
-		Auto<DBTableLoadSQL> mSQL;
+	public:
+		bool SaveRecord(DBTableManager *pDBMgr, BaseRecord *record, bool bInsert);
 	};
 }

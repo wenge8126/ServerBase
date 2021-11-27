@@ -136,7 +136,7 @@ BOOL CServerToolDlg::OnInitDialog()
 
 	mGateIP = "127.0.0.1";
 	mGatePort = 10000;
-	mConfigPath = "../../Config";
+	mConfigPath = "D:/Home_86/Config";
 
 	UpdateData(FALSE);
 
@@ -228,7 +228,7 @@ void CServerToolDlg::OnBnCreateDB()
 void CServerToolDlg::AsyncCreateDB()
 {
 	ClearLog();
-
+	UpdateData(TRUE);
 	AString dbConfigFile = "DBList";
 	//if (mToolConfig)
 	//	dbConfigFile = mToolConfig->GetValue("account_config", 1).c_str();

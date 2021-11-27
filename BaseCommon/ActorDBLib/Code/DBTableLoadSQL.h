@@ -8,12 +8,13 @@
 #include "IndexDBRecord.h"
 #include "IndexBaseTable.h"
 #include "SQLThread.h"
-
+#include "ActorDBLib.h"
+#include "Component.h"
 
 namespace NetCloud
 {
-
-	class DBTableLoadSQL : public AutoBase
+	class DBTableManager;
+	class DBTableLoadSQL : public Component
 	{
 	public:
 		DBTableLoadSQL()
@@ -21,7 +22,7 @@ namespace NetCloud
 		{}
 
 	public:
-		virtual bool SaveRecord(ARecord record) { AssertNote(0, "No override SaveRecord");  return false; }
+		virtual bool SaveRecord(DBTableManager *pDBMgr, BaseRecord *record, bool bInsert) { AssertNote(0, "No override SaveRecord");  return false; }
 
 	public:
 		// 如果在协程内自动启动异步加载, 否则同步加载
@@ -139,7 +140,6 @@ namespace NetCloud
 		SQLThread			mLoadSQLThread;
 	};
 	//-------------------------------------------------------------------------
-
 
 };
 

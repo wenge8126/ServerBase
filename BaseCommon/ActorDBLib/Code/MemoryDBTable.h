@@ -12,6 +12,8 @@ namespace NetCloud
 	//-------------------------------------------------------------------------
 	// 具有落地功能的内存表
 	// 支持自动冷处理
+	// 记录一旦变化, 立即落地处理
+	// 低速时, 进行一定数据的冷处理检测
 	//-------------------------------------------------------------------------
 	class TableActor;
 	class ActorDBLib_Export MemoryDBTable : public SkipBaseTable
@@ -23,6 +25,8 @@ namespace NetCloud
 		{			
 			mSQLComp = sqlComp;
 		}
+
+
 
 	protected:
 		TableActor *mpActor;

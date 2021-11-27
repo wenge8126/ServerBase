@@ -16,6 +16,7 @@ enum SQLTaskType
 {
 	eSQL_LoadRecord = 0,
 	eSQL_GrowRecond = 1,					// 自增加记录, 返回ID
+	eSQL_SaveRecord = 2,
 };
 
 struct TaskDataHead
@@ -55,9 +56,51 @@ public:
 };
 
 typedef Auto<LoadSQLTask> ALoadTask;
+//-------------------------------------------------------------------------
+class SaveSQLTask
+{
+public:
+	AString					mSQLString;
+	SQLDataArray		mArrayData;
 
+public:
+	bool WriteToThread(ThreadLoopData &targetData, StrLenType index)
+	{
+		DSIZE len = mSQLString.length();
+		if (len > SQL_STRING_MAX)
+		{
+			ERROR_LOG("SQL string %d > %d", len, SQL_STRING_MAX);
+			return false;
+		}
+
+		int totalSize = sizeof(short);
+		short dataCount = mArrayData.mNowCount;
+		for (int i=0; i<dataCount; ++i)
+		{
+			totalSize += mArrayData.mDataArray[i]->dataSize();
+		}
+
+		TaskDataHead head;
+		head.mIndex = len;
+		head.mDataLength = len + totalSize;
+		head.mType = eSQL_SaveRecord;
+
+		targetData.Write((const char*)&head, sizeof(head));
+		targetData.Write(mSQLString.c_str(), mSQLString.length());
+		targetData.write(dataCount);
+		for (int i = 0; i < dataCount; ++i)
+		{
+			DSIZE size = mArrayData.mDataArray[i]->dataSize();
+			targetData.writeData(mArrayData.mDataArray[i].getPtr(), size);
+		}
+
+		return true;
+	}
+};
+//-------------------------------------------------------------------------
 class SQLThread : protected WorkThread
 {
+
 public:
 	~SQLThread()
 	{
@@ -168,6 +211,7 @@ public:
 		int lenSize = sizeof(TaskDataHead);
 		char  szSQLString[SQL_STRING_MAX + 1+ sizeof(TaskDataHead)];
 		DataBuffer	mRecordData;
+		Array<AutoData> sqlDataList;
 
 		while (IsActive())
 		{
@@ -175,10 +219,46 @@ public:
 			if (!mWriteData.peek(&head, lenSize))
 				continue;
 			AssertNote(head.mDataLength <= SQL_STRING_MAX, "SQL string length %d > %d", head.mDataLength, SQL_STRING_MAX);
+
+			if (head.mType == eSQL_SaveRecord)
+			{
+				if (mWriteData.dataSize()<lenSize+head.mDataLength)
+					continue;
+				if (!mWriteData.peek(szSQLString, lenSize + head.mIndex))
+				{
+					AssertNote(0, "Must read sql string");
+					continue;
+				}
+				szSQLString[lenSize + head.mDataLength] = '\0';
+				
+				mWriteData.skip(lenSize+head.mIndex);
+				short dataSize = 0;
+				mWriteData.read(dataSize);
+				if (sqlDataList.size() < dataSize)
+					sqlDataList.resize(dataSize);
+				for (int i = 0; i < dataSize; ++i)
+				{
+					if (!sqlDataList[i])
+						sqlDataList[i] = MEM_NEW DataBuffer();
+
+					if (!mWriteData.readData(sqlDataList[i].getPtr()))
+					{
+						ERROR_LOG("Code error");
+						AssertNote(0, "Code error");
+						return;
+					}
+				}
+				if (!mSQLTool.exeSql(szSQLString + lenSize, sqlDataList))
+				{
+					ERROR_LOG("SQL fail : %s\r\n%s", szSQLString + lenSize, mSQLTool.getErrorMsg());
+				}
+				continue;
+			}
+
 			if (mWriteData.peek(szSQLString, lenSize + head.mDataLength))
 			{
 				mWriteData.skip(lenSize + head.mDataLength);
-
+				
 				szSQLString[lenSize + head.mDataLength] = '\0';
 				if (mSQLTool.exeMultiSql(szSQLString + lenSize, true, NULL))
 				{
@@ -230,11 +310,13 @@ public:
 		, mReadData(1024*1024*8)
 	{}
 
+public:
+	ThreadLoopData				mWriteData;				// No lock, NOTE: 由于不可变化大小, 所以, 最大包不可大于此空间值(可采用临时大包处理方案)
+
 protected:
 	AutoTable							mBackGrowTable;
 	ARecord							mBackGrowRecond;		// 用于只获取ID的
 	ARecord							mBackRecord;
-	ThreadLoopData				mWriteData;				// No lock, NOTE: 由于不可变化大小, 所以, 最大包不可大于此空间值(可采用临时大包处理方案)
 	ThreadLoopData				mReadData;
 	EasyHash<int, ALoadTask>	mTastList;
 	MySqlDBTool					mSQLTool;

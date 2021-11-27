@@ -1,57 +1,70 @@
 #include "LogicDBTable.h"
 #include "DBTableManager.h"
+#include "SQLComponect.h"
 
-
-ARecord NetCloud::LogicDBTable::_NewRecord()
+namespace NetCloud
 {
-	return MEM_NEW LogicDBRecord(this);
-}
 
-ARecord NetCloud::LogicDBTable::NewRecord()
-{
-	ARecord re = MEM_NEW LogicDBRecord(this);	
-	return re;
-}
-
-ARecord NetCloud::LogicDBTable::GrowthNewRecord(DataStream *recordData /*= NULL*/)
-{
-	ARecord r = _NewRecord();
-	r->_alloctData(0);
-
-	if (mDBDataLoadSQL.AwaitGrowRecondID(r))
-		return r;
-
-	return ARecord();
-}
-
-void NetCloud::LogicDBTable::InsertDBNewRecord(ARecord newRecord)
-{
-	newRecord->FullAllUpdate(true);
-	AString sql;
-
-	bool bRe = MySqlDBTool::_MakeSaveSqlData(sql, mTempDataArray, newRecord.getPtr(), true);
-	if (bRe)
+	NetCloud::LogicDBTable::LogicDBTable(bool bShareSQL) : SkipBaseTable(eInitPoolField)
 	{
-		mpDB->mSQLUpdate.SendRecordUpdate(sql, mTempDataArray.mDataArray, mTempDataArray.mNowCount);
-		newRecord->FullAllUpdate(false);
+		if (bShareSQL)
+			mDBDataLoadSQL = MEM_NEW ShareSQLComponect();
+		else
+			mDBDataLoadSQL = MEM_NEW MySQLComponect();
 	}
-}
 
-//-------------------------------------------------------------------------
-void NetCloud::LogicDBRecord::SaveUpdate()
-{
-	if (NeedUpdate())
+	ARecord NetCloud::LogicDBTable::_NewRecord()
 	{
-		Auto<LogicDBTable> t = GetTable();
-		AString sql;
-		bool bRe = MySqlDBTool::_MakeSaveSqlData(sql, t->mTempDataArray, this, false);
-		if (bRe)
+		return MEM_NEW LogicDBRecord(this);
+	}
+
+	ARecord NetCloud::LogicDBTable::NewRecord()
+	{
+		ARecord re = MEM_NEW LogicDBRecord(this);
+		return re;
+	}
+
+	ARecord NetCloud::LogicDBTable::GrowthNewRecord(DataStream *recordData /*= NULL*/)
+	{
+		ARecord r = _NewRecord();
+		r->_alloctData(0);
+
+		if (mDBDataLoadSQL->AwaitGrowRecondID(r))
+			return r;
+
+		return ARecord();
+	}
+
+	void NetCloud::LogicDBTable::InsertDBNewRecord(ARecord newRecord)
+	{
+		newRecord->FullAllUpdate(true);
+		
+		if (mDBDataLoadSQL->SaveRecord(mpDB, newRecord.getPtr(), true) )
+			newRecord->FullAllUpdate(false);
+	}
+
+	void NetCloud::LogicDBTable::ApplyExt(AutoNice extParam)
+	{
+		FieldInfo info = GetField()->getFieldInfo(0);
+		mbStringKey = info->getType() == FIELD_STRING || info->getType() == FIELD_CHAR_STRING;
+		mKeyFieldName = info->getName();
+
+		if (!mDBDataLoadSQL->InitStart(this, mSQLParam.getPtr()))
 		{
-			//t->mUpdateCount++;
-			t->mpDB->mSQLUpdate.SendRecordUpdate(sql, t->mTempDataArray.mDataArray, t->mTempDataArray.mNowCount);
-			FullAllUpdate(false);
-			//mLastUpdateTimeMilSec = TimeManager::NowTick();
+			ERROR_LOG("%s init load SQL fail", GetTableName());
 		}
 	}
+
+	//-------------------------------------------------------------------------
+	void NetCloud::LogicDBRecord::SaveUpdate()
+	{
+		if (NeedUpdate())
+		{
+			Auto<LogicDBTable> t = GetTable();
+			if (t->mDBDataLoadSQL->SaveRecord(t->mpDB, this, true))
+				FullAllUpdate(false);
+		}
+	}
+	//-------------------------------------------------------------------------
+
 }
-//-------------------------------------------------------------------------

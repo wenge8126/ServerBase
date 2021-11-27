@@ -21,17 +21,13 @@ namespace NetCloud
 		friend class LogicDBRecord;
 
 	public:
-		LogicDBTable()
-			: SkipBaseTable(eInitPoolField)
-		{
-
-		}
+		LogicDBTable(bool bShareSQL);
 
 		~LogicDBTable()
 		{}
 
-		virtual void Process() override { mDBDataLoadSQL.Process(); }
-		virtual void LowProcess()  { mDBDataLoadSQL.LowProcess(); }
+		virtual void Process() override { mDBDataLoadSQL->Process(); }
+		virtual void LowProcess()  { mDBDataLoadSQL->LowProcess(); }
 
 	public:
 		// 获取记录, 是异步从SQL中进行加载, 可能不存在
@@ -96,23 +92,12 @@ namespace NetCloud
 			return false;
 		}
 
-		virtual void ApplyExt(AutoNice extParam) 
-		{
-			FieldInfo info = GetField()->getFieldInfo(0);
-			mbStringKey = info->getType() == FIELD_STRING || info->getType() == FIELD_CHAR_STRING;
-			mKeyFieldName = info->getName();
-
-			if (!mDBDataLoadSQL.InitStart(this, mSQLParam.getPtr()))
-			{
-				ERROR_LOG("%s init load SQL fail", GetTableName());
-			}
-		}
+		virtual void ApplyExt(AutoNice extParam);
 
 	protected:
 		DBTableManager					*mpDB = NULL;
 		AutoNice								mSQLParam;
-		DBTableLoadSQL					mDBDataLoadSQL;
-		SQLDataArray						mTempDataArray;
+		Hand<DBTableLoadSQL>		mDBDataLoadSQL;
 
 		AString mKeyFieldName;
 		bool mbStringKey = false;
@@ -136,7 +121,7 @@ namespace NetCloud
 		virtual bool ReloadData(const char *szIndex) override
 		{
 			Auto<LogicDBTable> t = GetTable();
-			return (t->mDBDataLoadSQL.AwaitLoadRecord(szIndex, this));
+			return (t->mDBDataLoadSQL->AwaitLoadRecord(szIndex, this));
 
 		}
 
@@ -149,7 +134,7 @@ namespace NetCloud
 		}
 	};
 
-
+	//-------------------------------------------------------------------------
 }
 
 #endif //_INCLUDE_LOGICDBTABLE_H_

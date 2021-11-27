@@ -15,7 +15,10 @@
 
 namespace NetCloud
 {
-
+	/*/-------------------------------------------------------------------------
+	使用Actor 缓存用到的记录, 及进入逻辑统一
+	Actor分布部署, 所以只需要一个落地库即可完成并发
+	//-------------------------------------------------------------------------*/
 	class ActorDBLib_Export DBTableManager : public AutoBase
 	{
 	public:
@@ -75,17 +78,19 @@ namespace NetCloud
 
 	public:
 		SendShareSQLUpdate					mSQLUpdate;
+		bool												mbUseShareSQL = false;
+		SQLDataArray								mTempDataArray;
 
 	protected:
 		AutoNet										mShareDBClientNet;
 		
 		AutoNice										mInitParam;
-		FastHash<AString, AutoTable>	mTableList;
-		AutoTable									mTableListDBTable;
+		FastHash<AString, AutoTable>		mTableList;
+		AutoTable										mTableListDBTable;
 		bool												mbReadyClose = false;
 		
 	};
-	typedef Auto< DBTableManager>		AutoDBManager;
+	typedef Auto< DBTableManager>	AutoDBManager;
 	//-------------------------------------------------------------------------
 	class ShareDBClientNet : public IOCPClientNet
 	{
