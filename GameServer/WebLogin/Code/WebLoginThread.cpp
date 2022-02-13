@@ -19,6 +19,8 @@
 
 #include <windows.h>
 
+#include "LoginNetComponect.h"
+
 using namespace uWS;
 
 using namespace NetCloud;
@@ -165,28 +167,7 @@ void _ConnectGate(WebLoginThread *pThread)
 	pThread->mbStartOk = true;
 }
 //-------------------------------------------------------------------------
-class CS_ActorMsg : public ComponectResponseMsg
-{
-public:
-	virtual bool _DoEvent() override
-	{
-		ASYNC(&CS_ActorMsg::Async, this);
-		return true;
-	}
 
-	void Async()
-	{
-		AString msgName = get("MSG_NAME");
-		int type = get("UNIT_TYPE");
-		Int64 id = get("UNIT_ID");
-
-		GetResponseEvent()["RESP"] = GetActor()->Await(msgName, GetData(), { type, id }, 6000).getPtr();
-		Finish();
-	}
-
-protected:
-private:
-};
 
 //-------------------------------------------------------------------------
 // 实现客户端直接消息交互系统内所有Actor (中转Actor消息请求)
@@ -195,33 +176,33 @@ private:
 // 2 存在直接分配Actor
 // 3 新建时, 根据数据库, 新建记录, 然后以记录ID, 为UnitID 新建Actor
 // 4 Actor 内绑定 ConnectPtr, Connect 设置数据为对应 的Actor
-class ActorNetMsgComponent : public NetWorkerComponent
-{
-public:
-	virtual bool OnConnected(HandConnect connect)
-	{
-		NetWorkerComponent::OnConnected(connect);
-
-		CoroutineTool::AsyncCall(AsyncCreateConnectActor, connect);
-		return true;
-	}
-
-	static void AsyncCreateConnectActor(HandConnect connect)
-	{
-		Hand<NetWorkerComponent> comp = connect->GetUserData();
-		// 验证
-		// 获取数据
-		// 新建记录
-		// 新建
-	}
-
-	// 注册中转需要的事件
-	virtual void _RegisterMsg(Logic::tEventCenter *pCenter) override
-	{
-		REGISTER_EVENT(pCenter, CS_ActorMsg);
-		pCenter->RegisterMsg(200, MEM_NEW Logic::EventFactory<CS_ActorMsg>());
-	}
-};
+//class ActorNetMsgComponent : public NetWorkerComponent
+//{
+//public:
+//	virtual bool OnConnected(HandConnect connect)
+//	{
+//		NetWorkerComponent::OnConnected(connect);
+//
+//		CoroutineTool::AsyncCall(AsyncCreateConnectActor, connect);
+//		return true;
+//	}
+//
+//	static void AsyncCreateConnectActor(HandConnect connect)
+//	{
+//		Hand<NetWorkerComponent> comp = connect->GetUserData();
+//		// 验证
+//		// 获取数据
+//		// 新建记录
+//		// 新建
+//	}
+//
+//	// 注册中转需要的事件
+//	virtual void _RegisterMsg(Logic::tEventCenter *pCenter) override
+//	{
+//		REGISTER_EVENT(pCenter, CS_ActorMsg);
+//		pCenter->RegisterMsg(200, MEM_NEW Logic::EventFactory<CS_ActorMsg>());
+//	}
+//};
 
 //-------------------------------------------------------------------------
 void WebLoginThread::OnStart(void*)
@@ -255,7 +236,7 @@ void WebLoginThread::OnStart(void*)
 		mActorManager->RegisterActor(Unit_Login, MEM_NEW DefineActorFactory<LoginActor>());
 		mActorManager->RegisterComponect("HttpComponect", MEM_NEW EventFactory<HttpComponect>());
 		mActorManager->RegisterComponect("TcpComponent", MEM_NEW EventFactory< TcpComponent>());
-		mActorManager->RegisterComponect("ActorNetMsgComponent", MEM_NEW EventFactory< ActorNetMsgComponent>());
+		mActorManager->RegisterComponect("LoginNetComponect", MEM_NEW EventFactory<LoginNetComponect>());
 
 		mLoginActor = mActorManager->CreateActor(Unit_Login, config.login_id);
 		

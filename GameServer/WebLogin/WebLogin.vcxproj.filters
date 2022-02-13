@@ -74,6 +74,9 @@
     <ClInclude Include="Code\NetWorkerComponent.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Code\LoginNetComponect.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="WebLogin.rc">

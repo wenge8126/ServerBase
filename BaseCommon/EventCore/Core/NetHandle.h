@@ -91,8 +91,7 @@ public:
 	virtual void SetUserData(AutoAny userData) {}
 
 public:
-    ArrayMap<int> mInfoData;
-
+	AutoAny		mAttachData;
 };
 
 typedef Hand<tNetConnect>		HandConnect;

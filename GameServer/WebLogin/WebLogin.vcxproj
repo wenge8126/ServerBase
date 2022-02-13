@@ -518,6 +518,7 @@ xcopy $(COMMON_BASE_LIB)\Bin\$(TargetName).pdb $(Server_Out_Dir)\  /y
     <ClInclude Include="..\Common\SDK\HttpClient.h" />
     <ClInclude Include="..\Common\SDK\SDK.h" />
     <ClInclude Include="Code\HttpComponect.h" />
+    <ClInclude Include="Code\LoginNetComponect.h" />
     <ClInclude Include="Code\NetWorkerComponent.h" />
     <ClInclude Include="Code\TcpComponent.h" />
     <ClInclude Include="Code\WebLoginThread.h" />

@@ -349,8 +349,10 @@ HandPacket EventNetProtocol::GenerateEventPacket(tNetConnect *pConnect,  Logic::
 		ERROR_LOG("[%s]事件数据流化失败", sendEvent->GetEventName());
 		return NULL;
 	}
+#if    _USE_NICE_PROTOCOL_
     if (sendEvent->hasState(STATE_EVENT_NEED_SAVE_PROTOCOL))
         pConnect->mInfoData.Append(sendEvent->GetEventFactory()->GetID(), sendEvent->GetEventFactory()->GetNiceDataProtocolKey());
+#endif
 	//??? 使用自动压缩后，ZIP压缩耗时较大
 	if (bNeedZip)
 	{
