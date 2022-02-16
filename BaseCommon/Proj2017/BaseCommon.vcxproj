@@ -556,6 +556,7 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y</Command>
     <ClInclude Include="..\BaseCommon\Assertx.h" />
     <ClInclude Include="..\BaseCommon\AsyncAutoFunction.h" />
     <ClInclude Include="..\BaseCommon\AsyncFunction.h" />
+    <ClInclude Include="..\BaseCommon\AsyncLoop.h" />
     <ClInclude Include="..\BaseCommon\AutoPtr.h" />
     <ClInclude Include="..\BaseCommon\AutoDebug.h" />
     <ClInclude Include="..\BaseCommon\AutoKey.h" />

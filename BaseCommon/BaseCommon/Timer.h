@@ -9,6 +9,7 @@
 #include "AsyncFunction.h"
 #include "PoolLoop.h"
 #include <vector>
+
 //-------------------------------------------------------------------------
 class TimerCenter;
 class BaseCommon_Export tTimer : public AutoBase

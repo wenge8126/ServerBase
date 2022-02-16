@@ -426,6 +426,9 @@
     <ClInclude Include="..\BaseCommon\TaskSystem.h">
       <Filter>Thread</Filter>
     </ClInclude>
+    <ClInclude Include="..\BaseCommon\AsyncLoop.h">
+      <Filter>Coroutine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\BaseCommon\AutoDebug.cpp">

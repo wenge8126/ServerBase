@@ -20,6 +20,7 @@
 #include <windows.h>
 
 #include "LoginNetComponect.h"
+#include "AsyncLoop.h"
 
 using namespace uWS;
 
@@ -58,22 +59,22 @@ WebLoginThread::WebLoginThread()
 	: ServerThread(GetAppName())
 {
 	mServerListJson = "{}";
-	mServerList = MEM_NEW r_server_list();
+mServerList = MEM_NEW r_server_list();
 
-	mTaskSystem = MEM_NEW TaskSystem(32);
+mTaskSystem = MEM_NEW TaskSystem(32);
 }
 
 //-------------------------------------------------------------------------
 
 AString WebLoginThread::GetTitle()
-{	
+{
 	AString runMode;
 #if _DEBUG
 	runMode = "开发";
 #else
 	runMode = "运行";
 #endif
-	 
+
 	//AutoTable table = TableManager::getSingleton().GetTable("Config");
 	//ARecord webWsAddrRe = table->GetRecord("WebWs");
 	//ARecord serverRe = table->GetRecord("ServerArea");
@@ -92,11 +93,11 @@ AString WebLoginThread::GetTitle()
 			, GetAppName()
 			, runMode.c_str()
 			, mServerInfo.SERVER_ID
-			, serverName.ANIS().c_str()			
+			, serverName.ANIS().c_str()
 			, IsWss() ? "wss" : "ws"
 			, config.ws_ip.c_str()
 			, config.ws_port
-		
+
 			, SERVER_VERSION_FLAG
 			, szDir
 		);
@@ -114,7 +115,7 @@ void WebLoginThread::SetTitle(const AString &title)
 	}
 	else
 	{
-		AString info; 
+		AString info;
 		info.Format("X %s starting ...", GetAppName());
 		SetConsoleTitle(info.c_str());
 	}
@@ -123,47 +124,59 @@ void WebLoginThread::SetTitle(const AString &title)
 
 bool TraverseDeleteBackFiles(const std::string &path)
 {
-    _finddata_t file_info;
-    string current_path=path+"*.*"; //可以定义后面的后缀为*.exe，*.txt等来查找特定后缀的文件，*.*是通配符，匹配所有类型,路径连接符最好是左斜杠/，可跨平台
-    //打开文件查找句柄
-    intptr_t handle=_findfirst(current_path.c_str(),&file_info);
-    //返回值为-1则查找失败
-    if(-1==handle)
-        return false;
-    do
-    {
-        //判断是否子目录
-        string attribute;
-        if(file_info.attrib==_A_SUBDIR) //是目录
-            attribute="dir";
+	_finddata_t file_info;
+	string current_path = path + "*.*"; //可以定义后面的后缀为*.exe，*.txt等来查找特定后缀的文件，*.*是通配符，匹配所有类型,路径连接符最好是左斜杠/，可跨平台
+	//打开文件查找句柄
+	intptr_t handle = _findfirst(current_path.c_str(), &file_info);
+	//返回值为-1则查找失败
+	if (-1 == handle)
+		return false;
+	do
+	{
+		//判断是否子目录
+		string attribute;
+		if (file_info.attrib == _A_SUBDIR) //是目录
+			attribute = "dir";
 		else
 		{
 			attribute = "file";
 			//NOTE_LOG("%s", file_info.name);
 			if (FileDataStream::GetFileExtName(file_info.name) == ".bak")
 			{
-				::DeleteFile((path+file_info.name).c_str());
+				::DeleteFile((path + file_info.name).c_str());
 			}
 		}
-        //输出文件信息并计数,文件名(带后缀)、文件最后修改时间、文件字节数(文件夹显示0)、文件是否目录
-        //cout<<file_info.name<<' '<<file_info.time_write<<' '<<file_info.size<<' '<<attribute<<endl; //获得的最后修改时间是time_t格式的长整型，需要用其他方法转成正常时间显示
-        //file_num++;
- 
-    }while(!_findnext(handle,&file_info));  //返回0则遍历完
-    //关闭文件句柄
-    _findclose(handle);
-    return true;
+		//输出文件信息并计数,文件名(带后缀)、文件最后修改时间、文件字节数(文件夹显示0)、文件是否目录
+		//cout<<file_info.name<<' '<<file_info.time_write<<' '<<file_info.size<<' '<<attribute<<endl; //获得的最后修改时间是time_t格式的长整型，需要用其他方法转成正常时间显示
+		//file_num++;
+
+	} while (!_findnext(handle, &file_info));  //返回0则遍历完
+	//关闭文件句柄
+	_findclose(handle);
+	return true;
 }
- 
+
+
 void _ConnectGate(WebLoginThread *pThread)
 {
-	while (true)
+	LOG("=== Connect gate start");
+	bool re = AsyncLoop::AwaitLoop(
+		[=]()
 	{
 		bool b = pThread->mActorManager->mNetNode->AwaitConnectGate(NetAddress(config.login_node.gate.ip.c_str(), config.login_node.gate.port));
-		if (b)
-			break;
-		tTimer::AWaitTime(3000);
+		return b;
 	}
+		, 10, 3000);
+
+	LOG("=== Connect gate : %s", re ? "ok" : "fail");
+
+	//while (true)
+	//{
+	//	bool b = pThread->mActorManager->mNetNode->AwaitConnectGate(NetAddress(config.login_node.gate.ip.c_str(), config.login_node.gate.port));
+	//	if (b)
+	//		break;
+	//	tTimer::AWaitTime(3000);
+	//}
 	pThread->mbStartOk = true;
 }
 //-------------------------------------------------------------------------
