@@ -21,15 +21,17 @@ class CheckAccountMsg : public ComponectResponseMsg
 		RQ_CheckAndCreateAccount rq;
 		rq.mAccount = get("ACCOUNT");
 		rq.mPassword = get("PASSWORD");
-		
+		rq.mServerID = 1;
 		Auto< RS_CheckAndCreateAccount> resp = GetActor()->Await<RS_CheckAndCreateAccount>(rq, { Actor_Account, 1 }, 6000);
 
-		if (mNetConnect && resp->mID > 0)
+		if (resp && mNetConnect && resp->mID > 0)
 		{
 			LoginData *p = MEM_NEW LoginData();
 			p->mID = resp->mID;
 			mNetConnect->mAttachData = p;
 		}
+		else
+			ERROR_LOG("Account check fail");
 
 		 GetResponseEvent()["RESP"] = (tNiceData*)resp.getPtr();
 

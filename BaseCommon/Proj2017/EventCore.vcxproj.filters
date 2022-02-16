@@ -83,9 +83,6 @@
     <ClInclude Include="..\EventCore\Core\ClientEvent.h">
       <Filter>Event</Filter>
     </ClInclude>
-    <ClInclude Include="..\EventCore\Core\EasyListNode.h">
-      <Filter>Event</Filter>
-    </ClInclude>
     <ClInclude Include="..\EventCore\Core\Event.h">
       <Filter>Event</Filter>
     </ClInclude>

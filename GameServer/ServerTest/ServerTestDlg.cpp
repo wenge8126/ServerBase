@@ -459,11 +459,13 @@ void _RunTestConnectServer(CServerTestDlg *p)
 		net->Process();
 		//tTimer::AWaitTime(100);
 		net->LowProcess(1);
-		TimeManager::Sleep(10);
+		tTimer::AWaitTime(100);
 		if (gbTag)
 			break;
 	}
 	gbTag = false;
+
+	NOTE_LOG("完成帐号测试");
 }
 
 

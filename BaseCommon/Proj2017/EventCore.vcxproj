@@ -526,7 +526,6 @@ xcopy $(COMMON_BASE_LIB)_Win32\$(TargetName).pdb $(Server_Out_Dir)_Win32\  /y</C
     <ClInclude Include="..\EventCore\Core\CEvent.h" />
     <ClInclude Include="..\EventCore\Core\ClientEvent.h" />
     <ClInclude Include="..\EventCore\Core\DataCenter.h" />
-    <ClInclude Include="..\EventCore\Core\EasyListNode.h" />
     <ClInclude Include="..\EventCore\Core\Event.h" />
     <ClInclude Include="..\EventCore\Core\EventCallBack.h" />
     <ClInclude Include="..\EventCore\Core\EventCenter.h" />
