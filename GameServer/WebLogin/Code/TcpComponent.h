@@ -72,9 +72,7 @@ public:
 	}
 
 public:
-	void Awake() override
-	{
-	}
+	void Awake() override;
 
 	void Start() override;
 

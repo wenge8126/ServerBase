@@ -19,6 +19,14 @@ protected:
 	FastHash<PacketID, pNotifyMsgCall>	mOnNotifyMsgFunctionList;
 
 public:
+	template<typename ReqMsg, typename RespMsg>
+	Auto<RespMsg> Await(tNetConnect *pConnect, ReqMsg req)
+	{
+		//???
+		Auto<RespMsg> resp;
+		return resp;
+	}
+
 	void RegisterMsg(PacketID id, pMsgCall  pFun)
 	{
 		mOnMsgFunctionList.insert(id, pFun);

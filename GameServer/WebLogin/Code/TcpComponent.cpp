@@ -7,9 +7,14 @@ HandConnect TcpComponent::CreateConnect()
 	return MEM_NEW TcpComponentConnect();
 }
 
-void TcpComponent::Start()
+void TcpComponent::Awake()
 {
 	mTcpNet = MEM_NEW TcpComponentNet(this, mMaxConnectCount, mMaxThreadCount);
+}
+
+void TcpComponent::Start()
+{
+	
 	if (mServerIp.empty() || mServerPort <= 0)
 	{
 		ERROR_LOG("Error ip or port [%s : %d]", mServerIp.c_str(), mServerPort);
