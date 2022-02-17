@@ -32,8 +32,9 @@ class CheckAccountMsg : public ComponectResponseMsg
 		}
 		else
 			ERROR_LOG("Account check fail");
-
-		 GetResponseEvent()["RESP"] = (tNiceData*)resp.getPtr();
+		AutoNice d = MEM_NEW NiceData();
+		resp->ToData(d);
+		 GetResponseEvent()["RESP"] = d.getPtr();
 
 		Finish();
 	}

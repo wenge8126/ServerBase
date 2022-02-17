@@ -80,9 +80,6 @@
     <ClInclude Include="Code\ActorMsg.h">
       <Filter>Actor</Filter>
     </ClInclude>
-    <ClInclude Include="Code\BaseMsg.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="Code\ActorGate.h">
       <Filter>Gate</Filter>
     </ClInclude>

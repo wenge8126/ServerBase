@@ -58,13 +58,22 @@ namespace NetCloud
 			return AwaitRequest(targetID, overTimeSecond);
 		}
 
-		Auto<tResponseResultPacket> Await(const AString &requestMsgMame, const  tNiceData &requestMsg, UnitID targetID, int overTimeSecond)
+		Auto<tResponseResultPacket> Await(const AString &requestMsgMame, const  tBaseMsg &requestMsg, UnitID targetID, int overTimeSecond)
 		{
 			mMsgName = requestMsgMame;
 			mRequestData->clear(false);
 			if (!requestMsg.serialize(mRequestData.getPtr()))
 				ERROR_LOG("Msg seralize fail : \r\n%s", requestMsg.dump().c_str())
 			return AwaitRequest(targetID, overTimeSecond);
+		}
+
+		Auto<tResponseResultPacket> Await(const AString &requestMsgMame, const  tNiceData &requestMsg, UnitID targetID, int overTimeSecond)
+		{
+			mMsgName = requestMsgMame;
+			mRequestData->clear(false);
+			if (!requestMsg.serialize(mRequestData.getPtr()))
+				ERROR_LOG("Msg seralize fail : \r\n%s", requestMsg.dump().c_str())
+				return AwaitRequest(targetID, overTimeSecond);
 		}
 
 		virtual	PacketID_t	GetPacketID() const override { return eMsgResponse; }
@@ -256,7 +265,7 @@ namespace NetCloud
 		{
 			return SendMsg(localUnit, targetID, msg.GetMsgName(), msg);
 		}
-		bool SendMsg(AUnit localUnit, UnitID targetID, const AString &requestMsgMame, const  tNiceData &msg)
+		bool SendMsg(AUnit localUnit, UnitID targetID, const AString &requestMsgMame, const  tBaseMsg &msg)
 		{
 			mNetUnit = localUnit;
 			mMsgName = requestMsgMame;
@@ -265,6 +274,17 @@ namespace NetCloud
 				ERROR_LOG("Msg seralize fail : \r\n%s", msg.dump().c_str())
 
 			return SendPacket(targetID, this);
+		}
+
+		bool SendMsg(AUnit localUnit, UnitID targetID, const AString &requestMsgMame, const  tNiceData &msg)
+		{
+			mNetUnit = localUnit;
+			mMsgName = requestMsgMame;
+			mMsgData->clear(false);
+			if (!msg.serialize(mMsgData.getPtr()))
+				ERROR_LOG("Msg seralize fail : \r\n%s", msg.dump().c_str())
+
+				return SendPacket(targetID, this);
 		}
 
 		virtual bool		SendPacket(UnitID target, Packet *pPacket) override

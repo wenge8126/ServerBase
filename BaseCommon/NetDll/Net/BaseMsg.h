@@ -1,5 +1,9 @@
+#ifndef _INCLUDE_BASEMSG_H_
+#define _INCLUDE_BASEMSG_H_
+
 #pragma once
 
+#include "Packet.h"
 #include "NiceData.h"
 //#include "ShareMemCloudDB.h"
 #include "TimeManager.h"
@@ -33,7 +37,7 @@ namespace NetCloud
 
 using namespace NetCloud;
 
-class tBaseMsg : public tNiceData
+class tBaseMsg : public Packet
 {
 public:
 	tBaseMsg(const tBaseMsg &other)
@@ -305,14 +309,7 @@ public:
 	virtual void clear(bool bFreeBuffer = true) = 0;
 	virtual void copy(const tBaseMsg &other) {}
 
-	virtual void initData() override { clear(false); }
-	// 不知道什么原因, 只会执行基类的
-	//virtual tNiceData& operator = (const tNiceData &other) override
-	//{
-	//	copy((const tBaseMsg &)other);  return *this;
-	//}
-
-	virtual tNiceData& operator = (AutoNice other)
+	virtual tBaseMsg& operator = (AutoNice other)
 	{
 		Full(other);  return *this;
 	}
@@ -324,36 +321,10 @@ public:
 	}
 
 public:
-	virtual NICEDATA_TYPE getType() const { return NICEDATA; }
-	virtual AutoNice NewNice() { return MEM_NEW NiceData(); }
-
-	virtual AData& getOrCreate(const char* key)
-	{
-		ERROR_LOG("Can not use %s::getOrCreate(%s)", GetMsgName(),  key);
-		thread_local AData msData;
-		return  msData;
-	}
-	virtual AData& getAData(const char *szKey) const
-	{
-		ERROR_LOG("Can not use %s::getAData(%s)", GetMsgName(), szKey);
-		thread_local AData msData;
-		return  msData;
-	}
-
-	virtual bool append(int index, const AData &data, bool bReplace = false)
-	{
-		ERROR_LOG("Can not use %s::append(%d)", GetMsgName(), index);
-		return false;
-	}
-	virtual bool append(const AString &index, const AData &data, bool bReplace = false)
-	{
-		ERROR_LOG("Can not use %s::append(%s)", GetMsgName(), index.c_str());
-		return false;
-	}
 
 	// NOTE: 使用 IDNiceData 临时转换, 可以兼容之前老的结构
 	// NOTE: 特别注意, 如果新的结构中不存在对应的字段, 老的数据将被丢弃!
-	virtual bool restore(DataStream *scrData) override
+	virtual bool restore(DataStream *scrData)
 	{
 		thread_local static AutoNice idNice = MEM_NEW NiceData();
 		if (!idNice->restore(scrData))
@@ -365,53 +336,8 @@ public:
 		return true;
 	}
 
-	bool remove(const AString &key) { return remove(key.c_str()); }
-	virtual bool remove(const char* key)
-	{
-		ERROR_LOG("Can not use %s::remove(%s)", GetMsgName(), key);
-		return false;
-	}
 
-	virtual void swap(tNiceData &other)
-	{
-		ERROR_LOG("Can not use %s::swap()", GetMsgName());
-	}
-
-	virtual size_t append(const tNiceData &scrData, bool bReplace)
-	{
-		const tBaseMsg *pOther = dynamic_cast<const tBaseMsg*>(&scrData);
-		if (pOther != NULL)
-		{
-			clear(false);
-			copy(*pOther);
-			return 1;
-		}
-		else
-		{
-			if (scrData.mUseCount > 0)
-			{
-				AutoNice other = (tNiceData*)&scrData;
-				Full(other);
-				return 1;
-			}
-		}
-		ERROR_LOG("Can not use %s::append(), may be other is NiceData and is not AutoNice", GetMsgName());
-		return 0;
-	}
-
-	virtual size_t count() const
-	{
-		ERROR_LOG("Can not use %s::count()", GetMsgName());
-#if DEVELOP_MODE
-		AString info;
-		info.Format("Can not use %s::count()", GetMsgName());
-		MyMessageBox(info.c_str());
-		AssertNote(0, info.c_str());
-#endif
-		return 0;
-	}
-
-	virtual AString ToJSON() override
+	virtual AString ToJSON() 
 	{
 		thread_local static AutoNice  tempNice = MEM_NEW NiceData();
 		tempNice->clear(false);
@@ -419,23 +345,41 @@ public:
 		return tempNice->ToJSON();
 	}
 
-	virtual iterator begin() const
-	{
-		ERROR_LOG("Can not use %s::begin()", GetMsgName());
-#if DEVELOP_MODE
-		AString info;
-		info.Format("Can not use %s::begin()", GetMsgName());
-		MyMessageBox(info.c_str());
-		AssertNote(0, info.c_str());
-#endif
-		return iterator();
-	}
 
-	virtual AString dump(int sub = 0, int code = 0) const override
+	virtual AString dump(int sub = 0, int code = 0) const 
 	{
 		thread_local static AutoNice temp = MEM_NEW NiceData();
 		temp->clear(false);
 		((tBaseMsg*)this)->ToData(temp);
 		return temp->dump();
 	}
+
+public:
+	virtual	UINT		GetPacketSize() const { return 0; }
+	virtual UINT		GetState() const { return 0; }
+	virtual VOID		SetState(UINT stateData) {}
+
+	virtual BOOL		Read(DataStream& iStream, size_t packetSize) 
+	{ 
+		AutoNice temp = MEM_NEW NiceData();
+
+		if (temp->restore(&iStream))
+		{
+			Full(temp);
+			return TRUE;
+		}
+		else
+			ERROR_LOG("Restore msg %s data fail", GetMsgName());
+		return FALSE;
+	}
+	virtual BOOL		Write(DataStream& oStream) const 
+	{ 
+		return serialize(&oStream); 
+	}
+
+	virtual UINT		Execute(tNetConnect* pConnect) { return 0; }
 };
+
+
+
+#endif //_INCLUDE_BASEMSG_H_

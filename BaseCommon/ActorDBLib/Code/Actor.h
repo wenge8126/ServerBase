@@ -118,10 +118,10 @@ namespace NetCloud
 
 		bool SendMsg(tBaseMsg &msg, UnitID targetID, BROADCAST_MODE eMode = eBroadcastNone)
 		{
-			return SendMsg(msg.GetMsgName(),msg, targetID, eMode);
+			return SendMsg(msg.GetMsgName(), msg, targetID, eMode);
 		}
 
-		bool SendMsg(const AString &msgName, tNiceData &msg, UnitID targetID, BROADCAST_MODE eMode = eBroadcastNone);
+		bool SendMsg(const AString &msgName, tBaseMsg &msg, UnitID targetID, BROADCAST_MODE eMode = eBroadcastNone);
 
 		// 处理RPC消息函数
 		//template<typename ReqMsg, typename RespMsg>

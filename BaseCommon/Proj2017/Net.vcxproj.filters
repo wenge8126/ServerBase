@@ -99,9 +99,6 @@
     <ClCompile Include="..\NetDll\Net\BaseEventNet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\NetDll\Net\BaseNetHandle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\NetDll\Net\Socket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -260,9 +257,6 @@
     <ClInclude Include="..\NetDll\Net\BaseEventNet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\NetDll\Net\BaseNetHandle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\NetDll\Net\NodeNetEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -385,6 +379,12 @@
     </ClInclude>
     <ClInclude Include="..\NetDll\Net\SystemInfo.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NetDll\Net\BaseProtocol.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NetDll\Net\BaseMsg.h">
+      <Filter>Protocol</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

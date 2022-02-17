@@ -18,6 +18,7 @@
 //#include "TableRecord.h"
 #include "Event.h"
 #include "EventPacket.h"
+
 //----------------------------------------------------------------------
 enum
 {
@@ -49,6 +50,12 @@ public:
 	// 消息数据定义
 	//ARecord GetStructRecord( AutoEvent evt, const AString &structDefineIndex, AutoEvent parentEvent, int nIndex, bool bCreate = true );
 	virtual int GetMsgHeadSize() const  { return PACKET_HEADER_SIZE; }
+
+	virtual bool ProcessReceivePacket(tNetConnect *pConnect, Packet *pPacket) override
+	{
+		pPacket->Execute(pConnect);
+		return true;
+	}
 
 public:
 	virtual bool RegisterNetPacket(AutoPacketFactory f, bool bRespace = true);
