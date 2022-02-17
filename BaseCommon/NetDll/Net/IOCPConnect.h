@@ -92,6 +92,8 @@ public:
 	virtual void OnDisconnect(){ /*WARN_LOG("[%s:%d] disconnect!", GetIp(), GetPort());*/ }
 	virtual void OnSucceedSendEvent(Logic::tEvent *pEvt, Packet *p) {}
 
+	virtual void OnReceivePacket(Packet *pPacket);
+
 	// Ping
 	virtual void OnReceivePingOverTime();
 	virtual int ReceivePingOverSecond() const { return 120; }
@@ -179,9 +181,7 @@ public:
 
 protected:
 	virtual void _ProcessReceiveData();
-	virtual bool Process();
-
-	virtual void OnReceivePacket(Packet *pPacket);
+	virtual bool Process();	
 
 	virtual bool _checkOk() const override { return mbReceiveData; }
 

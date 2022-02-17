@@ -532,7 +532,7 @@ void IOCPConnect::_ProcessReceiveData()
 		if (packet)
 		{
 			try{
-				packet->Execute(this);		
+				OnReceivePacket(packet.getPtr());		
                 if (IsRemove())
                     return;
 
@@ -602,12 +602,17 @@ void IOCPConnect::SetRemove(bool bNeedRemove)
 	mRemoveTime = TimeManager::Now();
 #endif
 }
-//-------------------------------------------------------------------------*/
-//-------------------------------------------------------------------------*/
-void IOCPServerConnect::OnReceivePacket(Packet *pPacket)
+
+void IOCPConnect::OnReceivePacket(Packet *pPacket)
 {
-	pPacket->Execute(this);
+	//pPacket->Execute(this);
+	tNetHandle *pNet = GetNetHandle();
+	if (pNet != NULL)
+		pNet->ProcessReceivePacket(this, pPacket);
 }
+
+//-------------------------------------------------------------------------*/
+//-------------------------------------------------------------------------*/
 
 //-------------------------------------------------------------------------
 

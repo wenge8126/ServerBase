@@ -34,6 +34,7 @@ public:
 	virtual const char* GetConnectFinishEvent(void) { return NULL; }
 
 public:	
+	virtual void ProcessReceivePacket(tNetConnect *pConnect, Packet *pPacket) override;
 	virtual bool OnReceiveEvent(tNetConnect *revConnect, Logic::tEvent *revEvent);
 
 public:

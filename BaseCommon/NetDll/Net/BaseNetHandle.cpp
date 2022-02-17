@@ -42,6 +42,11 @@ bool tBaseNetHandle::Send( Logic::tEvent *sendEvent, tNetConnect *pConnect )
 	return false;
 }
 
+void tBaseNetHandle::ProcessReceivePacket(tNetConnect *pConnect, Packet *pPacket)
+{
+	pPacket->Execute(pConnect);
+}
+
 bool tBaseNetHandle::OnReceiveEvent( tNetConnect *revConnect, Logic::tEvent *revEvent )
 {
 	__ENTER_FUNCTION
