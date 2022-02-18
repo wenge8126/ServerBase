@@ -57,11 +57,6 @@ tBaseEventNet::~tBaseEventNet()
 
 //----------------------------------------------------------------------------------------------
 
-void tBaseEventNet::ProcessReceivePacket(tNetConnect *pConnect, Packet *pPacket)
-{
-	pPacket->Execute(pConnect);
-}
-
 //----------------------------------------------------------------------------------------------
 
 

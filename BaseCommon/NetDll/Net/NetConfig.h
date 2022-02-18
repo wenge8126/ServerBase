@@ -68,7 +68,7 @@ enum NET_PACKET_ID
 {
 	PACKET_NONE = 0,
 	PACKET_TRANSFER = 1,		// 网络节点之间中转数据的消息包 (里面是消息包数据)
-	//PACKET_REQUEST_MGR	= 2,		// 回复结果消息
+	PACKET_RESPONSE_MSG	= 2,		// 回复结果消息
 	PACKET_COMPRESS_EVENT = 3,		// 优化,只有数据的事件消息,字段信息固定在配置中
 	PACKET_PART_PACKET = 4,		// 分包
 	PACKET_QUEST_REPEAT_SEND = 5,		// 请求重发指定的包, 可能是丢包

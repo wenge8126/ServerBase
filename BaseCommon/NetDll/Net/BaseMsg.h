@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "Packet.h"
+#include "PacketFactory.h"
 #include "NiceData.h"
 //#include "ShareMemCloudDB.h"
 #include "TimeManager.h"
@@ -37,7 +37,7 @@ namespace NetCloud
 
 using namespace NetCloud;
 
-class tBaseMsg : public Packet
+class tBaseMsg : public BasePacket
 {
 public:
 	tBaseMsg(const tBaseMsg &other)

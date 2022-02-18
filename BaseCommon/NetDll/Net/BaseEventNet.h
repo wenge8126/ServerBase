@@ -34,8 +34,6 @@ public:
 	virtual bool TryReady(void){ return true;}
 
 public:	
-	void ProcessReceivePacket(tNetConnect *pConnect, Packet *pPacket) override;
-
 	virtual bool OnReceiveEvent(tNetConnect *revConnect, Logic::tEvent *revEvent);	
 
 public:

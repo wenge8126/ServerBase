@@ -608,7 +608,7 @@ void IOCPConnect::OnReceivePacket(Packet *pPacket)
 	//pPacket->Execute(this);
 	tNetHandle *pNet = GetNetHandle();
 	if (pNet != NULL)
-		pNet->ProcessReceivePacket(this, pPacket);
+		pNet->GetNetProtocol()->ProcessReceivePacket(this, pPacket);
 }
 
 //-------------------------------------------------------------------------*/

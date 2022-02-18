@@ -5,11 +5,72 @@
 
 #include "NetHandle.h"
 #include "NetHead.h"
-#include "Packet.h"
+#include "NetConfig.h"
+#include "PacketFactory.h"
 #include "EventProtocol.h"
 #include "BaseMsg.h"
+#include "CoroutineTool.h"
+#include "Timer.h"
 
-class BaseProtocol : public EventNetProtocol
+class Net_Export_H ResponseMsgPacket : public BasePacket
+{
+
+
+public:
+	MSG_ID		mRequestID;
+	DataBuffer	mData;
+};
+
+// 使用时间等待异步请求
+class Net_Export AsyncProtocol : public EventNetProtocol
+{
+	class WaitResponse : public tTimer
+	{
+	public:
+		void Init()
+		{
+			mResponsePacket.setNull();
+			mWaitCoroID = 0;
+			mRequestMsgID = 0;
+		}
+
+		virtual void onTime() override
+		{
+			RESUME(mWaitCoroID);
+		}
+
+	public:
+		HandPacket mResponsePacket;
+		CoroID mWaitCoroID;
+		MSG_ID mRequestMsgID;
+	};
+
+	typedef Auto<WaitResponse> AWaitResponse;
+
+public:
+	AsyncProtocol()
+	{
+		RegisterNetPacket(MEM_NEW DefinePacketFactory<ResponseMsgPacket, PACKET_RESPONSE_MSG>());
+	}
+
+public:
+	virtual bool ProcessReceivePacket(tNetConnect *pConnect, Packet *pPacket);
+
+public:
+	AutoNice Await(tNetConnect *pConnect, HandPacket req, int overMilSecond);
+
+	AWaitResponse AllotEventID();
+
+	void FreeServerEvent(WaitResponse *pWaitResponse);
+
+	AWaitResponse FindWaitResponse(MSG_ID id);
+
+protected:
+	Array<AWaitResponse>			mEventList;
+	EasyStack<UINT>				mIDStack;
+};
+
+class Net_Export BaseProtocol : public AsyncProtocol
 {
 	typedef Auto<tBaseMsg>(*pMsgCall)(tNetConnect *pConnect, AutoBase *pActor, tBaseMsg *pReqestMsgData);
 	typedef void(*pNotifyMsgCall)(tNetConnect *pConnect, AutoBase *pActor, tBaseMsg *pReqestMsgData);
@@ -19,14 +80,6 @@ protected:
 	FastHash<PacketID, pNotifyMsgCall>	mOnNotifyMsgFunctionList;
 
 public:
-	template<typename ReqMsg, typename RespMsg>
-	Auto<RespMsg> Await(tNetConnect *pConnect, ReqMsg req)
-	{
-		//???
-		Auto<RespMsg> resp;
-		return resp;
-	}
-
 	void RegisterMsg(PacketID id, pMsgCall  pFun)
 	{
 		mOnMsgFunctionList.insert(id, pFun);

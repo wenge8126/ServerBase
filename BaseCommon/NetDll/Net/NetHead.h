@@ -18,6 +18,7 @@
 #endif
 
 typedef unsigned long	IP_t;
+typedef unsigned int		MSG_ID;
 
 #define IP_SIZE				(24)
 #define NET_CONNECT_MAX		(10280)

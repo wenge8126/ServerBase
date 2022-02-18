@@ -166,8 +166,6 @@ public:
 	virtual bool OnAddConnect(tNetConnect *pConnect) = 0;
 	virtual void OnCloseConnect(tNetConnect *pConnect) = 0;
 
-	virtual void ProcessReceivePacket(tNetConnect *pConnect, Packet *pPacket) = 0;
-
 	virtual bool OnReceiveEvent(tNetConnect *revConnect, Logic::tEvent *revEvent) = 0;
 	virtual void OnReceivePacket(Packet *){ ERROR_LOG("xxxxxxxxxx can not process eceive"); }
 	//---------------------------------------------------

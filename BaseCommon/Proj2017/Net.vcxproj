@@ -618,6 +618,7 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y</Command>
   <ItemGroup>
     <ClCompile Include="..\NetDll\Net.cpp" />
     <ClCompile Include="..\NetDll\Net\BaseEventNet.cpp" />
+    <ClCompile Include="..\NetDll\Net\BaseProtocol.cpp" />
     <ClCompile Include="..\NetDll\Net\BaseServer.cpp" />
     <ClCompile Include="..\NetDll\Net\BaseThread.cpp" />
     <ClCompile Include="..\NetDll\Net\BigDataEvent.cpp" />

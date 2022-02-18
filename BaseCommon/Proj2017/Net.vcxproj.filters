@@ -195,6 +195,9 @@
     <ClCompile Include="..\NetDll\Net\SystemInfo.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\NetDll\Net\BaseProtocol.cpp">
+      <Filter>Protocol</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\NetDll\Net\NetHead.h">
