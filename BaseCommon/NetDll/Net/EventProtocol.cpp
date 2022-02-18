@@ -34,6 +34,7 @@ const uint EventNetProtocol::_MAX_SIZE = 0xFFFFF;
 
 //----------------------------------------------------------------------
 EventNetProtocol::EventNetProtocol( ) 
+	: mTempWriteBuffer(2048)
 	//: mDefaultEventFactory()
 	//, mCompressEventFactory()
 {
@@ -43,7 +44,7 @@ EventNetProtocol::EventNetProtocol( )
 	////mHeartPacket = MEM_NEW HeartBeatPacket();
 
 	mNetPacketFactoryList.Append(PACKET_EVENT, MEM_NEW DefinePacketFactory<EventPacket, PACKET_EVENT>());
-	mNetPacketFactoryList.Append(PACKET_COMPRESS_EVENT, MEM_NEW DefinePacketFactory<CompressPacket, PACKET_COMPRESS_EVENT>());
+	//mNetPacketFactoryList.Append(PACKET_COMPRESS_EVENT, MEM_NEW DefinePacketFactory<CompressPacket, PACKET_COMPRESS_EVENT>());
 	mNetPacketFactoryList.Append(PACKET_EVENT_PROCESS, MEM_NEW DefinePacketFactory<EventProcessPacket, PACKET_EVENT_PROCESS>());
 	
 	// 默认加入了索引与Ping 心跳包
@@ -110,13 +111,21 @@ HandPacket EventNetProtocol::CreatePacket( PacketID packetID )
 
 //----------------------------------------------------------------------------------------------
 
-bool EventNetProtocol::WritePacket( const Packet* pPacket, DataStream *mSocketOutputStream )
+bool EventNetProtocol::WritePacket(const Packet* pPacket, DataStream *mSocketOutputStream)
 {
 	__ENTER_FUNCTION_FOXNET
 
-	PacketID_t packetID = pPacket->GetPacketID() ;
-    byte packetState = (byte)pPacket->GetState();
-    UINT packetSize = pPacket->GetPacketSize( ) ;
+		PacketID_t packetID = pPacket->GetPacketID();
+	byte packetState = (byte)pPacket->GetState();
+
+	mTempWriteBuffer.clear(false);
+	if (pPacket->Write(mTempWriteBuffer) == FALSE)
+	{
+		ERROR_LOG("%d write fail", pPacket->GetPacketID());
+		return false;
+	}
+
+    UINT packetSize = mTempWriteBuffer.dataSize();
 
 	if (packetID <= 0)
 	{
@@ -149,11 +158,13 @@ bool EventNetProtocol::WritePacket( const Packet* pPacket, DataStream *mSocketOu
     mSocketOutputStream->Write( (CHAR*)&headValue , PACKET_HEADER_SIZE) ;
 #endif
 
+	if (packetSize <= 0)
+		return TRUE;
+
 	UINT currentLen = mSocketOutputStream->dataSize(); 
-
-	BOOL re = pPacket->Write( *mSocketOutputStream );
-
-	if (re==TRUE) // && mSocketOutputStream->dataSize()-currentLen == packetSize)
+	
+	bool re = mSocketOutputStream->_write(mTempWriteBuffer.data(), (DSIZE)packetSize);
+	if (re) 
     {
 #if _DEBUG_NET_
 		static int msTest = 0;
@@ -278,7 +289,7 @@ HandPacket EventNetProtocol::ReadPacket( tNetConnect *pConnect, DataStream *mSoc
 		p->SetState(packetStateData);
 
 		// step 5: read packet data
-		bRe = p->Read(*mSocketInputStream, packetSize);
+		bRe = p->Read(*mSocketInputStream, packetSize, pConnect);
 	}
 #if _DEBUG_NET_
     ((IOCPConnect*)pConnect)->mProcessSize += packetSize+PACKET_HEADER_SIZE;
@@ -343,49 +354,45 @@ HandPacket EventNetProtocol::GenerateEventPacket(tNetConnect *pConnect,  Logic::
 	AssertEx(sendPacket, "消息包获取失败");
     OnBeforeSendEvent(pConnect, sendEvent);
 	AutoEvent evt = sendEvent->GetSelf();
-	int eventDataSize = sendPacket->SetEvent(evt);
-	if (eventDataSize<=0)
-	{
-		ERROR_LOG("[%s]事件数据流化失败", sendEvent->GetEventName());
-		return NULL;
-	}
+	sendPacket->SetEvent(evt);
+
 #if    _USE_NICE_PROTOCOL_
     if (sendEvent->hasState(STATE_EVENT_NEED_SAVE_PROTOCOL))
         pConnect->mInfoData.Append(sendEvent->GetEventFactory()->GetID(), sendEvent->GetEventFactory()->GetNiceDataProtocolKey());
 #endif
 	//??? 使用自动压缩后，ZIP压缩耗时较大
-	if (bNeedZip)
-	{
-#if DEVELOP_MODE
-		int scrSize = 0;
-		UInt64 now = 0;
-#endif
-		// 实际测试, 1KB左右,压缩为几百个字节,压缩比很小,效率反而较低, 约4~5K,压缩为1~2K, 压缩比较高, 所以只有超过2K才进行压缩
-		if (sendEvent->NeedAutoCompress() && eventDataSize>=MIN_NEED_COMPRESS_SIZE)
-		{
-			Auto<EventPacket> p2 = CreatePacket(PACKET_COMPRESS_EVENT);
-
-			auto data = sendPacket->GetData();
-			p2->SwapEventData(data);
-			sendPacket = p2;
-#if DEVELOP_MODE
-			//sendEvent->Log("自动调整为 [压缩] 发送 >>> [%d]", eventDataSize);
-			scrSize = eventDataSize;
-			now = TimeManager::NowTick();
-#endif
-		}					
-
-		if (!sendPacket->ReadySendData())
-		{
-			sendEvent->Log("消息包准备发送数据失败, 压缩数据失败.");
-			ERROR_LOG("消息包准备发送数据失败, 压缩数据失败");
-			return NULL;
-		}
-#if DEVELOP_MODE
-		if (scrSize>0)
-			NOTE_LOG("Zip [%d]~[%u], use time [%llu]", scrSize, sendPacket->GetPacketSize(), TimeManager::NowTick()-now);
-#endif
-	}
+//	if (bNeedZip)
+//	{
+//#if DEVELOP_MODE
+//		int scrSize = 0;
+//		UInt64 now = 0;
+//#endif
+//		// 实际测试, 1KB左右,压缩为几百个字节,压缩比很小,效率反而较低, 约4~5K,压缩为1~2K, 压缩比较高, 所以只有超过2K才进行压缩
+//		if (sendEvent->NeedAutoCompress() && eventDataSize>=MIN_NEED_COMPRESS_SIZE)
+//		{
+//			Auto<EventPacket> p2 = CreatePacket(PACKET_COMPRESS_EVENT);
+//
+//			auto data = sendPacket->GetData();
+//			p2->SwapEventData(data);
+//			sendPacket = p2;
+//#if DEVELOP_MODE
+//			//sendEvent->Log("自动调整为 [压缩] 发送 >>> [%d]", eventDataSize);
+//			scrSize = eventDataSize;
+//			now = TimeManager::NowTick();
+//#endif
+//		}					
+//
+//		if (!sendPacket->ReadySendData())
+//		{
+//			sendEvent->Log("消息包准备发送数据失败, 压缩数据失败.");
+//			ERROR_LOG("消息包准备发送数据失败, 压缩数据失败");
+//			return NULL;
+//		}
+//#if DEVELOP_MODE
+//		if (scrSize>0)
+//			NOTE_LOG("Zip [%d]~[], use time [%llu]", scrSize, TimeManager::NowTick()-now);
+//#endif
+//	}
 	return sendPacket;
 }
 
@@ -487,39 +494,4 @@ bool EventNetProtocol::SendEvent( tNetConnect *connect, Logic::tEvent *sendEvent
 	return false;
 }
 
-void EventNetProtocol::ProcessEventData(tNetConnect *pConnect, EventData *pData)
-{
-	Hand<tNetEvent> evt = pConnect->GetNetHandle()->GetEventCenter()->StartEvent(pData->getEventIndex());
-	if (evt)
-	{
-		Hand<tNetEventFactory> f = evt->GetEventFactory();
-		if (!f)
-		{
-			ERROR_LOG("[%s] 必须使用 tNetEventFactory 注册事件", evt->GetEventName());
-			return;
-		}
-		f->SetEventData(pData, evt.getPtr());
-		evt->_OnBindNet(pConnect);
-		try{
-			evt->DoEvent(true);
-		}
-		catch (...)
-		{
-			ERROR_LOG("[%d] 事件执行异常", evt->GetEventName());
-		}
-	}
-	else
-		ERROR_LOG("No exist net msg evet [%d], or no register  tNetEvent type", pData->getEventIndex());
-}
 
-void EventNetProtocol::ProcessPacketData(tNetConnect *pConnect, PacketData *pData)
-{
-	EventNetProtocol *p = dynamic_cast<EventNetProtocol*>(pConnect->GetNetHandle()->GetNetProtocol());
-	AssertEx(p!=NULL, "必须是 EventNetProtocol");
-	HandPacket packet = p->CreatePacket(pData->mPacketID);
-	packet->SetState(pData->mState);
-	pData->mData.seek(0);
-
-	if (packet->Read(pData->mData, pData->mData.dataSize()))
-		packet->Execute(pConnect);
-}

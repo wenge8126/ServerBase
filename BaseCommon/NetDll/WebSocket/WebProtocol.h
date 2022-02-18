@@ -57,11 +57,10 @@ public:
 
 public:
 	virtual	PacketID_t	GetPacketID( ) const { return DEFALUT_WEB_SEND_PACKET_ID; }
-	virtual	UINT		GetPacketSize( ) const {  return mData.dataSize(); }
 	virtual UINT		GetState() const { return 0; }
 	virtual VOID		SetState(UINT stateData) {}
 
-	virtual BOOL		Read(DataStream& iStream, size_t packetSize ) { return FALSE; }
+	virtual BOOL		Read(DataStream& iStream, size_t packetSize, tNetConnect *pConnect ) { return FALSE; }
 	virtual BOOL		Write( DataStream& oStream ) const 
 	{ 
 		return oStream._write((void*)mData.data(), mData.dataSize()); 

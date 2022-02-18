@@ -49,7 +49,7 @@ public:
 	virtual	VOID		SetPacketID( PacketID_t id )  {};
 
 	//公用继承接口
-	virtual BOOL Read( DataStream& iStream, size_t packetSize ) 
+	virtual BOOL Read( DataStream& iStream, size_t packetSize, tNetConnect* pConnect)
 	{
 		size_t size = packetSize;
 		if (!mData)
@@ -82,7 +82,6 @@ public:
 		return FALSE;
 	}
 
-	virtual UINT GetPacketSize() const {  if (mData) return (UINT)mData->dataSize(); else return (UINT)0; }
 
 protected:
 	bool _OnSendData(void *szSendData, size_t size) const;
@@ -106,7 +105,7 @@ protected:
 class tNetHandle;
 
 
-class Net_Export EventPacket : public DataPacket
+class Net_Export EventPacket : public Packet
 {
 public:
 	EventPacket();
@@ -114,20 +113,30 @@ public:
 	~EventPacket()
 	{
 	}
+public:
+	virtual void SetEvent(AutoEvent &hEvent) 
+	{ 
+		mEvent = hEvent; 
+		if (mEvent && mEvent->StandardDataEvent())
+			SetState(eEventDataPacket);
+	}
 
 public:
-	virtual int SetEvent(AutoEvent &hEvent);
-	virtual AutoData GetData(void){ return mData; }
+	virtual UINT		GetState() const { return mStateData; }
+	virtual VOID		SetState(UINT stateData) { mStateData = stateData; }
+
+	virtual BOOL		Read(DataStream& iStream, size_t packetSize, tNetConnect* pConnect);
+	virtual BOOL		Write(DataStream& oStream) const;
+
 
 	virtual UINT Execute( tNetConnect* pConnect );
 
 	virtual	PacketID_t	GetPacketID( ) const { return PACKET_EVENT; }
 
-	virtual AutoData& GetEventData(){ return mData; }
-	virtual void SwapEventData( AutoData &eventData );
 
-	virtual bool ReadySendData(){ return true; }
-
+public:
+	AutoEvent mEvent;
+	mutable StateData		mStateData;
 };
 //-----------------------------------------------------------------------------
 // 优化读取恢复消息事件
@@ -154,82 +163,47 @@ public:
 };
 
 //-----------------------------------------------------------------------------
-//class CheckRequestPacket : public DataPacket
-//{
-//public:
-//	CheckRequestPacket()
-//	{
-//		mData = MEM_NEW DataBuffer();
-//	}
-//	bool SetNiceData(const NiceData &niceData)
-//	{		
-//		return niceData.serialize(mData.getPtr());
-//	}
-//
-//	virtual UINT Execute( tNetConnect* pConnect );
-//
-//	virtual	PacketID_t	GetPacketID( ) const { return PACKET_CHECK_REQUEST; }
-//
-//};
-//
-////-----------------------------------------------------------------------------
-//class CheckResponsePacket : public DataPacket
-//{
-//public:
-//	CheckResponsePacket()
-//	{
-//		mData = MEM_NEW DataBuffer();
-//	}
-//	bool SetNiceData(const NiceData &niceData)
-//	{		
-//		return niceData.serialize(mData.getPtr());
-//	}
-//
-//	virtual UINT Execute( tNetConnect* pConnect );
-//
-//	virtual	PacketID_t	GetPacketID( ) const { return PACKET_CHECK_RESPONSE; }
-//
-//};
+
 //-----------------------------------------------------------------------------
-class CompressPacket : public EventPacket
-{
-public:
-	CompressPacket();
-
-	virtual void InitData() override 
-	{
-		EventPacket::InitData();
-		//if (mZipBuffer)
-		//	mZipBuffer->clear(false);
-	}
-
-public:
-	//virtual bool SetEvent(AutoEvent &hEvent);
-
-	//virtual UINT Execute( tNetConnect* pConnect );
-
-	virtual	PacketID_t	GetPacketID( ) const { return PACKET_COMPRESS_EVENT; }
-
-	virtual BOOL Read(DataStream& iStream, size_t packetSize );
-	virtual bool FullZipData(AutoData zipData);
-
-	virtual int SetEvent(AutoEvent &hEvent);
-
-	virtual AutoData& GetEventData(){ return mZipBuffer; }
-
-	virtual bool ReadySendData();
-
-	virtual void SwapEventData( AutoData &eventData );
-
-	virtual bool SetData(AutoData hData, size_t size){ return FullZipData(hData); }
-
-public:
-	static bool UnZip(AutoData zipBuffer, AutoData &resultData);
-
-protected:
-	AutoData		mZipBuffer;
-
-};
+//class CompressPacket : public EventPacket
+//{
+//public:
+//	CompressPacket();
+//
+//	virtual void InitData() override 
+//	{
+//		EventPacket::InitData();
+//		//if (mZipBuffer)
+//		//	mZipBuffer->clear(false);
+//	}
+//
+//public:
+//	//virtual bool SetEvent(AutoEvent &hEvent);
+//
+//	//virtual UINT Execute( tNetConnect* pConnect );
+//
+//	virtual	PacketID_t	GetPacketID( ) const { return PACKET_COMPRESS_EVENT; }
+//
+//	virtual BOOL Read(DataStream& iStream, size_t packetSize, tNetConnect *pConnect) override;
+//	virtual bool FullZipData(AutoData zipData);
+//
+//	virtual int SetEvent(AutoEvent &hEvent);
+//
+//	virtual AutoData& GetEventData(){ return mZipBuffer; }
+//
+//	virtual bool ReadySendData();
+//
+//	virtual void SwapEventData( AutoData &eventData );
+//
+//	virtual bool SetData(AutoData hData, size_t size){ return FullZipData(hData); }
+//
+//public:
+//	static bool UnZip(AutoData zipBuffer, AutoData &resultData);
+//
+//protected:
+//	AutoData		mZipBuffer;
+//
+//};
 
 //-------------------------------------------------------------------------
 //-------------------------------------------------------------------------

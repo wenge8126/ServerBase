@@ -137,7 +137,7 @@ namespace NetCloud
 		mTempLoopData.CleanUp();
 		if (pData->Write(mTempLoopData) == TRUE)
 		{
-			pNodePak->Read(mTempLoopData, pData->GetPacketSize());
+			pNodePak->Read(mTempLoopData, mTempLoopData.dataSize(), NULL);
 			pNodePak->OnBeforeRun(pUnit);
 			pUnit->OnReceiveProcess(pNodePak.getPtr());
 		}

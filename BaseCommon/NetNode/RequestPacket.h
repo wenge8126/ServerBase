@@ -53,17 +53,11 @@ namespace NetCloud
 		void SetEventID(EVENT_ID id) { mID = (int)id; }
 
 	public:
-		virtual int _getInfoSize() const
-		{
-			return	sizeof(mID) + NodePacket::_getInfoSize();
-		}
-
-
-		virtual BOOL Read(DataStream& iStream, size_t packetSize)
+		virtual BOOL Read(DataStream& iStream, size_t packetSize, tNetConnect *pConnect) override
 		{
 			iStream.read(mID);
 
-			return NodePacket::Read(iStream, packetSize);
+			return NodePacket::Read(iStream, packetSize, pConnect);
 		}
 		virtual BOOL Write(DataStream& oStream)const
 		{

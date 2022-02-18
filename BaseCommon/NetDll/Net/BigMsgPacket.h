@@ -105,16 +105,8 @@ public:
 
 public:
 	virtual	PacketID_t	GetPacketID() const { return PACKET_PART_PACKET; }
-	virtual UINT GetPacketSize() const
-	{
-		size_t size = _GetInfoSize();
-		
-		size += (UINT)mTempSendData.dataSize();
 
-		return size;
-	}
-
-	virtual BOOL Read(DataStream& iStream, size_t packetSize) override
+	virtual BOOL Read(DataStream& iStream, size_t packetSize, tNetConnect *pConnect) override
 	{
 		CHECK_READ_STREAM(mPartCode);
 		CHECK_READ_STREAM(mPacketFlag);
@@ -189,13 +181,13 @@ public:
 
 	virtual	PacketID_t	GetPacketID() const { return FIRST_PART_PACKET; }
 
-	virtual BOOL Read(DataStream& iStream, size_t packetSize) override
+	virtual BOOL Read(DataStream& iStream, size_t packetSize, tNetConnect *pConnect) override
 	{
 		CHECK_READ_STREAM(mPartCount);
 		CHECK_READ_STREAM(mTotalDataSize);
 		CHECK_READ_STREAM(mBigMsgID);
 		
-		return PartPacket::Read(iStream, packetSize);
+		return PartPacket::Read(iStream, packetSize, pConnect);
 	}
 	virtual BOOL Write(DataStream& oStream) const override
 	{
@@ -256,7 +248,7 @@ public:
 
 	virtual bool Send(const Packet  *pMsgPacket, bool bEncrypt) override
 	{
-		if (pMsgPacket->GetPacketSize() > MsgSendMaxLength)
+		if (pMsgPacket->IsBigPacket())
 			return WaitReceiveBigMsgEvent::SendBigMsg((Packet*)pMsgPacket, this, MsgSendMaxLength);
 		else
 			return IOCPConnect::SendPacket(pMsgPacket, bEncrypt);
@@ -302,7 +294,7 @@ public:
 
 	virtual bool Send(const Packet  *pMsgPacket, bool bEncrypt) override
 	{
-		if (pMsgPacket->GetPacketSize() > MsgSendMaxLength)
+		if (pMsgPacket->IsBigPacket())
 			return WaitReceiveBigMsgEvent::SendBigMsg((Packet*)pMsgPacket, this, MsgSendMaxLength);
 		else
 			return IOCPConnect::SendPacket(pMsgPacket, bEncrypt);

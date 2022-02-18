@@ -57,11 +57,10 @@ public :
 	virtual void InitData() {}
 
 public:
-	virtual	UINT		GetPacketSize( ) const = 0;
 	virtual UINT		GetState() const = 0;
 	virtual VOID		SetState(UINT stateData) = 0;
 
-	virtual BOOL		Read( DataStream& iStream, size_t packetSize ) = 0 ;	
+	virtual BOOL		Read( DataStream& iStream, size_t packetSize, tNetConnect* pConnect) = 0 ;
 	virtual BOOL		Write( DataStream& oStream ) const = 0;
 	
 	//返回值为：PACKET_EXE 中的内容；
@@ -72,6 +71,7 @@ public:
 	virtual UINT		Execute( tNetConnect* pConnect ) = 0;	
 
 	virtual BOOL		CheckPacket( ){ return TRUE ; }
+	virtual bool		IsBigPacket() const { return false; }
 
 	virtual void		SetNeedEncrypt(bool bNeed)const{ }
 

@@ -100,7 +100,7 @@ public:
 	bool read(AString &str ){ return readString(str); }
 
 	// NOTE: 保存源缓存数据所有分配数据, 如需要只保存dataSize, 可指定保存长度
-	inline bool writeData(DataStream *scrData){ return writeData(scrData, scrData!=NULL ? scrData->size() : 0); }	
+	inline bool writeData(DataStream *scrData){ return writeData(scrData, scrData!=NULL ? scrData->dataSize() : 0); }	
 	inline bool writeData(DataStream *scrData, DSIZE writeLength);	
 	inline bool readData(DataStream *destData);	
 	

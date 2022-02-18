@@ -178,7 +178,7 @@ void WaitReceiveBigMsgEvent::OnRevPartDataMsg(tNetConnect *pConn, PartPacket *pP
 			Finish();
 			return;
 		}
-		if (!mBigMsgPacket->Read(*mRevData, mRevData->dataSize()))
+		if (!mBigMsgPacket->Read(*mRevData, mRevData->dataSize(), pConn))
 		{
 			Finish();
 			ERROR_LOG("big msg %d restore fail", mBigMsgID);

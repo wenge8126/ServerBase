@@ -105,19 +105,7 @@ namespace NetCloud
 		}
 
 	public:
-		virtual UINT GetPacketSize() const { return _getInfoSize(); }
-
-		virtual int _getInfoSize() const
-		{
-			return	sizeof(mSendCount) +sizeof(mbBroadcast) + sizeof(mSenderID) + sizeof(mTargetID) 
-#if DEBUG_CLOUD_NET
-				+ mSendInfo.length() + sizeof(StrLenType)
-#endif
-				;
-		}
-
-
-		virtual BOOL Read(DataStream& iStream, size_t packetSize)
+		virtual BOOL Read(DataStream& iStream, size_t packetSize, tNetConnect *pConnect) override
 		{
 #if DEBUG_CLOUD_NET
 			iStream.readString(mSendInfo);
@@ -189,26 +177,16 @@ namespace NetCloud
 		DataBuffer& GetData() { return mData; }
 
 		virtual	PacketID_t	GetPacketID() const { return PACKET_TRANSFER; }
-		virtual UINT GetPacketSize() const {	return _getInfoSize() + mData.dataSize(); }
 
-		virtual int _getInfoSize() const
+		virtual BOOL Read(DataStream& iStream, size_t packetSize, tNetConnect *pConnect) override
 		{
-			return	sizeof(mTargetPacketID) + NodePacket::_getInfoSize();
-		}
-
-		virtual BOOL Read(DataStream& iStream, size_t packetSize)
-		{
-			if (NodePacket::Read(iStream, packetSize) == FALSE)
+			if (NodePacket::Read(iStream, packetSize, pConnect) == FALSE)
 				return FALSE;
 			iStream.read(mTargetPacketID);
-			size_t size = packetSize - _getInfoSize();
 
 			mData.clear(false);
-			if (mData.size() < (DSIZE)size)
-				mData.resize(size);
-			if (iStream.Read(mData.data(), (UINT)size) == size)
+			if (iStream.readData(&mData))
 			{
-				mData.setDataSize(size);
 				return TRUE;
 			}
 			return FALSE;
@@ -221,9 +199,7 @@ namespace NetCloud
 
 			size_t size = mData.dataSize();
 
-			const char *szData = ((DataStream*)&mData)->data();
-
-			if (oStream.Write(szData, (UINT)size) == size)
+			if (oStream.writeData((DataStream*)&mData) )
 				return TRUE;
 
 			return FALSE;

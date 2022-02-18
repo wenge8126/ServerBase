@@ -65,7 +65,14 @@ public:
 		if (!accountRe)
 		{
 			// 需要新建
-			accountRe = GetDBMgr()->GetTable(TABLE_ACCOUNT)->CreateRecord(msg.mAccount, true);
+			AutoTable accountTable = GetDBMgr()->GetTable(TABLE_ACCOUNT);
+			if (!accountTable)
+			{
+				resp.mResult = eAccountCreateFail;
+				return;
+			}
+
+			accountRe = accountTable->CreateRecord(msg.mAccount, true);
 			if (!accountRe)
 			{
 				resp.mResult = eAccountCreateFail;

@@ -1,10 +1,6 @@
 #include "EventData.h"
 #include "TimeManager.h"
 
-EasyStack<EventData*> EventDataPool::mPoolList;
-CsLock EventDataPool::mLock;
-EasyStack<PacketData*> PacketDataPool::mPoolList;
-CsLock PacketDataPool::mLock;
 
 AutoEvent tNetEventFactory::StartEvent( void )
 {		

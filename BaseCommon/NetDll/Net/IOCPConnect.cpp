@@ -308,7 +308,7 @@ bool IOCPConnect::SendPacket(const Packet *msgPacket, bool bEncrypt)
 		if (!re)
 		{
 			AString err;
-			err.Format("%d [%s:%d] write packet fail to send [%d] size %u, then remove", GetNetID(), GetIp(), GetPort(), msgPacket->GetPacketID(), msgPacket->GetPacketSize());
+			err.Format("%d [%s:%d] write packet fail to send [%d],  then remove", GetNetID(), GetIp(), GetPort(), msgPacket->GetPacketID());
 			ERROR_LOG(err.c_str());
 			SetRemove(true);
 		}

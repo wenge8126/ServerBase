@@ -50,9 +50,8 @@ class HeartBeatPacket : public Packet
 {
 public:
 	virtual	PacketID_t	GetPacketID( ) const { return  eNotifyHeartBeat; }
-	virtual	UINT		GetPacketSize( ) const { return 0; }
 
-	virtual BOOL		Read(DataStream& iStream, size_t packetSize ) { return TRUE; }
+	virtual BOOL		Read(DataStream& iStream, size_t packetSize, tNetConnect* ) override { return TRUE; }
 	virtual BOOL		Write( DataStream& oStream ) const { return TRUE; }
 
 	virtual UINT		Execute( tNetConnect* pConnect ) 

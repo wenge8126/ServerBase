@@ -79,8 +79,7 @@ namespace NetCloud
 		virtual	PacketID_t	GetPacketID() const override { return eMsgResponse; }
 
 	public:
-		virtual UINT GetPacketSize() const { return AsyncRequestPacket::GetPacketSize() + mRequestData->dataSize() + sizeof(DSIZE) + sizeof(StrLenType)+mMsgName.length(); }
-		virtual BOOL Read(DataStream& iStream, size_t packetSize)
+		virtual BOOL Read(DataStream& iStream, size_t packetSize, tNetConnect *pConnect) override
 		{
 			ERROR_LOG("Not can send ActorRequestPacket msg, so not call Read");
 			AssertEx(0, "Not can send ActorRequestPacket msg, so not call Read");
@@ -110,7 +109,6 @@ namespace NetCloud
 	class GateTransferRequestPakcet : public tCloudPacket
 	{
 	public:
-		virtual UINT GetPacketSize() const { return tCloudPacket::GetPacketSize() + mRequestData->dataSize() + sizeof(DSIZE) + sizeof(StrLenType) + mMsgName.length(); }
 		virtual BOOL Write(DataStream& oStream)const
 		{
 			oStream.write(mMsgName);
@@ -118,12 +116,12 @@ namespace NetCloud
 			return tCloudPacket::Write(oStream);
 		}
 		
-		virtual BOOL Read(DataStream& iStream, size_t packetSize)
+		virtual BOOL Read(DataStream& iStream, size_t packetSize, tNetConnect *pConnect) override
 		{
 			iStream.readString(mMsgName);
 			mRequestData->clear(false);
 			if (iStream.readData(mRequestData.getPtr()))
-				return tCloudPacket::Read(iStream, packetSize - mRequestData->dataSize() - sizeof(DSIZE) - sizeof(StrLenType) - mMsgName.length());
+				return tCloudPacket::Read(iStream, packetSize - mRequestData->dataSize() - sizeof(DSIZE) - sizeof(StrLenType) - mMsgName.length(), pConnect);
 			return FALSE;
 		}
 
@@ -175,18 +173,12 @@ namespace NetCloud
 		}
 
 	public:
-		virtual UINT GetPacketSize() const override 
-		{ 
-			ERROR_LOG("Not can send ActorResponsePacket msg, so not call GetPacketSize");
-			AssertEx(0, "Not can send ActorResponsePacket msg, so not call GetPacketSize");
-			return 0; 
-		}
-		virtual BOOL Read(DataStream& iStream, size_t packetSize)
+		virtual BOOL Read(DataStream& iStream, size_t packetSize, tNetConnect *pConnect)
 		{
 			iStream.readString(mMsgName);
 			mRequestData->clear(false);
 			if (iStream.readData(mRequestData.getPtr()))
-				return tResponsePacket::Read(iStream, packetSize - mRequestData->dataSize() - sizeof(DSIZE)-sizeof(StrLenType)-mMsgName.length());
+				return tResponsePacket::Read(iStream, packetSize - mRequestData->dataSize() - sizeof(DSIZE)-sizeof(StrLenType)-mMsgName.length(), pConnect);
 			return FALSE;
 		}
 
@@ -221,13 +213,12 @@ namespace NetCloud
 		virtual PacketID_t GetPacketID() const override { return  eMsgResult; }
 
 	public:
-		virtual UINT GetPacketSize() const { return tResponseResultPacket::GetPacketSize() + mResultData->dataSize() + sizeof(DSIZE) + sizeof(mResultType); }
-		virtual BOOL Read(DataStream& iStream, size_t packetSize)
+		virtual BOOL Read(DataStream& iStream, size_t packetSize, tNetConnect *pConnect) override
 		{
 			iStream.read(mResultType);
 			mResultData->clear(false);
 			if (iStream.readData(mResultData.getPtr()))
-				return tResponseResultPacket::Read(iStream, packetSize - mResultData->dataSize() - sizeof(DSIZE)-sizeof(mResultType));
+				return tResponseResultPacket::Read(iStream, packetSize - mResultData->dataSize() - sizeof(DSIZE)-sizeof(mResultType), pConnect);
 			return FALSE;
 		}
 
@@ -308,14 +299,13 @@ namespace NetCloud
 		}
 
 	public:
-		virtual UINT GetPacketSize() const { return tCloudPacket::GetPacketSize() + mMsgData->dataSize() + sizeof(DSIZE) + sizeof(mNotifyType) + sizeof(StrLenType) + mMsgName.length(); }
-		virtual BOOL Read(DataStream& iStream, size_t packetSize)
+		virtual BOOL Read(DataStream& iStream, size_t packetSize, tNetConnect *pConnect) override
 		{
 			iStream.read(mNotifyType);
 			iStream.readString(mMsgName);
 			mMsgData->clear(false);
 			if (iStream.readData(mMsgData.getPtr()))
-				return tCloudPacket::Read(iStream, packetSize - mMsgData->dataSize() - sizeof(DSIZE) - sizeof(mNotifyType) -  sizeof(StrLenType) - mMsgName.length());
+				return tCloudPacket::Read(iStream, packetSize - mMsgData->dataSize() - sizeof(DSIZE) - sizeof(mNotifyType) -  sizeof(StrLenType) - mMsgName.length(), pConnect);
 			return FALSE;
 		}
 

@@ -51,7 +51,6 @@ class BasePacket : public Packet
 {
 public:
 	virtual	PacketID_t	GetPacketID( ) const { return mFactoryPtr->mpFactory->GetPacketID(); }
-	virtual	UINT		GetPacketSize( ) const { return 0; }
 
 	virtual BOOL		Read(DataStream& iStream, size_t packetSize ) { return TRUE; }
 	virtual BOOL		Write( DataStream& oStream ) const { return TRUE; }

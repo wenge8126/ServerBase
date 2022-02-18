@@ -133,11 +133,11 @@ public:
 	WebLoginThread  *mpThread = NULL;
 };
 
-class ClientProtocol : public BaseProtocol
-{
-public:
-	Auto<tBaseMsg> On()
-};
+//class ClientProtocol : public BaseProtocol
+//{
+//public:
+//	Auto<tBaseMsg> On()
+//};
 
 class LoginActor : public NetCloud::Actor
 {
@@ -159,7 +159,7 @@ public:
 		
 		tcpNet->mSafeCode = 11;
 		Hand<tBaseEventNet> net = tcpNet->GetNet();
-		net->SetNetProtocol();
+		//net->SetNetProtocol();
 
 		AddComponent("LoginNetComponect");
 	}

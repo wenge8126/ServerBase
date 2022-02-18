@@ -355,11 +355,10 @@ public:
 	}
 
 public:
-	virtual	UINT		GetPacketSize() const { return 0; }
 	virtual UINT		GetState() const { return 0; }
 	virtual VOID		SetState(UINT stateData) {}
 
-	virtual BOOL		Read(DataStream& iStream, size_t packetSize) 
+	virtual BOOL		Read(DataStream& iStream, size_t packetSize, tNetConnect*) override
 	{ 
 		AutoNice temp = MEM_NEW NiceData();
 
@@ -372,7 +371,7 @@ public:
 			ERROR_LOG("Restore msg %s data fail", GetMsgName());
 		return FALSE;
 	}
-	virtual BOOL		Write(DataStream& oStream) const 
+	virtual BOOL		Write(DataStream& oStream) const override
 	{ 
 		return serialize(&oStream); 
 	}

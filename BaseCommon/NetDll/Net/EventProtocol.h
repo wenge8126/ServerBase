@@ -87,15 +87,12 @@ public:
 
 protected:
 	ArrayMap<AutoPacketFactory> mNetPacketFactoryList;
+	DataBuffer	mTempWriteBuffer;
 
 public:
 	static bool SendEvent(tNetConnect *connect, Logic::tEvent *sendEvent);
 
-public:
-	static void ProcessEventData(tNetConnect *pConnect, EventData *pData);
-
-	static void ProcessPacketData(tNetConnect *pConnect, PacketData *pData);
-    
+public: 
     static const uint  _MAX_SIZE;
 };
 

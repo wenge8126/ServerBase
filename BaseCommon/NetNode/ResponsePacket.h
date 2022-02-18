@@ -73,14 +73,9 @@ namespace NetCloud
 	public:
 		virtual UINT		Execute(tNetConnect* pConnect) override;
 
-		virtual int _getInfoSize() const
+		virtual BOOL Read(DataStream& iStream, size_t packetSize, tNetConnect *pConnect) override
 		{
-			return	sizeof(short)*2+mData.dataSize() + tCloudPacket::_getInfoSize();
-		}
-
-		virtual BOOL Read(DataStream& iStream, size_t packetSize)
-		{
-			tCloudPacket::Read(iStream, packetSize);
+			tCloudPacket::Read(iStream, packetSize, pConnect);
 
 			iStream.read(mPartCount);
 			iStream.read(mPartIndex);
