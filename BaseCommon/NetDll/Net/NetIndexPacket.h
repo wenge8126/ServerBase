@@ -31,7 +31,6 @@ class IndexPacketFactory : public PacketFactory
 public:
 	virtual HandPacket	CreatePacket () override { return mIndexPacket; }
 	virtual PacketID_t	GetPacketID ()const override { return eNotifyNetEventID; } 
-	virtual void SetPacketID(PacketID_t id) override { AssertEx(0, "Can not use"); }
 	virtual	void		destroyPacket(Packet* pPacket) override {}
 
 public:
@@ -72,7 +71,6 @@ class HeartBeatPacketFactory : public PacketFactory
 public:
 	virtual HandPacket	CreatePacket () override  { return mHeartPacket; }
 	virtual PacketID_t	GetPacketID ()const override { return eNotifyHeartBeat; } 
-	virtual void SetPacketID(PacketID_t id) override { AssertEx(0, "Can not use"); }
 	virtual	void		destroyPacket(Packet* pPacket) override {}
 
 public:

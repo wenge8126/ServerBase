@@ -43,6 +43,9 @@
     <Filter Include="NetNode">
       <UniqueIdentifier>{fef9a5d5-c22e-4f99-9012-58742c8ecfae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MeshNet">
+      <UniqueIdentifier>{12c0b30f-ae84-47fb-a6db-ad816bcdd33d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\NetDll\Net.cpp">
@@ -197,6 +200,9 @@
     </ClCompile>
     <ClCompile Include="..\NetDll\Net\BaseProtocol.cpp">
       <Filter>Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NetDll\Net\MeshNet.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -388,6 +394,9 @@
     </ClInclude>
     <ClInclude Include="..\NetDll\Net\BaseMsg.h">
       <Filter>Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NetDll\Net\MeshNet.h">
+      <Filter>MeshNet</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

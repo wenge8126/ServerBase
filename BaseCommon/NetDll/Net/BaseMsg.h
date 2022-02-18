@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include "NetHead.h"
+
 #include "PacketFactory.h"
 #include "NiceData.h"
 //#include "ShareMemCloudDB.h"
@@ -377,8 +379,18 @@ public:
 	}
 
 	virtual UINT		Execute(tNetConnect* pConnect) { return 0; }
+
+
 };
 
+class tRequestMsg : public tBaseMsg
+{
+public:
+	void SetPackectID(PacketID_t msgID) { mID = msgID; }
+	virtual PacketID_t GetPacketID() const override { return mID; }
 
+	virtual void SetRequestID(MSG_ID id) = 0;
+	virtual MSG_ID GetRequestID() = 0; // { ERROR_LOG("%s is not reqeust msg", GetMsgName());  return 0; }
+};
 
 #endif //_INCLUDE_BASEMSG_H_

@@ -14,6 +14,8 @@
 #define IDC_BUTTON_CONNECT              1007
 #define IDC_EDIT_INFO                   1008
 #define IDC_BUTTON2                     1009
+#define IDC_BUTTON_EXPORT_RUN_CONFIG2   1010
+#define IDC_BUTTON_EXPORT_MESH_MSG      1010
 
 // Next default values for new objects
 // 

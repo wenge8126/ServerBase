@@ -71,7 +71,6 @@ public:
 	virtual Packet *_createPacket() { return MEM_NEW T(); }
 	virtual PacketID_t	GetPacketID()const { return typeID; }
 
-	virtual void SetPacketID(PacketID_t id) override { AssertEx(0, "Can not use"); }
 
 };
 

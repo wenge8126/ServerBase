@@ -710,6 +710,33 @@ bool IOCPClientNet::Connect( const char *szIp, int nPort, int overmilSecond )
 	return true;
 }
 
+bool IOCPClientNet::AwaitConnect(const char *szIp, int nPort, int overmilSecond)
+{
+	if (CORO == 0)
+	{
+		ERROR_LOG("AwaitConnect must in coro");
+		return false;
+	}
+	mIp = szIp;
+	mPort = nPort;
+
+	if (mIp == "" || mPort <= 0)
+		return false;
+
+	if (mWaitConnectThread != NULL)
+	{
+		mWaitConnectThread->Close();
+		delete mWaitConnectThread;
+	}
+	mWaitConnectThread = MEM_NEW ConnectNetThread();
+	mWaitConnectThread->mConnectCoroID = CORO;
+	mWaitConnectThread->StartConnect(szIp, nPort, overmilSecond);
+
+	YIELD;
+
+	return IsConnected();
+}
+
 void IOCPClientNet::StopNet( void )
 {
 	if (mWaitConnectThread!=NULL)
@@ -785,6 +812,10 @@ void IOCPClientNet::Process()
 				Log("NET: WARN Connect fail [%s:%d]", mIp.c_str(), mPort);
 				OnConnectFail();
 			}
+
+			if (mWaitConnectThread->mConnectCoroID != 0)
+				RESUME(mWaitConnectThread->mConnectCoroID);
+
 			if (mWaitConnectThread!=NULL)
 			{
 				mWaitConnectThread->Close();
@@ -801,6 +832,8 @@ void IOCPClientNet::Process()
 
 			OnConnectFail();
 
+			if (mWaitConnectThread->mConnectCoroID != 0)
+				RESUME(mWaitConnectThread->mConnectCoroID);
 		}
 
 	}

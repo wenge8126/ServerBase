@@ -32,6 +32,8 @@ public:
 public:
 	virtual bool Connect(const char *szIp, int nPort, int overmilSecond);
 
+	HandConnect AwaitConnect(const char *szIp, int nPort, int overmilSecond);
+
 	virtual void OnConnected(tNetConnect *pConnect) = 0;
 	virtual void OnConnectFail(const char *szIp, int nPort) = 0;
 

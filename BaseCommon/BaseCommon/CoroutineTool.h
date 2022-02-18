@@ -47,6 +47,19 @@ public:
 	{
 		return Create(std::bind(runCoFunction, f));
 	}
+	
+	template<typename FUN>
+	static void _runCoFunction(FUN f)
+	{
+		f();
+		_Remove(CORO);
+	}
+
+	template<typename FUN>
+	static CoroID AsyncCall(FUN f)
+	{
+		return Create(std::bind(_runCoFunction<FUN>, f));
+	}
 
 public:
 	static CoroID current();

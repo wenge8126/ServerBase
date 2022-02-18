@@ -34,7 +34,6 @@ public:
 	virtual HandPacket	CreatePacket ()  = 0;
 	virtual	void		destroyPacket(Packet* pPacket) = 0;
 
-	virtual void SetPacketID(PacketID_t id) = 0;
 	virtual PacketID_t	GetPacketID() const = 0;
 
 	virtual void SetReponsePacketID(int responseResultID) { mID = responseResultID; }

@@ -54,10 +54,17 @@ public:
 	}
 
 public:
-	virtual bool ProcessReceivePacket(tNetConnect *pConnect, Packet *pPacket);
+	virtual bool ProcessReceivePacket(tNetConnect *pConnect, Packet *pPacket)
+	{
+		if (ProcessRequestPacket(pConnect, pPacket))
+			return true;
+		return EventNetProtocol::ProcessReceivePacket(pConnect, pPacket);
+	}
+
+	virtual bool ProcessRequestPacket(tNetConnect *pConnect, Packet *pPacket);
 
 public:
-	AutoNice Await(tNetConnect *pConnect, HandPacket req, int overMilSecond);
+	AutoNice Await(tNetConnect *pConnect, int msgID, tRequestMsg &req, int overMilSecond);
 
 	AWaitResponse AllotEventID();
 

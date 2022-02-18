@@ -636,6 +636,7 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y</Command>
     <ClCompile Include="..\NetDll\Net\IOCPUDPNet.cpp" />
     <ClCompile Include="..\NetDll\Net\MeshedNetNodeData.cpp" />
     <ClCompile Include="..\NetDll\Net\MeshedNodeNet.cpp" />
+    <ClCompile Include="..\NetDll\Net\MeshNet.cpp" />
     <ClCompile Include="..\NetDll\Net\NetAddress.cpp" />
     <ClCompile Include="..\NetDll\Net\NodeNetEvent.cpp" />
     <ClCompile Include="..\NetDll\Net\Object.cpp" />
@@ -703,6 +704,7 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y</Command>
     <ClInclude Include="..\NetDll\Net\IOCPUDPNet.h" />
     <ClInclude Include="..\NetDll\Net\MeshedNetNodeData.h" />
     <ClInclude Include="..\NetDll\Net\MeshedNodeNet.h" />
+    <ClInclude Include="..\NetDll\Net\MeshNet.h" />
     <ClInclude Include="..\NetDll\Net\NetAddress.h" />
     <ClInclude Include="..\NetDll\Net\NetConfig.h" />
     <ClInclude Include="..\NetDll\Net\NetDataBuffer.h" />

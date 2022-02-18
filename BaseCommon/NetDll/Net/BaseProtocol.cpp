@@ -2,7 +2,7 @@
 
 
 
-bool AsyncProtocol::ProcessReceivePacket(tNetConnect *pConnect, Packet *pPacket)
+bool AsyncProtocol::ProcessRequestPacket(tNetConnect *pConnect, Packet *pPacket)
 {
 
 	if (pPacket->GetPacketID() == PACKET_RESPONSE_MSG)
@@ -19,15 +19,22 @@ bool AsyncProtocol::ProcessReceivePacket(tNetConnect *pConnect, Packet *pPacket)
 
 		return true;
 	}
-	return EventNetProtocol::ProcessReceivePacket(pConnect, pPacket);
+	return false;
 }
 
-AutoNice AsyncProtocol::Await(tNetConnect *pConnect, HandPacket req, int overMilSecond)
+AutoNice AsyncProtocol::Await(tNetConnect *pConnect, int msgID,  tRequestMsg &req, int overMilSecond)
 {
+	if (CORO == 0)
+	{
+		ERROR_LOG("AwaitConnect must in coro");
+		return AutoNice();
+	}
+
 	AutoNice resp;
 	AWaitResponse pWait = AllotEventID();
-
-	if (!pConnect->Send(req.getPtr(), false))
+	req.SetPackectID(msgID);
+	req.SetRequestID(pWait->mRequestMsgID);
+	if (!pConnect->Send(&req, false))
 		return resp;
 	pWait->mWaitCoroID = CORO;
 	pWait->Wait(overMilSecond);
@@ -41,7 +48,7 @@ AutoNice AsyncProtocol::Await(tNetConnect *pConnect, HandPacket req, int overMil
 		pResp->mData.seek(0);
 		if (!resp->restore(&pResp->mData))
 		{
-			ERROR_LOG("Restore response msg data fail %d : msg ID %u", req->GetID(), pWait->mRequestMsgID);
+			ERROR_LOG("Restore response msg data fail %d : msg ID %u", req.GetPacketID(), pWait->mRequestMsgID);
 			return AutoNice();
 		}
 	}

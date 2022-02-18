@@ -115,7 +115,7 @@ namespace NetCloud
 		if (x > 0 && (DSIZE)x < mWaitRequestPacketHash.size())
 		{
 			Packet *p = mWaitRequestPacketHash[x];
-			if (p != NULL && (EVENT_ID)p->GetID() == id)
+			if (p != NULL && (EVENT_ID)p->_getID() == id)
 			{
 				return p;
 			}

@@ -50,9 +50,7 @@ public :
 	virtual ~Packet( ){}
 
 
-	virtual	void SetPacketID(PacketID_t id)  { mID = id; }
-	virtual	PacketID_t	GetPacketID() const { return mID; }
-	virtual int GetID() const { return mID; }
+	virtual	PacketID_t	GetPacketID() const = 0;
 
 	virtual void InitData() {}
 
@@ -63,6 +61,9 @@ public:
 	virtual BOOL		Read( DataStream& iStream, size_t packetSize, tNetConnect* pConnect) = 0 ;
 	virtual BOOL		Write( DataStream& oStream ) const = 0;
 	
+	virtual bool ReadExt(DataStream& iStream, tNetConnect* pConnect) { return true; }
+	virtual bool WriteExt(DataStream& oStream) { return true; }
+
 	//返回值为：PACKET_EXE 中的内容；
 	//PACKET_EXE_ERROR 表示出现严重错误，当前连接需要被强制断开
 	//PACKET_EXE_BREAK 表示返回后剩下的消息将不在当前处理循环里处理
@@ -79,6 +80,7 @@ public:
 	virtual void		Release() override;
 
 	Auto<Packet> GetSelf() { return Auto<Packet>(this); }
+	int						_getID() const { return mID; }
 
 	virtual const char* getName() const { return "None"; }
 };

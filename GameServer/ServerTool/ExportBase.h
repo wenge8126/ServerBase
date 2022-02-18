@@ -265,7 +265,10 @@ AString GenerateMsgProtocolCppCode(AutoNice proList, AutoNice proNotes, Array<AS
 
 		cppCode += "class ";
 		cppCode += name;
-		cppCode += " : public tBaseMsg";
+		if (d->exist("mRequestID"))
+			cppCode += " : public tRequestMsg";
+		else
+			cppCode += " : public tBaseMsg";
 		AString structNote = GetMemberNote(noteData, "_struct_");
 		if (structNote.length() > 0)
 		{
@@ -549,6 +552,15 @@ AString GenerateMsgProtocolCppCode(AutoNice proList, AutoNice proNotes, Array<AS
 
 		code.Format("    virtual const char* GetMsgName() const override { return \"%s\"; }\r\n\r\n", name.c_str());
 		cppCode += code;
+
+		if (d->exist("mRequestID"))
+		{
+			code.Format("    virtual void SetRequestID(MSG_ID id)  override { mRequestID = (int)id; }\r\n\r\n");
+			cppCode += code;
+
+			code.Format("    virtual MSG_ID GetRequestID()  override { return (MSG_ID)mRequestID; }\r\n\r\n");
+			cppCode += code;
+		}
 
 		if (exportRunHash.find(name))
 			cppCode += "    virtual int Run(ShareMemCloudDBNode *pNode, const AString &tableName, AutoNice &paramData, AutoNice &resultData) override;\r\n\r\n";
@@ -858,7 +870,7 @@ AutoNice GenerateProtocol(const AString &fileName, const AString tsPath, const A
 	if (!d || d->dataSize() <= 0)
 	{	
 		error.Format("%s 不存在或内容为空", fileName.c_str());
-		//MessageBox(info);
+		MessageBox(NULL, error.c_str(), "错误", 0);
 		return AutoNice();
 	}
 	d->resize(d->dataSize() + 3);
@@ -908,6 +920,7 @@ AutoNice GenerateProtocol(const AString &fileName, const AString tsPath, const A
 				lastStructInfo = strInfo;
 			continue;
 		}
+		bool bIsRequest = false;
 
 		AString name = lineString;
 		if (strstr(name.c_str(), ":DB") != NULL)
@@ -924,6 +937,12 @@ AutoNice GenerateProtocol(const AString &fileName, const AString tsPath, const A
 		{
 			name = lineString.SplitLeft(":CONFIG");
 			runConfigList.insert(name, true);				// 插入到需要导出 Run 列表, 但值为false
+		}
+		else if (strstr(name.c_str(), ":RQ") != NULL)
+		{
+			name = lineString.SplitLeft(":RQ");
+			bIsRequest = true;
+			//exportRunHash.insert(name, true);
 		}
 
 		AString dataString = strPro.SplitBlock();
@@ -944,7 +963,12 @@ AutoNice GenerateProtocol(const AString &fileName, const AString tsPath, const A
 
 		structNameList.push_back(name);
 
+
 		AutoNice field = MEM_NEW NiceData();
+
+		if (bIsRequest)
+			field["mRequestID"] = "int";
+
 		int i = 0;
 		while (true)
 		{
