@@ -124,8 +124,6 @@ public:
 
 	virtual void OnPacketExecuteError(tNetConnect *pConnect, Packet *pPacket) = 0;
 
-	virtual bool ProcessReceivePacket(tNetConnect *pConnect, Packet *pPacket) = 0;
-
 	virtual bool RegisterNetPacket(AutoPacketFactory f, bool bRespace = true){ return false; }
 	virtual int AppendNetPacketFrom(tNetProtocol *other, bool bReplace){ return 0; }
 	virtual AutoPacketFactory FindPacketFactory(PacketID_t packetID) { return AutoPacketFactory(); }

@@ -1,14 +1,15 @@
-#pragma once
 
 #ifndef _INCLUDE_MESHNET_H_
 #define _INCLUDE_MESHNET_H_
 
+#pragma once
+
 #include "IOCPClientSetNet.h"
-#include "IOCPServerNet.h";
+#include "IOCPServerNet.h"
 #include "MeshNetMsg.h"
 #include "CoroutineTool.h"
 #include "NetAddress.h"
-#include "BaseProtocol.h"
+#include "NetProcess.h"
 
 enum EMeshNetMsgType
 {
@@ -18,7 +19,9 @@ enum EMeshNetMsgType
 
 class MeshNet : public DefaultServerNet
 {
-	friend class MeshNetProtocol;
+	friend class MeshNetProcess;
+	friend class MeshClientNetProcess;
+
 public:
 	class MeshConnectData : public AnyData
 	{
@@ -103,23 +106,22 @@ public:
 		);
 	}
 
-	void AwaitConnectNode(const char *szIp, int nPort, int overmilSecond)
+	virtual bool AwaitConnectNode(const char *szIp, int nPort, int overmilSecond)
 	{
 		HandConnect nodeConnect = mNodeClientNet->AwaitConnect(szIp, nPort, overmilSecond);
 		if (nodeConnect)
 		{
-			NetAddress d(szIp, nPort);
-			if (!mClientNodeList.exist((UInt64)d))
+			NetAddress targetAddr(szIp, nPort);
+			if (!mServerNodeList.exist((UInt64)targetAddr))
 			{
 				AConnectData d = MEM_NEW MeshConnectData();
 				d->mpConnect = nodeConnect.getPtr();
 				nodeConnect->SetUserData(d);
-				mClientNodeList.insert(d, d);
+				mServerNodeList.insert(targetAddr, d);
 
-				Auto<AsyncProtocol> protocol = GetNetProtocol();
 				RQ_RequestMeshInfo req;
 				req.mNodeAddr = mKey;
-				AutoNice respData = protocol->Await(nodeConnect.getPtr(), eMeshMsg_RequestNodeInfo, req, 6000);
+				AutoNice respData = mClientNetProcess->Await(nodeConnect.getPtr(), eMeshMsg_RequestNodeInfo, req, 6000);
 				if (respData)
 				{
 					RS_MeshNodeInfo  info;
@@ -129,15 +131,18 @@ public:
 					{
 						NetAddress addr(info.mNodeList[i]);
 
-						AConnectData d = mClientNodeList.find(addr);
-						if (!d)
+						AConnectData exsitNode = mServerNodeList.find(addr);
+						if (!exsitNode)
 						{
 							AwaitConnectNode(addr.Ip().c_str(), addr.GetPort(), 6000);
 						}
 					}
+
+					return true;
 				}
 			}
 		}
+		return false;
 	}
 
 	virtual void StopNet() override
@@ -160,17 +165,25 @@ public:
 		return MEM_NEW MeshServerConnect();
 	}
 
+	virtual int GetSafeCode() override { return mSafeCode; }
+
 protected:
-	Hand<MeshClientNet>		mNodeClientNet;
+	Hand<MeshClientNet>								mNodeClientNet;
 	FastHash<UInt64, AConnectData>			mServerNodeList;
-	FastHash<UInt64, AConnectData>			mClientNodeList;
+
+	Hand<tNetProcess>		mServerProcess;
+	Hand<tNetProcess>		mClientNetProcess;
+	
 	UInt64			mKey;
 	bool				mbClose = false;
+
+public:
+	int					mSafeCode = 0;
 };
 
 
 
-class MeshNetProtocol : public AsyncProtocol
+class MeshNetProcess : public tNetProcess
 {
 public:
 	MeshNet*			GetNet(tNetConnect *pConnect)
@@ -178,44 +191,31 @@ public:
 		return dynamic_cast<MeshNet*>(pConnect->GetNetHandle());
 	}
 
-	virtual bool ProcessReceivePacket(tNetConnect *pConnect, Packet *pPacket)
+	virtual void On(tNetConnect *pConnect, RQ_RequestMeshInfo &req, RS_MeshNodeInfo &info)
 	{
-		switch (pPacket->GetPacketID())
-		{
-		case eMeshMsg_RequestNodeInfo:
-		{
 			// 更新当前服务器Node列表
-			Auto<RQ_RequestMeshInfo> req = pPacket;
 			Hand<MeshNet::MeshConnectData> d = MEM_NEW MeshNet::MeshConnectData();
 			d->mpConnect = pConnect;
-			d->mNodeKey = req->mNodeAddr;
+			d->mNodeKey = req.mNodeAddr;
 			pConnect->SetUserData(d);
 			MeshNet *pNet = GetNet(pConnect);
 
 			// 返回所有列表
-			RS_MeshNodeInfo  info;
+			//RS_MeshNodeInfo  info;
 
 			for (auto it=pNet->mServerNodeList.begin(); it; ++it)
 			{
 				info.mNodeList.add(it.key());
 			}
-			Auto< ResponseMsgPacket> resp = CreatePacket(PACKET_RESPONSE_MSG);
-			resp->mRequestID = req->mRequestID;
-			info.serialize(&resp->mData);
-			pConnect->Send(resp.getPtr(), false);
-			pNet->mServerNodeList.insert(req->mNodeAddr, d);
-		}
-		return true;
-		break;
-
-		default:
-			return AsyncProtocol::ProcessReceivePacket(pConnect, pPacket);
-			break;
-		}
+			//Auto< ResponseMsgPacket> resp = CreatePacket(PACKET_RESPONSE_MSG);
+			//resp->mRequestID = req->mRequestID;
+			//info.serialize(&resp->mData);
+			//pConnect->Send(resp.getPtr(), false);
+			//pNet->mServerNodeList.insert(req->mNodeAddr, d);
 	}
 };
 
-class MeshClientNetProtocol : public AsyncProtocol
+class MeshClientNetProcess : public tNetProcess
 {
 public:
 	MeshNet*			GetNet(tNetConnect *pConnect)
@@ -223,18 +223,7 @@ public:
 		return (dynamic_cast<MeshNet::MeshClientNet*>(pConnect->GetNetHandle()))->mpOwnerNet;
 	}
 
-	virtual bool ProcessReceivePacket(tNetConnect *pConnect, Packet *pPacket)
-	{
-		switch (pPacket->GetPacketID())
-		{
 
-
-		default:
-			return AsyncProtocol::ProcessReceivePacket(pConnect, pPacket);
-			break;
-		}
-		return false;
-	}
 };
 
 

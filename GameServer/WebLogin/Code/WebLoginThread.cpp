@@ -21,7 +21,6 @@
 
 #include "LoginNetComponect.h"
 #include "AsyncLoop.h"
-#include "BaseProtocol.h"
 
 using namespace uWS;
 

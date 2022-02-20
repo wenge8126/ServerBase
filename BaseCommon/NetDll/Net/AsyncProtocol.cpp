@@ -1,65 +1,18 @@
-#include "BaseProtocol.h"
+#include "AsyncProtocol.h"
+#include "DefinePacketFactory.h"
 
 
-
-bool AsyncProtocol::ProcessRequestPacket(tNetConnect *pConnect, Packet *pPacket)
-{
-
-	if (pPacket->GetPacketID() == PACKET_RESPONSE_MSG)
-	{
-		Auto<ResponseMsgPacket> p = pPacket;
-		AWaitResponse pWait = FindWaitResponse(p->mRequestID);
-		if (pWait)
-		{
-			pWait->mResponsePacket = pPacket;
-			RESUME(pWait->mWaitCoroID);
-		}
-		else
-			WARN_LOG("Wait msg no exist : %u", p->mRequestID);
-
-		return true;
-	}
-	return false;
-}
-
-AutoNice AsyncProtocol::Await(tNetConnect *pConnect, int msgID,  tRequestMsg &req, int overMilSecond)
-{
-	if (CORO == 0)
-	{
-		ERROR_LOG("AwaitConnect must in coro");
-		return AutoNice();
-	}
-
-	AutoNice resp;
-	AWaitResponse pWait = AllotEventID();
-	req.SetPackectID(msgID);
-	req.SetRequestID(pWait->mRequestMsgID);
-	if (!pConnect->Send(&req, false))
-		return resp;
-	pWait->mWaitCoroID = CORO;
-	pWait->Wait(overMilSecond);
-
-	YIELD;
-
-	if (pWait->mResponsePacket)
-	{
-		Auto< ResponseMsgPacket> pResp = pWait->mResponsePacket;
-		resp = MEM_NEW NiceData();
-		pResp->mData.seek(0);
-		if (!resp->restore(&pResp->mData))
-		{
-			ERROR_LOG("Restore response msg data fail %d : msg ID %u", req.GetPacketID(), pWait->mRequestMsgID);
-			return AutoNice();
-		}
-	}
-	FreeServerEvent(pWait.getPtr());
-	return resp;
-}
 //-------------------------------------------------------------------------
 #define _MOVE_BIT 24
 static const UINT msMaxPosValue = ~((0xFFFFFFFF >> _MOVE_BIT) << _MOVE_BIT);
 
-AsyncProtocol::AWaitResponse AsyncProtocol::AllotEventID()
+AsyncProtocol::AsyncProtocol()
+{
+	EventNetProtocol  x;
+	RegisterNetPacket(MEM_NEW DefinePacketFactory<ResponseMsgPacket, PACKET_RESPONSE_MSG>());
+}
+
+AWaitResponse AsyncProtocol::AllotEventID()
 {
 	UINT x = 0;
 	if (!mIDStack.empty())
@@ -108,7 +61,7 @@ void AsyncProtocol::FreeServerEvent(WaitResponse *pWaitResponse)
 	}
 }
 
-AsyncProtocol::AWaitResponse AsyncProtocol::FindWaitResponse(MSG_ID id)
+AWaitResponse AsyncProtocol::FindWaitResponse(MSG_ID id)
 {
 	UINT x = id & msMaxPosValue;
 	if (x > 0 && (DSIZE)x < mEventList.size())
@@ -120,4 +73,19 @@ AsyncProtocol::AWaitResponse AsyncProtocol::FindWaitResponse(MSG_ID id)
 		}
 	}
 	return NULL;
+}
+
+UINT ResponseMsgPacket::Execute(tNetConnect* pConnect)
+{
+	Auto< AsyncProtocol> protocol = pConnect->GetNetHandle()->GetNetProtocol();
+	AWaitResponse pWait = protocol->FindWaitResponse(mRequestID);
+	if (pWait)
+	{
+		pWait->mResponsePacket = this;
+		RESUME(pWait->mWaitCoroID);
+	}
+	else
+		WARN_LOG("Wait msg no exist : %u", mRequestID);
+
+	return 0;
 }

@@ -39,6 +39,11 @@ public:
 	virtual void SetReponsePacketID(int responseResultID) { mID = responseResultID; }
 	virtual int GetResponsePacketID() const { return mID; }
 
+	virtual void ProcessPacket(tNetConnect *pConnect, Packet *pPacket)
+	{
+		ERROR_LOG("No over write PacketFactory:ProcessPacket");
+	}
+
 public:
 	Auto<PacketFactoryPtr> mOwnerPtr;
 };
@@ -49,12 +54,17 @@ typedef Auto<PacketFactory> AutoPacketFactory;
 class BasePacket : public Packet
 {
 public:
-	virtual	PacketID_t	GetPacketID( ) const { return mFactoryPtr->mpFactory->GetPacketID(); }
+	virtual	PacketID_t	GetPacketID( ) const override { return mFactoryPtr->mpFactory->GetPacketID(); }
 
 	virtual BOOL		Read(DataStream& iStream, size_t packetSize, tNetConnect* ) override { return TRUE; }
 	virtual BOOL		Write( DataStream& oStream ) const  override { return TRUE; }
 
-	virtual UINT		Execute( tNetConnect* pConnect ) { return 0;  }
+	virtual UINT		Execute( tNetConnect* pConnect ) 
+	{ 
+		if (mFactoryPtr->mpFactory != NULL)
+			mFactoryPtr->mpFactory->ProcessPacket(pConnect, this);
+		return 0;  
+	}
 
 	virtual UINT		GetState() const { return 0; }
 	virtual VOID		SetState(UINT stateData) { }
