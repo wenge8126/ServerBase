@@ -9,7 +9,7 @@
 #include "PoolList.h"
 #include "Lock.h"
 #include "SocketAPI.h"
-
+#include "CoroutineTool.h"
 //-------------------------------------------------------------------------
 #define IoSend	1	// 发送事件
 #define IoRecv	2	// 接收事件
@@ -151,8 +151,9 @@ public:
 	AString			mIP;
 	int				mPort;
 	bool				mbFinish;
-
+	CoroID			mConnectCoroID = 0;
 	UInt64			mOverTime;
+	HandConnect mConnect;
 };
 
 

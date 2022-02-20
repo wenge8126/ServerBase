@@ -87,8 +87,8 @@ public:
 
 	virtual uint GetSendDataSize(){ return 0; }
 	virtual uint GetReceiveDataSize(){ return 0; }
-    virtual AutoAny GetUserData() { return AutoAny(); }
-	virtual void SetUserData(AutoAny userData) {}
+    virtual AutoAny GetUserData() { return mAttachData; }
+	virtual void SetUserData(AutoAny userData) { mAttachData = userData;  }
 
 public:
 	AutoAny		mAttachData;
@@ -123,8 +123,6 @@ public:
 	virtual HandPacket ReadPacket( tNetConnect *pConnect, DataStream *scrInputStream ) = 0;
 
 	virtual void OnPacketExecuteError(tNetConnect *pConnect, Packet *pPacket) = 0;
-
-	virtual bool ProcessReceivePacket(tNetConnect *pConnect, Packet *pPacket) = 0;
 
 	virtual bool RegisterNetPacket(AutoPacketFactory f, bool bRespace = true){ return false; }
 	virtual int AppendNetPacketFrom(tNetProtocol *other, bool bReplace){ return 0; }

@@ -136,7 +136,7 @@ BOOL CServerToolDlg::OnInitDialog()
 
 	mGateIP = "127.0.0.1";
 	mGatePort = 10000;
-	mConfigPath = "D:/Home_86/Config";
+	mConfigPath = "D:/ServerBase/Config";
 
 	UpdateData(FALSE);
 
@@ -466,8 +466,10 @@ void CServerToolDlg::OnBnExportRunConfig()
 
 	AString fileName;
 	fileName.Format("%s/RunConfigProtocol.txt", (LPCTSTR)configPath);
+	fileName.Format("%s/MeshProtocol.txt", (LPCTSTR)configPath);
 	AString err;
-	AutoNice info = GenerateProtocol(fileName, "", "../GameServer/Common", "RunConfigStruct", false, err);
+	//AutoNice info = GenerateProtocol(fileName, "", "../GameServer/Common", "RunConfigStruct", false, err);
+	AutoNice info = GenerateProtocol(fileName, "", "../BaseCommon/NetDll/Net", "MeshNetMsg", false, err);
 
 	LOG("%s", err.c_str());
 

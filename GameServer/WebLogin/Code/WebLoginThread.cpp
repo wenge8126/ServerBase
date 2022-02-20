@@ -21,7 +21,6 @@
 
 #include "LoginNetComponect.h"
 #include "AsyncLoop.h"
-#include "BaseProtocol.h"
 
 using namespace uWS;
 
@@ -161,7 +160,7 @@ bool TraverseDeleteBackFiles(const std::string &path)
 void _ConnectGate(WebLoginThread *pThread)
 {
 	LOG("=== Connect gate start");
-	bool re = AsyncLoop::AwaitLoop(
+	bool re = Async::AwaitLoop(
 		[=]()
 	{
 		bool b = pThread->mActorManager->mNetNode->AwaitConnectGate(NetAddress(config.login_node.gate.ip.c_str(), config.login_node.gate.port));
@@ -258,7 +257,8 @@ void WebLoginThread::OnStart(void*)
 		mSdkMgr.InitThread();
 
 		CoroutineTool::AsyncCall(_ConnectGate, this);
-	
+
+
 		//ServerThread::OnStart(NULL);
 		//TraverseDeleteBackFiles("./");
 		//TraverseDeleteBackFiles("./DBPlugin/");

@@ -21,6 +21,30 @@ bool IOCPClientSetNet::Connect( const char *szIp, int nPort, int overmilSecond )
 	return true;
 }
 
+HandConnect IOCPClientSetNet::AwaitConnect(const char *szIp, int nPort, int overmilSecond)
+{
+	if (CORO == 0)
+	{
+		ERROR_LOG("AwaitConnect must in coro");
+		return false;
+	}
+
+	if (szIp == NULL || nPort <= 0)
+	{
+		DEBUG_LOG("ERROR: 未提供正常的连接IP或端口[%d]", nPort);
+		return false;
+	}
+
+	ConnectNetThread *pWaitConnectThread = MEM_NEW ConnectNetThread();
+	pWaitConnectThread->mConnectCoroID = CORO;
+	pWaitConnectThread->StartConnect(szIp, nPort, overmilSecond);
+	mWaitConnectThreadList.push_front(pWaitConnectThread);
+
+	YIELD;
+
+	return pWaitConnectThread->mConnect;
+}
+
 void IOCPClientSetNet::StopNet( void )
 {
 	for (ConnectThreadList::iterator it=mWaitConnectThreadList.begin(); it; ++it)
@@ -68,6 +92,7 @@ void IOCPClientSetNet::Process()
 					//_SendSafeCode(pRecConnect);
 					//pRecConnect->OnConnected();
 					OnConnected(pRecConnect);
+					pConnectThread->mConnect = conn;
 				}
 				else
 				{
@@ -75,6 +100,8 @@ void IOCPClientSetNet::Process()
 					OnConnectFail( pConnectThread->mIP.c_str(), pConnectThread->mPort );
 				}
 				pConnectThread->Close();
+				if (pConnectThread->mConnectCoroID != 0)
+					RESUME(pConnectThread->mConnectCoroID);
 				delete pConnectThread;
 				pConnectThread = NULL;
 			}
@@ -85,6 +112,8 @@ void IOCPClientSetNet::Process()
 				OnConnectFail(pConnectThread->mIP.c_str(), pConnectThread->mPort);
 				Log("NET: WARN Connect over time [%s:%d]", pConnectThread->mIP.c_str(), pConnectThread->mPort);
 				pConnectThread->Close();
+				if (pConnectThread->mConnectCoroID != 0)
+					RESUME(pConnectThread->mConnectCoroID);
 				delete pConnectThread;
 				pConnectThread = NULL;				
 			}

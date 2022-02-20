@@ -11,7 +11,6 @@
 #include "DefinePacketFactory.h"
 
 
-
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
@@ -46,7 +45,6 @@ public:
 
 	void _SetSendData(AutoData hData, size_t size){ mData = hData; if (mData) mData->seek(size); }	
 
-	virtual	VOID		SetPacketID( PacketID_t id )  {};
 
 	//公用继承接口
 	virtual BOOL Read( DataStream& iStream, size_t packetSize, tNetConnect* pConnect)

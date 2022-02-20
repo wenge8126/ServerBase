@@ -43,6 +43,9 @@
     <Filter Include="NetNode">
       <UniqueIdentifier>{fef9a5d5-c22e-4f99-9012-58742c8ecfae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MeshNet">
+      <UniqueIdentifier>{12c0b30f-ae84-47fb-a6db-ad816bcdd33d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\NetDll\Net.cpp">
@@ -195,7 +198,13 @@
     <ClCompile Include="..\NetDll\Net\SystemInfo.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\NetDll\Net\BaseProtocol.cpp">
+    <ClCompile Include="..\NetDll\Net\AsyncProtocol.cpp">
+      <Filter>Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NetDll\Net\MeshNet.cpp">
+      <Filter>MeshNet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NetDll\Net\NetProcess.cpp">
       <Filter>Protocol</Filter>
     </ClCompile>
   </ItemGroup>
@@ -383,11 +392,26 @@
     <ClInclude Include="..\NetDll\Net\SystemInfo.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\NetDll\Net\BaseProtocol.h">
-      <Filter>Protocol</Filter>
-    </ClInclude>
     <ClInclude Include="..\NetDll\Net\BaseMsg.h">
       <Filter>Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NetDll\Net\MeshNet.h">
+      <Filter>MeshNet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NetDll\Net\AsyncProtocol.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NetDll\Net\NetProcess.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NetDll\Net\DefineNetFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NetNode\AsyncGate.h">
+      <Filter>NetNode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NetNode\AsyncNode.h">
+      <Filter>NetNode</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

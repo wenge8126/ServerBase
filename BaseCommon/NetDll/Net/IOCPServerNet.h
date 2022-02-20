@@ -230,6 +230,8 @@ public:
 public:
 	virtual bool Connect(const char *szIp, int nPort, int overmilSecond);
 
+	virtual bool AwaitConnect(const char *szIp, int nPort, int overmilSecond);
+
 	virtual void OnConnected(){  }
 	virtual void OnConnectFail(){}
 	virtual void OnCloseConnect(tNetConnect *pConnect) {}
@@ -264,6 +266,9 @@ protected:
 	AString					mIp;
 	int							mPort;
 };
+//-------------------------------------------------------------------------
+
+
 //-------------------------------------------------------------------------
 
 #endif //_INCLUDE_IOCPSERVERNET_H_

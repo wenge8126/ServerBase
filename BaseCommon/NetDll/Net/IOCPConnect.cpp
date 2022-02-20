@@ -605,10 +605,8 @@ void IOCPConnect::SetRemove(bool bNeedRemove)
 
 void IOCPConnect::OnReceivePacket(Packet *pPacket)
 {
-	//pPacket->Execute(this);
-	tNetHandle *pNet = GetNetHandle();
-	if (pNet != NULL)
-		pNet->GetNetProtocol()->ProcessReceivePacket(this, pPacket);
+	pPacket->Execute(this);
+
 }
 
 //-------------------------------------------------------------------------*/

@@ -1,0 +1,12 @@
+
+
+// Mesh 连接后, 请求当前所有的节点信息
+RQ_RequestMeshInfo :RQ
+{
+	UInt64 mNodeAddr;	
+}
+
+RS_MeshNodeInfo
+{
+	arraydata<UInt64> mNodeList;
+}

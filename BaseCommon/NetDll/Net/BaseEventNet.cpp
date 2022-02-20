@@ -4,6 +4,7 @@
 #include "NetAddress.h"
 #include <stdarg.h>
 #include "ClientEvent.h"
+#include "AsyncProtocol.h"
 //----------------------------------------------------------------------------------------------
 
 //bool tBaseEventNet::Send( Logic::tEvent *sendEvent, int target )
@@ -45,7 +46,7 @@
 tBaseEventNet::tBaseEventNet(bool bCreateEventProtocol)
 {
 	if (bCreateEventProtocol)
-		mNetProtocol = MEM_NEW EventNetProtocol();
+		mNetProtocol = MEM_NEW AsyncProtocol();
 }
 //-------------------------------------------------------------------------------------------------------------------
 

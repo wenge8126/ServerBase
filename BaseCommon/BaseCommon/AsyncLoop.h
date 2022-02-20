@@ -7,7 +7,7 @@
 #include "Timer.h"
 
 
-class AsyncLoop
+class Async
 {
 public:
 	template<typename FUN>
@@ -28,6 +28,26 @@ public:
 		return true;
 	}
 
+	template<typename FUN>
+	class _ATimer : public tTimer
+	{
+	public:
+		virtual void onTime() override
+		{
+			mOnFun();
+		}
+
+	public:
+		FUN		mOnFun;
+	};
+
+	template<typename FUN>
+	static void Wait(FUN onFun, Int64 overMilSecond)
+	{
+		Auto<_ATimer> t = MEM_NEW _ATimer();
+		t->mOnFun = onFun;
+		t->Wait(overMilSecond);
+	}
 };
 
 
