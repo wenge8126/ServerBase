@@ -207,6 +207,12 @@
     <ClCompile Include="..\NetDll\Net\NetProcess.cpp">
       <Filter>Protocol</Filter>
     </ClCompile>
+    <ClCompile Include="..\NetNode\AsyncGate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NetNode\AsyncNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\NetDll\Net\NetHead.h">
@@ -404,17 +410,25 @@
     <ClInclude Include="..\NetDll\Net\NetProcess.h">
       <Filter>Protocol</Filter>
     </ClInclude>
-    <ClInclude Include="..\NetDll\Net\DefineNetFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\NetNode\AsyncGate.h">
       <Filter>NetNode</Filter>
     </ClInclude>
     <ClInclude Include="..\NetNode\AsyncNode.h">
       <Filter>NetNode</Filter>
     </ClInclude>
+    <ClInclude Include="..\NetDll\Net\DefineMsgFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NetDll\Net\MeshNetMsg.h">
+      <Filter>MeshNet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\Config\MeshProtocol.txt">
+      <Filter>MeshNet</Filter>
+    </Text>
   </ItemGroup>
 </Project>

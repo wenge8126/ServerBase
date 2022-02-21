@@ -1,5 +1,5 @@
-#ifndef _INCLUDE_DEFINENETFACTORY_H_
-#define _INCLUDE_DEFINENETFACTORY_H_
+#ifndef _INCLUDE_DEFINEMSGFACTORY_H_
+#define _INCLUDE_DEFINEMSGFACTORY_H_
 
 #pragma once
 
@@ -9,33 +9,33 @@
 
 //-------------------------------------------------------------------------
 // 注册一般通知消息
-template<int packetID, typename T, typename ProcessType>
-class DefaultNetFactory : public tPacketFactory
+template<int packetID, typename Msg, typename ProcessType>
+class DefaultMsgFactory : public tPacketFactory
 {
 public:
-	DefaultNetFactory(tNetProcess *pProcess)
+	DefaultMsgFactory(tNetProcess *pProcess)
 		: tPacketFactory(0)
 	{
 		mProcess = pProcess->mAutoThis;
 	}
 
 public:
-	virtual Packet *_createPacket() { return MEM_NEW T(); }
+	virtual Packet *_createPacket() { return MEM_NEW Msg(); }
 	virtual PacketID_t	GetPacketID()const { return packetID; }
 
 	virtual void ProcessPacket(tNetConnect *pConnect, Packet *pPacket) override
 	{
-		Auto<T> pak = pPacket;
+		Auto<Msg> pak = pPacket;
 		if (!pak)
 		{
-			ERROR_LOG("Is not %s packet", typeid(T).name());
+			ERROR_LOG("Is not %s packet", typeid(Msg).name());
 			return;
 		}
 		Hand<ProcessType> process = mProcess->mpProcess;
 		if (process)
 			process->On(pConnect, *pak);
 		else
-			ERROR_LOG("%s run process is null", typeid(T).name());
+			ERROR_LOG("%s run process is null", typeid(Msg).name());
 	}
 
 public:
@@ -44,10 +44,10 @@ public:
 //-------------------------------------------------------------------------
 // 注册请求消息
 template<int packetID, typename ReqMsg, typename RespMsg, typename ProcessType>
-class DefaultNetReqeustFactory : public tPacketFactory
+class DefaultReqeustMsgFactory : public tPacketFactory
 {
 public:
-	DefaultNetReqeustFactory(tNetProcess *pProcess)
+	DefaultReqeustMsgFactory(tNetProcess *pProcess)
 		: tPacketFactory(0)
 	{
 		mProcess = pProcess->mAutoThis;
@@ -87,4 +87,4 @@ public:
 };
 //-------------------------------------------------------------------------
 
-#endif //_INCLUDE_DEFINENETFACTORY_H_
+#endif //_INCLUDE_DEFINEMSGFACTORY_H_

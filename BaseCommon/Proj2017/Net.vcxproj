@@ -673,6 +673,8 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y</Command>
     <ClCompile Include="..\NetDll\WebSocket\sha1.cpp" />
     <ClCompile Include="..\NetDll\WebSocket\WebProtocol.cpp" />
     <ClCompile Include="..\NetDll\WebSocket\WebServerProtocol.cpp" />
+    <ClCompile Include="..\NetNode\AsyncGate.cpp" />
+    <ClCompile Include="..\NetNode\AsyncNode.cpp" />
     <ClCompile Include="..\NetNode\MeshNetGate.cpp" />
     <ClCompile Include="..\NetNode\MeshNetNode.cpp" />
     <ClCompile Include="..\NetNode\NetCommon.cpp" />
@@ -691,7 +693,7 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y</Command>
     <ClInclude Include="..\NetDll\Net\BaseThread.h" />
     <ClInclude Include="..\NetDll\Net\BigDataEvent.h" />
     <ClInclude Include="..\NetDll\Net\BigMsgPacket.h" />
-    <ClInclude Include="..\NetDll\Net\DefineNetFactory.h" />
+    <ClInclude Include="..\NetDll\Net\DefineMsgFactory.h" />
     <ClInclude Include="..\NetDll\Net\DefinePacketFactory.h" />
     <ClInclude Include="..\NetDll\Net\EventData.h" />
     <ClInclude Include="..\NetDll\Net\EventPacket.h" />
@@ -707,6 +709,7 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y</Command>
     <ClInclude Include="..\NetDll\Net\MeshedNetNodeData.h" />
     <ClInclude Include="..\NetDll\Net\MeshedNodeNet.h" />
     <ClInclude Include="..\NetDll\Net\MeshNet.h" />
+    <ClInclude Include="..\NetDll\Net\MeshNetMsg.h" />
     <ClInclude Include="..\NetDll\Net\NetAddress.h" />
     <ClInclude Include="..\NetDll\Net\NetConfig.h" />
     <ClInclude Include="..\NetDll\Net\NetDataBuffer.h" />
@@ -763,6 +766,9 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y</Command>
     <ProjectReference Include="EventCore.vcxproj">
       <Project>{8fd22748-0005-4b29-9136-bd5e8512b1bd}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\Config\MeshProtocol.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -3,10 +3,58 @@
 // Mesh 连接后, 请求当前所有的节点信息
 RQ_RequestMeshInfo :RQ
 {
+	int mNodeCode;
 	UInt64 mNodeAddr;	
 }
 
 RS_MeshNodeInfo
 {
+	int mTargetNodeCode;
 	arraydata<UInt64> mNodeList;
+}
+
+// 网关消息 : 节点连接Gate后请求所有Gate信息, 同时注册到节点
+RQ_RequestGateInfo :RQ
+{
+	UInt64 mNodeKey;
+}
+
+RS_GateListInfo
+{
+	int mGateCode;
+	int mGateCount;
+	arraydata<UInt64> mGateList;
+}
+
+// 追加Actor
+MS_AppendUnit
+{
+	UInt64 mUintID;
+}
+
+// 通知节点信息
+MS_NotifyNodeInfo
+{
+	UInt64 mNodeKey;	
+}
+
+// 请求节点上所有Unit列表
+RQ_RequestUnitListInfo :RQ
+{
+}
+
+RS_UnitInfoList
+{
+	arraydata<UInt64>	mUnitList;
+}
+
+// 通知Unit不存在
+MS_NotifyUnitNoExist
+{
+	UInt64 mNoExistUnitID;
+}
+
+// 通知节点关闭
+MS_NotifyNodeClose
+{
 }

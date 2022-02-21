@@ -229,7 +229,7 @@ AString GetTsType(AString typeString, AutoNice proList, bool bSetDefault)
 }
 //-------------------------------------------------------------------------
 
-AString GenerateMsgProtocolCppCode(AutoNice proList, AutoNice proNotes, Array<AString> &structNameList, EasyHash<AString, bool> &exportRunHash, bool bFirst, bool bRunConfig)
+AString GenerateMsgProtocolCppCode(AutoNice proList, AutoNice proNotes, Array<AString> &structNameList, EasyHash<AString, bool> &exportRunHash, bool bFirst, bool bRunConfig, bool bIncludeMsgStruct)
 {
 	AString cppCode = "//Auto genereate msg data code		";
 	//cppCode += TimeManager::GetMe().GetDateTime();
@@ -237,7 +237,7 @@ AString GenerateMsgProtocolCppCode(AutoNice proList, AutoNice proNotes, Array<AS
 
 	cppCode += "#include \"BaseMsg.h\"\r\n#include \"Array.h\"\r\n#include \"ArrayList.h\"\r\n\r\n";
 
-	if (!bFirst && !bRunConfig)
+	if (!bFirst && !bRunConfig && bIncludeMsgStruct)
 		cppCode += "#include \"MsgStruct.h\"\r\n\r\n";
 
 	for (int i = 0; i < structNameList.size(); ++i)
@@ -863,7 +863,7 @@ AString GenerateMsgProtocolTSCode(AutoNice proList, AutoNice proNotes, Array<ASt
 }
 
 
-AutoNice GenerateProtocol(const AString &fileName, const AString tsPath, const AString cppPath, const AString &targetName, bool bTSCode, AString error)
+AutoNice GenerateProtocol(const AString &fileName, const AString tsPath, const AString cppPath, const AString &targetName, bool bTSCode, AString error, bool bExportComment = false, bool bIncludeMsgStruct = false)
 {
 	FileDataStream  f(fileName.c_str(), FILE_READ);
 	AutoData  d = f.readAllData();
@@ -1069,7 +1069,7 @@ AutoNice GenerateProtocol(const AString &fileName, const AString tsPath, const A
 	}
 	//------------------------------------------------------------------------
 	// Éú³ÉC++
-	AString cppCode = GenerateMsgProtocolCppCode(proList, proNotes, structNameList, exportRunHash, false, !bTSCode);
+	AString cppCode = GenerateMsgProtocolCppCode(proList, proNotes, structNameList, exportRunHash, false, bExportComment, bIncludeMsgStruct);
 
 	//LOG("C++ ----------------------\r\n%s", proNotes->dump().c_str());
 

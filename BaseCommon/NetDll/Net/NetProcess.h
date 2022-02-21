@@ -35,6 +35,16 @@ public:
 public:
 	static AutoNice Await(tNetConnect *pConnect, int msgID, tRequestMsg &req, int overMilSecond);
 
+	template<typename RespMsg>
+	static bool Await(tNetConnect *pConnect, int msgID, tRequestMsg &req, RespMsg &respMsg, int overMilSecond)
+	{
+		AutoNice respData = Await(pConnect, msgID, req, overMilSecond);
+		if (!respData)
+			return false;
+		respMsg.Full(respData);
+		return true;
+	}
+
 public:
 	AProcess		mAutoThis;
 };

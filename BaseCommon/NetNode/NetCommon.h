@@ -41,6 +41,11 @@ namespace NetCloud
 #endif
 		bool operator == (const UnitID &other) const { return *((UInt64*)this) == (UInt64)other; }
 
+		int Hash(int nCount)
+		{
+			return (int)(value % nCount);
+		}
+
 		AString dump() const
 		{
 			AString info;
@@ -144,6 +149,17 @@ namespace NetCloud
 		virtual void OnBeforeSend(tGateConnect *pNode);
 
 		virtual bool OnBeforeRun(tNetUnit *pUnit);
+
+		AString Dump()
+		{ 
+			AString info;
+			info.Format("%s > %s", mSenderID.dump().c_str(), mTargetID.dump().c_str());
+#if DEBUG_CLOUD_NET
+			info += " : ";
+			info += mSendInfo;
+#endif
+			return info;
+		}
 
 	public:
 		UnitID	mSenderID;
