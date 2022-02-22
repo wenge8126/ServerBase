@@ -8,6 +8,7 @@
 #include "NetNode.h"
 #include "NetHead.h"
 #include "WaitRequestManager.h"
+#include "NetProcess.h"
 
 namespace Logic
 {
@@ -37,24 +38,19 @@ namespace NetCloud
 	public:
 		virtual bool OnReceiveProcess(NodePacket *pNodePacket) = 0;
 
-		void SetID(int type, UInt64 id) 
-		{ 		
-			mID.type = type; mID.id = id; 
-			if (mNode)
-				mNode->AppendUnit(this);
-		}
+		void SetID(int type, UInt64 id);
 		virtual void Ready() {}
 
 		virtual Logic::tEventCenter* GetEventCenter()
 		{
-			if (mNode)
-				return mNode->GetEventCenter();
+			//if (mNode)
+			//	return mEventCenter.getPtr();
 			return NULL;
 		}
 
 		AutoEvent StartEvent(const char *szEventName);
 
-		AWaitRequestManager	 GetWaitReqeustMgr() { if (mNode) return	mNode->GetWaitReqeustMgr(); return AWaitRequestManager(); }
+		AWaitRequestManager	 GetWaitReqeustMgr() { /*if (mNode) return	mNode->GetWaitReqeustMgr();*/ return AWaitRequestManager(); }
 
 	public:
 		// 发送的唯一接口 NOTE: 发送的消息包, 必须是 DataPacket
@@ -72,10 +68,12 @@ namespace NetCloud
 
 		virtual HandPacket CreatePacket(PacketID_t packetID)
 		{
-			if (mNode)
-				return mNode->CreatePacket(packetID);
+			//if (mNode)
+			//	return mNode->CreatePacket(packetID);
 			ERROR_LOG("Childen class need override CreatePacket"); return HandPacket(); 
 		}
+
+		Auto<TransferPacket> CreateNodePacket();
 
 	public:
 		UnitID GetID() { return mID; }
@@ -85,19 +83,7 @@ namespace NetCloud
 		virtual bool IsJumping() { return mbJumping; }
 
 	protected:
-		virtual bool SendTo(NodePacket *p)
-		{
-			p->OnStartSend(this);
-			if (mNode)
-			{
-				return mNode->SendToTarget(p);				
-			}
-			else
-			{
-				ERROR_LOG("No set node connect or gate connect");
-			}
-			return false;
-		}
+		virtual bool SendTo(NodePacket *p);
 
 	public:
 		tNetUnit()
@@ -106,9 +92,9 @@ namespace NetCloud
 		}
 
 	public:
-		Hand<tNetNode>		mNode;
+		AProcess		mNode;
 		//ANodeConnect				mNodeConnect;
-
+		
 		UnitID	mID;
 		bool mbJumping;
 	};

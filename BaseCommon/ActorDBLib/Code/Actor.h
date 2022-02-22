@@ -34,6 +34,8 @@ Actor
 #define REG_COMP_MSG(ComponentClass, RQ, RS)		pActorMgr->RegisterActorMsg(#RQ, &Actor::OnComponentMsg<ComponentClass, RQ, RS>);
 #define REG_COMP_NOTIFY(ComponentClass, MSG)		pActorMgr->RegisterNotifyMsg(#MSG, &Actor::OnComponentNotify<ComponentClass, MSG>);
 //-------------------------------------------------------------------------
+class AsyncNode;
+
 namespace NetCloud
 {
 	class ActorManager;
@@ -222,11 +224,7 @@ namespace NetCloud
 			return pResponse->mResultType;
 		}
 
-		virtual bool OnReceiveProcess(NodePacket *pNodePacket) override
-		{
-			return pNodePacket->Execute(NULL) == 0;			
-			//return BigMsgUnit::OnReceiveProcess(pNodePacket);
-		}
+		virtual bool OnReceiveProcess(NodePacket *pNodePacket) override;
 
 		virtual void RegisterMsg(ActorManager *pActorMgr) {}
 
@@ -243,6 +241,8 @@ namespace NetCloud
 			AssertNote(0, "Must inherit DBActor");
 			return NULL;
 		}
+
+		AsyncNode* GetNetNode();
 
 		virtual void LowProcess()
 		{

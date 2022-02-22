@@ -18,9 +18,9 @@ public:
 	GateThread *mpThread;
 
 
-	CGate(GateThread *pThread, int fixedGateCount, int gateID, const char *szCloudGateIp, int nCloudGatePort, int nGateMeshNetSafeCheck, int threadNum = 2)
-		: ActorGate(fixedGateCount, gateID, szCloudGateIp, nCloudGatePort, nGateMeshNetSafeCheck, threadNum)
-		, mpThread(pThread)
+	CGate(GateThread *pThread) //, int fixedGateCount, int gateID, const char *szCloudGateIp, int nCloudGatePort, int nGateMeshNetSafeCheck, int threadNum = 2)
+		//: ActorGate(fixedGateCount, gateID, szCloudGateIp, nCloudGatePort, nGateMeshNetSafeCheck, threadNum)
+		: mpThread(pThread)
 	{
 
 	}
@@ -110,14 +110,23 @@ void GateThread::OnStart(void*)
 
 	ServerThread::OnStart(NULL);
 
-	mGate = MEM_NEW CGate(this, config.gate_node.fix_count, config.gate_node.gate_code, config.gate_node.address.ip.c_str(), config.gate_node.address.port, config.gate_node.address.saft_code);
+	mGate = MEM_NEW CGate(this); // , config.gate_node.fix_count, config.gate_node.gate_code, config.gate_node.address.ip.c_str(), config.gate_node.address.port, config.gate_node.address.saft_code);
 
-	mGate->Init(NetCloud::Address(config.gate_server.ip.c_str(), config.gate_server.port), NetCloud::Address(config.main_gate.ip.c_str(), config.main_gate.port));
+	//mGate->Init(NetCloud::Address(config.gate_server.ip.c_str(), config.gate_server.port), NetCloud::Address(config.main_gate.ip.c_str(), config.main_gate.port));
 
-	Hand<MeshGate> gate = mGate;
-	REGISTER_EVENT(gate->mNodeServerNet->GetEventCenter(), NG_SyncRunState);
-	REGISTER_EVENT(gate->mNodeServerNet->GetEventCenter(), NG_CloseServer);
-	REGISTER_EVENT(gate->mNodeServerNet->GetEventCenter(), NG_GetRunState);
+	mGate->StartGate(config.gate_node.fix_count
+		, config.gate_node.gate_code
+		, config.gate_server.ip.c_str()
+		, config.gate_server.port
+		, config.main_gate.ip.c_str()
+		, config.main_gate.port
+		, config.gate_node.address.saft_code
+	);
+
+	//Hand<MeshGate> gate = mGate;
+	//REGISTER_EVENT(gate->mNodeServerNet->GetEventCenter(), NG_SyncRunState);
+	//REGISTER_EVENT(gate->mNodeServerNet->GetEventCenter(), NG_CloseServer);
+	//REGISTER_EVENT(gate->mNodeServerNet->GetEventCenter(), NG_GetRunState);
 
 	AutoTable whiteListTable = TableManager::getSingleton().CreateNewTable(CLOUD_WHITE_LIST_NAME);
 	if (!whiteListTable->LoadCSV("RunConfig/GateWhiteList.csv"))

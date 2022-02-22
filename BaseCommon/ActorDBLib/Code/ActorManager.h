@@ -4,6 +4,7 @@
 
 #include "Actor.h"
 #include "DBTableManager.h"
+#include "AsyncNode.h"
 
 namespace NetCloud
 {
@@ -30,7 +31,8 @@ namespace NetCloud
 			{
 				Hand<Actor> actor = fact->_NewActor();
 				actor->SetID(actorType, id);
-				mNetNode->AppendUnit(actor.getPtr());
+				if (!mNetNode->AppendUnit(actor.getPtr()))
+					ERROR_LOG("Unit append node fail : %s", actor->GetID().dump().c_str());
 				actor->Init();
 				return actor;
 			}
@@ -50,7 +52,7 @@ namespace NetCloud
 
 		void RegisterMsg()
 		{
-			ActorRequestPacket::RegisterDBPacket(mNetNode.getPtr());
+			//ActorRequestPacket::RegisterDBPacket(mNetNode.getPtr());
 		}
 
 		void RegisterActorMsg(const AString &msgName, pActorMsgCall  pFun)
@@ -66,6 +68,7 @@ namespace NetCloud
 
 		virtual void Process()
 		{
+			mEventCenter->ProcessEvent();
 			mNetNode->Process();
 
 			for (int i=0; i<mProcessComponectList.size(); )
@@ -88,15 +91,16 @@ namespace NetCloud
 		~ActorManager()
 		{
 			mSelfPtr->mpMgr = nullptr;
+			mEventCenter._free();
 		}
 
 		virtual Auto<ActorDBMgr> GetDBMgr() { AssertNote(0, "This is not DBActorManager"); return Auto<ActorDBMgr>(); }
 
 	public:
 		FastHash<int, Auto<ActorFactory> >			mFactoryList;
-
+		AutoEventCenter											mEventCenter;
 		AutoActorMsgPtr										mSelfPtr;
-		ANetNode													mNetNode;
+		Hand<AsyncNode>									mNetNode;
 
 		FastHash<AString, pActorMsgCall>			mOnMsgFunctionList;
 		FastHash<AString, pActorNotifyMsgCall>	mOnNotifyMsgFunctionList;

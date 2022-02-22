@@ -11,7 +11,7 @@ AutoNice tNetProcess::Await(tNetConnect *pConnect, int msgID, tRequestMsg &req, 
 	}
 	Auto< AsyncProtocol> protocol = pConnect->GetNetHandle()->GetNetProtocol();
 	AutoNice resp;
-	AWaitResponse pWait = protocol->AllotEventID();
+	AWaitResponse pWait = protocol->AllotWaitID();
 	
 	req.SetRequestID(pWait->mRequestMsgID);
 	if (!pConnect->Send(msgID, &req))
@@ -32,6 +32,6 @@ AutoNice tNetProcess::Await(tNetConnect *pConnect, int msgID, tRequestMsg &req, 
 			return AutoNice();
 		}
 	}
-	protocol->FreeServerEvent(pWait.getPtr());
+	protocol->FreeWaitID(pWait.getPtr());
 	return resp;
 }

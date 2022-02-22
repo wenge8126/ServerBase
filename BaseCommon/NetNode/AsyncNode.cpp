@@ -91,7 +91,7 @@ void AsyncNode::ConnectGate(const char *szGateIP, int nPort)
 	});
 }
 
-void AsyncNode::AppendUnit(AUnit unit)
+bool AsyncNode::AppendUnit(AUnit unit)
 {
 	auto gate = GetGate(unit->GetID());
 	if (gate)
@@ -99,7 +99,11 @@ void AsyncNode::AppendUnit(AUnit unit)
 		NG_AppendUnit msg;
 		msg.mUintID = unit->GetID();
 		if (gate->mpConnect->Send(eN2G_AppendUnit, &msg))
+		{
+			unit->mNode = this;
 			mUnitList.insert(unit->GetID(), unit);
+			return true;
+		}
 		else
 			ERROR_LOG("Send MS_AppendUnit %s fail", unit->GetID().dump().c_str());
 	}

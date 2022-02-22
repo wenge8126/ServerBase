@@ -1,0 +1,13 @@
+STRING,STRING,INT
+INDEX,VALUE,PORT
+config_path,D:\Home_86\Config,
+ts_path,D:/Home_86/Client/assets/scripts/Game,
+c_path,D:/Home_86/Server/GameServer/Common,
+target_path,D:/Home_86/Server/ServerRun/Config,
+db_config,DBList,1
+CloudNode,192.168.3.118,13311
+MainGate,192.168.3.118,6000
+account_config,AccountDBList,0
+Notice,这是一段废话 …,
+RunPath,D:\Home_86\Server\ServerRun_Release,
+BeginWorkerID,22000,

@@ -1,9 +1,16 @@
 #include "NetUnit.h"
 #include "EventCenter.h"
+#include "AsyncNode.h"
+#include "AsyncGate.h"
 
 namespace NetCloud
 {
-
+	Hand<AsyncNode> GetNetNode(AProcess node)
+	{
+		if (node)
+			return node->mpProcess;
+		return Hand<AsyncNode>();
+	}
 
 	AutoEvent tNetUnit::StartEvent(const char *szEventName)
 	{
@@ -27,15 +34,17 @@ namespace NetCloud
 
 	bool tNetUnit::Send(UnitID targetID, Packet *p, BROADCAST_MODE bBroadcast)
 	{
-		Auto<TransferPacket> pNodePak = mNode->CreateNodePacket();
+		Auto<TransferPacket> pNodePak = CreateNodePacket(); // mNode->CreateNodePacket();
 		pNodePak->mTargetID = targetID;
 		pNodePak->mSenderID = mID;
 		pNodePak->mTargetPacketID = p->GetFactory()->GetPacketID();
 		pNodePak->mbBroadcast = bBroadcast;
-		mNode->mTempLoopData.CleanUp();
-		if (p->Write(mNode->mTempLoopData) == TRUE)
+
+
+		GetNetNode(mNode)->mTempLoopData.CleanUp();
+		if (p->Write(GetNetNode(mNode)->mTempLoopData) == TRUE)
 		{
-			pNodePak->GetData()._write(mNode->mTempLoopData.data(), mNode->mTempLoopData.dataSize());
+			pNodePak->GetData()._write(GetNetNode(mNode)->mTempLoopData.data(), GetNetNode(mNode)->mTempLoopData.dataSize());
 			return SendTo(pNodePak.getPtr());
 		}
 		else
@@ -45,7 +54,7 @@ namespace NetCloud
 
 	bool tNetUnit::SendEvent(UnitID targetID, Logic::tEvent *pEvent, BROADCAST_MODE bBroadcast)
 	{
-		Auto<TransferPacket> pNodePak = mNode->CreateNodePacket();
+		Auto<TransferPacket> pNodePak = CreateNodePacket(); //  mNode->CreateNodePacket();
 		AutoEvent evt = pEvent;
 		pNodePak->mData.seek(0);
 		pEvent->GetEventCenter()->SerializeMsg(evt, &pNodePak->mData);
@@ -85,25 +94,68 @@ namespace NetCloud
 
 	void tNetUnit::StartTransferNode()
 	{
+		//if (mNode)
+		//{
+		//	AGateConnect gate = mNode->FindGateByID(mID);
+		//	if (gate)
+		//	{
+		//		AutoEvent evt = gate->StartEvent("NG_NotifyBeginJumpUnit");
+		//		if (evt)
+		//		{
+		//			evt["UNIT_ID"] = (UInt64)mID;
+		//			evt->Start();
+		//			return;
+		//		}
+		//		ERROR_LOG("No exist NG_NotifyBeginJumpUnit ");
+		//	}
+		//	else
+		//		ERROR_LOG("No exist Gate %lld type %d ", mID.id, mID.type);
+		//}
+		//else
+			ERROR_LOG("No exist Node %lld type %d ", mID.id, mID.type);
+	}
+
+	Auto<NetCloud::TransferPacket> tNetUnit::CreateNodePacket()
+	{
 		if (mNode)
 		{
-			AGateConnect gate = mNode->FindGateByID(mID);
-			if (gate)
-			{
-				AutoEvent evt = gate->StartEvent("NG_NotifyBeginJumpUnit");
-				if (evt)
-				{
-					evt["UNIT_ID"] = (UInt64)mID;
-					evt->Start();
-					return;
-				}
-				ERROR_LOG("No exist NG_NotifyBeginJumpUnit ");
-			}
-			else
-				ERROR_LOG("No exist Gate %lld type %d ", mID.id, mID.type);
+			Hand<AsyncNode> node = mNode->mpProcess;
+			if (node)
+				return node->mNodeNet->GetNetProtocol()->CreatePacket(eNGN_TransferMsg);
+		}
+
+		return Auto<TransferPacket>();
+	}
+
+	void tNetUnit::SetID(int type, UInt64 id)
+	{
+		mID.type = type; 
+		mID.id = id;
+
+		if (mNode)
+		{
+			Hand<AsyncNode> node = mNode->mpProcess;
+			if (node)
+				node->AppendUnit(this);
+		}
+	}
+
+	bool tNetUnit::SendTo(NodePacket *p)
+	{
+		p->OnStartSend(this);
+		if (mNode)
+		{
+			Hand<AsyncNode> node = mNode->mpProcess;
+			//return mNode->SendToTarget(p);				
+			if (node)
+				return node->Send(p->GetFactory()->GetPacketID(), p);
+			ERROR_LOG("Node is not exist");
 		}
 		else
-			ERROR_LOG("No exist Node %lld type %d ", mID.id, mID.type);
+		{
+			ERROR_LOG("No set node connect or gate connect");
+		}
+		return false;
 	}
 
 }

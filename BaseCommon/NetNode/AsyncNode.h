@@ -7,22 +7,33 @@
 #include "MeshNet.h"
 #include "FastHash.h"
 
-class AsyncNode : public tNetProcess
+class Net_Export  AsyncNode : public tNetProcess
 {
 public:
 	AsyncNode();
 
 public:
-	virtual void StartNode(const char *szNodeIP, int nPort)
+	virtual void StartNode(const char *szNodeIP, int nPort, int nSafeCheck)
 	{
+		mNodeNet->mSafeCode = nSafeCheck;
 		mNodeNet->StartNet(szNodeIP, nPort);
 	}
 
 	virtual void CloseNode();
 
+	virtual void Process()
+	{
+		mNodeNet->Process();
+	}
+
+	virtual void LowProcess(int spaceTime)
+	{
+		mNodeNet->LowProcess(spaceTime);
+	}
+
 	void ConnectGate(const char *szGateIP, int nPort);
 
-	void AppendUnit(AUnit unit);
+	bool AppendUnit(AUnit unit);
 
 	void RemoveUnit(AUnit unit)
 	{
@@ -52,6 +63,8 @@ public:
 		}
 		else
 			ERROR_LOG("No exist unit %s gate %d", p->Dump().c_str(), p->mTargetID.Hash(mGateCount));
+
+		return false;
 	}
 
 	MeshNet::AConnectData GetGate(UnitID id)
@@ -128,6 +141,8 @@ public:
 
 	FastHash<UInt64, AUnit>		mUnitList;
 	FastHash<UInt64, MeshNet::AConnectData> mUnitNodeIndex;
+
+	LoopDataStream	mTempLoopData;
 };
 
 

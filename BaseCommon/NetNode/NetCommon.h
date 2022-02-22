@@ -96,6 +96,8 @@ namespace NetCloud
 			, mSenderID()
 			, mSendCount(0)
 			, mbBroadcast(false)
+			, mTargetPacketID(0)
+			, mRequestID(0)
 		{}
 
 		virtual void InitData() override
@@ -104,6 +106,8 @@ namespace NetCloud
 			mSenderID = 0;
 			mSendCount = 0;
 			mbBroadcast = false;
+			mTargetPacketID = 0;
+			mRequestID = 0;
 #if DEBUG_CLOUD_NET
 			mSendInfo.setNull();
 #endif			
@@ -123,6 +127,9 @@ namespace NetCloud
 			iStream.read(idValue);
 			mTargetID = idValue;
 
+			iStream.read(mTargetPacketID);
+			iStream.read(mRequestID);
+
 			return TRUE;
 		}
 		virtual BOOL Write(DataStream& oStream)const
@@ -134,6 +141,9 @@ namespace NetCloud
 			oStream.write(mbBroadcast);
 			oStream.write((UInt64)mSenderID);
 			oStream.write((UInt64)mTargetID);
+
+			oStream.write(mTargetPacketID);
+			oStream.write(mRequestID);
 
 			return TRUE;
 		}
@@ -167,6 +177,9 @@ namespace NetCloud
 
 		byte		mbBroadcast;
 		byte		mSendCount;				// 被发送过多少次, 超过3次, 不再转发
+
+		PacketID_t	mTargetPacketID;
+		MSG_ID		mRequestID;
 #if DEBUG_CLOUD_NET
 		AString	mSendInfo;
 #endif
@@ -185,7 +198,6 @@ namespace NetCloud
 		virtual void InitData() override 
 		{
 			NodePacket::InitData();
-			mTargetPacketID = 0;
 			mData.clear();
 		}
 
@@ -197,8 +209,7 @@ namespace NetCloud
 		virtual BOOL Read(DataStream& iStream, size_t packetSize, tNetConnect *pConnect) override
 		{
 			if (NodePacket::Read(iStream, packetSize, pConnect) == FALSE)
-				return FALSE;
-			iStream.read(mTargetPacketID);
+				return FALSE;			
 
 			mData.clear(false);
 			if (iStream.readData(&mData))
@@ -210,10 +221,7 @@ namespace NetCloud
 		virtual BOOL Write(DataStream& oStream)const
 		{
 			if (NodePacket::Write(oStream) == FALSE)
-				return FALSE;
-			oStream.write(mTargetPacketID);
-
-			size_t size = mData.dataSize();
+				return FALSE;			
 
 			if (oStream.writeData((DataStream*)&mData) )
 				return TRUE;
@@ -226,7 +234,7 @@ namespace NetCloud
 
 	public:
 		DataBuffer  mData;
-		PacketID_t mTargetPacketID;
+		
 	};
 	//-------------------------------------------------------------------------*/
 

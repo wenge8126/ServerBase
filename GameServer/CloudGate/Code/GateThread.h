@@ -6,6 +6,7 @@
 #include "Gate.h"
 #include "CRunConfig.h"
 #include "Vesion.h"
+#include "AsyncGate.h"
 
 class GateThread : public ServerThread
 {
@@ -30,7 +31,7 @@ public:
 
 	virtual bool NotifyThreadClose() override
 	{
-		mGate->Close();
+		mGate->CloseGate();
 		return ServerThread::NotifyThreadClose();
 	}
 
@@ -52,7 +53,7 @@ public:
 	virtual StateDataType GetRunStateInfo(tNiceData &info) override;
 
 public:
-	NetCloud::AGate		mGate;
+	Hand<AsyncGate>		mGate;
 	bool							mbNeedRestart;
 };
 

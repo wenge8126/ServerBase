@@ -256,7 +256,9 @@ void WebLoginThread::OnStart(void*)
 
 		mSdkMgr.InitThread();
 
-		CoroutineTool::AsyncCall(_ConnectGate, this);
+		//CoroutineTool::AsyncCall(_ConnectGate, this);
+
+		mActorManager->mNetNode->ConnectGate(config.login_node.gate.ip.c_str(), config.login_node.gate.port);
 
 
 		//ServerThread::OnStart(NULL);

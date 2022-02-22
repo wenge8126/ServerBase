@@ -20,7 +20,7 @@ enum GateMsgType
 	eN2N_BroadcastUnitNoExist,
 };
 
-class AsyncGate : public tNetProcess
+class Net_Export AsyncGate : public tNetProcess
 {
 public:
 	AsyncGate(size_t maxConnectCount = NET_CONNECT_MAX, int threadNum = _IOCP_THREAD_NUM);
@@ -42,6 +42,15 @@ public:
 		mGateNet->StopNet();
 	}
 
+	virtual void Process()
+	{
+		mGateNet->Process();
+	}
+
+	virtual void LowProcess(int spaceTime)
+	{
+		mGateNet->LowProcess(spaceTime);
+	}
 
 	// 接收节点请求获取Gate信息
 	void On(tNetConnect *pConnect, NG_RequestGateInfo  &req, GN_ResponseGateListInfo &info)

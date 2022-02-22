@@ -59,9 +59,9 @@ public:
 	AsyncProtocol();
 
 public:
-	AWaitResponse AllotEventID();
+	AWaitResponse AllotWaitID();
 
-	void FreeServerEvent(WaitResponse *pWaitResponse);
+	void FreeWaitID(WaitResponse *pWaitResponse);
 
 	AWaitResponse FindWaitResponse(MSG_ID id);
 

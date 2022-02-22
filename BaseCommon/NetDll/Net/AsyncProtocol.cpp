@@ -12,7 +12,7 @@ AsyncProtocol::AsyncProtocol()
 	RegisterNetPacket(MEM_NEW DefinePacketFactory<ResponseMsgPacket, PACKET_RESPONSE_MSG>());
 }
 
-AWaitResponse AsyncProtocol::AllotEventID()
+AWaitResponse AsyncProtocol::AllotWaitID()
 {
 	UINT x = 0;
 	if (!mIDStack.empty())
@@ -41,7 +41,7 @@ AWaitResponse AsyncProtocol::AllotEventID()
 	}
 }
 
-void AsyncProtocol::FreeServerEvent(WaitResponse *pWaitResponse)
+void AsyncProtocol::FreeWaitID(WaitResponse *pWaitResponse)
 {
 	if (pWaitResponse->mRequestMsgID <= 0)
 		return;

@@ -75,6 +75,18 @@ public:
 		IOCPServerNet::StopNet();
 	}
 
+	virtual void Process() override
+	{
+		IOCPServerNet::Process();
+		mNodeClientNet->Process();
+	}
+
+	virtual void LowProcess(int spaceTime) override 
+	{
+		IOCPServerNet::LowProcess(spaceTime);
+		mNodeClientNet->LowProcess(spaceTime);
+	}
+
 	class MeshServerConnect : public IOCPServerConnect
 	{
 	public:
