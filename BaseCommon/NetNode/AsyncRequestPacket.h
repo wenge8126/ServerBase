@@ -38,7 +38,7 @@ namespace NetCloud
 
 		virtual void	OnTime() override
 		{
-			WARN_LOG("RequestPacket over time > %d", GetPacketID());
+			WARN_LOG("RequestPacket over time > %s", GetMsgName());
 			CoroutineTool::Resume(mCoroutine);
 		}
 

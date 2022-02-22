@@ -45,6 +45,8 @@ public:
 		return true;
 	}
 
+	virtual bool ProcessPacket(tNetConnect* pConnect, Packet *pPacket) { return false; }
+
 public:
 	AProcess		mAutoThis;
 };

@@ -192,7 +192,7 @@ namespace NetCloud
 	public:
 		DataBuffer& GetData() { return mData; }
 
-		virtual	PacketID_t	GetPacketID() const { return PACKET_TRANSFER; }
+		virtual UINT Execute(tNetConnect* pConnect) override { ERROR_LOG("TransferPacket execute"); return 0; }
 
 		virtual BOOL Read(DataStream& iStream, size_t packetSize, tNetConnect *pConnect) override
 		{

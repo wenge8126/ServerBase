@@ -63,7 +63,7 @@ public:
 
 public:
 	virtual bool SendEvent(Logic::tEvent *pEvent) = 0;
-	virtual bool Send(const Packet  *msgPacket, bool bEncrypt) = 0;
+	virtual bool Send(int packetID, const Packet  *msgPacket) = 0;
 	virtual tNetHandle* GetNetHandle(void) = 0;	
 	virtual AutoEvent StartEvent(const char* szEvent);	
 
@@ -119,7 +119,7 @@ public:
 	//write or read packet
 	virtual HandPacket	CreatePacket (PacketID packetID) = 0;
 
-	virtual bool WritePacket( const Packet* pPacket, DataStream *destOutputStream ) = 0;
+	virtual bool WritePacket(int packetID, const Packet* pPacket, DataStream *destOutputStream ) = 0;
 	virtual HandPacket ReadPacket( tNetConnect *pConnect, DataStream *scrInputStream ) = 0;
 
 	virtual void OnPacketExecuteError(tNetConnect *pConnect, Packet *pPacket) = 0;

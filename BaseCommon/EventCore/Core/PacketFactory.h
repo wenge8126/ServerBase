@@ -11,14 +11,7 @@
 #include "EventCore.h"
 
 //-------------------------------------------------------------------------*/
-class PacketFactoryPtr : public AutoBase
-{
-public:
-	PacketFactoryPtr()
-		: mpFactory(NULL){}
-	PacketFactory *mpFactory;
-};
-//-------------------------------------------------------------------------*/
+
 class tNetProtocol;
 class EVENTCORE_EXPORTS_H PacketFactory : public AutoBase
 {
@@ -29,6 +22,8 @@ public :
 		mOwnerPtr->mpFactory = this;
 	}
 	virtual ~PacketFactory (){  mOwnerPtr->mpFactory = NULL; }
+
+	virtual const char* GetPacketName() = 0;
 
 public:
 	virtual HandPacket	CreatePacket ()  = 0;
@@ -54,8 +49,6 @@ typedef Auto<PacketFactory> AutoPacketFactory;
 class BasePacket : public Packet
 {
 public:
-	virtual	PacketID_t	GetPacketID( ) const override { return mFactoryPtr->mpFactory->GetPacketID(); }
-
 	virtual BOOL		Read(DataStream& iStream, size_t packetSize, tNetConnect* ) override { return TRUE; }
 	virtual BOOL		Write( DataStream& oStream ) const  override { return TRUE; }
 

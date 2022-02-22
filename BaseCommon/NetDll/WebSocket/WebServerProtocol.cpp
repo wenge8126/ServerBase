@@ -9,7 +9,7 @@ bool WebConnect::SendMsgData(DataStream *pSendMsgData, int frameType)
     if (WebProtocol::wsEncodeFrame(pSendMsgData, &p->mData, (WS_FrameType)frameType)>0)
     {
         //if (!mSendData._write((void*)mSendFramData.data(), mSendFramData.dataSize()))
-		if (!Send(p.getPtr(), false))
+		if (!Send(DEFALUT_WEB_SEND_PACKET_ID, p.getPtr()))
 		{
 			ERROR_LOG("Write msg data fail, %d more then send buffer size %d", (int)p->mData.dataSize(), (int)mSendLoopData.size());
 			return false;

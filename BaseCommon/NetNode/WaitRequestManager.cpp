@@ -16,7 +16,7 @@ namespace NetCloud
 			requestPacket->OnResponse(pResultPacket);
 		}
 		else
-			DEBUG_LOG("Response result %d, but wait request packet no exist", pResultPacket->GetPacketID());
+			DEBUG_LOG("Response result %s, but wait request packet no exist", pResultPacket->GetMsgName());
 	}
 
 
@@ -29,7 +29,7 @@ namespace NetCloud
 			requestPacket->OnResponsePartData(pResultPacket, pConnect);
 		}
 		else
-			DEBUG_LOG("Response result %d, but wait request packet no exist", pResultPacket->GetPacketID());
+			DEBUG_LOG("Response result %s, but wait request packet no exist", pResultPacket->GetMsgName());
 	}
 
 	class Net_Export WaitRequestTimer : public tTimer
@@ -60,7 +60,7 @@ namespace NetCloud
 	{
 		if (serverEvent->GetEventID() > 0)
 		{
-			ERROR_LOG("%d Now packet event ID != 0, may be no call InitData", serverEvent->GetPacketID());
+			ERROR_LOG("%s Now packet event ID != 0, may be no call InitData", serverEvent->GetMsgName());
 			return;
 		}
 		UINT x = 0;
@@ -73,7 +73,7 @@ namespace NetCloud
 			x = (code << _MOVE_BIT) + pos;
 			AssertNote(mWaitRequestPacketHash[pos] == NULL, "Event no free id %u", pos);
 			mWaitRequestPacketHash[pos] = serverEvent;
-			INFO_LOG(" [%d] Start wait pos [%u], code [%u]", serverEvent->GetPacketID(), pos, code);
+			INFO_LOG(" [%s] Start wait pos [%u], code [%u]", serverEvent->GetMsgName(), pos, code);
 		}
 		else
 		{
@@ -81,7 +81,7 @@ namespace NetCloud
 
 			x = mWaitRequestPacketHash.size();
 			mWaitRequestPacketHash.push_back(serverEvent);
-			INFO_LOG(" [%d] Start wait pos [%u], code [%u]", serverEvent->GetPacketID(), mWaitRequestPacketHash.size() - 1, 0);
+			INFO_LOG(" [%s] Start wait pos [%u], code [%u]", serverEvent->GetMsgName(), mWaitRequestPacketHash.size() - 1, 0);
 		}
 		serverEvent->SetEventID( x );
 
@@ -103,7 +103,7 @@ namespace NetCloud
 			{
 				mWaitRequestPacketHash[pos] = NULL;
 				mIDStack.push(serverEvent->GetEventID());
-				INFO_LOG(" [%d] Free wait pos [%u], code [%u]", serverEvent->GetPacketID(), pos, serverEvent->GetEventID() >> _MOVE_BIT);
+				INFO_LOG(" [%s] Free wait pos [%u], code [%u]", serverEvent->GetMsgName(), pos, serverEvent->GetEventID() >> _MOVE_BIT);
 				serverEvent->SetEventID( 0 );
 			}
 		}

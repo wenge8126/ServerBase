@@ -186,7 +186,7 @@ namespace uWS
 
 		virtual bool SendMsgData(DataStream *pSendMsgData, int frameType);
 		virtual bool SendEvent(Logic::tEvent *pEvent) override;
-		virtual bool Send(const Packet  *msgPacket, bool bEncrypt) override;
+		virtual bool Send(int packetID, const Packet  *msgPacket) override;
 	};
 
 

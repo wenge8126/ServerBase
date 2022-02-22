@@ -13,13 +13,21 @@ RS_MeshNodeInfo
 	arraydata<UInt64> mNodeList;
 }
 
-// 网关消息 : 节点连接Gate后请求所有Gate信息, 同时注册到节点
-RQ_RequestGateInfo :RQ
+// 广播节点关闭
+MS_BroadcastNodeClose
 {
 	UInt64 mNodeKey;
 }
 
-RS_GateListInfo
+//-----------------------------------------------------------
+
+// 网关消息 : 节点连接Gate后请求所有Gate信息, 同时注册到Gate
+NG_RequestGateInfo :RQ
+{
+	UInt64 mNodeKey;
+}
+
+GN_ResponseGateListInfo
 {
 	int mGateCode;
 	int mGateCount;
@@ -27,34 +35,42 @@ RS_GateListInfo
 }
 
 // 追加Actor
-MS_AppendUnit
+NG_AppendUnit
 {
 	UInt64 mUintID;
 }
 
 // 通知节点信息
-MS_NotifyNodeInfo
+GN_NotifyNodeInfo
 {
 	UInt64 mNodeKey;	
 }
 
 // 请求节点上所有Unit列表
-RQ_RequestUnitListInfo :RQ
+NN_RequestUnitListInfo :RQ
 {
 }
 
-RS_UnitInfoList
+NN_ResponseUnitInfoList
 {
 	arraydata<UInt64>	mUnitList;
 }
 
 // 通知Unit不存在
-MS_NotifyUnitNoExist
+NG_NotifyUnitNoExist
+{
+	UInt64 mNoExistUnitID;
+}
+
+// 广播其他节点Unit不存在
+NN_BroadcastUnitNoExist
 {
 	UInt64 mNoExistUnitID;
 }
 
 // 通知节点关闭
-MS_NotifyNodeClose
+NG_NotifyNodeClose
 {
+	
 }
+

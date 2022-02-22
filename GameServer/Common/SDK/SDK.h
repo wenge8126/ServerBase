@@ -97,7 +97,7 @@ public:
 	void Start() override
 	{
 		mSDK.InitThread();
-		StartUpdate(0.001);
+		StartUpdate(0.001f);
 	}
 
 	void Update(float onceTime) override

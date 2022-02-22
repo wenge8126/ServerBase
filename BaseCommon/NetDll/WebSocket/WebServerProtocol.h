@@ -33,7 +33,7 @@ protected:
 class Net_Export WebServerProtocol : public EventNetProtocol
 {
 public:
-	virtual bool WritePacket( const Packet* pPacket, DataStream *mSocketOutputStream ) override
+	virtual bool WritePacket(int packetID, const Packet* pPacket, DataStream *mSocketOutputStream ) override
 	{
         return false;
 	}

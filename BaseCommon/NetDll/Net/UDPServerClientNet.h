@@ -93,7 +93,7 @@ public:
 	void SendFirstReadyOkMsg();
 
 public:
-	virtual bool _sendByTcp(HandPacket dataPacket){ return IOCPServerConnect::Send(dataPacket.getPtr(), false); }
+	virtual bool _sendByTcp(HandPacket dataPacket){ return IOCPServerConnect::Send(dataPacket->GetFactory()->GetPacketID(), dataPacket.getPtr()); }
 
 public:
 	virtual HandPacket _createPartPacket()
@@ -130,7 +130,7 @@ public:
 		//return net->sendByUDP(dataPacket, mTargetAddr);
 	}
 
-	virtual bool _sendByTcp(HandPacket dataPacket){ return IOCPConnect::Send(dataPacket.getPtr(), false); }
+	virtual bool _sendByTcp(HandPacket dataPacket){ return IOCPConnect::Send(dataPacket->GetFactory()->GetPacketID(), dataPacket.getPtr()); }
 
 public:
 	virtual void OnConnected() override;

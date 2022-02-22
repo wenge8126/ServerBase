@@ -287,7 +287,7 @@ namespace NetCloud
 				if (pNode != NULL)
 					mpNetNode->OnReceive(ANodeConnect(), pNode);
 				else
-					ERROR_LOG("Packet %d is not NodePacket", p->GetPacketID());
+					ERROR_LOG("Packet %s is not NodePacket", p->GetMsgName());
 			}
 
 		public:
@@ -364,7 +364,7 @@ namespace NetCloud
 		{ 
 			NodePacket *pNodePak = dynamic_cast<NodePacket*>(p);
 			if (pNodePak == NULL)
-				ERROR_LOG("Packet %d is not NodePacket", p->GetPacketID())
+				ERROR_LOG("Packet %s is not NodePacket", p->GetMsgName())
 			else
 			mpMeshNetNode->OnReceive(ANodeConnect(), pNodePak);
 		}
@@ -378,7 +378,7 @@ namespace NetCloud
 			{
 				if (mOtherToLocal)
 				{
-					if (mOtherToLocal->Send(pPacket, false))
+					if (mOtherToLocal->Send(pPacket->GetFactory()->GetPacketID(), pPacket))
 						return true;
 					else
 						mOtherToLocal.setNull();
@@ -386,7 +386,7 @@ namespace NetCloud
 
 				if (mLocalToOther && mLocalToOther->mNodeConnect)
 				{
-					if (mLocalToOther->mNodeConnect->Send(pPacket, false))
+					if (mLocalToOther->mNodeConnect->Send(pPacket->GetFactory()->GetPacketID(), pPacket))
 						return true;
 					mLocalToOther->mNodeConnect.setNull();
 					mLocalToOther.setNull();
@@ -397,7 +397,7 @@ namespace NetCloud
 				//	ERROR_LOG("Node mesh connect invable %s", mAddress.dump().c_str());
 				//	return false;
 				//}
-				DEBUG_LOG("> Fail send to node %s, packet %d", mAddress.dump().c_str(), pPacket->GetPacketID());
+				DEBUG_LOG("> Fail send to node %s, packet %s", mAddress.dump().c_str(), pPacket->GetMsgName());
 				return false;
 			}
 

@@ -627,7 +627,7 @@ namespace uWS
 	}
 
 	template<bool bUSE_SSL>
-	bool uWS::tWssConnect<bUSE_SSL>::Send(const Packet *msgPacket, bool bEncrypt)
+	bool uWS::tWssConnect<bUSE_SSL>::Send(int packetID, const Packet *msgPacket)
 	{
 		static thread_local DataBuffer  sTempBuffer(16 * 1024);
 		sTempBuffer.clear(false);

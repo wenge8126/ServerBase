@@ -7,13 +7,17 @@
 #include "MeshNet.h"
 #include "DefineMsgFactory.h"
 #include "NetCommon.h"
+#include "FastHash.h"
 
 enum GateMsgType
 {
-	eGateMsg_RequestGateInfo = eMeshMsg_Max+1,
-	eGateMsg_AppendUnit,
-	eGateMsg_NotifyNodeInfo,
-	eNodeMsg_UnitList,
+	eN2G_RequestGateInfo = eMeshMsg_Max+1,
+	eN2G_AppendUnit,
+	eG2N_NotifyNodeInfo,
+	eN2N_RequestUnitList,
+	eNGN_TransferMsg,
+	eN2G_NotifyNodeClose,
+	eN2N_BroadcastUnitNoExist,
 };
 
 class AsyncGate : public tNetProcess
@@ -35,7 +39,7 @@ public:
 
 
 	// 接收节点请求获取Gate信息
-	void On(tNetConnect *pConnect, RQ_RequestGateInfo &req, RS_GateListInfo &info)
+	void On(tNetConnect *pConnect, NG_RequestGateInfo  &req, GN_ResponseGateListInfo &info)
 	{		
 		MeshNet::AConnectData nodeData = MEM_NEW MeshNet::MeshConnectData();
 		nodeData->mNodeKey = req.mNodeKey;
@@ -48,26 +52,45 @@ public:
 		info.mGateList.resize(gateList.size() + 1);
 		for (auto it=gateList.begin(); it; ++it)
 		{
-			auto nodeData = it.get();
-			info.mGateList[nodeData->mNodeCode] =  nodeData->mNodeKey;
+			auto gateData = it.get();
+			if (gateData)
+				info.mGateList[gateData->mNodeCode] = gateData->mNodeKey;
 		}
 	}
 
-	void On(tNetConnect *pConnect, MS_AppendUnit &req)
+	void On(tNetConnect *pConnect, NG_AppendUnit &req)
 	{
 		mUnitList.insert(req.mUintID, pConnect->GetUserData());
+		NOTE_LOG("Append unit %s", UnitID(req.mUintID).dump().c_str());
 	}
 
-	virtual bool ProcessPacket(tNetConnect* pConnect, TransferPacket *pPacket)
+	void On(tNetConnect *pConnect, NG_NotifyNodeClose &msg)
 	{
+		MeshNet::AConnectData nodeData = pConnect->GetUserData();
+		{
+			for (auto it = mUnitList.begin(); it; )
+			{
+				if (it.get() == nodeData)
+					it.erase();
+				else
+					++it;
+			}
+		}
+		pConnect->SetUserData(AutoAny());
+		pConnect->SetRemove(true);
+	}
+
+	virtual bool ProcessPacket(tNetConnect* pConnect, Packet *pPak) override
+	{
+		TransferPacket *pPacket = dynamic_cast<TransferPacket*>(pPak);
 		auto nodeData = mUnitList.find(pPacket->mTargetID);
 		if (nodeData)
 		{
-			nodeData->mpConnect->Send(pPacket, false);
+			nodeData->mpConnect->Send(eNGN_TransferMsg, pPacket);
 
-			MS_NotifyNodeInfo nodeInfo;
-			nodeInfo.mNodeKey = nodeData->mNodeKey; //??? eGateMsg_NotifyNodeInfo
-			pConnect->Send(&nodeInfo, false);
+			GN_NotifyNodeInfo nodeInfo;
+			nodeInfo.mNodeKey = nodeData->mNodeKey; 
+			pConnect->Send(eG2N_NotifyNodeInfo, &nodeInfo);
 		}
 		else
 			ERROR_LOG("No exist node %s", pPacket->mTargetID.dump().c_str());
@@ -79,8 +102,30 @@ public:
 	Hand<MeshNet>		mGateNet;
 	FastHash<UInt64, MeshNet::AConnectData> mUnitList;
 };
+//-------------------------------------------------------------------------
+class GateTransferPacketFactory : public tPacketFactory
+{
+public:
+	GateTransferPacketFactory(tNetProcess *pGate)
+	{
+		mGate = pGate->mAutoThis;
+	}
 
+public:
+	virtual void ProcessPacket(tNetConnect *pConnect, Packet *pPacket) override
+	{
+		mGate->mpProcess->ProcessPacket(pConnect, pPacket);
+	}
 
+	virtual Packet *_createPacket() { return MEM_NEW TransferPacket(); }
+	virtual PacketID_t	GetPacketID()const override { return eNGN_TransferMsg; }
+
+	virtual const char* GetPacketName() { return  "GateTransferPacketFactory"; }
+
+public:
+	AProcess mGate;
+};
+//-------------------------------------------------------------------------
 
 #endif //_INCLUDE_ASYNCGATE_H_
 

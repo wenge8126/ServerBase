@@ -19,7 +19,7 @@ public:
 			if (checkFun())
 				break;
 
-			if (TimerCenter::GetMe()->Now() - now >= overMilSecond)
+			if ((Int64)TimerCenter::GetMe()->Now() - now >= overMilSecond)
 				return false;
 
 			tTimer::AWaitTime(onceMilSecond);

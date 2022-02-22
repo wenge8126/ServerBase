@@ -397,7 +397,7 @@ namespace NetCloud
 	public:
 		virtual void SendToGate(UnitID targetAddress, Packet *pPacket)
 		{
-			mGateConnect->Send(pPacket, false);
+			mGateConnect->Send(pPacket->GetFactory()->GetPacketID(), pPacket);
 		}
 
 		virtual AutoEvent StartEvent(const char *eventMsgName)

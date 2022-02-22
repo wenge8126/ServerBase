@@ -15,24 +15,29 @@
 enum EMeshNetMsgType
 {
 	eMeshMsg_RequestNodeInfo = PACKET_MAX + 1,
+	eMeshMsg_BroadcastNodeClose,
 	eMeshMsg_Max,
 };
 
 class Net_Export MeshNet : public IOCPServerNet
 {
 	friend class MeshNetProcess;
-	friend class MeshClientNetProcess;
 	friend class MeshClientNet;
 	friend class AsyncNode;
+	friend class AsyncGate;
 
 public:
 	//-------------------------------------------------------------------------
 	class MeshConnectData : public AnyData
 	{
 	public:
+		bool IsValid() { return mpConnect != NULL && !mpConnect->IsDisconnect() && !mbIsClose; }
+
+	public:
 		tNetConnect		*mpConnect = NULL; 
-		UInt64				mNodeKey = 0;
+		UInt64					mNodeKey = 0;
 		int						mNodeCode;
+		bool						mbIsClose = false;
 	};
 	typedef Hand<MeshConnectData> AConnectData;
 	//-------------------------------------------------------------------------
@@ -42,6 +47,7 @@ public:
 
 public:
 	virtual void OnConnectNode(AConnectData nodeData){ }
+	virtual void OnNodeClose(AConnectData closeNode) {}
 
 	void ConnectNode(const char *szIp, int nPort, int overmilSecond)
 	{
@@ -93,10 +99,9 @@ public:
 
 protected:
 	Hand<IOCPClientSetNet>								mNodeClientNet;
-	FastHash<UInt64, AConnectData>			mServerNodeList;
+	FastHash<UInt64, AConnectData>					mServerNodeList;
 
-	Hand<tNetProcess>		mServerProcess;
-	Hand<tNetProcess>		mClientNetProcess;
+	Hand<tNetProcess>		mNetProcess;
 	
 	UInt64			mKey;
 	bool				mbClose = false;
@@ -111,21 +116,39 @@ public:
 class Net_Export MeshNetProcess : public tNetProcess
 {
 public:
-	MeshNet*			GetNet(tNetConnect *pConnect)
+	virtual MeshNet*	GetNet()
 	{
-		return dynamic_cast<MeshNet*>(pConnect->GetNetHandle());
+		return mpNet;
 	}
 
 	virtual void On(tNetConnect *pConnect, RQ_RequestMeshInfo &req, RS_MeshNodeInfo &info);
+
+	virtual void On(tNetConnect *pConnect, MS_BroadcastNodeClose &msg)
+	{
+		MeshNet::AConnectData connData = pConnect->GetUserData();
+		if (connData)
+		{
+			connData->mbIsClose = true;
+			auto existData = mpNet->mServerNodeList.find(connData->mNodeKey);
+			if (connData == existData)
+			{
+				mpNet->OnNodeClose(existData);
+				mpNet->mServerNodeList.erase(connData->mNodeCode);
+			}
+			else if (!existData && mpNet->mServerNodeList.exist(connData->mNodeKey))
+				mpNet->mServerNodeList.erase(connData->mNodeCode);
+		}
+	}
+
+public:
+	MeshNetProcess(MeshNet *pNet)
+		: mpNet(pNet) {}
+
+public:
+	MeshNet *mpNet;
 };
 //-------------------------------------------------------------------------
-class Net_Export MeshClientNetProcess : public tNetProcess
-{
-public:
-	MeshNet*			GetNet(tNetConnect *pConnect);
 
-
-};
 //-------------------------------------------------------------------------
 
 #endif

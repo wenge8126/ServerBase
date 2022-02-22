@@ -61,14 +61,14 @@ bool WaitReceiveBigMsgEvent::_sendBigMsg(Packet *pScrPacket, tNetConnect *pTarge
 	bool b = pScrPacket->Write(mWaitSendData);
 	if (!b)
 	{
-		ERROR_LOG("Big msg %d save data fail", pScrPacket->GetPacketID());
+		ERROR_LOG("Big msg %s save data fail", pScrPacket->GetMsgName());
 		return false;
 	}
 	mWaitSendData.seek(0);
 	EVENT_ID flagID = (EVENT_ID)GetEventCenter()->AutoAlloctKey();
 	int allSize = (int)mWaitSendData.dataSize();
 	int count = (allSize + onePartSize - 1) / onePartSize;
-	DEBUG_LOG("Will big msg %d, part count %d, total size %d", pScrPacket->GetPacketID(), count, mRevData->dataSize());
+	DEBUG_LOG("Will big msg %s, part count %d, total size %d", pScrPacket->GetMsgName(), count, mRevData->dataSize());
 	for (int i = 0; i < count; ++i)
 	{
 		Auto<PartPacket> pPacket = pTargetConnect->GetNetHandle()->GetNetProtocol()->CreatePacket(i == 0 ? FIRST_PART_PACKET : PACKET_PART_PACKET);
@@ -92,7 +92,7 @@ bool WaitReceiveBigMsgEvent::_sendBigMsg(Packet *pScrPacket, tNetConnect *pTarge
 			AssertNote(p, "first part packet must is FirstPartPacket");
 			p->mTotalDataSize = allSize;
 			p->mPartCount = count;
-			p->mBigMsgID = pScrPacket->GetPacketID();
+			p->mBigMsgID = pScrPacket->GetFactory()->GetPacketID();
 		}
 		IOCPConnect *pConn = dynamic_cast<IOCPConnect*>(pTargetConnect);
 		if (pConn != NULL)

@@ -132,7 +132,7 @@ public:
 		net->SetNetProtocol(netProtocol);
 	}
 
-	virtual void OnReceivePacket(Packet *p) override { ERROR_LOG("No process packet %d", p->GetPacketID()); }
+	virtual void OnReceivePacket(Packet *p) override { ERROR_LOG("No process packet %s", p->GetMsgName()); }
 
 public:
 	AutoEventCenter		mEventCenter;

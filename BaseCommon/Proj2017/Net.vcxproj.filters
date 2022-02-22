@@ -208,10 +208,10 @@
       <Filter>Protocol</Filter>
     </ClCompile>
     <ClCompile Include="..\NetNode\AsyncGate.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>NetNode</Filter>
     </ClCompile>
     <ClCompile Include="..\NetNode\AsyncNode.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>NetNode</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

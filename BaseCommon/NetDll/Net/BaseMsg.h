@@ -49,9 +49,7 @@ public:
 
 	tBaseMsg(){}
 
-	virtual ~tBaseMsg() {}
-
-	virtual const char* GetMsgName() const = 0;
+	virtual ~tBaseMsg() {}	
 
 	virtual AData& _getStaticData() const 
 	{
@@ -386,9 +384,6 @@ public:
 class tRequestMsg : public tBaseMsg
 {
 public:
-	void SetPackectID(PacketID_t msgID) { mID = msgID; }
-	virtual PacketID_t GetPacketID() const override { return mID; }
-
 	virtual void SetRequestID(MSG_ID id) = 0;
 	virtual MSG_ID GetRequestID() = 0; // { ERROR_LOG("%s is not reqeust msg", GetMsgName());  return 0; }
 };

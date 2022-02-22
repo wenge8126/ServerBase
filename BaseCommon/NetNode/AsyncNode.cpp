@@ -2,15 +2,57 @@
 
 #include "AsyncGate.h"
 
+class AsyncNodeMeshNet : public MeshNet
+{
+public:
+	virtual void OnNodeClose(AConnectData closeNode) override
+	{
+		for (auto it = mpNode->mUnitNodeIndex.begin(); it; )
+		{
+			auto nodeData = it.get();
+			if (!nodeData || nodeData == closeNode)
+				it.erase();
+			else
+				++it;
+		}
+	}
 
+public:
+	AsyncNodeMeshNet(AsyncNode *pNode)
+		: MeshNet(0)
+		, mpNode(pNode) { }
+
+public:
+	AsyncNode *mpNode;
+};
 
 AsyncNode::AsyncNode()
 {
-	mNodeNet = MEM_NEW MeshNet(0);
-	mNodeNet->mNodeClientNet->GetNetProtocol()->RegisterNetPacket(MEM_NEW DefaultReqeustMsgFactory<eNodeMsg_UnitList, RQ_RequestUnitListInfo, RS_UnitInfoList, AsyncNode>(this));
-	mNodeNet->GetNetProtocol()->RegisterNetPacket(MEM_NEW DefaultReqeustMsgFactory<eNodeMsg_UnitList, RQ_RequestUnitListInfo, RS_UnitInfoList, AsyncNode>(this));
+	mNodeNet = MEM_NEW AsyncNodeMeshNet(this);
 
-	mNodeNet->GetNetProtocol()->RegisterNetPacket(MEM_NEW DefaultMsgFactory < eGateMsg_NotifyNodeInfo, MS_NotifyNodeInfo, AsyncNode>(this));
+	mNodeNet->GetNetProtocol()->RegisterNetPacket(MEM_NEW GateTransferPacketFactory(this));
+	mNodeNet->mNodeClientNet->GetNetProtocol()->RegisterNetPacket(MEM_NEW GateTransferPacketFactory(this));
+
+
+	mNodeNet->mNodeClientNet->GetNetProtocol()->RegisterNetPacket(MEM_NEW DefaultReqeustMsgFactory<eN2N_RequestUnitList, NN_RequestUnitListInfo, NN_ResponseUnitInfoList, AsyncNode>(this));
+	mNodeNet->GetNetProtocol()->RegisterNetPacket(MEM_NEW DefaultReqeustMsgFactory<eN2N_RequestUnitList, NN_RequestUnitListInfo, NN_ResponseUnitInfoList, AsyncNode>(this));
+
+	mNodeNet->mNodeClientNet->GetNetProtocol()->RegisterNetPacket(MEM_NEW DefaultMsgFactory < eG2N_NotifyNodeInfo, GN_NotifyNodeInfo, AsyncNode>(this));
+
+	mNodeNet->GetNetProtocol()->RegisterNetPacket(MEM_NEW DefaultMsgFactory<eN2N_BroadcastUnitNoExist, NN_BroadcastUnitNoExist, AsyncNode>(this));
+	mNodeNet->mNodeClientNet->GetNetProtocol()->RegisterNetPacket(MEM_NEW DefaultMsgFactory<eN2N_BroadcastUnitNoExist, NN_BroadcastUnitNoExist, AsyncNode>(this));
+
+}
+
+void AsyncNode::CloseNode()
+{
+	NG_NotifyNodeClose msg;
+	for (int i = 0; i < mGateList.size(); ++i)
+	{
+		auto gateData = mGateList[i];
+		if (gateData)
+			gateData->mpConnect->Send(eN2G_NotifyNodeClose, &msg);
+	}
 }
 
 void AsyncNode::ConnectGate(const char *szGateIP, int nPort)
@@ -20,9 +62,9 @@ void AsyncNode::ConnectGate(const char *szGateIP, int nPort)
 		auto connect = mNodeNet->mNodeClientNet->AwaitConnect(szGateIP, nPort, 10);
 		if (connect)
 		{
-			RQ_RequestGateInfo req;
-			RS_GateListInfo resp;
-			if (tNetProcess::Await(connect.getPtr(), eGateMsg_RequestGateInfo, req, resp, 10))
+			NG_RequestGateInfo  req;
+			GN_ResponseGateListInfo resp;
+			if (tNetProcess::Await(connect.getPtr(), eN2G_RequestGateInfo, req, resp, 10))
 			{
 				mGateCount = resp.mGateCount;
 				// 加入Gate列表
@@ -44,7 +86,38 @@ void AsyncNode::ConnectGate(const char *szGateIP, int nPort)
 	});
 }
 
-void AsyncNode::On(tNetConnect *pConnect, MS_NotifyNodeInfo &msg)
+void AsyncNode::AppendUnit(AUnit unit)
+{
+	auto gate = GetGate(unit->GetID());
+	if (gate)
+	{
+		NG_AppendUnit msg;
+		msg.mUintID = unit->GetID();
+		if (gate->mpConnect->Send(eN2G_AppendUnit, &msg))
+			mUnitList.insert(unit->GetID(), unit);
+		else
+			ERROR_LOG("Send MS_AppendUnit %s fail", unit->GetID().dump().c_str());
+	}
+	else
+		ERROR_LOG("No exist unit %s gate %d", unit->GetID().dump().c_str(), unit->GetID().Hash(mGateCount));
+}
+
+void AsyncNode::BroadcastUnitNoExist(UnitID id)
+{
+	NN_BroadcastUnitNoExist msg;
+	msg.mNoExistUnitID = id;
+	auto &nodeList = mNodeNet->GetMeshNodeList();
+	for (auto it = nodeList.begin(); it; ++it)
+	{
+		auto nodeData = it.get();
+		if (nodeData && nodeData->IsValid())
+		{
+			nodeData->mpConnect->Send(eN2N_BroadcastUnitNoExist, &msg);
+		}
+	}
+}
+
+void AsyncNode::On(tNetConnect *pConnect, GN_NotifyNodeInfo &msg)
 {
 	CoroutineTool::AsyncCall([&]()
 	{
@@ -52,9 +125,9 @@ void AsyncNode::On(tNetConnect *pConnect, MS_NotifyNodeInfo &msg)
 		HandConnect conn = mNodeNet->AwaitConnectNode(addr.Ip().c_str(), addr.GetPort(), 6000);
 		if (conn)
 		{
-			RQ_RequestUnitListInfo req;
-			RS_UnitInfoList resp;
-			if (tNetProcess::Await(conn.getPtr(), eNodeMsg_UnitList, req, resp, 6000))
+			NN_RequestUnitListInfo  req;
+			NN_ResponseUnitInfoList resp;
+			if (tNetProcess::Await(conn.getPtr(), eN2N_RequestUnitList, req, resp, 6000))
 			{
 				auto d = conn->GetUserData();
 				for (int i = 0; i < resp.mUnitList.size(); ++i)

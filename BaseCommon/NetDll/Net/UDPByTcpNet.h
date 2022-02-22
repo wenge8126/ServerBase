@@ -83,20 +83,20 @@ public:
 	}
 
 	// 接管所有的发送消息包,使用UDP发送
-	virtual bool Send(const Packet *msgPacket, bool bEncrypt) override
+	virtual bool Send(int packetID, const Packet *msgPacket) override
 	{
 		if (!UdpReadyOk())
-			return IOCPServerConnect::Send(msgPacket, bEncrypt);
+			return IOCPServerConnect::Send(packetID, msgPacket);
 
 		// 分包
-		bool b = GetNetHandle()->GetNetProtocol()->WritePacket(msgPacket, &mUDPSendData);
+		bool b = GetNetHandle()->GetNetProtocol()->WritePacket(packetID, msgPacket, &mUDPSendData);
 		if (b)
 		{
 			_sendAllData();
 			return true;
 		}
 		else
-			ERROR_LOG("UDP send [%d] WritePacket fail", msgPacket->GetPacketID());
+			ERROR_LOG("UDP send [%s] WritePacket fail", msgPacket->GetMsgName());
 		return false;
 	}
 

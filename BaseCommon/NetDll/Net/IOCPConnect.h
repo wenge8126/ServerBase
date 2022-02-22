@@ -82,8 +82,8 @@ public:
 
 public:
 	virtual bool SendEvent(Logic::tEvent *pEvent);
-	virtual bool Send(const Packet  *msgPacket, bool bEncrypt) override { return SendPacket(msgPacket, bEncrypt); }		// 子类覆盖后, 可以分析大消息包是否自动进行分包发送
-	bool SendPacket(const Packet *msgPacket, bool bEncrypt);
+	virtual bool Send(int packetID, const Packet  *msgPacket) override { return SendPacket(msgPacket, packetID); }		// 子类覆盖后, 可以分析大消息包是否自动进行分包发送
+	bool SendPacket(const Packet *msgPacket, int packetID);
 
 	virtual tNetHandle* GetNetHandle(void){ return mNet.getPtr(); }
 

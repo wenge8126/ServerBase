@@ -17,7 +17,7 @@
 class Net_Export_H ResponseMsgPacket : public BasePacket
 {
 public:
-	virtual PacketID_t GetPacketID() const override {
+	virtual PacketID_t GetPacketID() const  {
 		return PACKET_RESPONSE_MSG;
 	}
 	virtual UINT Execute(tNetConnect* pConnect) override;

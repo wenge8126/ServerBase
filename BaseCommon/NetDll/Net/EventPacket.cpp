@@ -16,7 +16,7 @@ BOOL EventPacket::Read(DataStream& iStream, size_t packetSize, tNetConnect* pCon
 	AutoEvent hRevEvent = pCenter->RestoreMsg(&iStream);
 	if (!hRevEvent)
 	{
-		WARN_LOG("»Ö¸´ÍøÂçÊÂ¼þÊ§°Ü >[%d] size [%llu]", GetPacketID(), packetSize);
+		WARN_LOG("»Ö¸´ÍøÂçÊÂ¼þÊ§°Ü >[%s] size [%llu]", GetMsgName(), packetSize);
 		pConnect->GetNetHandle()->GetNetProtocol()->OnPacketExecuteError(pConnect, this);
 
 		return FALSE;
@@ -305,7 +305,7 @@ BOOL EventProcessPacket::ReadEvent( tNetConnect *pConnect, DataStream& iStream, 
 
 	if (!mMsgEvent)
 	{
-		WARN_LOG("»Ö¸´ÍøÂçÊÂ¼þÊ§°Ü >[%d] size [%llu]", GetPacketID(), packetSize);
+		WARN_LOG("»Ö¸´ÍøÂçÊÂ¼þÊ§°Ü >[%s] size [%llu]", GetMsgName(), packetSize);
 		pConnect->GetNetHandle()->GetNetProtocol()->OnPacketExecuteError(pConnect, this);
 
 		return false;

@@ -6,7 +6,7 @@ namespace NetCloud
 	void NodePacket::OnStartSend(tNetUnit *pSendUnit)
 	{
 #if DEBUG_CLOUD_NET
-		 mSendInfo.Format("*** Start %d  %s > %s >>>\r\n", GetPacketID(), pSendUnit->mID.dump().c_str(), mTargetID.dump().c_str()); 
+		 mSendInfo.Format("*** Start %s  %s > %s >>>\r\n", GetMsgName(), pSendUnit->mID.dump().c_str(), mTargetID.dump().c_str()); 
 		 DEBUG_LOG("\r\n-------------------------------------------------------\r\n\r\n%s\r\n\r\n------------------------------------------------------\r\n", mSendInfo.c_str());
 #endif
 	}

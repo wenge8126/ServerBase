@@ -30,7 +30,7 @@ namespace NetCloud
 		Auto<TransferPacket> pNodePak = mNode->CreateNodePacket();
 		pNodePak->mTargetID = targetID;
 		pNodePak->mSenderID = mID;
-		pNodePak->mTargetPacketID = p->GetPacketID();
+		pNodePak->mTargetPacketID = p->GetFactory()->GetPacketID();
 		pNodePak->mbBroadcast = bBroadcast;
 		mNode->mTempLoopData.CleanUp();
 		if (p->Write(mNode->mTempLoopData) == TRUE)
@@ -39,7 +39,7 @@ namespace NetCloud
 			return SendTo(pNodePak.getPtr());
 		}
 		else
-			ERROR_LOG("%d write error", p->GetPacketID());
+			ERROR_LOG("%s write error", p->GetMsgName());
 		return false;
 	}
 
@@ -74,7 +74,7 @@ namespace NetCloud
 		NodePacket *pNodePak = dynamic_cast<NodePacket*>(pNodePacket);
 		if (pNodePak == NULL)
 		{
-			ERROR_LOG("%d is not NodePakcet", pNodePak->GetPacketID());
+			ERROR_LOG("%s is not NodePakcet", pNodePak->GetMsgName());
 			return false;
 		}
 		pNodePak->mTargetID = targetID;

@@ -215,7 +215,7 @@ namespace NetCloud
 				if (pNodePak != NULL)
 					mpMeshGate->OnReceive(pNodePak);
 				else
-					ERROR_LOG("xxxxxxxxxx %d can not receive", pPacket->GetPacketID());
+					ERROR_LOG("xxxxxxxxxx %s can not receive", pPacket->GetMsgName());
 			}
 
 		public:
@@ -291,7 +291,7 @@ namespace NetCloud
 			{ 
 				NodePacket *pNodePak = dynamic_cast<NodePacket*>(p);
 				if ( pNodePak== NULL)
-					ERROR_LOG("Packet %d is not NodePacket", p->GetPacketID())
+					ERROR_LOG("Packet %s is not NodePacket", p->GetMsgName())
 				else
 					mpMeshGate->OnReceive(pNodePak); 
 			}

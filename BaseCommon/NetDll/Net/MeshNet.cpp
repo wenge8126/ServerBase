@@ -45,6 +45,10 @@ public:
 
 	virtual void OnCloseConnect(tNetConnect *pConnect) override
 	{
+		MeshNet::AConnectData nodeData = pConnect->GetUserData();
+		if (nodeData && nodeData->mbIsClose)
+			return;
+
 		if (!mpOwnerNet->mbClose)
 		{
 			CoroutineTool::AsyncCall(
@@ -73,10 +77,11 @@ MeshNet::MeshNet(int nCode, size_t maxConnectCount /*= NET_CONNECT_MAX*/, int th
 {
 	mNodeClientNet = MEM_NEW MeshClientNet(this);
 	
-	mServerProcess = MEM_NEW MeshNetProcess();
-	mClientNetProcess = MEM_NEW MeshClientNetProcess();
+	mNetProcess = MEM_NEW MeshNetProcess(this);
 
-	GetNetProtocol()->RegisterNetPacket(MEM_NEW DefaultReqeustMsgFactory<eMeshMsg_RequestNodeInfo, RQ_RequestMeshInfo, RS_MeshNodeInfo, MeshNetProcess>(mServerProcess.getPtr()));
+	GetNetProtocol()->RegisterNetPacket(MEM_NEW DefaultReqeustMsgFactory<eMeshMsg_RequestNodeInfo, RQ_RequestMeshInfo, RS_MeshNodeInfo, MeshNetProcess>(mNetProcess.getPtr()));
+	GetNetProtocol()->RegisterNetPacket(MEM_NEW DefaultMsgFactory<eMeshMsg_BroadcastNodeClose, MS_BroadcastNodeClose, MeshNetProcess>(mNetProcess.getPtr()));
+	mNodeClientNet->GetNetProtocol()->RegisterNetPacket(MEM_NEW DefaultMsgFactory<eMeshMsg_BroadcastNodeClose, MS_BroadcastNodeClose, MeshNetProcess>(mNetProcess.getPtr()));
 }
 //-------------------------------------------------------------------------
 HandConnect MeshNet::AwaitConnectNode(const char *szIp, int nPort, int overmilSecond)
@@ -87,7 +92,7 @@ HandConnect MeshNet::AwaitConnectNode(const char *szIp, int nPort, int overmilSe
 		RQ_RequestMeshInfo req;
 		req.mNodeAddr = mKey;
 		req.mNodeCode = mCode;
-		AutoNice respData = mClientNetProcess->Await(nodeConnect.getPtr(), eMeshMsg_RequestNodeInfo, req, 6000);
+		AutoNice respData = tNetProcess::Await(nodeConnect.getPtr(), eMeshMsg_RequestNodeInfo, req, 6000);
 		if (respData)
 		{
 			RS_MeshNodeInfo  info;
@@ -155,7 +160,7 @@ void MeshNetProcess::On(tNetConnect *pConnect, RQ_RequestMeshInfo &req, RS_MeshN
 	d->mNodeKey = req.mNodeAddr;
 	d->mNodeCode = req.mNodeCode;
 	pConnect->SetUserData(d);
-	MeshNet *pNet = GetNet(pConnect);
+	MeshNet *pNet = GetNet();
 	pNet->mServerNodeList.insert(req.mNodeAddr, d);
 	pNet->Dump();
 	pNet->OnConnectNode(d);
@@ -169,12 +174,8 @@ void MeshNetProcess::On(tNetConnect *pConnect, RQ_RequestMeshInfo &req, RS_MeshN
 	//Auto< ResponseMsgPacket> resp = CreatePacket(PACKET_RESPONSE_MSG);
 	//resp->mRequestID = req->mRequestID;
 	//info.serialize(&resp->mData);
-	//pConnect->Send(resp.getPtr(), false);
+	//pConnect->Send(resp.getPtr(), PACKET_RESPONSE_MSG);
 	//pNet->mServerNodeList.insert(req->mNodeAddr, d);
 }
 //-------------------------------------------------------------------------
 
-MeshNet* MeshClientNetProcess::GetNet(tNetConnect *pConnect)
-{
-	return (dynamic_cast<MeshClientNet*>(pConnect->GetNetHandle()))->mpOwnerNet;
-}

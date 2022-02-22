@@ -23,6 +23,11 @@ public:
 	virtual Packet *_createPacket() { return MEM_NEW Msg(); }
 	virtual PacketID_t	GetPacketID()const { return packetID; }
 
+	virtual const char* GetPacketName() override
+	{
+		return typeid(Msg).name();
+	}
+
 	virtual void ProcessPacket(tNetConnect *pConnect, Packet *pPacket) override
 	{
 		Auto<Msg> pak = pPacket;
@@ -57,6 +62,11 @@ public:
 	virtual Packet *_createPacket() { return MEM_NEW ReqMsg(); }
 	virtual PacketID_t	GetPacketID()const { return packetID; }
 
+	virtual const char* GetPacketName() override
+	{
+		return typeid(ReqMsg).name();
+	}
+
 	virtual void ProcessPacket(tNetConnect *pConnect, Packet *pPacket) override
 	{
 		Auto<ReqMsg> pak = pPacket;
@@ -74,7 +84,7 @@ public:
 			responseMsg.mRequestID = pak->mRequestID;
 			responseMsg.mData.clear(false);
 			if (resp.Write(responseMsg.mData) == TRUE)
-				pConnect->Send(&responseMsg, false);
+				pConnect->Send(responseMsg.GetPacketID(), &responseMsg);
 			else
 				ERROR_LOG("Write packet %s fail", typeid(RespMsg).name());
 		}

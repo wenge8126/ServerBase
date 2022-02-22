@@ -18,7 +18,7 @@ namespace NetCloud
 	class tCloudPacket : public NodePacket
 	{
 	public:
-		virtual PacketID_t GetPacketID() const override { if (mFactoryPtr->mpFactory == NULL) return 0; return  mFactoryPtr->mpFactory->GetPacketID(); }
+		virtual PacketID_t GetPacketID() const  { if (mFactoryPtr->mpFactory == NULL) return 0; return  mFactoryPtr->mpFactory->GetPacketID(); }
 		virtual UINT		Execute(tNetConnect* pConnect) override 
 		{ 
 			if (pConnect == NULL) 
@@ -31,7 +31,7 @@ namespace NetCloud
 		{
 			if (mNetUnit)
 				return mNetUnit->SendPacket(target, pPacket);
-			ERROR_LOG("Packet %d send fail, No exist net base", pPacket->GetPacketID());
+			ERROR_LOG("Packet %s send fail, No exist net base", pPacket->GetMsgName());
 			return false;
 		}
 		virtual HandPacket CreatePacket(PacketID_t packetID)
@@ -114,7 +114,7 @@ namespace NetCloud
 		{
 			FreeID(); 
 			if (mID != 0)
-				ERROR_LOG("%d Free event id %d fail", GetPacketID(), mID);
+				ERROR_LOG("%s Free event id %d fail", GetMsgName(), mID);
 			mbFinish = false;			
 			tCloudPacket::InitData();
 		}

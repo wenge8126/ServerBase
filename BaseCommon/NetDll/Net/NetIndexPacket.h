@@ -33,6 +33,10 @@ public:
 	virtual PacketID_t	GetPacketID ()const override { return eNotifyNetEventID; } 
 	virtual	void		destroyPacket(Packet* pPacket) override {}
 
+	virtual const char* GetPacketName() override {
+		return "IndexPacketFactory";
+	}
+
 public:
 	HandPacket	mIndexPacket;
 
@@ -72,6 +76,10 @@ public:
 	virtual HandPacket	CreatePacket () override  { return mHeartPacket; }
 	virtual PacketID_t	GetPacketID ()const override { return eNotifyHeartBeat; } 
 	virtual	void		destroyPacket(Packet* pPacket) override {}
+
+	virtual const char* GetPacketName() override {
+		return "HeartBeatPacketFactory";
+	}
 
 public:
 	HandPacket	mHeartPacket;

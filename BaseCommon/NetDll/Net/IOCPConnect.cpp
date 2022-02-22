@@ -294,7 +294,7 @@ bool IOCPConnect::SendEvent( Logic::tEvent *sendEvent )
 	return false;
 }
 
-bool IOCPConnect::SendPacket(const Packet *msgPacket, bool bEncrypt)
+bool IOCPConnect::SendPacket(const Packet *msgPacket, int packetID)
 {
 	if (mNeedRemove)
 		return false;
@@ -302,13 +302,13 @@ bool IOCPConnect::SendPacket(const Packet *msgPacket, bool bEncrypt)
 	tNetHandle *p = GetNetHandle();
 	if (p!=NULL)
 	{
-		msgPacket->SetNeedEncrypt(bEncrypt);
+		//msgPacket->SetNeedEncrypt(bEncrypt);
 
-		bool re = p->GetNetProtocol()->WritePacket(msgPacket, &mSendLoopData.mWaitSendBuffer);
+		bool re = p->GetNetProtocol()->WritePacket(packetID, msgPacket, &mSendLoopData.mWaitSendBuffer);
 		if (!re)
 		{
 			AString err;
-			err.Format("%d [%s:%d] write packet fail to send [%d],  then remove", GetNetID(), GetIp(), GetPort(), msgPacket->GetPacketID());
+			err.Format("%d [%s:%d] write packet fail to send [%d],  then remove", GetNetID(), GetIp(), GetPort(), packetID);
 			ERROR_LOG(err.c_str());
 			SetRemove(true);
 		}
@@ -353,7 +353,7 @@ void IOCPConnect::ProcessPing()
 		// ·¢ËÍPING
 		HandPacket pingPacket = GetNetHandle()->GetNetProtocol()->CreatePacket(eNotifyHeartBeat);
 
-		Send(pingPacket.getPtr(), false);
+		Send(eNotifyHeartBeat, pingPacket.getPtr());
 
 		//int port = 0;
 		//AString ip = GetRemoteAddr(port);
@@ -547,7 +547,7 @@ void IOCPConnect::_ProcessReceiveData()
 			}
 			catch (...)
 			{
-				ERROR_LOG("Net message [%d] execute error", packet->GetPacketID());
+				ERROR_LOG("Net message [%s] execute error", packet->GetMsgName());
 			}
 		}
 		else
@@ -688,7 +688,7 @@ void IOCPServerConnect::_ProcessReceiveData()
 				}
 				catch (...)
 				{
-					ERROR_LOG("Net message [%d] execute error", packet->GetPacketID());
+					ERROR_LOG("Net message [%s] execute error", packet->GetMsgName());
 				}
 			}
 			else

@@ -161,14 +161,80 @@ public:
 
 };
 
-class RQ_RequestGateInfo : public tRequestMsg
+//  广播节点关闭
+class MS_BroadcastNodeClose : public tBaseMsg
+{ 
+public:
+    UInt64 mNodeKey;		
+
+public:
+    MS_BroadcastNodeClose() { clear(false); };
+
+
+    void Full(AutoNice scrData)
+    {
+        clear(false);
+        CheckGet(scrData, mNodeKey);
+    }
+
+    virtual void ToData(AutoNice &destData) override
+    {
+        destData["mNodeKey"] = mNodeKey;
+    }
+
+    bool serialize(DataStream *destData) const override
+    {
+        destData->write((short)1);
+
+        SAVE_MSG_VALUE(mNodeKey, 18);
+        return true;
+    }
+
+    void clear(bool bClearBuffer=false) override 
+    {
+        mNodeKey = 0;
+    }
+
+    void copy(const tBaseMsg &otherMsg) override 
+    {
+        if (strcmp("MS_BroadcastNodeClose", otherMsg.GetMsgName())!=0) { LOG("%s is not MS_BroadcastNodeClose", otherMsg.GetMsgName()); return; }; const MS_BroadcastNodeClose &other = *(const MS_BroadcastNodeClose*)(&otherMsg);
+        mNodeKey = other.mNodeKey;
+    }
+
+    virtual const char* GetMsgName() const override { return "MS_BroadcastNodeClose"; }
+
+    AData get(const char *szMember) const 
+    {
+        if (strcmp(szMember, "mNodeKey")==0) { AData value; value = mNodeKey; return value; }
+        return AData();
+    }
+
+    bool set(const char *szMember, AData value) 
+    {
+        if (strcmp(szMember, "mNodeKey")==0) { mNodeKey = value; return true; };
+        LOG("No exist > %%s", szMember);  return false;
+    }
+
+    AData operator [] (const char *szMember) const 
+    {
+        return get(szMember);
+    }
+
+    AData operator [] (const AString &member) const 
+    {
+        return get(member.c_str());
+    }
+
+};
+
+class NG_RequestGateInfo : public tRequestMsg
 { 
 public:
     UInt64 mNodeKey;		
     int mRequestID;		
 
 public:
-    RQ_RequestGateInfo() { clear(false); };
+    NG_RequestGateInfo() { clear(false); };
 
 
     void Full(AutoNice scrData)
@@ -201,12 +267,12 @@ public:
 
     void copy(const tBaseMsg &otherMsg) override 
     {
-        if (strcmp("RQ_RequestGateInfo", otherMsg.GetMsgName())!=0) { LOG("%s is not RQ_RequestGateInfo", otherMsg.GetMsgName()); return; }; const RQ_RequestGateInfo &other = *(const RQ_RequestGateInfo*)(&otherMsg);
+        if (strcmp("NG_RequestGateInfo", otherMsg.GetMsgName())!=0) { LOG("%s is not NG_RequestGateInfo", otherMsg.GetMsgName()); return; }; const NG_RequestGateInfo &other = *(const NG_RequestGateInfo*)(&otherMsg);
         mNodeKey = other.mNodeKey;
         mRequestID = other.mRequestID;
     }
 
-    virtual const char* GetMsgName() const override { return "RQ_RequestGateInfo"; }
+    virtual const char* GetMsgName() const override { return "NG_RequestGateInfo"; }
 
     virtual void SetRequestID(MSG_ID id)  override { mRequestID = (int)id; }
 
@@ -238,7 +304,7 @@ public:
 
 };
 
-class RS_GateListInfo : public tBaseMsg
+class GN_ResponseGateListInfo : public tBaseMsg
 { 
 public:
     int mGateCode;		
@@ -246,7 +312,7 @@ public:
     ArrayList<UInt64> mGateList;	
 
 public:
-    RS_GateListInfo() { clear(false); };
+    GN_ResponseGateListInfo() { clear(false); };
 
 
     void Full(AutoNice scrData)
@@ -283,13 +349,13 @@ public:
 
     void copy(const tBaseMsg &otherMsg) override 
     {
-        if (strcmp("RS_GateListInfo", otherMsg.GetMsgName())!=0) { LOG("%s is not RS_GateListInfo", otherMsg.GetMsgName()); return; }; const RS_GateListInfo &other = *(const RS_GateListInfo*)(&otherMsg);
+        if (strcmp("GN_ResponseGateListInfo", otherMsg.GetMsgName())!=0) { LOG("%s is not GN_ResponseGateListInfo", otherMsg.GetMsgName()); return; }; const GN_ResponseGateListInfo &other = *(const GN_ResponseGateListInfo*)(&otherMsg);
         mGateCode = other.mGateCode;
         mGateCount = other.mGateCount;
         mGateList = other.mGateList;
     }
 
-    virtual const char* GetMsgName() const override { return "RS_GateListInfo"; }
+    virtual const char* GetMsgName() const override { return "GN_ResponseGateListInfo"; }
 
     AData get(const char *szMember) const 
     {
@@ -318,13 +384,13 @@ public:
 };
 
 //  追加Actor
-class MS_AppendUnit : public tBaseMsg
+class NG_AppendUnit : public tBaseMsg
 { 
 public:
     UInt64 mUintID;		
 
 public:
-    MS_AppendUnit() { clear(false); };
+    NG_AppendUnit() { clear(false); };
 
 
     void Full(AutoNice scrData)
@@ -353,11 +419,11 @@ public:
 
     void copy(const tBaseMsg &otherMsg) override 
     {
-        if (strcmp("MS_AppendUnit", otherMsg.GetMsgName())!=0) { LOG("%s is not MS_AppendUnit", otherMsg.GetMsgName()); return; }; const MS_AppendUnit &other = *(const MS_AppendUnit*)(&otherMsg);
+        if (strcmp("NG_AppendUnit", otherMsg.GetMsgName())!=0) { LOG("%s is not NG_AppendUnit", otherMsg.GetMsgName()); return; }; const NG_AppendUnit &other = *(const NG_AppendUnit*)(&otherMsg);
         mUintID = other.mUintID;
     }
 
-    virtual const char* GetMsgName() const override { return "MS_AppendUnit"; }
+    virtual const char* GetMsgName() const override { return "NG_AppendUnit"; }
 
     AData get(const char *szMember) const 
     {
@@ -384,13 +450,13 @@ public:
 };
 
 //  通知节点信息
-class MS_NotifyNodeInfo : public tBaseMsg
+class GN_NotifyNodeInfo : public tBaseMsg
 { 
 public:
     UInt64 mNodeKey;		
 
 public:
-    MS_NotifyNodeInfo() { clear(false); };
+    GN_NotifyNodeInfo() { clear(false); };
 
 
     void Full(AutoNice scrData)
@@ -419,11 +485,11 @@ public:
 
     void copy(const tBaseMsg &otherMsg) override 
     {
-        if (strcmp("MS_NotifyNodeInfo", otherMsg.GetMsgName())!=0) { LOG("%s is not MS_NotifyNodeInfo", otherMsg.GetMsgName()); return; }; const MS_NotifyNodeInfo &other = *(const MS_NotifyNodeInfo*)(&otherMsg);
+        if (strcmp("GN_NotifyNodeInfo", otherMsg.GetMsgName())!=0) { LOG("%s is not GN_NotifyNodeInfo", otherMsg.GetMsgName()); return; }; const GN_NotifyNodeInfo &other = *(const GN_NotifyNodeInfo*)(&otherMsg);
         mNodeKey = other.mNodeKey;
     }
 
-    virtual const char* GetMsgName() const override { return "MS_NotifyNodeInfo"; }
+    virtual const char* GetMsgName() const override { return "GN_NotifyNodeInfo"; }
 
     AData get(const char *szMember) const 
     {
@@ -449,13 +515,13 @@ public:
 
 };
 
-class RQ_RequestUnitListInfo : public tRequestMsg
+class NN_RequestUnitListInfo : public tRequestMsg
 { 
 public:
     int mRequestID;		
 
 public:
-    RQ_RequestUnitListInfo() { clear(false); };
+    NN_RequestUnitListInfo() { clear(false); };
 
 
     void Full(AutoNice scrData)
@@ -484,11 +550,11 @@ public:
 
     void copy(const tBaseMsg &otherMsg) override 
     {
-        if (strcmp("RQ_RequestUnitListInfo", otherMsg.GetMsgName())!=0) { LOG("%s is not RQ_RequestUnitListInfo", otherMsg.GetMsgName()); return; }; const RQ_RequestUnitListInfo &other = *(const RQ_RequestUnitListInfo*)(&otherMsg);
+        if (strcmp("NN_RequestUnitListInfo", otherMsg.GetMsgName())!=0) { LOG("%s is not NN_RequestUnitListInfo", otherMsg.GetMsgName()); return; }; const NN_RequestUnitListInfo &other = *(const NN_RequestUnitListInfo*)(&otherMsg);
         mRequestID = other.mRequestID;
     }
 
-    virtual const char* GetMsgName() const override { return "RQ_RequestUnitListInfo"; }
+    virtual const char* GetMsgName() const override { return "NN_RequestUnitListInfo"; }
 
     virtual void SetRequestID(MSG_ID id)  override { mRequestID = (int)id; }
 
@@ -518,13 +584,13 @@ public:
 
 };
 
-class RS_UnitInfoList : public tBaseMsg
+class NN_ResponseUnitInfoList : public tBaseMsg
 { 
 public:
     ArrayList<UInt64> mUnitList;	
 
 public:
-    RS_UnitInfoList() { clear(false); };
+    NN_ResponseUnitInfoList() { clear(false); };
 
 
     void Full(AutoNice scrData)
@@ -553,11 +619,11 @@ public:
 
     void copy(const tBaseMsg &otherMsg) override 
     {
-        if (strcmp("RS_UnitInfoList", otherMsg.GetMsgName())!=0) { LOG("%s is not RS_UnitInfoList", otherMsg.GetMsgName()); return; }; const RS_UnitInfoList &other = *(const RS_UnitInfoList*)(&otherMsg);
+        if (strcmp("NN_ResponseUnitInfoList", otherMsg.GetMsgName())!=0) { LOG("%s is not NN_ResponseUnitInfoList", otherMsg.GetMsgName()); return; }; const NN_ResponseUnitInfoList &other = *(const NN_ResponseUnitInfoList*)(&otherMsg);
         mUnitList = other.mUnitList;
     }
 
-    virtual const char* GetMsgName() const override { return "RS_UnitInfoList"; }
+    virtual const char* GetMsgName() const override { return "NN_ResponseUnitInfoList"; }
 
     AData get(const char *szMember) const 
     {
@@ -582,13 +648,13 @@ public:
 };
 
 //  通知Unit不存在
-class MS_NotifyUnitNoExist : public tBaseMsg
+class NG_NotifyUnitNoExist : public tBaseMsg
 { 
 public:
     UInt64 mNoExistUnitID;		
 
 public:
-    MS_NotifyUnitNoExist() { clear(false); };
+    NG_NotifyUnitNoExist() { clear(false); };
 
 
     void Full(AutoNice scrData)
@@ -617,11 +683,77 @@ public:
 
     void copy(const tBaseMsg &otherMsg) override 
     {
-        if (strcmp("MS_NotifyUnitNoExist", otherMsg.GetMsgName())!=0) { LOG("%s is not MS_NotifyUnitNoExist", otherMsg.GetMsgName()); return; }; const MS_NotifyUnitNoExist &other = *(const MS_NotifyUnitNoExist*)(&otherMsg);
+        if (strcmp("NG_NotifyUnitNoExist", otherMsg.GetMsgName())!=0) { LOG("%s is not NG_NotifyUnitNoExist", otherMsg.GetMsgName()); return; }; const NG_NotifyUnitNoExist &other = *(const NG_NotifyUnitNoExist*)(&otherMsg);
         mNoExistUnitID = other.mNoExistUnitID;
     }
 
-    virtual const char* GetMsgName() const override { return "MS_NotifyUnitNoExist"; }
+    virtual const char* GetMsgName() const override { return "NG_NotifyUnitNoExist"; }
+
+    AData get(const char *szMember) const 
+    {
+        if (strcmp(szMember, "mNoExistUnitID")==0) { AData value; value = mNoExistUnitID; return value; }
+        return AData();
+    }
+
+    bool set(const char *szMember, AData value) 
+    {
+        if (strcmp(szMember, "mNoExistUnitID")==0) { mNoExistUnitID = value; return true; };
+        LOG("No exist > %%s", szMember);  return false;
+    }
+
+    AData operator [] (const char *szMember) const 
+    {
+        return get(szMember);
+    }
+
+    AData operator [] (const AString &member) const 
+    {
+        return get(member.c_str());
+    }
+
+};
+
+//  广播其他节点Unit不存在
+class NN_BroadcastUnitNoExist : public tBaseMsg
+{ 
+public:
+    UInt64 mNoExistUnitID;		
+
+public:
+    NN_BroadcastUnitNoExist() { clear(false); };
+
+
+    void Full(AutoNice scrData)
+    {
+        clear(false);
+        CheckGet(scrData, mNoExistUnitID);
+    }
+
+    virtual void ToData(AutoNice &destData) override
+    {
+        destData["mNoExistUnitID"] = mNoExistUnitID;
+    }
+
+    bool serialize(DataStream *destData) const override
+    {
+        destData->write((short)1);
+
+        SAVE_MSG_VALUE(mNoExistUnitID, 18);
+        return true;
+    }
+
+    void clear(bool bClearBuffer=false) override 
+    {
+        mNoExistUnitID = 0;
+    }
+
+    void copy(const tBaseMsg &otherMsg) override 
+    {
+        if (strcmp("NN_BroadcastUnitNoExist", otherMsg.GetMsgName())!=0) { LOG("%s is not NN_BroadcastUnitNoExist", otherMsg.GetMsgName()); return; }; const NN_BroadcastUnitNoExist &other = *(const NN_BroadcastUnitNoExist*)(&otherMsg);
+        mNoExistUnitID = other.mNoExistUnitID;
+    }
+
+    virtual const char* GetMsgName() const override { return "NN_BroadcastUnitNoExist"; }
 
     AData get(const char *szMember) const 
     {
@@ -648,12 +780,12 @@ public:
 };
 
 //  通知节点关闭
-class MS_NotifyNodeClose : public tBaseMsg
+class NG_NotifyNodeClose : public tBaseMsg
 { 
 public:
 
 public:
-    MS_NotifyNodeClose() { clear(false); };
+    NG_NotifyNodeClose() { clear(false); };
 
 
     void Full(AutoNice scrData)
@@ -678,10 +810,10 @@ public:
 
     void copy(const tBaseMsg &otherMsg) override 
     {
-        if (strcmp("MS_NotifyNodeClose", otherMsg.GetMsgName())!=0) { LOG("%s is not MS_NotifyNodeClose", otherMsg.GetMsgName()); return; }; const MS_NotifyNodeClose &other = *(const MS_NotifyNodeClose*)(&otherMsg);
+        if (strcmp("NG_NotifyNodeClose", otherMsg.GetMsgName())!=0) { LOG("%s is not NG_NotifyNodeClose", otherMsg.GetMsgName()); return; }; const NG_NotifyNodeClose &other = *(const NG_NotifyNodeClose*)(&otherMsg);
     }
 
-    virtual const char* GetMsgName() const override { return "MS_NotifyNodeClose"; }
+    virtual const char* GetMsgName() const override { return "NG_NotifyNodeClose"; }
 
     AData get(const char *szMember) const 
     {

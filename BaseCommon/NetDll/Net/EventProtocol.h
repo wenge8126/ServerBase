@@ -60,7 +60,7 @@ public:
 
 	virtual HandPacket GenerateEventPacket(tNetConnect *pConnect, Logic::tEvent *pSendEvent, bool bNeedZip = true);
 
-	virtual bool WritePacket( const Packet* pPacket, DataStream *mSocketOutputStream ) override;
+	virtual bool WritePacket(int packetID, const Packet* pPacket, DataStream *mSocketOutputStream ) override;
 	virtual HandPacket ReadPacket( tNetConnect *pConnect, DataStream *mSocketInputStream ) override;
 
 	virtual void OnWritePacketError(AString strErrorInfo);
@@ -68,7 +68,7 @@ public:
 	// 为了网络安全, 如果发生协议恢复失败时, 全部清除连接处理
 	virtual void OnPacketExecuteError(tNetConnect *pConnect, Packet *pPacket)
 	{
-		WARN_LOG("Net packet excute error >[%d], then now remove connect >[%s:%d]", pPacket->GetPacketID(), pConnect->GetIp(), pConnect->GetPort());
+		WARN_LOG("Net packet excute error >[%s], then now remove connect >[%s:%d]", pPacket->GetMsgName(), pConnect->GetIp(), pConnect->GetPort());
 		pConnect->SetRemove(true); 
 	}
 	

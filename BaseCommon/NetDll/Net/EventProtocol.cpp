@@ -111,17 +111,17 @@ HandPacket EventNetProtocol::CreatePacket( PacketID packetID )
 
 //----------------------------------------------------------------------------------------------
 
-bool EventNetProtocol::WritePacket(const Packet* pPacket, DataStream *mSocketOutputStream)
+bool EventNetProtocol::WritePacket(int id, const Packet* pPacket, DataStream *mSocketOutputStream)
 {
 	__ENTER_FUNCTION_FOXNET
 
-		PacketID_t packetID = pPacket->GetPacketID();
+		PacketID_t packetID = id;
 	byte packetState = (byte)pPacket->GetState();
 
 	mTempWriteBuffer.clear(false);
 	if (pPacket->Write(mTempWriteBuffer) == FALSE)
 	{
-		ERROR_LOG("%d write fail", pPacket->GetPacketID());
+		ERROR_LOG("%d :  %s write fail", id, pPacket->GetMsgName());
 		return false;
 	}
 
@@ -480,9 +480,9 @@ bool EventNetProtocol::SendEvent( tNetConnect *connect, Logic::tEvent *sendEvent
 		return false;
 	}
 
-	bool bEncrypt = net->NeedEncryptPacket() && sendEvent->GetEventFactory()->HasState(ePacketStateEncrypt);
+	//bool bEncrypt = net->NeedEncryptPacket() && sendEvent->GetEventFactory()->HasState(ePacketStateEncrypt);
 
-	if ( connect->Send(pPacket.getPtr(), bEncrypt) )
+	if ( connect->Send(pPacket->GetFactory()->GetPacketID(), pPacket.getPtr()) )
 	{
 		connect->OnSucceedSendEvent(sendEvent, pPacket.getPtr());		
 		return true;

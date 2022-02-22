@@ -76,7 +76,7 @@ namespace NetCloud
 				return AwaitRequest(targetID, overTimeSecond);
 		}
 
-		virtual	PacketID_t	GetPacketID() const override { return eMsgResponse; }
+		virtual	PacketID_t	GetPacketID() const  { return eMsgResponse; }
 
 	public:
 		virtual BOOL Read(DataStream& iStream, size_t packetSize, tNetConnect *pConnect) override
@@ -210,7 +210,7 @@ namespace NetCloud
 	class ActorResponResultPacket : public tResponseResultPacket
 	{
 	public:
-		virtual PacketID_t GetPacketID() const override { return  eMsgResult; }
+		virtual PacketID_t GetPacketID() const  { return  eMsgResult; }
 
 	public:
 		virtual BOOL Read(DataStream& iStream, size_t packetSize, tNetConnect *pConnect) override
@@ -282,14 +282,14 @@ namespace NetCloud
 		{
 			if (mNetUnit)
 				return mNetUnit->SendPacket(target, pPacket, (BROADCAST_MODE)mNotifyType);
-			ERROR_LOG("Packet %d send fail, No exist net base", pPacket->GetPacketID());
+			ERROR_LOG("Packet %s send fail, No exist net base", pPacket->GetMsgName());
 			return false;
 		}
 
 		void _AsyncDo();
 
 	public:
-		virtual PacketID_t GetPacketID() const override { return  eMsgNotify; }
+		virtual PacketID_t GetPacketID() const { return  eMsgNotify; }
 
 		virtual UINT		Execute(tNetConnect* pConnect) override
 		{

@@ -38,7 +38,7 @@ public:
 	void Start() override
 	{
 		if (!GetNet())
-			StartUpdate(0.01);
+			StartUpdate(0.01f);
 	}
 
 	void Update(float t) override

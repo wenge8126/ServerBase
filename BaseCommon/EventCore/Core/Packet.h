@@ -36,7 +36,14 @@ enum PACKET_EXE
 
 class tNetConnect;
 class PacketFactory;
-class PacketFactoryPtr;
+//-------------------------------------------------------------------------*/
+class PacketFactoryPtr : public AutoBase
+{
+public:
+	PacketFactoryPtr()
+		: mpFactory(NULL) {}
+	PacketFactory *mpFactory;
+};
 //-------------------------------------------------------------------------*/
 class EventCoreDll_Export Packet : public AutoBase //Base<Packet>
 {
@@ -49,8 +56,7 @@ public :
 
 	virtual ~Packet( ){}
 
-
-	virtual	PacketID_t	GetPacketID() const = 0;
+	virtual const char* GetMsgName() const;
 
 	virtual void InitData() {}
 
@@ -74,15 +80,15 @@ public:
 	virtual BOOL		CheckPacket( ){ return TRUE ; }
 	virtual bool		IsBigPacket() const { return false; }
 
-	virtual void		SetNeedEncrypt(bool bNeed)const{ }
-
 	virtual VOID		CleanUp( ){}
 	virtual void		Release() override;
 
 	Auto<Packet> GetSelf() { return Auto<Packet>(this); }
 	int						_getID() const { return mID; }
 
-	virtual const char* getName() const { return "None"; }
+
+	PacketFactory* GetFactory() { if (mFactoryPtr) return mFactoryPtr->mpFactory; return NULL; }
+
 };
 //----------------------------------------------------------------------------------
 typedef Auto<Packet>	HandPacket;

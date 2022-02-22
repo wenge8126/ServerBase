@@ -391,7 +391,7 @@ namespace NetCloud
 	{
 		if (mNetConnect)
 		{
-			if (mNetConnect->Send(pPacket, false))
+			if (mNetConnect->Send(pPacket->GetFactory()->GetPacketID(), pPacket))
 				return true;
 			else
 				mNetConnect.setNull();

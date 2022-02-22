@@ -265,6 +265,7 @@ IOCPBaseNet::IOCPBaseNet(size_t connectCount /*= 1*/, int threadNum/* = _IOCP_TH
 		ERROR_LOG("XXXXXX thread count = 0, can not net work, may be no need this net ?!");
 		return;
 	}
+
 	//NOTE: Must use one net thread, because async work thread data	
 	// So one thread with once IOCP or epoll
 
@@ -649,7 +650,7 @@ void IOCPServerNet::OnMsgRegistered(int eventNameIndex)
 		{
 			if (mConnectList[i])
 			{
-				mConnectList[i]->Send(&indexPacket, false);
+				mConnectList[i]->Send(indexPacket.GetPacketID(), &indexPacket);
 			}
 		}
 	}
@@ -685,7 +686,7 @@ void IOCPServerNet::_OnConnectStart( tNetConnect *pConnect )
 
 	if (GetEventCenter()->GenerateMsgIndex(indexPacket.GetData(), 0))
 	{
-		pConnect->Send(&indexPacket, false);
+		pConnect->Send(indexPacket.GetPacketID(), &indexPacket);
 	}
 }
 

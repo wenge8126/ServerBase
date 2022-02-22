@@ -12,9 +12,9 @@ AutoNice tNetProcess::Await(tNetConnect *pConnect, int msgID, tRequestMsg &req, 
 	Auto< AsyncProtocol> protocol = pConnect->GetNetHandle()->GetNetProtocol();
 	AutoNice resp;
 	AWaitResponse pWait = protocol->AllotEventID();
-	req.SetPackectID(msgID);
+	
 	req.SetRequestID(pWait->mRequestMsgID);
-	if (!pConnect->Send(&req, false))
+	if (!pConnect->Send(msgID, &req))
 		return resp;
 	pWait->mWaitCoroID = CORO;
 	pWait->Wait(overMilSecond);
@@ -28,7 +28,7 @@ AutoNice tNetProcess::Await(tNetConnect *pConnect, int msgID, tRequestMsg &req, 
 		pResp->mData.seek(0);
 		if (!resp->restore(&pResp->mData))
 		{
-			ERROR_LOG("Restore response msg data fail %d : msg ID %u", req.GetPacketID(), pWait->mRequestMsgID);
+			ERROR_LOG("Restore response msg data fail %s : msg ID %u", req.GetMsgName(), pWait->mRequestMsgID);
 			return AutoNice();
 		}
 	}

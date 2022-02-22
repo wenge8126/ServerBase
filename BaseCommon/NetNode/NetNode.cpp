@@ -21,7 +21,7 @@ namespace NetCloud
 
 		if (scrNodeConnect)
 		{
-			DEBUG_LOG(">>> Process scr node %s packet %d", scrNodeConnect->GetAddress().dump().c_str(), pData->GetPacketID());
+			DEBUG_LOG(">>> Process scr node %s packet %s", scrNodeConnect->GetAddress().dump().c_str(), pData->GetMsgName());
 			// 通知此地址已经无效
 			NotifyInvalidNode(scrNodeConnect, pData->mTargetID);
 		}
@@ -125,11 +125,11 @@ namespace NetCloud
 		tNetUnit *pUnit = FindUnit(pData->mTargetID);
 		if (pUnit == NULL)
 		{
-			ERROR_LOG("Run local packet %d fail, target unit no exist %s", pData->GetPacketID(), pData->mTargetID.dump().c_str());
+			ERROR_LOG("Run local packet %s fail, target unit no exist %s", pData->GetMsgName(), pData->mTargetID.dump().c_str());
 			return;
 		}
 		// 必须反序列出, 才可以正常获取在本节点执行的消息(发送与接受不同的包)
-		Auto<NodePacket> pNodePak = CreatePacket(pData->GetPacketID());
+		Auto<NodePacket> pNodePak = CreatePacket(pData->GetFactory()->GetPacketID());
 		pNodePak->mTargetID = pData->mTargetID;
 		pNodePak->mSenderID = pData->mSenderID;
 
@@ -142,7 +142,7 @@ namespace NetCloud
 			pUnit->OnReceiveProcess(pNodePak.getPtr());
 		}
 		else
-			ERROR_LOG("%d write error", pData->GetPacketID());
+			ERROR_LOG("%s write error", pData->GetMsgName());
 	}
 
 	tNetNode::tNetNode()

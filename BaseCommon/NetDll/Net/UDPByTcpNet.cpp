@@ -283,7 +283,7 @@ void UDPByTcpConnect::_ProcessUDPReceive()
 			}
 			catch (...)
 			{
-				ERROR_LOG("Net message [%d] execute error", packet->GetPacketID());
+				ERROR_LOG("Net message [%s] execute error", packet->GetMsgName());
 			}
 		}
 		else

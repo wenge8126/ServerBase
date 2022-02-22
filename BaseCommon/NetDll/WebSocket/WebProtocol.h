@@ -87,7 +87,7 @@ public:
 
 	virtual int GetMsgHeadSize() const override { return 0; }
 
-	virtual bool WritePacket( const Packet* pPacket, DataStream *mSocketOutputStream ) override
+	virtual bool WritePacket(int packetID, const Packet* pPacket, DataStream *mSocketOutputStream ) override
 	{
 		return pPacket->Write(*mSocketOutputStream)==TRUE;
 	}

@@ -80,7 +80,7 @@ namespace NetCloud
 			{				
 				if (pData->mSendCount > 10)
 				{
-					ERROR_LOG("%d Append send times > 10, then give up", pData->GetPacketID());
+					ERROR_LOG("%s Append send times > 10, then give up", pData->GetMsgName());
 					return;
 				}
 				pData->OnBeforeSend(nodeConn.getPtr());
