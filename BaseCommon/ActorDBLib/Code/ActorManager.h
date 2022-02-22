@@ -6,8 +6,13 @@
 #include "DBTableManager.h"
 #include "AsyncNode.h"
 
+using namespace Logic;
+
 namespace NetCloud
 {
+	typedef int(*pActorMsgCall)(Actor*, DataStream*, TransferPacket*);
+	typedef void(*pActorNotifyMsgCall)(Actor*, DataStream*, UnitID);
+
 	class ActorManager;
 	class ActorDBMgr : public DBTableManager
 	{

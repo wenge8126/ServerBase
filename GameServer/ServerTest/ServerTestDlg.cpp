@@ -13,6 +13,7 @@
 #include "FileDataStream.h"
 
 #include "SDK.h"
+#include "ServerEvent.h"
 
 #ifdef _DEBUG
 //#define new DEBUG_NEW

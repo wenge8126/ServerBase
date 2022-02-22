@@ -621,7 +621,6 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y</Command>
     <ClCompile Include="..\NetDll\Net\AsyncProtocol.cpp" />
     <ClCompile Include="..\NetDll\Net\BaseServer.cpp" />
     <ClCompile Include="..\NetDll\Net\BaseThread.cpp" />
-    <ClCompile Include="..\NetDll\Net\BigDataEvent.cpp" />
     <ClCompile Include="..\NetDll\Net\BigMsgPacket.cpp" />
     <ClCompile Include="..\NetDll\Net\EventData.cpp" />
     <ClCompile Include="..\NetDll\Net\EventPacket.cpp" />
@@ -634,12 +633,9 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y</Command>
     <ClCompile Include="..\NetDll\Net\IOCPConnect.cpp" />
     <ClCompile Include="..\NetDll\Net\IOCPServerNet.cpp" />
     <ClCompile Include="..\NetDll\Net\IOCPUDPNet.cpp" />
-    <ClCompile Include="..\NetDll\Net\MeshedNetNodeData.cpp" />
-    <ClCompile Include="..\NetDll\Net\MeshedNodeNet.cpp" />
     <ClCompile Include="..\NetDll\Net\MeshNet.cpp" />
     <ClCompile Include="..\NetDll\Net\NetAddress.cpp" />
     <ClCompile Include="..\NetDll\Net\NetProcess.cpp" />
-    <ClCompile Include="..\NetDll\Net\NodeNetEvent.cpp" />
     <ClCompile Include="..\NetDll\Net\Object.cpp" />
     <ClCompile Include="..\NetDll\Net\ObjectManager.cpp" />
     <ClCompile Include="..\NetDll\Net\ShareMemMsg.cpp" />
@@ -675,15 +671,9 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y</Command>
     <ClCompile Include="..\NetDll\WebSocket\WebServerProtocol.cpp" />
     <ClCompile Include="..\NetNode\AsyncGate.cpp" />
     <ClCompile Include="..\NetNode\AsyncNode.cpp" />
-    <ClCompile Include="..\NetNode\MeshNetGate.cpp" />
-    <ClCompile Include="..\NetNode\MeshNetNode.cpp" />
     <ClCompile Include="..\NetNode\NetCommon.cpp" />
-    <ClCompile Include="..\NetNode\NetNode.cpp" />
     <ClCompile Include="..\NetNode\NetUnit.cpp" />
-    <ClCompile Include="..\NetNode\RequestPacket.cpp" />
-    <ClCompile Include="..\NetNode\ResponsePacket.cpp" />
     <ClCompile Include="..\NetNode\UnitComponent.cpp" />
-    <ClCompile Include="..\NetNode\WaitRequestManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\NetDll\Net\BaseEventNet.h" />
@@ -691,7 +681,6 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y</Command>
     <ClInclude Include="..\NetDll\Net\AsyncProtocol.h" />
     <ClInclude Include="..\NetDll\Net\BaseServer.h" />
     <ClInclude Include="..\NetDll\Net\BaseThread.h" />
-    <ClInclude Include="..\NetDll\Net\BigDataEvent.h" />
     <ClInclude Include="..\NetDll\Net\BigMsgPacket.h" />
     <ClInclude Include="..\NetDll\Net\DefineMsgFactory.h" />
     <ClInclude Include="..\NetDll\Net\DefinePacketFactory.h" />
@@ -706,8 +695,6 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y</Command>
     <ClInclude Include="..\NetDll\Net\IOCPConnect.h" />
     <ClInclude Include="..\NetDll\Net\IOCPServerNet.h" />
     <ClInclude Include="..\NetDll\Net\IOCPUDPNet.h" />
-    <ClInclude Include="..\NetDll\Net\MeshedNetNodeData.h" />
-    <ClInclude Include="..\NetDll\Net\MeshedNodeNet.h" />
     <ClInclude Include="..\NetDll\Net\MeshNet.h" />
     <ClInclude Include="..\NetDll\Net\MeshNetMsg.h" />
     <ClInclude Include="..\NetDll\Net\NetAddress.h" />
@@ -716,7 +703,6 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y</Command>
     <ClInclude Include="..\NetDll\Net\NetHead.h" />
     <ClInclude Include="..\NetDll\Net\NetIndexPacket.h" />
     <ClInclude Include="..\NetDll\Net\NetProcess.h" />
-    <ClInclude Include="..\NetDll\Net\NodeNetEvent.h" />
     <ClInclude Include="..\NetDll\Net\Object.h" />
     <ClInclude Include="..\NetDll\Net\ObjectFactory.h" />
     <ClInclude Include="..\NetDll\Net\ObjectID.h" />
@@ -742,19 +728,10 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y</Command>
     <ClInclude Include="..\NetDll\WebSocket\WebServerProtocol.h" />
     <ClInclude Include="..\NetNode\AsyncGate.h" />
     <ClInclude Include="..\NetNode\AsyncNode.h" />
-    <ClInclude Include="..\NetNode\AsyncRequestPacket.h" />
-    <ClInclude Include="..\NetNode\Gate.h" />
-    <ClInclude Include="..\NetNode\MeshNetGate.h" />
-    <ClInclude Include="..\NetNode\MeshNetNode.h" />
     <ClInclude Include="..\NetNode\NetCommon.h" />
-    <ClInclude Include="..\NetNode\NetNode.h" />
     <ClInclude Include="..\NetNode\NetUnit.h" />
-    <ClInclude Include="..\NetNode\NodeMsgEvent.h" />
-    <ClInclude Include="..\NetNode\RequestPacket.h" />
-    <ClInclude Include="..\NetNode\ResponsePacket.h" />
     <ClInclude Include="..\NetNode\UnitComponent.h" />
     <ClInclude Include="..\NetNode\UnitNetProcess.h" />
-    <ClInclude Include="..\NetNode\WaitRequestManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />

@@ -4,7 +4,7 @@
 #include "CommonDefine.h"
 
 #include "TaskManager.h"
-#include "NodeMsgEvent.h"
+//#include "NodeMsgEvent.h"
 #include "BaseMsg.h"
 #include "LoginMsgData.h"
 

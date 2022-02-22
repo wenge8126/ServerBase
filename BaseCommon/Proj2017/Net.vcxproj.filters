@@ -22,9 +22,6 @@
     <Filter Include="IOCP">
       <UniqueIdentifier>{59f5081f-79d1-4a9b-8333-5a579ce6910e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MeshedNodeNet">
-      <UniqueIdentifier>{9654a11d-a465-4f60-8a80-027db38eafd2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Transfer">
       <UniqueIdentifier>{290e122c-264a-4d49-8630-7b238e6016aa}</UniqueIdentifier>
     </Filter>
@@ -77,12 +74,6 @@
     </ClCompile>
     <ClCompile Include="..\NetDll\Net\IOCPClientSetNet.cpp">
       <Filter>IOCP</Filter>
-    </ClCompile>
-    <ClCompile Include="..\NetDll\Net\MeshedNetNodeData.cpp">
-      <Filter>MeshedNodeNet</Filter>
-    </ClCompile>
-    <ClCompile Include="..\NetDll\Net\MeshedNodeNet.cpp">
-      <Filter>MeshedNodeNet</Filter>
     </ClCompile>
     <ClCompile Include="..\NetDll\Net\IOCPConnect.cpp">
       <Filter>IOCP</Filter>
@@ -162,15 +153,6 @@
     <ClCompile Include="..\NetDll\Net\NetAddress.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\NetNode\MeshNetGate.cpp">
-      <Filter>NetNode</Filter>
-    </ClCompile>
-    <ClCompile Include="..\NetNode\MeshNetNode.cpp">
-      <Filter>NetNode</Filter>
-    </ClCompile>
-    <ClCompile Include="..\NetNode\NetNode.cpp">
-      <Filter>NetNode</Filter>
-    </ClCompile>
     <ClCompile Include="..\NetNode\NetUnit.cpp">
       <Filter>NetNode</Filter>
     </ClCompile>
@@ -178,21 +160,6 @@
       <Filter>NetNode</Filter>
     </ClCompile>
     <ClCompile Include="..\NetNode\NetCommon.cpp">
-      <Filter>NetNode</Filter>
-    </ClCompile>
-    <ClCompile Include="..\NetNode\WaitRequestManager.cpp">
-      <Filter>NetNode</Filter>
-    </ClCompile>
-    <ClCompile Include="..\NetDll\Net\NodeNetEvent.cpp">
-      <Filter>NetNode</Filter>
-    </ClCompile>
-    <ClCompile Include="..\NetDll\Net\BigDataEvent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\NetNode\RequestPacket.cpp">
-      <Filter>NetNode</Filter>
-    </ClCompile>
-    <ClCompile Include="..\NetNode\ResponsePacket.cpp">
       <Filter>NetNode</Filter>
     </ClCompile>
     <ClCompile Include="..\NetDll\Net\SystemInfo.cpp">
@@ -248,12 +215,6 @@
     <ClInclude Include="..\NetDll\Net\IOCPClientSetNet.h">
       <Filter>IOCP</Filter>
     </ClInclude>
-    <ClInclude Include="..\NetDll\Net\MeshedNetNodeData.h">
-      <Filter>MeshedNodeNet</Filter>
-    </ClInclude>
-    <ClInclude Include="..\NetDll\Net\MeshedNodeNet.h">
-      <Filter>MeshedNodeNet</Filter>
-    </ClInclude>
     <ClInclude Include="..\NetDll\Net\IOCPConnect.h">
       <Filter>IOCP</Filter>
     </ClInclude>
@@ -273,9 +234,6 @@
       <Filter>Protocol</Filter>
     </ClInclude>
     <ClInclude Include="..\NetDll\Net\BaseEventNet.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\NetDll\Net\NodeNetEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\NetDll\Net\Socket.h">
@@ -353,19 +311,7 @@
     <ClInclude Include="..\NetDll\Net\NetAddress.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\NetNode\Gate.h">
-      <Filter>NetNode</Filter>
-    </ClInclude>
-    <ClInclude Include="..\NetNode\MeshNetGate.h">
-      <Filter>NetNode</Filter>
-    </ClInclude>
-    <ClInclude Include="..\NetNode\MeshNetNode.h">
-      <Filter>NetNode</Filter>
-    </ClInclude>
     <ClInclude Include="..\NetNode\NetCommon.h">
-      <Filter>NetNode</Filter>
-    </ClInclude>
-    <ClInclude Include="..\NetNode\NetNode.h">
       <Filter>NetNode</Filter>
     </ClInclude>
     <ClInclude Include="..\NetNode\NetUnit.h">
@@ -375,24 +321,6 @@
       <Filter>NetNode</Filter>
     </ClInclude>
     <ClInclude Include="..\NetNode\UnitNetProcess.h">
-      <Filter>NetNode</Filter>
-    </ClInclude>
-    <ClInclude Include="..\NetNode\NodeMsgEvent.h">
-      <Filter>NetNode</Filter>
-    </ClInclude>
-    <ClInclude Include="..\NetNode\WaitRequestManager.h">
-      <Filter>NetNode</Filter>
-    </ClInclude>
-    <ClInclude Include="..\NetNode\AsyncRequestPacket.h">
-      <Filter>NetNode</Filter>
-    </ClInclude>
-    <ClInclude Include="..\NetDll\Net\BigDataEvent.h">
-      <Filter>NetNode</Filter>
-    </ClInclude>
-    <ClInclude Include="..\NetNode\RequestPacket.h">
-      <Filter>NetNode</Filter>
-    </ClInclude>
-    <ClInclude Include="..\NetNode\ResponsePacket.h">
       <Filter>NetNode</Filter>
     </ClInclude>
     <ClInclude Include="..\NetDll\Net\SystemInfo.h">

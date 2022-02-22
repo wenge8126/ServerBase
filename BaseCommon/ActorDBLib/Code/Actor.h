@@ -3,10 +3,10 @@
 #ifndef _INCLUDE_ACTOR_H_
 #define _INCLUDE_ACTOR_H_
 
-#include "BigDataEvent.h"
-#include "ActorMsg.h"
+//#include "BigDataEvent.h"
+//#include "ActorMsg.h"
 #include "BaseMsg.h"
-#include "ActorMsg.h"
+//#include "ActorMsg.h"
 #include "ArrayList.h"
 #include "DBTableManager.h"
 #include "Component.h"
@@ -74,11 +74,13 @@ namespace NetCloud
 	};
 
 	//-------------------------------------------------------------------------
-	class ActorDBLib_Export Actor : public BigMsgUnit
+	class ActorDBLib_Export Actor : public tNetUnit
 	{
 		friend class Component;
 		friend class ProcessComponent;
 		friend class ActorFactory;
+
+		typedef tNetUnit Base;
 
 	public:
 		virtual void Init() {}
@@ -137,22 +139,7 @@ namespace NetCloud
 			}
 			return false;
 		}
-		//{
-		//	Auto< ActorRequestPacket> requestPak = GetMgr()->mNetNode->CreatePacket(eMsgRequest);
-		//	requestPak->mNetUnit = this;
-		//	Auto<ActorResponResultPacket> resultPak =  requestPak->Await(reqestMsg, targetID, waitMilSecond);
-		//	if (resultPak)
-		//	{
-		//		Auto<RespMsg> msg = MEM_NEW RespMsg();
-		//		resultPak->mResultData->seek(0);
-		//		if (!msg->restore(resultPak->mResultData.getPtr()))
-		//		{
-		//			ERROR_LOG("Restore %s fail", msg->GetMsgName());
-		//		}
-		//		return msg;
-		//	}
-		//	return Auto<RespMsg>();
-		//}
+	
 	
 		AutoNice Await(UnitID targetID, const AString &requestMsgName, tNiceData &reqestMsg, int waitMilSecond)
 		{
@@ -340,7 +327,7 @@ namespace NetCloud
 				comp._free();
 			}
 
-			BigMsgUnit::Release();
+			Base::Release();
 		}
 
 	protected:

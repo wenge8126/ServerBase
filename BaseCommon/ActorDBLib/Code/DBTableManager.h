@@ -9,7 +9,7 @@
 #include "ShareSQLUpdate.h"
 #include "FastHash.h"
 #include "LogicDBTable.h"
-#include "NetNode.h"
+//#include "NetNode.h"
 #include "ActorDBLib.h"
 #include "IOCPServerNet.h"
 

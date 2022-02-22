@@ -6,6 +6,8 @@
 #include "BaseServer.h"
 #include "SendDuanXin.h"
 #include "ActorGate.h"
+#include "ServerEvent.h"
+#include "ClientEvent.h"
 
 GateServerConfig CRunConfig<GateServerConfig>::mConfig;
 
@@ -33,8 +35,8 @@ class NG_SyncRunState : public Logic::tBaseNetEvent
 public:
 	virtual bool _DoEvent() override
 	{
-		Hand<MeshGate::ViaductNodeServerNet> net = mNetConnect->GetNetHandle();
-		Hand<CGate> gate = net->mpMeshGate;
+		//Hand<MeshGate::ViaductNodeServerNet> net = mNetConnect->GetNetHandle();
+		//Hand<CGate> gate = net->mpMeshGate;
 		return true;
 	}
 };
@@ -43,12 +45,12 @@ class NG_CloseServer : public Logic::tBaseNetEvent
 public:
 	virtual bool _DoEvent() override
 	{
-		Hand<MeshGate::ViaductNodeServerNet> net = mNetConnect->GetNetHandle();
-		Hand<CGate> gate = net->mpMeshGate;
+		//Hand<MeshGate::ViaductNodeServerNet> net = mNetConnect->GetNetHandle();
+		//Hand<CGate> gate = net->mpMeshGate;
 
-		NOTE_LOG("Node reqeust close gate > %s", GetData().dump().c_str());
-		gate->mpThread->mbNeedRestart = get("RESTART");
-		gate->mpThread->RequestClose();
+		//NOTE_LOG("Node reqeust close gate > %s", GetData().dump().c_str());
+		//gate->mpThread->mbNeedRestart = get("RESTART");
+		//gate->mpThread->RequestClose();
 
 		return true;
 	}
@@ -60,11 +62,11 @@ class NG_GetRunState : public Logic::tClientEvent
 public:
 	virtual bool _DoEvent() override
 	{
-		Hand<MeshGate::ViaductNodeServerNet> net = mNetConnect->GetNetHandle();
+	/*	Hand<MeshGate::ViaductNodeServerNet> net = mNetConnect->GetNetHandle();
 		Hand<CGate> gate = net->mpMeshGate;
 	
 		gate->mpThread->GetRunStateInfo(GetResponseEvent()->GetData());
-		Finish();
+		Finish();*/
 		return true;
 	}
 };
@@ -154,11 +156,11 @@ StateDataType GateThread::GetRunStateInfo(tNiceData &info)
 {
 	info["VER"] = SERVER_VERSION_FLAG;
 
-	Hand<MeshGate> gate = mGate;
-	// Gate连接数量, 节点连接数量, Unit数量
-	AString strInfo;
-	strInfo.Format("Unit %d, Node %d, GConnect %d, Gate %d", gate->TotalUnitCount(), gate->GetCloudNodeCount(), gate->GetNowGateConnect(), gate->GetGateCount());
-	info["INFO"] = strInfo;
+	//Hand<MeshGate> gate = mGate;
+	//// Gate连接数量, 节点连接数量, Unit数量
+	//AString strInfo;
+	//strInfo.Format("Unit %d, Node %d, GConnect %d, Gate %d", gate->TotalUnitCount(), gate->GetCloudNodeCount(), gate->GetNowGateConnect(), gate->GetGateCount());
+	//info["INFO"] = strInfo;
 
 	return ServerThread::GetRunStateInfo(info);
 }

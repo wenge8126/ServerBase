@@ -1,7 +1,7 @@
 #pragma once
 
-#include "MeshNetGate.h"
-#include "MeshNetNode.h"
+//#include "MeshNetGate.h"
+//#include "MeshNetNode.h"
 #include "ActorDBLib.h"
 
 #include "AsyncGate.h"

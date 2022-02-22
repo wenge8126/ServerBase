@@ -241,7 +241,6 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
     <ClCompile Include="Code\Actor.cpp" />
     <ClCompile Include="Code\ActorGate.cpp" />
     <ClCompile Include="Code\ActorManager.cpp" />
-    <ClCompile Include="Code\ActorMsg.cpp" />
     <ClCompile Include="Code\Component.cpp" />
     <ClCompile Include="Code\DBTable.cpp" />
     <ClCompile Include="Code\DBTableManager.cpp" />
@@ -255,7 +254,6 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
     <ClInclude Include="Code\ActorDBLib.h" />
     <ClInclude Include="Code\ActorGate.h" />
     <ClInclude Include="Code\ActorManager.h" />
-    <ClInclude Include="Code\ActorMsg.h" />
     <ClInclude Include="Code\Component.h" />
     <ClInclude Include="Code\DBTableLoadSQL.h" />
     <ClInclude Include="Code\DBTable.h" />

@@ -36,9 +36,6 @@
     <ClCompile Include="Code\ActorManager.cpp">
       <Filter>Actor</Filter>
     </ClCompile>
-    <ClCompile Include="Code\ActorMsg.cpp">
-      <Filter>Actor</Filter>
-    </ClCompile>
     <ClCompile Include="Code\DBTableManager.cpp">
       <Filter>DBCode</Filter>
     </ClCompile>
@@ -75,9 +72,6 @@
       <Filter>Actor</Filter>
     </ClInclude>
     <ClInclude Include="Code\ActorManager.h">
-      <Filter>Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ActorMsg.h">
       <Filter>Actor</Filter>
     </ClInclude>
     <ClInclude Include="Code\ActorGate.h">

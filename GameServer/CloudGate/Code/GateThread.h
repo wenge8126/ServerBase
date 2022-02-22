@@ -3,7 +3,7 @@
 #define _INCLUDE_CLOUDDBTHREAD_H_
 
 #include "BaseThread.h"
-#include "Gate.h"
+//#include "Gate.h"
 #include "CRunConfig.h"
 #include "Vesion.h"
 #include "AsyncGate.h"

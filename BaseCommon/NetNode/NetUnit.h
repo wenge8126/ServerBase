@@ -5,9 +5,9 @@
 
 #include "AnyData.h"
 #include "NetCommon.h"
-#include "NetNode.h"
+
 #include "NetHead.h"
-#include "WaitRequestManager.h"
+
 #include "NetProcess.h"
 
 namespace Logic
@@ -50,7 +50,6 @@ namespace NetCloud
 
 		AutoEvent StartEvent(const char *szEventName);
 
-		AWaitRequestManager	 GetWaitReqeustMgr() { /*if (mNode) return	mNode->GetWaitReqeustMgr();*/ return AWaitRequestManager(); }
 
 	public:
 		// 发送的唯一接口 NOTE: 发送的消息包, 必须是 DataPacket
