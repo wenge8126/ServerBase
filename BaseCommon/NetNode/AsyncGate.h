@@ -37,13 +37,21 @@ public:
 			mGateNet->ConnectNode(szMainIP, mainPort, 6000);
 	}
 
+	void CloseGate()
+	{
+		mGateNet->StopNet();
+	}
+
 
 	// 接收节点请求获取Gate信息
 	void On(tNetConnect *pConnect, NG_RequestGateInfo  &req, GN_ResponseGateListInfo &info)
 	{		
 		MeshNet::AConnectData nodeData = MEM_NEW MeshNet::MeshConnectData();
 		nodeData->mNodeKey = req.mNodeKey;
+		nodeData->mpConnect = pConnect;
 		pConnect->SetUserData(nodeData);
+
+		mNodeList.insert(req.mNodeKey, nodeData);
 
 		info.mGateCode = mGateNet->mCode;
 		info.mGateCount = mGateCount;
@@ -56,12 +64,15 @@ public:
 			if (gateData)
 				info.mGateList[gateData->mNodeCode] = gateData->mNodeKey;
 		}
+
+		DumpNode();
 	}
 
 	void On(tNetConnect *pConnect, NG_AppendUnit &req)
 	{
 		mUnitList.insert(req.mUintID, pConnect->GetUserData());
 		NOTE_LOG("Append unit %s", UnitID(req.mUintID).dump().c_str());
+		DumpUnit();
 	}
 
 	void On(tNetConnect *pConnect, NG_NotifyNodeClose &msg)
@@ -97,10 +108,34 @@ public:
 		return false;
 	}
 
+	void DumpNode()
+	{
+		NOTE_LOG("Gate %s ------------- node ----------------", NetAddress(mGateNet->mKey).dump().c_str());
+		for (auto it=mNodeList.begin(); it; ++it)
+		{
+			auto nodeData = it.get();
+			NOTE_LOG("Node : %s", NetAddress(it.key()).dump().c_str())
+		}
+		NOTE_LOG("-------------------------------------");
+	}
+
+	void DumpUnit()
+	{
+		NOTE_LOG("Gate %s ------------- unit ----------------", NetAddress(mGateNet->mKey).dump().c_str());
+		for (auto it = mUnitList.begin(); it; ++it)
+		{
+			auto nodeData = it.get();
+			if (nodeData)
+				NOTE_LOG("unit %s > node : %s ", NetAddress(nodeData->mNodeKey).dump().c_str(), UnitID(it.get()).dump().c_str());
+		}
+		NOTE_LOG("-------------------------------------");
+	}
+
 public:
 	int mGateCount  = 1;
 	Hand<MeshNet>		mGateNet;
 	FastHash<UInt64, MeshNet::AConnectData> mUnitList;
+	FastHash<UInt64, MeshNet::AConnectData> mNodeList;
 };
 //-------------------------------------------------------------------------
 class GateTransferPacketFactory : public tPacketFactory

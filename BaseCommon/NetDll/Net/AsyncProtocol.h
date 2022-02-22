@@ -39,12 +39,13 @@ public:
 
 	virtual void onTime() override
 	{
-		RESUME(mWaitCoroID);
+		if (mWaitCoroID>0)
+			RESUME(mWaitCoroID);
 	}
 
 public:
 	HandPacket mResponsePacket;
-	CoroID mWaitCoroID;
+	CoroID mWaitCoroID = 0;
 	MSG_ID mRequestMsgID;
 };
 

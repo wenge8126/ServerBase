@@ -20,7 +20,7 @@ AutoNice tNetProcess::Await(tNetConnect *pConnect, int msgID, tRequestMsg &req, 
 	pWait->Wait(overMilSecond);
 
 	YIELD;
-
+	pWait->StopWait();
 	if (pWait->mResponsePacket)
 	{
 		Auto< ResponseMsgPacket> pResp = pWait->mResponsePacket;

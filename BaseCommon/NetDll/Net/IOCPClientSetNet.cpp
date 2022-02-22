@@ -39,8 +39,12 @@ HandConnect IOCPClientSetNet::AwaitConnect(const char *szIp, int nPort, int over
 	pWaitConnectThread->mConnectCoroID = CORO;
 	pWaitConnectThread->StartConnect(szIp, nPort, overmilSecond);
 	mWaitConnectThreadList.push_front(pWaitConnectThread);
+	
+	NOTE_LOG("Start connect [%s:%d] ...", szIp, nPort);
 
 	YIELD;
+
+	NOTE_LOG("Connect to [%s:%d] %s", szIp, nPort, pWaitConnectThread->mConnect ? "OK" : "FAIL");
 
 	return pWaitConnectThread->mConnect;
 }

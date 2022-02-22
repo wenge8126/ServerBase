@@ -53,6 +53,11 @@ void AsyncNode::CloseNode()
 		if (gateData)
 			gateData->mpConnect->Send(eN2G_NotifyNodeClose, &msg);
 	}
+	CoroutineTool::AsyncCall([=]()
+	{
+		tTimer::AWaitTime(3000);
+		mNodeNet->StopNet();
+	});
 }
 
 void AsyncNode::ConnectGate(const char *szGateIP, int nPort)
