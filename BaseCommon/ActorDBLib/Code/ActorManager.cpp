@@ -13,9 +13,9 @@ void NetCloud::ActorManager::RegisterComponect(const char *szName, Hand<tEventFa
 void NetCloud::ActorManager::LowProcess()
 {
 	mNetNode->LowProcess(1);
-	
-	Hand<MeshNetNode> node = mNetNode;
-	for (auto it = node->mUnitListHash.begin(); it; ++it)
+		
+	//Hand<MeshNetNode> node = mNetNode;
+	for (auto it = mNetNode->mUnitList.begin(); it; ++it)
 	{
 		HandActor actor = it.get();
 		if (actor)

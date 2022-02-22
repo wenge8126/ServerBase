@@ -376,7 +376,7 @@ public:
 		return serialize(&oStream); 
 	}
 
-	virtual UINT		Execute(tNetConnect* pConnect) { return 0; }
+	//virtual UINT		Execute(tNetConnect* pConnect) { return 0; }
 
 
 };

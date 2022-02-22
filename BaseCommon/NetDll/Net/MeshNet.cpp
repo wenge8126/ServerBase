@@ -1,6 +1,7 @@
 #include "MeshNet.h"
 #include "EventProtocol.h"
 #include "DefineMsgFactory.h"
+#include "NetCommon.h"
 //-------------------------------------------------------------------------
 class MeshClientNet : public IOCPClientSetNet
 {
@@ -16,7 +17,7 @@ public:
 
 	virtual int GetSafeCode() override { return mpOwnerNet->GetSafeCode(); }
 
-	class NodeConnect : public IOCPConnect
+	class NodeConnect : public IOCPClientConnect
 	{
 	public:
 		~NodeConnect()
@@ -113,7 +114,8 @@ HandConnect MeshNet::AwaitConnectNode(const char *szIp, int nPort, int overmilSe
 			for (int i = 0; i < info.mNodeList.size(); ++i)
 			{
 				NetAddress addr(info.mNodeList[i]);
-
+				if (info.mNodeList[i]==mKey)
+					continue;
 				AConnectData exsitNode = mServerNodeList.find(addr);
 				if (!exsitNode)
 				{
@@ -130,7 +132,7 @@ HandConnect MeshNet::AwaitConnectNode(const char *szIp, int nPort, int overmilSe
 
 void MeshNet::Dump()
 {
-	NOTE_LOG("-------------------------------------------------------");
+	NOTE_LOG("-------------------------- mesh ---------------------------");
 	for (auto it = mServerNodeList.begin(); it; ++it)
 	{
 		AConnectData d = it.get();

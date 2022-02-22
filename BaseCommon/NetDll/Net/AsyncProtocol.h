@@ -23,6 +23,22 @@ public:
 	virtual UINT Execute(tNetConnect* pConnect) override;
 
 public:
+	virtual BOOL		Read(DataStream& iStream, size_t packetSize, tNetConnect*) override 
+	{
+		if (!iStream.read(mRequestID))
+			return FALSE;
+		if (!iStream.readData(&mData))
+			return FALSE;
+		return TRUE; 
+	}
+	virtual BOOL		Write(DataStream& oStream) const  override 
+	{ 
+		oStream.write(mRequestID);
+		oStream.writeData((DataStream*)&mData, mData.dataSize());
+		return TRUE; 
+	}
+
+public:
 	MSG_ID		mRequestID;
 	DataBuffer	mData;
 };
@@ -34,19 +50,22 @@ public:
 	{
 		mResponsePacket.setNull();
 		mWaitCoroID = 0;
-		mRequestMsgID = 0;
+		mRequestMsgID = -1;
 	}
 
 	virtual void onTime() override
 	{
-		if (mWaitCoroID>0)
+		if (mWaitCoroID > 0)
+		{
 			RESUME(mWaitCoroID);
+			mWaitCoroID = 0;
+		}
 	}
 
 public:
 	HandPacket mResponsePacket;
 	CoroID mWaitCoroID = 0;
-	MSG_ID mRequestMsgID;
+	MSG_ID mRequestMsgID = -1;
 };
 
 typedef Auto<WaitResponse> AWaitResponse;

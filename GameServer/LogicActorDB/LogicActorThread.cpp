@@ -150,7 +150,7 @@ void LogicActorThread::SetTitle(const AString &title)
 
 void AsyncReadyDB(LogicActorThread *pThread)
 {
-	if (!pThread->mActorManager->mNetNode->AwaitConnectGate(NetCloud::Address("127.0.0.1", 10000)))
+	if (!pThread->mActorManager->mNetNode->AwaitConnectGate("127.0.0.1", 10000, 60000))
 	{
 		ERROR_LOG("Connect gate fail");
 		return;

@@ -60,35 +60,58 @@ void AsyncNode::CloseNode()
 	});
 }
 
-void AsyncNode::ConnectGate(const char *szGateIP, int nPort)
+void AsyncNode::ConnectGate(const char *szGateIP, int nPort, int overMilSecond)
 {
-	CoroutineTool::AsyncCall([&]()
+	CoroutineTool::AsyncCall([=]()
 	{
-		auto connect = mNodeNet->mNodeClientNet->AwaitConnect(szGateIP, nPort, 10);
-		if (connect)
-		{
-			NG_RequestGateInfo  req;
-			GN_ResponseGateListInfo resp;
-			if (tNetProcess::Await(connect.getPtr(), eN2G_RequestGateInfo, req, resp, 10))
-			{
-				mGateCount = resp.mGateCount;
-				// 加入Gate列表
-				MeshNet::AConnectData gateData = connect->GetUserData();
-				mGateList.Append(gateData->mNodeCode, gateData);
+		AwaitConnectGate(szGateIP, nPort, overMilSecond);
+	});
+}
 
-				for (int i = 0; i < resp.mGateList.size(); ++i)
+bool AsyncNode::AwaitConnectGate(const char *szGateIP, int nPort, int overMilSecond)
+{
+	auto connect = mNodeNet->mNodeClientNet->AwaitConnect(szGateIP, nPort, overMilSecond);
+	if (connect)
+	{
+		NG_RequestGateInfo  req;
+		req.mNodeKey = mNodeNet->mKey;
+		GN_ResponseGateListInfo resp;
+		if (tNetProcess::Await(connect.getPtr(), eN2G_RequestGateInfo, req, resp, overMilSecond))
+		{
+			mGateCount = resp.mGateCount;
+			// 加入Gate列表
+			MeshNet::AConnectData gateData = MEM_NEW  MeshNet::MeshConnectData();
+			gateData->mpConnect = connect.getPtr();
+			connect->SetUserData(gateData);
+
+			mGateList.Append(gateData->mNodeCode, gateData);
+
+			for (int i = mWaitAppendList.size() - 1; i >= 0; --i)
+			{
+				auto unit = mWaitAppendList[i];
+				if (unit)
 				{
-					if (!mGateList[i])
-					{
-						NetAddress addr(resp.mGateList[i]);
-						ConnectGate(addr.Ip().c_str(), addr.GetPort());
-					}
+					if (AppendUnit(unit))
+						mWaitAppendList.removeAt(i);
+				}
+				else
+					mWaitAppendList.removeAt(i);
+			}
+
+			for (int i = 0; i < resp.mGateList.size(); ++i)
+			{
+				if (!mGateList[i])
+				{
+					NetAddress addr(resp.mGateList[i]);
+					ConnectGate(addr.Ip().c_str(), addr.GetPort(), overMilSecond);
 				}
 			}
+			return true;
 		}
-		else
-			ERROR_LOG("Connect gate fail : [%s:%d]", szGateIP, nPort);
-	});
+	}
+	else
+		ERROR_LOG("Connect gate fail : [%s:%d]", szGateIP, nPort);
+	return false;
 }
 
 bool AsyncNode::AppendUnit(AUnit unit)
@@ -100,7 +123,7 @@ bool AsyncNode::AppendUnit(AUnit unit)
 		msg.mUintID = unit->GetID();
 		if (gate->mpConnect->Send(eN2G_AppendUnit, &msg))
 		{
-			unit->mNode = this;
+			unit->mNode = mAutoThis;
 			mUnitList.insert(unit->GetID(), unit);
 			return true;
 		}
@@ -109,6 +132,8 @@ bool AsyncNode::AppendUnit(AUnit unit)
 	}
 	else
 		ERROR_LOG("No exist unit %s gate %d", unit->GetID().dump().c_str(), unit->GetID().Hash(mGateCount));
+	mWaitAppendList.push_back(unit);
+	return false;
 }
 
 void AsyncNode::BroadcastUnitNoExist(UnitID id)
@@ -128,21 +153,30 @@ void AsyncNode::BroadcastUnitNoExist(UnitID id)
 
 void AsyncNode::On(tNetConnect *pConnect, GN_NotifyNodeInfo &msg)
 {
+	if (mNodeNet->GetKey()==msg.mNodeKey)
+		return;
+
 	CoroutineTool::AsyncCall([&]()
 	{
-		NetAddress addr(msg.mNodeKey);
-		HandConnect conn = mNodeNet->AwaitConnectNode(addr.Ip().c_str(), addr.GetPort(), 6000);
-		if (conn)
+		MeshNet::AConnectData nodeData =  mNodeNet->GetMeshNodeList().find(msg.mNodeKey);
+		if (!nodeData)
+		{
+			NetAddress addr(msg.mNodeKey);
+			HandConnect conn = mNodeNet->AwaitConnectNode(addr.Ip().c_str(), addr.GetPort(), 6000);
+			if (conn)
+				nodeData = conn->GetUserData();
+		}
+
+		if (nodeData && nodeData->IsValid())
 		{
 			NN_RequestUnitListInfo  req;
 			NN_ResponseUnitInfoList resp;
-			if (tNetProcess::Await(conn.getPtr(), eN2N_RequestUnitList, req, resp, 6000))
+			if (tNetProcess::Await(nodeData->mpConnect, eN2N_RequestUnitList, req, resp, 6000))
 			{
-				auto d = conn->GetUserData();
 				for (int i = 0; i < resp.mUnitList.size(); ++i)
 				{
 					UInt64 key = resp.mUnitList[i];
-					mUnitList.insert(key, d);
+					mUnitNodeIndex.insert(key, nodeData);
 				}
 			}
 		}

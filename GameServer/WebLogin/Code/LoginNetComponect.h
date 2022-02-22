@@ -22,18 +22,19 @@ class CheckAccountMsg : public ComponectResponseMsg
 		rq.mAccount = get("ACCOUNT");
 		rq.mPassword = get("PASSWORD");
 		rq.mServerID = 1;
-		Auto< RS_CheckAndCreateAccount> resp = GetActor()->Await<RS_CheckAndCreateAccount>(rq, { Actor_Account, 1 }, 6000);
+		RS_CheckAndCreateAccount resp;
+		bool bRe = GetActor()->Await({ Actor_Account, 1 }, rq,  resp, 600000);
 
-		if (resp && mNetConnect && resp->mID > 0)
+		if (bRe && mNetConnect && resp.mID > 0)
 		{
 			LoginData *p = MEM_NEW LoginData();
-			p->mID = resp->mID;
+			p->mID = resp.mID;
 			mNetConnect->mAttachData = p;
 		}
 		else
 			ERROR_LOG("Account check fail");
 		AutoNice d = MEM_NEW NiceData();
-		resp->ToData(d);
+		resp.ToData(d);
 		 GetResponseEvent()["RESP"] = d.getPtr();
 
 		Finish();
@@ -60,7 +61,7 @@ public:
 			int type = get("UNIT_TYPE");
 			Int64 id = get("UNIT_ID");
 
-			GetResponseEvent()["RESP"] = GetActor()->Await(msgName, GetData(), { type, id }, 6000).getPtr();
+			GetResponseEvent()["RESP"] = GetActor()->Await({ type, id }, msgName, GetData(), 6000).getPtr();
 		}
 		Finish();
 	}

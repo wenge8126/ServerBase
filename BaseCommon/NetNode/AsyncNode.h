@@ -31,7 +31,9 @@ public:
 		mNodeNet->LowProcess(spaceTime);
 	}
 
-	void ConnectGate(const char *szGateIP, int nPort);
+	void ConnectGate(const char *szGateIP, int nPort, int overMilSecond);
+
+	bool AwaitConnectGate(const char *szGateIP, int nPort, int overMilSecond);
 
 	bool AppendUnit(AUnit unit);
 
@@ -58,8 +60,9 @@ public:
 		auto gate = GetGate(p->mTargetID);
 		if (gate)
 		{
-			if (!gate->mpConnect->Send(packetID, p))
-				ERROR_LOG("Send MS_AppendUnit %s fail", p->Dump().c_str());
+			if (gate->mpConnect->Send(packetID, p))
+				return true;
+			ERROR_LOG("Send MS_AppendUnit %s fail", p->Dump().c_str());
 		}
 		else
 			ERROR_LOG("No exist unit %s gate %d", p->Dump().c_str(), p->mTargetID.Hash(mGateCount));
@@ -73,6 +76,8 @@ public:
 		auto gate = mGateList.Find(code);
 		return gate;
 	}
+
+	Hand<MeshNet> GetNet() const { return mNodeNet; }
 
 public:
 	// 
@@ -108,6 +113,14 @@ public:
 	virtual bool ProcessPacket(tNetConnect* pConnect, Packet *pPak) override
 	{
 		TransferPacket *pPacket = dynamic_cast<TransferPacket*>(pPak);
+
+#if DEBUG_CLOUD_NET
+		AString info;
+		info.Format(" >>> %d : N %s ", ++pPacket->mSendCount, NetAddress(mNodeNet->mKey).dump().c_str());
+		pPacket->mSendInfo += info;
+		NOTE_LOG("%u :  %s", pPacket->mRequestID, pPacket->mSendInfo.c_str());
+#endif
+
 		auto existUnit = mUnitList.find(pPacket->mTargetID);
 		if (existUnit)
 		{
@@ -141,7 +154,7 @@ public:
 
 	FastHash<UInt64, AUnit>		mUnitList;
 	FastHash<UInt64, MeshNet::AConnectData> mUnitNodeIndex;
-
+	ArrayList<AUnit>	mWaitAppendList;
 	LoopDataStream	mTempLoopData;
 };
 

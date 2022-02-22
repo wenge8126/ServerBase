@@ -46,7 +46,7 @@ bool NetCloud::ProcessComponent::_DoEvent()
 
 void NetCloud::ProcessComponent::RemoveProcess()
 {
-	if (mpActor != NULL)
+	if (mpActor != NULL && mpActor->GetMgr()!=NULL)
 	{
 		for (int i = 0; i < mpActor->GetMgr()->mProcessComponectList.size(); ++i)
 		{

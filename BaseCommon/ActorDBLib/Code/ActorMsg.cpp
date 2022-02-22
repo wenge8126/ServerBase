@@ -16,7 +16,7 @@ namespace NetCloud
 			{
 				ActorResponResultPacket *pResp = dynamic_cast<ActorResponResultPacket*>(pResponse);
 				pResp->mSenderID = mSenderID;
-				(*pFun)(actor.getPtr(), mRequestData.getPtr(), pResp);
+				//??? (*pFun)(actor.getPtr(), mRequestData.getPtr(), pResp);
 			}
 		}
 	}

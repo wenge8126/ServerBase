@@ -22,7 +22,7 @@ AWaitResponse AsyncProtocol::AllotWaitID()
 		UINT pos = x & msMaxPosValue;
 		UINT code = (x >> _MOVE_BIT) + 1;
 		x = (code << _MOVE_BIT) + pos;
-		AssertNote(mEventList[pos] == NULL, "Event no free id %u", pos);
+		AssertEx(mEventList[pos], "Event no free id %u", pos);
 		AWaitResponse p = mEventList[pos];
 		p->mRequestMsgID = x;
 		return p;
@@ -43,8 +43,8 @@ AWaitResponse AsyncProtocol::AllotWaitID()
 
 void AsyncProtocol::FreeWaitID(WaitResponse *pWaitResponse)
 {
-	if (pWaitResponse->mRequestMsgID <= 0)
-		return;
+	//if (pWaitResponse->mRequestMsgID <= 0)
+	//	return;
 
 	UINT pos = pWaitResponse->mRequestMsgID & msMaxPosValue;
 
@@ -63,8 +63,8 @@ void AsyncProtocol::FreeWaitID(WaitResponse *pWaitResponse)
 
 AWaitResponse AsyncProtocol::FindWaitResponse(MSG_ID id)
 {
-	UINT x = id & msMaxPosValue;
-	if (x > 0 && (DSIZE)x < mEventList.size())
+ 	UINT x = id & msMaxPosValue;
+	if (x >= 0 && (DSIZE)x < mEventList.size())
 	{
 		AWaitResponse p = mEventList[x];
 		if (p && p->mRequestMsgID == id)
@@ -82,7 +82,8 @@ UINT ResponseMsgPacket::Execute(tNetConnect* pConnect)
 	if (pWait)
 	{
 		pWait->mResponsePacket = this;
-		RESUME(pWait->mWaitCoroID);
+		if (pWait->mWaitCoroID>0)
+			RESUME(pWait->mWaitCoroID);
 	}
 	else
 		WARN_LOG("Wait msg no exist : %u", mRequestID);

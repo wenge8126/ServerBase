@@ -1,12 +1,20 @@
 #include "NetCommon.h"
 #include "NetUnit.h"
+#include "AsyncNode.h"
 
 namespace NetCloud
 {
 	void NodePacket::OnStartSend(tNetUnit *pSendUnit)
 	{
 #if DEBUG_CLOUD_NET
-		 mSendInfo.Format("*** Start %s  %s > %s >>>\r\n", GetMsgName(), pSendUnit->mID.dump().c_str(), mTargetID.dump().c_str()); 
+		AString nodeInfo = "None node";
+		if (pSendUnit->mNode && pSendUnit->mNode->mpProcess!=NULL)
+		{
+			Hand<AsyncNode> node = pSendUnit->mNode->mpProcess;
+			nodeInfo = NetAddress(node->mNodeNet->GetKey()).dump();
+		}
+
+		 mSendInfo.Format("*** %s Start %s  %s > %s >>>\r\n", nodeInfo.c_str(), GetMsgName(), pSendUnit->mID.dump().c_str(), mTargetID.dump().c_str()); 
 		 DEBUG_LOG("\r\n-------------------------------------------------------\r\n\r\n%s\r\n\r\n------------------------------------------------------\r\n", mSendInfo.c_str());
 #endif
 	}

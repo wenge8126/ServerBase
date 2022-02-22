@@ -203,13 +203,14 @@ void CServerToolDlg::OnBnClickedButtonConnect()
 
 void CServerToolDlg::AsyncConnectGate()
 {
-	if (!mActorManager->mNetNode->AwaitConnectGate(NetCloud::Address((LPCSTR)mGateIP, mGatePort)))
-	{
-		ERROR_LOG("Connect gate fail");
-		return;
-	}
-	else
-		LOG("Connect succeed gate");
+	mActorManager->mNetNode->ConnectGate((LPCSTR)mGateIP, mGatePort, 10000);
+	//if (!mActorManager->mNetNode->ConnectGate(NetCloud::Address((LPCSTR)mGateIP, mGatePort)))
+	//{
+	//	ERROR_LOG("Connect gate fail");
+	//	return;
+	//}
+	//else
+	//	LOG("Connect succeed gate");
 }
 
 void _RunCreateDB(CServerToolDlg *pDlg)
@@ -280,7 +281,9 @@ void CServerToolDlg::AsyncCreateDB()
 			LOG("Fail load xlsx  %s, sheet %s, index %s", record["XLSX"].c_str(), record["SHEET"].c_str(), record["INDEX"].c_str());
 	}
 	msg.mExportCodePath = "D:/Home_86/Server/GameServer/Common";
-	auto result = mToolActor->Await<RS_CreateDBTable>(msg, { Actor_DBWorker, 1 }, 16000);
+	RS_CreateDBTable resp;
+	mToolActor->Await( { Actor_DBWorker, 1 }, msg, resp, 16000);
+	auto result = &resp;
 	if (result)
 	{
 		LOG("-----------------------------------------------------\r\n%s\r\n------------------------------------------", result->mResultInfo.c_str());
@@ -334,28 +337,30 @@ void _RunTestAccount(CServerToolDlg *p)
 	msg.mAccount = "Testx";
 	msg.mPassword = "333444";
 	msg.mServerID = 1;
-	auto resp = p->mToolActor->Await<RS_CheckAndCreateAccount>(msg, { Actor_Account, 1 }, 100000);
-	if (resp)
+	RS_CheckAndCreateAccount resp2;
+	bool b = p->mToolActor->Await( { Actor_Account, 1 }, msg, resp2, 100000);
+	auto resp = &resp2;
+	if (b)
 	{
 		LOG("Response account : \r\n%s", resp->dump().c_str());
 
-		if (resp->mID > 0)
-		{
-			if (!p->mActorManager->mNetNode->AwaitCheckExistUnit({ Actor_Player, resp->mID }, 10000))
-			{
-				RQ_CreatePlayerActor  msg;
-				msg.mPlayerID = resp->mID;
-				auto resp = p->mToolActor->Await<RS_CreatePlayerActor>(msg, { Actor_DBWorker, 1 }, 100000);
-				if (resp)
-					LOG("Create player %s", resp->dump().c_str());
-			}
+		//if (resp->mID > 0)
+		//{
+		//	if (!p->mActorManager->mNetNode->AwaitCheckExistUnit({ Actor_Player, resp->mID }, 10000))
+		//	{
+		//		RQ_CreatePlayerActor  msg;
+		//		msg.mPlayerID = resp->mID;
+		//		auto resp = p->mToolActor->Await<RS_CreatePlayerActor>(msg, { Actor_DBWorker, 1 }, 100000);
+		//		if (resp)
+		//			LOG("Create player %s", resp->dump().c_str());
+		//	}
 
-			RQ_PlayerBaseData msg;
-			
-			auto responseMsg = p->mToolActor->Await<RS_PlayerBaseData>(msg, { Actor_Player, resp->mID }, 10000);
-			if (responseMsg)
-				LOG("Player %s data : \r\n%s", STRING(resp->mID), responseMsg->dump().c_str());
-		}
+		//	RQ_PlayerBaseData msg;
+		//	
+		//	auto responseMsg = p->mToolActor->Await<RS_PlayerBaseData>(msg, { Actor_Player, resp->mID }, 10000);
+		//	if (responseMsg)
+		//		LOG("Player %s data : \r\n%s", STRING(resp->mID), responseMsg->dump().c_str());
+		//}
 
 	}
 	else

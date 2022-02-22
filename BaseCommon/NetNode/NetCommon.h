@@ -6,12 +6,32 @@
 #include "NetAddress.h"
 #include "NetHead.h"
 
-#define DEBUG_CLOUD_NET		0
+#define DEBUG_CLOUD_NET			1
 
 #define GATE_HASH_KEY_MAX			1103				// 网关最大哈希KEY, NOTE: 网关数量不可大于此值
 
 #define UNITID_DUMP(id)			id.dump().c_str()
 #define UNITID_UINT64(id)			UnitID(id).dump().c_str()
+
+//-------------------------------------------------------------------------
+enum EMeshNetMsgType
+{
+	eMeshMsg_RequestNodeInfo = PACKET_MAX + 1,
+	eMeshMsg_BroadcastNodeClose,
+	eMeshMsg_Max,
+};
+
+enum GateMsgType
+{
+	eN2G_RequestGateInfo = eMeshMsg_Max + 1,
+	eN2G_AppendUnit,
+	eG2N_NotifyNodeInfo,
+	eN2N_RequestUnitList,
+	eNGN_TransferMsg,
+	eN2G_NotifyNodeClose,
+	eN2N_BroadcastUnitNoExist,
+};
+//-------------------------------------------------------------------------
 
 namespace NetCloud
 {
@@ -98,6 +118,7 @@ namespace NetCloud
 			, mbBroadcast(false)
 			, mTargetPacketID(0)
 			, mRequestID(0)
+			, mMsgType(0)
 		{}
 
 		virtual void InitData() override
@@ -108,6 +129,7 @@ namespace NetCloud
 			mbBroadcast = false;
 			mTargetPacketID = 0;
 			mRequestID = 0;
+			mMsgType = 0;
 #if DEBUG_CLOUD_NET
 			mSendInfo.setNull();
 #endif			
@@ -126,7 +148,7 @@ namespace NetCloud
 			mSenderID = idValue;
 			iStream.read(idValue);
 			mTargetID = idValue;
-
+			iStream.read(mMsgType);
 			iStream.read(mTargetPacketID);
 			iStream.read(mRequestID);
 
@@ -141,7 +163,7 @@ namespace NetCloud
 			oStream.write(mbBroadcast);
 			oStream.write((UInt64)mSenderID);
 			oStream.write((UInt64)mTargetID);
-
+			oStream.write(mMsgType);
 			oStream.write(mTargetPacketID);
 			oStream.write(mRequestID);
 
@@ -177,8 +199,8 @@ namespace NetCloud
 
 		byte		mbBroadcast;
 		byte		mSendCount;				// 被发送过多少次, 超过3次, 不再转发
-
-		PacketID_t	mTargetPacketID;
+		byte		mMsgType;
+		PacketID_t		mTargetPacketID;
 		MSG_ID		mRequestID;
 #if DEBUG_CLOUD_NET
 		AString	mSendInfo;
@@ -192,7 +214,6 @@ namespace NetCloud
 	{
 	public:
 		TransferPacket()
-			: mTargetPacketID(0)
 		{}
 
 		virtual void InitData() override 
@@ -204,7 +225,15 @@ namespace NetCloud
 	public:
 		DataBuffer& GetData() { return mData; }
 
-		virtual UINT Execute(tNetConnect* pConnect) override { ERROR_LOG("TransferPacket execute"); return 0; }
+		//virtual UINT Execute(tNetConnect* pConnect) override { ERROR_LOG("TransferPacket execute"); return 0; }
+		virtual UINT		Execute(tNetConnect* pConnect)
+		{
+			if (mFactoryPtr->mpFactory != NULL)
+				mFactoryPtr->mpFactory->ProcessPacket(pConnect, this);
+			else
+				ERROR_LOG("TransferPacket execute");
+			return 0;
+		}
 
 		virtual BOOL Read(DataStream& iStream, size_t packetSize, tNetConnect *pConnect) override
 		{

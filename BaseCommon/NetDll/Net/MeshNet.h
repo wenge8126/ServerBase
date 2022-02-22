@@ -12,12 +12,6 @@
 #include "NetProcess.h"
 #include "Timer.h"
 
-enum EMeshNetMsgType
-{
-	eMeshMsg_RequestNodeInfo = PACKET_MAX + 1,
-	eMeshMsg_BroadcastNodeClose,
-	eMeshMsg_Max,
-};
 
 class Net_Export MeshNet : public IOCPServerNet
 {
@@ -87,6 +81,8 @@ public:
 		mNodeClientNet->LowProcess(spaceTime);
 	}
 
+	virtual void _OnConnectStart(tNetConnect *pConnect) override {}
+
 	class MeshServerConnect : public IOCPServerConnect
 	{
 	public:
@@ -108,6 +104,8 @@ public:
 	void Dump();
 
 	FastHash<UInt64, AConnectData> & GetMeshNodeList() { return mServerNodeList; }
+
+	UInt64 GetKey() const { return mKey; }
 
 protected:
 	Hand<IOCPClientSetNet>								mNodeClientNet;

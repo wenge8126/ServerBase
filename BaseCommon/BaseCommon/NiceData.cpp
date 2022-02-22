@@ -536,7 +536,7 @@ bool NiceData::restore(DataStream *scrData)
 {
 	mDataMap.clear(false);
 	if (scrData->lastDataSize()<=0)
-		return true;
+		return false;
 	AUTODATA_COUNT_TYPE s = 0;
 
 	if (!scrData->read(s))

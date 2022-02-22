@@ -9,16 +9,6 @@
 #include "NetCommon.h"
 #include "FastHash.h"
 
-enum GateMsgType
-{
-	eN2G_RequestGateInfo = eMeshMsg_Max+1,
-	eN2G_AppendUnit,
-	eG2N_NotifyNodeInfo,
-	eN2N_RequestUnitList,
-	eNGN_TransferMsg,
-	eN2G_NotifyNodeClose,
-	eN2N_BroadcastUnitNoExist,
-};
 
 class Net_Export AsyncGate : public tNetProcess
 {
@@ -79,7 +69,7 @@ public:
 
 	void On(tNetConnect *pConnect, NG_AppendUnit &req)
 	{
-		mUnitList.insert(req.mUintID, pConnect->GetUserData());
+		mUnitList.insert((UInt64)req.mUintID, pConnect->GetUserData());
 		NOTE_LOG("Append unit %s", UnitID(req.mUintID).dump().c_str());
 		DumpUnit();
 	}
@@ -103,6 +93,12 @@ public:
 	virtual bool ProcessPacket(tNetConnect* pConnect, Packet *pPak) override
 	{
 		TransferPacket *pPacket = dynamic_cast<TransferPacket*>(pPak);
+#if DEBUG_CLOUD_NET
+		AString info;
+		info.Format(" >>> %d : G %s ", ++pPacket->mSendCount, NetAddress(mGateNet->mKey).dump().c_str());
+		pPacket->mSendInfo += info;
+		NOTE_LOG("%u :  %s", pPacket->mRequestID, pPacket->mSendInfo.c_str());
+#endif
 		auto nodeData = mUnitList.find(pPacket->mTargetID);
 		if (nodeData)
 		{
@@ -119,25 +115,25 @@ public:
 
 	void DumpNode()
 	{
-		NOTE_LOG("Gate %s ------------- node ----------------", NetAddress(mGateNet->mKey).dump().c_str());
+		NOTE_LOG("Gate %s\r\n---------------- node ----------------", NetAddress(mGateNet->mKey).dump().c_str());
 		for (auto it=mNodeList.begin(); it; ++it)
 		{
 			auto nodeData = it.get();
 			NOTE_LOG("Node : %s", NetAddress(it.key()).dump().c_str())
 		}
-		NOTE_LOG("-------------------------------------");
+		NOTE_LOG("\r\n--------------------------------------");
 	}
 
 	void DumpUnit()
 	{
-		NOTE_LOG("Gate %s ------------- unit ----------------", NetAddress(mGateNet->mKey).dump().c_str());
+		NOTE_LOG("Gate %s\r\n---------------- unit ----------------", NetAddress(mGateNet->mKey).dump().c_str());
 		for (auto it = mUnitList.begin(); it; ++it)
 		{
 			auto nodeData = it.get();
 			if (nodeData)
-				NOTE_LOG("unit %s > node : %s ", NetAddress(nodeData->mNodeKey).dump().c_str(), UnitID(it.get()).dump().c_str());
+				NOTE_LOG("unit %s > node : %s ", UnitID(it.key()).dump().c_str(), NetAddress(nodeData->mNodeKey).dump().c_str());
 		}
-		NOTE_LOG("-------------------------------------");
+		NOTE_LOG("\r\n--------------------------------------");
 	}
 
 public:

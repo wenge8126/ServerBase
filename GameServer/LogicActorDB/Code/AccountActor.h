@@ -94,7 +94,9 @@ public:
 			// 创建Player数据
 			RQ_CreatePlayerData req;
 			req.mAccount = msg.mAccount;
-			auto responseMsg = Await<RS_CreatePlayerData>(req, { Actor_GameServer, msg.mServerID }, 10000);
+			RS_CreatePlayerData resp;
+			Await({ Actor_GameServer, msg.mServerID }, req, resp, 100000);
+			auto responseMsg = &resp;
 			if (responseMsg)
 			{
 				serverData[STRING(msg.mServerID)] = responseMsg->mPlayerID;
@@ -103,7 +105,7 @@ public:
 			}
 			else
 			{
-				resp.mResult = eCreateDataRecordFail;
+				//resp.mResult = eCreateDataRecordFail;
 				return;
 			}
 		}

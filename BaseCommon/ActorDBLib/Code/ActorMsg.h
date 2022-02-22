@@ -22,9 +22,9 @@ namespace NetCloud
 	};
 
 	class Actor;
-	class ActorResponResultPacket;
+	class TransferPacket;
 
-	typedef int (*pActorMsgCall)(Actor*, DataStream*, ActorResponResultPacket*);
+	typedef int (*pActorMsgCall)(Actor*, DataStream*, TransferPacket*);
 	typedef void(*pActorNotifyMsgCall)(Actor*, DataStream*, UnitID);
 
 	class ActorDBLib_Export ActorRequestPacket :  public AsyncRequestPacket

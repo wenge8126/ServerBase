@@ -159,16 +159,16 @@ bool TraverseDeleteBackFiles(const std::string &path)
 
 void _ConnectGate(WebLoginThread *pThread)
 {
-	LOG("=== Connect gate start");
-	bool re = Async::AwaitLoop(
-		[=]()
-	{
-		bool b = pThread->mActorManager->mNetNode->AwaitConnectGate(NetAddress(config.login_node.gate.ip.c_str(), config.login_node.gate.port));
-		return b;
-	}
-		, 10, 3000);
+	//LOG("=== Connect gate start");
+	//bool re = Async::AwaitLoop(
+	//	[=]()
+	//{
+	//	bool b = pThread->mActorManager->mNetNode->AwaitConnectGate(NetAddress(config.login_node.gate.ip.c_str(), config.login_node.gate.port));
+	//	return b;
+	//}
+	//	, 10, 3000);
 
-	LOG("=== Connect gate : %s", re ? "ok" : "fail");
+	//LOG("=== Connect gate : %s", re ? "ok" : "fail");
 
 	//while (true)
 	//{
@@ -258,7 +258,7 @@ void WebLoginThread::OnStart(void*)
 
 		//CoroutineTool::AsyncCall(_ConnectGate, this);
 
-		mActorManager->mNetNode->ConnectGate(config.login_node.gate.ip.c_str(), config.login_node.gate.port);
+		mActorManager->mNetNode->ConnectGate(config.login_node.gate.ip.c_str(), config.login_node.gate.port, 10000);
 
 
 		//ServerThread::OnStart(NULL);
