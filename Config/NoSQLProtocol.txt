@@ -1,0 +1,32 @@
+
+// 保存
+SQL_SaveNoSQLData
+{
+	string mKey;
+	data mData;
+}
+
+// 请求提供字段数据
+SQL_RequestFieldData
+{
+	int mHash;	
+}
+
+SQL_ResponseFieldData
+{
+	data mData;
+}
+
+// 调取数据
+SQL_LoadNoSQLData
+{
+	string mKey;
+	bool mbNeedField;
+}
+
+// 回复数据
+SQL_ResponseNoSQLData
+{
+	data mData;
+	data mFieldData;
+}

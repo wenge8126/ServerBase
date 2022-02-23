@@ -4,11 +4,18 @@
 #pragma once
 #include "Component.h"
 #include "PoolLoop.h"
+#include "NoSQLNetMsg.h"
+#include "NetCommon.h"
+#include "FastHash.h"
+#include "Actor.h"
+#include "ActorManager.h"
+#include "SQLComponent.h"
+#include "PoolLoop.h"
 
 namespace NetCloud
 {
 	typedef int			DB_HASH;
-
+	//-------------------------------------------------------------------------
 	class NoSQLData : public AutoBase
 	{
 	public:
@@ -16,9 +23,9 @@ namespace NetCloud
 		Buffer			mData;
 		DB_HASH				mFieldHash = 0;
 	};
-	typename Auto<NoSQLData> ANoSQLData;
-
-	class NoSQLComponent : public Component
+	typedef Auto<NoSQLData> ANoSQLData;
+	//-------------------------------------------------------------------------
+	class ActorDBLib_Export NoSQLComponent : public Component
 	{
 	public:
 		virtual void LowUpdate() override
@@ -47,6 +54,35 @@ namespace NetCloud
 		}
 
 	public:
+		void Notify(SQL_SaveNoSQLData &resp, UnitID senderID)
+		{
+
+		}
+
+		void On(SQL_LoadNoSQLData &req, SQL_ResponseNoSQLData &resp, UnitID sender)
+		{
+
+		}
+
+		void On(SQL_RequestFieldData &req, SQL_ResponseFieldData &resp, UnitID sender)
+		{
+
+		}
+
+		virtual void RegisterMsg(ActorManager *pActorMgr) 
+		{
+			REG_COMP_NOTIFY(NoSQLComponent, SQL_SaveNoSQLData);
+			REG_COMP_MSG(NoSQLComponent, SQL_LoadNoSQLData, SQL_ResponseNoSQLData);
+			REG_COMP_MSG(NoSQLComponent, SQL_RequestFieldData, SQL_ResponseFieldData);
+		}
+
+		NoSQLComponent()
+			: mActiveList(100000)
+		{
+
+		}
+
+	public:
 		FastHash<AString, ANoSQLData>	mNoSQLDataList;
 		FastHash<DB_HASH, AutoData>	mFieldList;
 		PoolLoop<ANoSQLData>				mActiveList;
@@ -55,12 +91,12 @@ namespace NetCloud
 	class DBMySQLComponent : public MySQLComponent
 	{
 	public:
-		LogicDBTable mFieldTable;
-		LogicDBTable mDataTable;
+		Hand<LogicDBTable> mFieldTable;
+		Hand<LogicDBTable> mDataTable;
 	};
-
+	//-------------------------------------------------------------------------
 	// 使用端结构
-	class tDBData : public AutoBase
+	class ActorDBLib_Export_H tDBData : public AutoBase
 	{
 	public:
 		Int64 GetID() { return MAKE_INDEX_ID(mKey.c_str()); }
@@ -75,9 +111,9 @@ namespace NetCloud
 		ARecord		mData;
 		AutoField		mField;
 	};
-
+	//-------------------------------------------------------------------------
 	// 使用端
-	class NoSQLUserComponent : public Component
+	class ActorDBLib_Export NoSQLUserComponent : public Component
 	{
 	public:
 		bool Init(tDBData *pDBData)
@@ -94,6 +130,17 @@ namespace NetCloud
 		{
 			return false;
 		}
+
+		void On(SQL_RequestFieldData &req, SQL_ResponseFieldData &resp, UnitID sender)
+		{
+
+		}
+
+		virtual void RegisterMsg(ActorManager *pActorMgr)
+		{
+			REG_COMP_MSG(NoSQLUserComponent, SQL_RequestFieldData, SQL_ResponseFieldData);
+		}
 	};
+	//-------------------------------------------------------------------------
 }
 #endif //_INCLDUE_NOSQLCOMPONECNT_H_

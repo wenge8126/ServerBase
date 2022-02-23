@@ -469,12 +469,22 @@ void CServerToolDlg::OnBnExportRunConfig()
 	CString configPath = mConfigPath;
 	//mEditConfigPath.GetWindowText(configPath);
 
-	AString fileName;
-	fileName.Format("%s/RunConfigProtocol.txt", (LPCTSTR)configPath);
-	fileName.Format("%s/MeshProtocol.txt", (LPCTSTR)configPath);
 	AString err;
-	//AutoNice info = GenerateProtocol(fileName, "", "../GameServer/Common", "RunConfigStruct", false, err);
-	AutoNice info = GenerateProtocol(fileName, "", "../BaseCommon/NetDll/Net", "MeshNetMsg", false, err);
+	AutoNice info;
+	if (0)
+	{
+		AString fileName;
+		fileName.Format("%s/RunConfigProtocol.txt", (LPCTSTR)configPath);
+		fileName.Format("%s/MeshProtocol.txt", (LPCTSTR)configPath);
+		//AutoNice info = GenerateProtocol(fileName, "", "../GameServer/Common", "RunConfigStruct", false, err);
+		info = GenerateProtocol(fileName, "", "../BaseCommon/NetDll/Net", "MeshNetMsg", false, err);
+	}
+	if (1)
+	{
+		AString fileName;
+		fileName.Format("%s/NoSQLProtocol.txt", (LPCTSTR)configPath);
+		info = GenerateProtocol(fileName, "", "../BaseCommon/ActorDBLib/Code", "NoSQLNetMsg", false, err);
+	}
 
 	LOG("%s", err.c_str());
 

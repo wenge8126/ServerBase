@@ -245,6 +245,7 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
     <ClCompile Include="Code\DBTable.cpp" />
     <ClCompile Include="Code\DBTableManager.cpp" />
     <ClCompile Include="Code\LogicDBTable.cpp" />
+    <ClCompile Include="Code\NoSQLActor.cpp" />
     <ClCompile Include="Code\SQLComponent.cpp" />
     <ClCompile Include="Code\SQLThread.cpp" />
     <ClCompile Include="dllmain.cpp" />
@@ -259,7 +260,9 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
     <ClInclude Include="Code\DBTable.h" />
     <ClInclude Include="Code\DBTableManager.h" />
     <ClInclude Include="Code\LogicDBTable.h" />
+    <ClInclude Include="Code\NoSQLActor.h" />
     <ClInclude Include="Code\NoSQLComponet.h" />
+    <ClInclude Include="Code\NoSQLNetMsg.h" />
     <ClInclude Include="Code\SQLComponent.h" />
     <ClInclude Include="Code\SQLThread.h" />
   </ItemGroup>
@@ -278,6 +281,7 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Text Include="..\..\Config\NoSQLProtocol.txt" />
     <Text Include="ActorDB说明.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -9,15 +9,19 @@
 #include "NiceData.h"
 //#include "ShareMemCloudDB.h"
 #include "TimeManager.h"
+#include "BaseRecord.h"
+
 #define CheckGet(d, dest) { Data v = d[#dest]; if (v.empty()) {} else dest = v; }
 
 #define SAVE_MSG_VALUE(member, fieldType) Save(#member, fieldType, member, destData);
 
 #define SAVE_MSG_NICE(member)  destData->write(#member); destData->write((byte)FIELD_NICEDATA); if (member) { destData->write((byte)member->getType()); member->serialize(destData); }   else destData->write((byte)NULL_NICEDATA);
+#define SAVE_MSG_DATA(member)  destData->write(#member); destData->write((byte)FIELD_DATA); destData->writeData((DataStream*)member.getPtr(), member?member->dataSize():0); 
 
 #define  SAVE_MSG_STRUCT(member) destData->write(#member);  destData->write((byte)FIELD_NICEDATA);  destData->write((byte)NICEDATA); member.serialize(destData);
 
 #define  COPY_MSG_NICE(scr, destNice) destNice = MEM_NEW NiceData(); if (scr) destNice->append(*scr, true);
+#define  COPY_MSG_DATA(scr, destData) destData = MEM_NEW DataBuffer(); if (scr) { destData->resize(scr->dataSize()); destData->_write(((DataStream*)scr.getPtr())->data(), scr->dataSize()); }
 
 #if DEVELOP_MODE
 #	define _MSG_ARRAY_LIMIT 2000
@@ -306,8 +310,28 @@ public:
 	virtual bool serialize(DataStream *destData) const = 0;
 	virtual void Full(AutoNice scrData) = 0;
 	virtual void ToData(AutoNice &destData) = 0;
+
+
+
 	virtual void clear(bool bFreeBuffer = true) = 0;
 	virtual void copy(const tBaseMsg &other) {}
+
+	virtual void FullFromRecord(ARecord scrData) 
+	{
+		AutoNice data = scrData->ToNiceData();
+		Full(data);
+	}
+	virtual void SaveToRecord(ARecord &destData) 
+	{
+		AutoNice tempData = MEM_NEW NiceData();
+		ToData(tempData);
+		int count = destData->getField()->getCount();
+		for (int i=0; i<count; ++i)
+		{
+			FieldInfo info = destData->getField()->getFieldInfo(i);
+			destData->get(i).setData(tempData[info->getName()]);
+		}
+	}
 
 	virtual tBaseMsg& operator = (AutoNice other)
 	{

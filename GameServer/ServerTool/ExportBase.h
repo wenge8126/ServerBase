@@ -405,6 +405,12 @@ AString GenerateMsgProtocolCppCode(AutoNice proList, AutoNice proNotes, Array<AS
 				clearString = ".setNull()";
 				break;
 			}
+			case FIELD_DATA:
+			{
+				szType = "AutoData";
+				clearString = ".setNull()";
+				break;
+			}
 			}
 			if (szType == NULL)
 			{
@@ -413,7 +419,8 @@ AString GenerateMsgProtocolCppCode(AutoNice proList, AutoNice proNotes, Array<AS
 			}
 			else
 			{
-				if (info->getType() == FIELD_NICEDATA)
+
+				if (info->getType() == FIELD_NICEDATA || info->getType()==FIELD_DATA)
 					code.Format("        if (%s) %s%s;\r\n", key.c_str(), key.c_str(), clearString.c_str());
 				else
 				{
@@ -498,6 +505,21 @@ AString GenerateMsgProtocolCppCode(AutoNice proList, AutoNice proNotes, Array<AS
 						code.Format("        COPY_MSG_NICE(other.%s, %s);\r\n", key.c_str(), key.c_str());
 						copyCode += code;
 					}
+					else if (info->getType() == FIELD_DATA)
+					{
+						code.Format("        %s = (DataStream*)scrData[\"%s\"];\r\n", m.key().c_str(), m.key().c_str());
+						getCode += code;
+
+						code.Format("        destData[\"%s\"] = %s.getPtr();\r\n", m.key().c_str(), m.key().c_str());
+						toDataCode += code;
+
+						// AutoNiceFieldInfo::saveData
+						code.Format("        SAVE_MSG_DATA(%s);\r\n", key.c_str());
+						saveCode += code;
+
+						code.Format("        COPY_MSG_DATA(other.%s, %s);\r\n", key.c_str(), key.c_str());
+						copyCode += code;
+					}
 					else
 					{
 						code.Format("        CheckGet(scrData, %s);\r\n", m.key().c_str(), m.key().c_str());
@@ -519,13 +541,21 @@ AString GenerateMsgProtocolCppCode(AutoNice proList, AutoNice proNotes, Array<AS
 		code.Format("\r\npublic:\r\n    %s() { clear(false); };\r\n\r\n", name.c_str());
 		cppCode += code;
 
-		cppCode += "\r\n    void Full(AutoNice scrData)\r\n    {\r\n        clear(false);\r\n";
+		cppCode += "\r\n   virtual  void Full(AutoNice scrData) override\r\n    {\r\n        clear(false);\r\n";
 		cppCode += getCode;
 		cppCode += "    }\r\n\r\n";
 
 		cppCode += "    virtual void ToData(AutoNice &destData) override\r\n    {\r\n";
 		cppCode += toDataCode;
 		cppCode += "    }\r\n\r\n";
+
+		//cppCode += "\r\n    virtual void FullFromRecord(ARecord scrData) override\r\n    {\r\n        clear(false);\r\n";
+		//cppCode += getCode;
+		//cppCode += "    }\r\n\r\n";
+
+		//cppCode += "    virtual void SaveToRecord(ARecord &destData) override\r\n    {\r\n";
+		//cppCode += toDataCode;
+		//cppCode += "    }\r\n\r\n";
 
 		cppCode += "    bool serialize(DataStream *destData) const override\r\n    {\r\n";
 		if (bOnlyOneArray)

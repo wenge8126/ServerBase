@@ -57,6 +57,9 @@
     <ClCompile Include="Code\SQLComponent.cpp">
       <Filter>DBCode</Filter>
     </ClCompile>
+    <ClCompile Include="Code\NoSQLActor.cpp">
+      <Filter>DBCode</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\LogicDBTable.h">
@@ -95,9 +98,18 @@
     <ClInclude Include="Code\NoSQLComponet.h">
       <Filter>DBCode</Filter>
     </ClInclude>
+    <ClInclude Include="Code\NoSQLActor.h">
+      <Filter>DBCode</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\NoSQLNetMsg.h">
+      <Filter>DBCode</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ActorDB说明.txt">
+      <Filter>DBCode</Filter>
+    </Text>
+    <Text Include="..\..\Config\NoSQLProtocol.txt">
       <Filter>DBCode</Filter>
     </Text>
   </ItemGroup>
