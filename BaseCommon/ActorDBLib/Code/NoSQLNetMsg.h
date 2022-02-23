@@ -10,6 +10,7 @@ class SQL_SaveNoSQLData : public tBaseMsg
 { 
 public:
     AutoData mData;		
+    int mFieldHash;		
     AString mKey;		
 
 public:
@@ -20,20 +21,23 @@ public:
     {
         clear(false);
         mData = (DataStream*)scrData["mData"];
+        CheckGet(scrData, mFieldHash);
         CheckGet(scrData, mKey);
     }
 
     virtual void ToData(AutoNice &destData) override
     {
         destData["mData"] = mData.getPtr();
+        destData["mFieldHash"] = mFieldHash;
         destData["mKey"] = mKey;
     }
 
     bool serialize(DataStream *destData) const override
     {
-        destData->write((short)2);
+        destData->write((short)3);
 
         SAVE_MSG_DATA(mData);
+        SAVE_MSG_VALUE(mFieldHash, 1);
         SAVE_MSG_VALUE(mKey, 4);
         return true;
     }
@@ -41,6 +45,7 @@ public:
     void clear(bool bClearBuffer=false) override 
     {
         if (mData) mData.setNull();
+        mFieldHash = 0;
         mKey.setNull();
     }
 
@@ -48,6 +53,7 @@ public:
     {
         if (strcmp("SQL_SaveNoSQLData", otherMsg.GetMsgName())!=0) { LOG("%s is not SQL_SaveNoSQLData", otherMsg.GetMsgName()); return; }; const SQL_SaveNoSQLData &other = *(const SQL_SaveNoSQLData*)(&otherMsg);
         COPY_MSG_DATA(other.mData, mData);
+        mFieldHash = other.mFieldHash;
         mKey = other.mKey;
     }
 
@@ -55,12 +61,14 @@ public:
 
     AData get(const char *szMember) const 
     {
+        if (strcmp(szMember, "mFieldHash")==0) { AData value; value = mFieldHash; return value; }
         if (strcmp(szMember, "mKey")==0) { AData value; value = mKey; return value; }
         return AData();
     }
 
     bool set(const char *szMember, AData value) 
     {
+        if (strcmp(szMember, "mFieldHash")==0) { mFieldHash = value; return true; };
         if (strcmp(szMember, "mKey")==0) { mKey = value; return true; };
         LOG("No exist > %%s", szMember);  return false;
     }
@@ -81,7 +89,8 @@ public:
 class SQL_RequestFieldData : public tBaseMsg
 { 
 public:
-    int mHash;		
+    int mFieldHash;		
+    AString mKey;		
 
 public:
     SQL_RequestFieldData() { clear(false); };
@@ -90,44 +99,51 @@ public:
    virtual  void Full(AutoNice scrData) override
     {
         clear(false);
-        CheckGet(scrData, mHash);
+        CheckGet(scrData, mFieldHash);
+        CheckGet(scrData, mKey);
     }
 
     virtual void ToData(AutoNice &destData) override
     {
-        destData["mHash"] = mHash;
+        destData["mFieldHash"] = mFieldHash;
+        destData["mKey"] = mKey;
     }
 
     bool serialize(DataStream *destData) const override
     {
-        destData->write((short)1);
+        destData->write((short)2);
 
-        SAVE_MSG_VALUE(mHash, 1);
+        SAVE_MSG_VALUE(mFieldHash, 1);
+        SAVE_MSG_VALUE(mKey, 4);
         return true;
     }
 
     void clear(bool bClearBuffer=false) override 
     {
-        mHash = 0;
+        mFieldHash = 0;
+        mKey.setNull();
     }
 
     void copy(const tBaseMsg &otherMsg) override 
     {
         if (strcmp("SQL_RequestFieldData", otherMsg.GetMsgName())!=0) { LOG("%s is not SQL_RequestFieldData", otherMsg.GetMsgName()); return; }; const SQL_RequestFieldData &other = *(const SQL_RequestFieldData*)(&otherMsg);
-        mHash = other.mHash;
+        mFieldHash = other.mFieldHash;
+        mKey = other.mKey;
     }
 
     virtual const char* GetMsgName() const override { return "SQL_RequestFieldData"; }
 
     AData get(const char *szMember) const 
     {
-        if (strcmp(szMember, "mHash")==0) { AData value; value = mHash; return value; }
+        if (strcmp(szMember, "mFieldHash")==0) { AData value; value = mFieldHash; return value; }
+        if (strcmp(szMember, "mKey")==0) { AData value; value = mKey; return value; }
         return AData();
     }
 
     bool set(const char *szMember, AData value) 
     {
-        if (strcmp(szMember, "mHash")==0) { mHash = value; return true; };
+        if (strcmp(szMember, "mFieldHash")==0) { mFieldHash = value; return true; };
+        if (strcmp(szMember, "mKey")==0) { mKey = value; return true; };
         LOG("No exist > %%s", szMember);  return false;
     }
 
@@ -147,6 +163,7 @@ class SQL_ResponseFieldData : public tBaseMsg
 { 
 public:
     AutoData mData;		
+    int mFieldHash;		
 
 public:
     SQL_ResponseFieldData() { clear(false); };
@@ -156,41 +173,48 @@ public:
     {
         clear(false);
         mData = (DataStream*)scrData["mData"];
+        CheckGet(scrData, mFieldHash);
     }
 
     virtual void ToData(AutoNice &destData) override
     {
         destData["mData"] = mData.getPtr();
+        destData["mFieldHash"] = mFieldHash;
     }
 
     bool serialize(DataStream *destData) const override
     {
-        destData->write((short)1);
+        destData->write((short)2);
 
         SAVE_MSG_DATA(mData);
+        SAVE_MSG_VALUE(mFieldHash, 1);
         return true;
     }
 
     void clear(bool bClearBuffer=false) override 
     {
         if (mData) mData.setNull();
+        mFieldHash = 0;
     }
 
     void copy(const tBaseMsg &otherMsg) override 
     {
         if (strcmp("SQL_ResponseFieldData", otherMsg.GetMsgName())!=0) { LOG("%s is not SQL_ResponseFieldData", otherMsg.GetMsgName()); return; }; const SQL_ResponseFieldData &other = *(const SQL_ResponseFieldData*)(&otherMsg);
         COPY_MSG_DATA(other.mData, mData);
+        mFieldHash = other.mFieldHash;
     }
 
     virtual const char* GetMsgName() const override { return "SQL_ResponseFieldData"; }
 
     AData get(const char *szMember) const 
     {
+        if (strcmp(szMember, "mFieldHash")==0) { AData value; value = mFieldHash; return value; }
         return AData();
     }
 
     bool set(const char *szMember, AData value) 
     {
+        if (strcmp(szMember, "mFieldHash")==0) { mFieldHash = value; return true; };
         LOG("No exist > %%s", szMember);  return false;
     }
 

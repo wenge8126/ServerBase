@@ -2,6 +2,7 @@
 // 保存
 SQL_SaveNoSQLData
 {
+	int mFieldHash;
 	string mKey;
 	data mData;
 }
@@ -9,11 +10,13 @@ SQL_SaveNoSQLData
 // 请求提供字段数据
 SQL_RequestFieldData
 {
-	int mHash;	
+	int mFieldHash;	
+	string mKey;
 }
 
 SQL_ResponseFieldData
 {
+	int mFieldHash;
 	data mData;
 }
 
