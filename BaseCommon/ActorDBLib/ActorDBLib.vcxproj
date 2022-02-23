@@ -259,6 +259,7 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
     <ClInclude Include="Code\DBTable.h" />
     <ClInclude Include="Code\DBTableManager.h" />
     <ClInclude Include="Code\LogicDBTable.h" />
+    <ClInclude Include="Code\NoSQLComponet.h" />
     <ClInclude Include="Code\SQLComponent.h" />
     <ClInclude Include="Code\SQLThread.h" />
   </ItemGroup>

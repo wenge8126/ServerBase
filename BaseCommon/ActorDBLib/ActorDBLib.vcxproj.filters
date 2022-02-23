@@ -92,6 +92,9 @@
     <ClInclude Include="Code\SQLComponent.h">
       <Filter>DBCode</Filter>
     </ClInclude>
+    <ClInclude Include="Code\NoSQLComponet.h">
+      <Filter>DBCode</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ActorDB说明.txt">

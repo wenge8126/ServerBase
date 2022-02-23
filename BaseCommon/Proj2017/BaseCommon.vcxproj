@@ -621,6 +621,7 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y</Command>
     <ClInclude Include="..\BaseCommon\MemoryLock.h" />
     <ClInclude Include="..\BaseCommon\MultipleUInt64MapIndex.h" />
     <ClInclude Include="..\BaseCommon\NiceDataFieldInfo.h" />
+    <ClInclude Include="..\BaseCommon\PoolLoop.h" />
     <ClInclude Include="..\BaseCommon\RecordTool.h" />
     <ClInclude Include="..\BaseCommon\ShareMemAO.h" />
     <ClInclude Include="..\BaseCommon\ShareMemAPI.h" />

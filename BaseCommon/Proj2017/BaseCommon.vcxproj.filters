@@ -429,6 +429,9 @@
     <ClInclude Include="..\BaseCommon\AsyncLoop.h">
       <Filter>Coroutine</Filter>
     </ClInclude>
+    <ClInclude Include="..\BaseCommon\PoolLoop.h">
+      <Filter>Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\BaseCommon\AutoDebug.cpp">
