@@ -345,8 +345,8 @@ namespace NetCloud
 	class ActorDBLib_Export DBActor : public Actor
 	{
 	public:
-		ARecord LoadRecord(const char *szTableName, const char *szKey);
-		ARecord LoadRecord(const char *szTableName, Int64 nKey);
+		virtual ARecord LoadRecord(const char *szTableName, const char *szKey) override;
+		virtual ARecord LoadRecord(const char *szTableName, Int64 nKey) override;
 
 		virtual AutoDBManager GetDBMgr() override;
 
