@@ -245,7 +245,7 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
     <ClCompile Include="Code\DBTable.cpp" />
     <ClCompile Include="Code\DBTableManager.cpp" />
     <ClCompile Include="Code\LogicDBTable.cpp" />
-    <ClCompile Include="Code\SQLComponect.cpp" />
+    <ClCompile Include="Code\SQLComponent.cpp" />
     <ClCompile Include="Code\SQLThread.cpp" />
     <ClCompile Include="dllmain.cpp" />
   </ItemGroup>
@@ -259,7 +259,7 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
     <ClInclude Include="Code\DBTable.h" />
     <ClInclude Include="Code\DBTableManager.h" />
     <ClInclude Include="Code\LogicDBTable.h" />
-    <ClInclude Include="Code\SQLComponect.h" />
+    <ClInclude Include="Code\SQLComponent.h" />
     <ClInclude Include="Code\SQLThread.h" />
   </ItemGroup>
   <ItemGroup>

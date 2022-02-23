@@ -6,14 +6,14 @@
 
 namespace NetCloud
 {
-	class ActorDBLib_Export SQLComponect : public DBTableLoadSQL
+	class ActorDBLib_Export SQLComponent : public DBTableLoadSQL
 	{
 	public:
 		void Start() override;
 
 	};
 
-	class ActorDBLib_Export MySQLComponect : public SQLComponect
+	class ActorDBLib_Export MySQLComponent : public SQLComponent
 	{
 	public:
 		SaveSQLTask	mSaveTask;
@@ -23,7 +23,7 @@ namespace NetCloud
 	};
 
 
-	class ActorDBLib_Export ShareSQLComponect : public SQLComponect
+	class ActorDBLib_Export ShareSQLComponent : public SQLComponent
 	{
 	public:
 		AString mSQLString;

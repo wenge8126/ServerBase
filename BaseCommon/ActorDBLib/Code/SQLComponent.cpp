@@ -1,16 +1,16 @@
-#include "SQLComponect.h"
+#include "SQLComponent.h"
 
 #include "DBTableManager.h"
 
 namespace NetCloud
 {
 
-	void NetCloud::SQLComponect::Start()
+	void NetCloud::SQLComponent::Start()
 	{
 
 	}
 
-	bool NetCloud::MySQLComponect::SaveRecord(DBTableManager *pDBMgr, BaseRecord *targetRecord, bool bInsert)
+	bool NetCloud::MySQLComponent::SaveRecord(DBTableManager *pDBMgr, BaseRecord *targetRecord, bool bInsert)
 	{
 		if (!MySqlDBTool::_MakeSaveSqlData(mSaveTask.mSQLString, mSaveTask.mArrayData, targetRecord, bInsert))
 		{
@@ -26,7 +26,7 @@ namespace NetCloud
 		return false;
 	}
 
-	bool ShareSQLComponect::SaveRecord(DBTableManager *pDBMgr, BaseRecord *record, bool bInsert)
+	bool ShareSQLComponent::SaveRecord(DBTableManager *pDBMgr, BaseRecord *record, bool bInsert)
 	{
 		bool bRe = MySqlDBTool::_MakeSaveSqlData(mSQLString, pDBMgr->mTempDataArray, record, bInsert);
 		if (bRe)

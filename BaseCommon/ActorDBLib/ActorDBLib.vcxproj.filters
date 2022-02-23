@@ -54,7 +54,7 @@
     <ClCompile Include="Code\ActorGate.cpp">
       <Filter>Gate</Filter>
     </ClCompile>
-    <ClCompile Include="Code\SQLComponect.cpp">
+    <ClCompile Include="Code\SQLComponent.cpp">
       <Filter>DBCode</Filter>
     </ClCompile>
   </ItemGroup>
@@ -89,7 +89,7 @@
     <ClInclude Include="Code\Component.h">
       <Filter>Actor</Filter>
     </ClInclude>
-    <ClInclude Include="Code\SQLComponect.h">
+    <ClInclude Include="Code\SQLComponent.h">
       <Filter>DBCode</Filter>
     </ClInclude>
   </ItemGroup>

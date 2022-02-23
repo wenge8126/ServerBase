@@ -1,6 +1,6 @@
 #include "LogicDBTable.h"
 #include "DBTableManager.h"
-#include "SQLComponect.h"
+#include "SQLComponent.h"
 
 namespace NetCloud
 {
@@ -8,9 +8,9 @@ namespace NetCloud
 	NetCloud::LogicDBTable::LogicDBTable(bool bShareSQL) : SkipBaseTable(eInitPoolField)
 	{
 		if (bShareSQL)
-			mDBDataLoadSQL = MEM_NEW ShareSQLComponect();
+			mDBDataLoadSQL = MEM_NEW ShareSQLComponent();
 		else
-			mDBDataLoadSQL = MEM_NEW MySQLComponect();
+			mDBDataLoadSQL = MEM_NEW MySQLComponent();
 	}
 
 	ARecord NetCloud::LogicDBTable::_NewRecord()

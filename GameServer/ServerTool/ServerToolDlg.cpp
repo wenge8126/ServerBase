@@ -11,7 +11,7 @@
 #include "XlsxTableLoader.h"
 #include "ExportBase.h"
 #include "FileDataStream.h"
-
+#include "ServerEvent.h"
 #include "SDK.h"
 
 #ifdef _DEBUG
