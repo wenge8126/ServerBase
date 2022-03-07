@@ -3,25 +3,25 @@
 
 #pragma once
 
-#include "NoSQLComponet.h"
+#include "NoSQLComponent.h"
 
 namespace NetCloud
 {
 
-	class NoSQLActor : public DBActor
+	class NoSQLActor : public Actor
 	{
 	public:
 		virtual void Init() override
 		{
 			AddComponent("NoSQLComponent");
-			AddComponent("DBMySQLComponent");
+			//AddComponent("DBMySQLComponent");
 		}
 
 	public:
 		virtual void RegisterMsg(ActorManager *pActorMgr) override
 		{
 			REG_COMPONENT(pActorMgr, NoSQLComponent);
-			REG_COMPONENT(pActorMgr, DBMySQLComponent);
+			//REG_COMPONENT(pActorMgr, DBMySQLComponent);
 		}
 	};
 	//-------------------------------------------------------------------------

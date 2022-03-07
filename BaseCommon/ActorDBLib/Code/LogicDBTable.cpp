@@ -61,7 +61,7 @@ namespace NetCloud
 		if (NeedUpdate())
 		{
 			Auto<LogicDBTable> t = GetTable();
-			if (t->mDBDataLoadSQL->SaveRecord(t->mpDB, this, true))
+			if (t->mDBDataLoadSQL->SaveRecord(t->mpDB, this, false))
 				FullAllUpdate(false);
 		}
 	}

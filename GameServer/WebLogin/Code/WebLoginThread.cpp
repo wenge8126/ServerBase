@@ -402,6 +402,90 @@ void WebLoginThread::DoCommand(const AString &commandString, StringArray &paramA
 //		CoroutineTool::DumpDebug();
 //#endif
 	}
+	else if (commandString == "t")
+	{
+		if (paramArray.size() < 3)
+		{
+			ERROR_LOG("t : test no sql must 3 param, second is key, thrid is value(json)");
+		}
+		else
+		{
+			CoroutineTool::AsyncCall([=]()
+			{
+				AString json = paramArray[2];
+
+				Hand<NoSQLUserComponent> user = mLoginActor->GetComponent("NoSQLUserComponent");
+				user->mData.mKey = paramArray[1];
+				user->mData.mNiceData = MEM_NEW NiceData();
+				if (user->mData.mNiceData->FullJSON(json))
+				{
+					AutoField field = MEM_NEW FieldIndex(NULL, user->mData.mNiceData->count());
+					AutoTable t = tBaseTable::NewBaseTable();
+					int col = 0;
+					for (auto it=user->mData.mNiceData->begin(); it; ++it)
+					{
+						AString name = it.key();
+						AData &d = it.get();
+						field->setField(name.c_str(), d.getType(), col++);
+					}
+					if (!field->check())
+					{
+						ERROR_LOG("Field init set fail");
+						return;
+					}
+
+					user->mData.InitField(field);
+					for (auto it = user->mData.mNiceData->begin(); it; ++it)
+					{
+						AString name = it.key();
+						AData &d = it.get();
+						Data dd(&d);
+						user->mData.mDataRecord->set(name, dd);
+					}
+
+					if (user->Save())
+						NOTE_LOG("Save succeed")
+					else
+						ERROR_LOG("Save fail");
+				}
+				else
+					ERROR_LOG("Json Ω‚Œˆ ß∞‹");
+			});
+		}
+	}
+
+	else if (commandString == "l")
+	{
+		if (paramArray.size() < 2)
+		{
+			ERROR_LOG("t : test no sql must 2 param, second is key");
+		}
+		else
+		{
+			CoroutineTool::AsyncCall([=]()
+			{
+			
+
+				Hand<NoSQLUserComponent> user = mLoginActor->GetComponent("NoSQLUserComponent");
+				user->mData.mKey = paramArray[1];
+				//user->mData.mNiceData = MEM_NEW NiceData();
+				if (user->Load(true))
+				{		
+					AutoNice dd = user->mData.mDataRecord->ToNiceData();
+					//AString json = user->mData.mNiceData->ToJSON();
+					AString json = dd->ToJSON();
+					if (json.length()>0)
+					{						
+						NOTE_LOG("Load succeed : %s", json.c_str());
+					}
+					else
+						ERROR_LOG("Load fail");
+				}
+				else
+					ERROR_LOG("Load reqeust fail");
+			});
+		}
+	}
 }
 
 template<bool bSSL>

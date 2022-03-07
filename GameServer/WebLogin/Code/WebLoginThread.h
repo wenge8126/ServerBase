@@ -16,6 +16,7 @@
 #include "HttpComponect.h"
 #include "TcpComponent.h"
 #include "WssWebComponent.h"
+#include "NoSQLComponent.h"
 
 using namespace NetCloud;
 
@@ -150,6 +151,7 @@ public:
 
 	virtual void Init() override
 	{
+		AddComponent("NoSQLUserComponent");
 		Hand<HttpComponect> comp = AddComponent("HttpComponect");
 		comp->mPort = 5000;		
 
@@ -167,6 +169,7 @@ public:
 	void RegisterMsg(ActorManager *pActorMgr)
 	{
 		REG_COMPONENT(pActorMgr, WssWebComponent);
+		REG_COMPONENT(pActorMgr, NoSQLUserComponent);
 	}
 };
 

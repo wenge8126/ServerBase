@@ -90,7 +90,7 @@ namespace NetCloud
 		bool												mbReadyClose = false;
 		
 	};
-	typedef Auto< DBTableManager>	AutoDBManager;
+	typedef Auto<DBTableManager>	AutoDBManager;
 	//-------------------------------------------------------------------------
 	class ShareDBClientNet : public IOCPClientNet
 	{

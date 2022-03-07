@@ -204,9 +204,9 @@ bool NetCloud::Actor::OnReceiveProcess(NodePacket *pNodePacket)
 			auto fun = GetMgr()->mOnNotifyMsgFunctionList.find(msgName);
 			if (fun != NULL)
 			{
-				CoroutineTool::AsyncCall([&]()
+				CoroutineTool::AsyncCall([=]()
 				{
-					(*fun)(this, &pak->mData, pak->mSenderID);
+					(*fun)(this, (DataStream*)&pak->mData, pak->mSenderID);
 				});
 			}
 			else
@@ -224,6 +224,15 @@ bool NetCloud::Actor::OnReceiveProcess(NodePacket *pNodePacket)
 	return pNodePacket->Execute(NULL) == 0;				
 
 	///return BigMsgUnit::OnReceiveProcess(pNodePacket);
+}
+
+NetCloud::AutoDBManager NetCloud::Actor::GetDBMgr()
+{
+	ActorManager *pMgr = GetMgr();
+	if (pMgr != NULL)
+		return pMgr->GetDBMgr();
+	AssertNote(0, "Must inherit DBActor");
+	return AutoDBManager();
 }
 
 AsyncNode* NetCloud::Actor::GetNetNode()

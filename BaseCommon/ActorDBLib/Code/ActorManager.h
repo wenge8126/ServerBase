@@ -41,7 +41,7 @@ namespace NetCloud
 				actor->Init();
 				return actor;
 			}
-
+			ERROR_LOG("No register actor %d", actorType);
 			return Hand<Actor>();
 		}
 

@@ -50,7 +50,7 @@ BEGIN_MESSAGE_MAP(CServerToolDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_CREATE_DB, &CServerToolDlg::OnBnCreateDB)
 	ON_WM_TIMER()
 	ON_BN_CLICKED(IDC_BUTTON3, &CServerToolDlg::OnBnClickedTestCreateAccount)
-	ON_BN_CLICKED(IDC_BUTTON_EXPORT_RUN_CONFIG, &CServerToolDlg::OnBnExportRunConfig)
+	ON_BN_CLICKED(IDC_BUTTON_EXPORT_RUN_CONFIG, &CServerToolDlg::OnBnExportRunConfig)	
 END_MESSAGE_MAP()
 
 CServerToolDlg *gpToolDlg = NULL;

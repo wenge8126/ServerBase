@@ -252,7 +252,7 @@ namespace NetCloud
 		static int OnComponentMsg(Actor *pActor, DataStream *pReqestMsgData, TransferPacket *pResponse)
 		{
 			ReqMsg pMsg;
-			pReqestMsgData->seek(0);
+			//!!! 新的协议数据开头为消息名称,后面即为消息数据 pReqestMsgData->seek(0);
 			if (!pMsg.restore(pReqestMsgData))
 			{
 				ERROR_LOG("%s restore fail", pMsg.GetMsgName());
@@ -287,11 +287,7 @@ namespace NetCloud
 			return NULL;
 		}
 
-		virtual AutoDBManager GetDBMgr()
-		{
-			AssertNote(0, "Must inherit DBActor");
-			return NULL;
-		}
+		virtual AutoDBManager GetDBMgr();
 
 		AsyncNode* GetNetNode();
 

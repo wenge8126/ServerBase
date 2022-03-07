@@ -66,7 +66,7 @@ public:
 public:
 	bool WriteToThread(ThreadLoopData &targetData, StrLenType index)
 	{
-		DSIZE len = mSQLString.length();
+		DSIZE len = mSQLString.length()+1;
 		if (len > SQL_STRING_MAX)
 		{
 			ERROR_LOG("SQL string %d > %d", len, SQL_STRING_MAX);
@@ -86,7 +86,7 @@ public:
 		head.mType = eSQL_SaveRecord;
 
 		targetData.Write((const char*)&head, sizeof(head));
-		targetData.Write(mSQLString.c_str(), mSQLString.length());
+		targetData.Write(mSQLString.c_str(), mSQLString.length()+1);
 		targetData.write(dataCount);
 		for (int i = 0; i < dataCount; ++i)
 		{

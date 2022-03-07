@@ -173,6 +173,7 @@ public:
 	virtual bool HadChanged(int col){ return false; }
 	virtual void Update(){}
 	virtual void SaveUpdate() {}
+	virtual void SaveInsert() {}
 	virtual void SetNewInsert(bool bInsert){}
     virtual void OnUpdateSaveBefore(){}   
     virtual void OnChangedNiceData(int nFieldCol) {}
