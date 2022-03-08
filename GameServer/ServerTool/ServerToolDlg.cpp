@@ -230,7 +230,7 @@ void CServerToolDlg::AsyncCreateDB()
 {
 	ClearLog();
 	UpdateData(TRUE);
-	AString dbConfigFile = "DBList";
+	AString dbConfigFile = "NoSQLUser"; // "DBList";
 	//if (mToolConfig)
 	//	dbConfigFile = mToolConfig->GetValue("account_config", 1).c_str();
 

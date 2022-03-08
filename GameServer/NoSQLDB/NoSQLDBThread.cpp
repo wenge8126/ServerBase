@@ -13,6 +13,8 @@
 #include "NoSQLActor.h"
 #include "MsgData.h"
 
+#include "GenerateNoSQLUser.h"
+
 using namespace NetCloud;
 
 DEFINE_RUN_CONFIG(LogicActorDBConfig)
@@ -23,7 +25,7 @@ class WorkerActor : public DBActor
 public:
 	void On(RQ_CreateDBTable &msg, RS_CreateDBTable &resp, UnitID senderID)
 	{
-		LOG("Rev %s msg %s :\r\n%s", senderID.dump().c_str(), msg.GetMsgName(), msg.dump().c_str());		
+		LOG("Rev %s msg %s :\r\n%s", senderID.dump().c_str(), msg.GetMsgName(), msg.dump().c_str());
 
 		for (auto it = msg.mDBConfigData->begin(); it; ++it)
 		{
@@ -32,10 +34,14 @@ public:
 			it.get().get(&configTable, typeid(AutoTable));
 			if (configTable)
 			{
+#if CREATE_DB
 				if (GetDBMgr()->CreateDBTable(it.key().c_str(), configTable, info))
 				{
 					info.Format("Succeed create table %s", it.key().c_str());
-				}			
+				}
+#else
+				GenerateNoSQLUser::generate(it.key(), configTable, "../GameServer/WebLogin/Code/", false);
+#endif
 			}
 			else
 			{
@@ -44,11 +50,12 @@ public:
 			resp.mResultInfo += info;
 			resp.mResultInfo += "\r\n";
 		}
-
+#if CREATE_DB
 		auto &list = GetDBMgr()->GetTableList();
 
-		//GenerateCodeTool::generateDBManager(list, msg.mExportCodePath, "DB"); 
-	}		
+		GenerateCodeTool::generateDBManager(list, msg.mExportCodePath, "DB");
+#endif
+	}
 
 	virtual void RegisterMsg(ActorManager *pActorMgr) override
 	{

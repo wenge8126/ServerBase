@@ -55,13 +55,13 @@ int g_register_login::Run(ShareMemCloudDBNode *pNode, const AString &tableName, 
 
 //-------------------------------------------------------------------------
 
-WebLoginThread::WebLoginThread() 
+WebLoginThread::WebLoginThread()
 	: ServerThread(GetAppName())
 {
 	mServerListJson = "{}";
-mServerList = MEM_NEW r_server_list();
+	mServerList = MEM_NEW r_server_list();
 
-mTaskSystem = MEM_NEW TaskSystem(32);
+	mTaskSystem = MEM_NEW TaskSystem(32);
 }
 
 //-------------------------------------------------------------------------
@@ -245,14 +245,14 @@ void WebLoginThread::OnStart(void*)
 		// Á¬½ÓLogicDB
 
 
-		
+
 		mActorManager->RegisterActor(Unit_Login, MEM_NEW DefineActorFactory<LoginActor>());
 		mActorManager->RegisterComponect("HttpComponect", MEM_NEW EventFactory<HttpComponect>());
 		mActorManager->RegisterComponect("TcpComponent", MEM_NEW EventFactory< TcpComponent>());
 		mActorManager->RegisterComponect("LoginNetComponect", MEM_NEW EventFactory<LoginNetComponect>());
 
 		mLoginActor = mActorManager->CreateActor(Unit_Login, config.login_id);
-		
+
 
 		mSdkMgr.InitThread();
 
@@ -332,7 +332,7 @@ public:
 		//mpThread->mSdkMgr.AwaitRequest("http://127.0.0.1:10001", response, "cmd=fenghao&server_id=1&type=1&player_id=1&device=1&reson=1&enddate=2017-12-02 00:00:00");
 		//NOTE_LOG("Test http response > %s", response.c_str());
 	}
-	 
+
 public:
 	WebLoginThread  *mpThread;
 };
@@ -382,7 +382,7 @@ void WebLoginThread::DoCommand(const AString &commandString, StringArray &paramA
 	{
 		Auto<TT> test = MEM_NEW TT();
 		test->mpThread = this;
-		for (int i=0; i<10000; ++i)
+		for (int i = 0; i < 10000; ++i)
 		{
 			ASYNCAUTO(&TT::TestPost, test.getPtr());
 			CoroutineTool::CheckFinish();
@@ -390,17 +390,17 @@ void WebLoginThread::DoCommand(const AString &commandString, StringArray &paramA
 		LOG("Now count %d, %d", CoroutineTool::getCount(), coroList.size());
 		UInt64 now = TimeManager::NowTick();
 
-		for (int i=0; i<coroList.size(); ++i)
+		for (int i = 0; i < coroList.size(); ++i)
 		{
 			RESUME(coroList[i]);
 			CoroutineTool::CheckFinish();
 		}
 
 		LOG("Coro use time > %llu", TimeManager::NowTick() - now);
-		
-//#define DEVELOP_MODE
-//		CoroutineTool::DumpDebug();
-//#endif
+
+		//#define DEVELOP_MODE
+		//		CoroutineTool::DumpDebug();
+		//#endif
 	}
 	else if (commandString == "t")
 	{
@@ -414,7 +414,7 @@ void WebLoginThread::DoCommand(const AString &commandString, StringArray &paramA
 			{
 				AString json = paramArray[2];
 
-				Hand<RecordNoSQLUserComponent> user = mLoginActor->GetComponent("RecordNoSQLUserComponent");
+				Hand<RecordNoSQLUserComponent> user = mLoginActor->GetComponent("TestNoSQLUserComponent");
 				user->mKey = paramArray[1];
 				AutoNice data = MEM_NEW NiceData();
 				if (data->FullJSON(json))
@@ -422,7 +422,7 @@ void WebLoginThread::DoCommand(const AString &commandString, StringArray &paramA
 					AutoField field = MEM_NEW FieldIndex(NULL, data->count());
 					//AutoTable t = tBaseTable::NewBaseTable();
 					int col = 0;
-					for (auto it=data->begin(); it; ++it)
+					for (auto it = data->begin(); it; ++it)
 					{
 						AString name = it.key();
 						AData &d = it.get();
@@ -464,18 +464,18 @@ void WebLoginThread::DoCommand(const AString &commandString, StringArray &paramA
 		{
 			CoroutineTool::AsyncCall([=]()
 			{
-			
 
-				Hand<RecordNoSQLUserComponent> user = mLoginActor->GetComponent("RecordNoSQLUserComponent");
+
+				Hand<RecordNoSQLUserComponent> user = mLoginActor->GetComponent("TestNoSQLUserComponent");
 				user->mKey = paramArray[1];
 				//user->mData.mNiceData = MEM_NEW NiceData();
 				if (user->Load(true))
-				{		
+				{
 					AutoNice dd = user->mDataRecord->ToNiceData();
 					//AString json = user->mData.mNiceData->ToJSON();
 					AString json = dd->ToJSON();
-					if (json.length()>0)
-					{						
+					if (json.length() > 0)
+					{
 						NOTE_LOG("Load succeed : %s", json.c_str());
 					}
 					else
@@ -486,14 +486,38 @@ void WebLoginThread::DoCommand(const AString &commandString, StringArray &paramA
 			});
 		}
 	}
+	else if (commandString == "t2")
+	{
+		if (paramArray.size() < 3)
+		{
+			ERROR_LOG("t : test no sql must 3 param, second is key, thrid is value(json)");
+		}
+		else
+		{
+			CoroutineTool::AsyncCall([=]()
+			{
+				Hand<TestNoSQLUserComponent > user = mLoginActor->GetComponent<TestNoSQLUserComponent>();
+				//if (!user->mDataRecord)
+				{
+					AutoTable t = user->CreateTable();
+					ARecord re = t->CreateRecord(paramArray[1], true);
+					user->InitRecord(re);
+					user->TYPE() = paramArray[2];
+					user->Save();
+				}
+			}
+			);
+		}
+	}
+
 }
 
 template<bool bSSL>
 void WebLoginThread::OnPlayerDisconnect(WebPlayer<bSSL> *pLayer)
-{	
+{
 	if (pLayer->mbForeClose)
 		return;
-	
+
 	//AutoEvent evt = mLoginActor->StartEvent("LD_NotifyPlayerLeave", 0);
 	//evt["ID"] = pLayer->mDBID;
 	////evt->Start();
@@ -508,7 +532,7 @@ void WebLoginThread::OnLoginDBStart(int dbCode)
 
 
 StateDataType WebLoginThread::GetRunStateInfo(tNiceData &info)
-{	
+{
 	AString strInfo;
 
 	{
@@ -520,8 +544,8 @@ StateDataType WebLoginThread::GetRunStateInfo(tNiceData &info)
 	info["INFO"] = strInfo;
 	info["VER"] = SERVER_VERSION_FLAG;
 
-	ServerThread::GetRunStateInfo(info);	
-	
+	ServerThread::GetRunStateInfo(info);
+
 	//NOTE_LOG("%s > \r\n%s", info.dump().c_str(), info.ToJSON().c_str());
 	return info.ToJSON();
 }
@@ -537,7 +561,7 @@ AString WebLoginThread::GetServerList()
 		info["WSS_PORT"] = mServerInfo.WSS_PORT;
 		//info["GATE_PORT"] = CRunConfig<LoginConfig>::mConfig.data_db_node.gate.port;
 	}
-	
+
 	return info.ToJSON();
 }
 
@@ -545,13 +569,13 @@ AString WebLoginThread::GetServerList()
 
 bool WebLoginThread::IsAccountWeb()
 {
-	return strstr(GetCommandLine(), " account_web_config")!=NULL;
+	return strstr(GetCommandLine(), " account_web_config") != NULL;
 }
 
 bool WebLoginThread::IsWss()
 {
 
-	
+
 	return CRunConfig<LoginConfig>::mConfig.key_file.length() > 0;
-	
+
 }

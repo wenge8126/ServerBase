@@ -260,6 +260,7 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
     <ClInclude Include="Code\DBTableLoadSQL.h" />
     <ClInclude Include="Code\DBTable.h" />
     <ClInclude Include="Code\DBTableManager.h" />
+    <ClInclude Include="Code\GenerateNoSQLUser.h" />
     <ClInclude Include="Code\LogicDBTable.h" />
     <ClInclude Include="Code\NoSQLActor.h" />
     <ClInclude Include="Code\NoSQLComponent.h" />

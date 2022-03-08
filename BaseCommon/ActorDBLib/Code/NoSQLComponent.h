@@ -345,6 +345,14 @@ namespace NetCloud
 		AutoField		mField;
 
 	public:
+		virtual bool InitRecord(ARecord recode)
+		{
+			mDataRecord = recode;
+			mDataRecord->get(0, mKey);
+			InitField(mDataRecord->getField());			
+			return true;
+		}
+
 		void InitField(AutoField  field)
 		{
 			mField = field;
@@ -355,6 +363,7 @@ namespace NetCloud
 				Auto<NoSQLUserRecord> re = mDataRecord;
 				re->mField = field;
 				mDataRecord->_alloctData(0);
+				mDataRecord->set(0, mKey);
 			}
 		}
 

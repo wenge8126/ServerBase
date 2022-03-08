@@ -16,6 +16,10 @@
 #include "AccountActor.h"
 #include "PlayerActor.h"
 
+#include "GenerateNoSQLUser.h"
+
+#define CREATE_DB		0
+
 using namespace NetCloud;
 
 DEFINE_RUN_CONFIG(LogicActorDBConfig)
@@ -43,10 +47,14 @@ public:
 			it.get().get(&configTable, typeid(AutoTable));
 			if (configTable)
 			{
+#if CREATE_DB
 				if (GetDBMgr()->CreateDBTable(it.key().c_str(), configTable, info))
 				{
 					info.Format("Succeed create table %s", it.key().c_str());
 				}			
+#else
+				GenerateNoSQLUser::generate(configTable, "../GameServer/WebLogin/Code/", false);
+#endif
 			}
 			else
 			{
@@ -55,10 +63,11 @@ public:
 			resp.mResultInfo += info;
 			resp.mResultInfo += "\r\n";
 		}
-
+#if CREATE_DB
 		auto &list = GetDBMgr()->GetTableList();
 
 		GenerateCodeTool::generateDBManager(list, msg.mExportCodePath, "DB"); 
+#endif
 	}		
 
 	virtual void RegisterMsg(ActorManager *pActorMgr) override
