@@ -212,7 +212,7 @@ namespace NetCloud
 		static void OnNotify(Actor *pActor, DataStream *pMsgData, UnitID senderID)
 		{
 			Msg pMsg;
-			pMsgData->seek(0);
+			//pMsgData->seek(0);
 			if (!pMsg.restore(pMsgData))
 			{
 				ERROR_LOG("%s restore fail", pMsg.GetMsgName());
