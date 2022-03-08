@@ -268,7 +268,7 @@ namespace NetCloud
 	class ActorDBLib_Export_H tDBData : public AutoBase
 	{
 	public:
-		Int64 GetID() { return MAKE_INDEX_ID(mKey.c_str()); }
+		size_t GetID() { return (size_t)mKey; }
 
 		UnitID GetNoSQLID(int dbCode, int nDBCount) 
 		{
