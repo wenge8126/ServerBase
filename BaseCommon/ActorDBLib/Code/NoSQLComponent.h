@@ -54,19 +54,25 @@ namespace NetCloud
 				return;
 			int count = 100;
 			UInt64 nowSec = TimeManager::Now();
-
+			auto *beginNode = mActiveList.__getRoot();
+			auto *pNow = beginNode;
 			for (int i = 0; i < count; ++i)
 			{
-				auto pNow = mActiveList.__getRoot();
 				
-				if (TimeManager::Now() - pNow->mValue->mActiveMilSecond > 3600)
+				if (nowSec - pNow->mValue->mActiveMilSecond > 3)
 				{
-					pNow->mValue->mDataRecord._free();
+					Auto<LogicDBRecord> re = pNow->mValue->mDataRecord;
+					re->FreeDataMemory();
+					//pNow->mValue->mDataRecord->_freeData();
 					pNow->mValue->mActiveMilSecond = 0;
 					mActiveList._remove(pNow);
 				}
 				else
 					mActiveList.loop();
+
+				pNow = mActiveList.__getRoot();
+				if (pNow==NULL || pNow == beginNode)
+					break;
 			}
 		}
 
@@ -81,15 +87,20 @@ namespace NetCloud
 			if (d)
 			{
 				if (!d->mDataRecord)
-					if (!d->mDataRecord->ReloadData(key.c_str()))
+				{
+					if (d->mDataRecord->ReloadData(key.c_str()))
+						mActiveList.insert(d);
+					else
 					{
 						ERROR_LOG("Data record %s reload fail", key.c_str());
 						AssertNote(0, "Data record %s reload fail", key.c_str());
 						return ANoSQLData();
 					}
+				}
 			}
 			else
 			{
+				d = MEM_NEW NoSQLData();
 				ARecord re = mDataTable->GetRecord(key.c_str());
 				if (!re)
 				{
@@ -101,10 +112,10 @@ namespace NetCloud
 					else
 						return ANoSQLData();
 				}
-				d = MEM_NEW NoSQLData();
 				d->mDataRecord = re;
 				d->mActiveMilSecond = TimeManager::Now();
 				mNoSQLDataList.insert(key, d);
+				mActiveList.insert(d);
 			}
 			return d;
 		}

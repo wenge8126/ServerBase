@@ -120,9 +120,10 @@ namespace NetCloud
 
 		virtual bool ReloadData(const char *szIndex) override
 		{
+			if (mRecordData == NULL)
+				_alloctData(0);
 			Auto<LogicDBTable> t = GetTable();
 			return (t->mDBDataLoadSQL->AwaitLoadRecord(szIndex, this));
-
 		}
 
 		virtual void SaveUpdate() override;
