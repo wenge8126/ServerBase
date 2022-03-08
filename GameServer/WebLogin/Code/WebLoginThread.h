@@ -151,7 +151,7 @@ public:
 
 	virtual void Init() override
 	{
-		AddComponent("NoSQLUserComponent");
+		AddComponent("RecordNoSQLUserComponent");
 		Hand<HttpComponect> comp = AddComponent("HttpComponect");
 		comp->mPort = 5000;		
 
@@ -169,7 +169,7 @@ public:
 	void RegisterMsg(ActorManager *pActorMgr)
 	{
 		REG_COMPONENT(pActorMgr, WssWebComponent);
-		REG_COMPONENT(pActorMgr, NoSQLUserComponent);
+		REG_COMPONENT(pActorMgr, RecordNoSQLUserComponent);
 	}
 };
 

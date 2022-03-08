@@ -46,7 +46,7 @@ namespace NetCloud
 		{
 			factory->SetType(actorType);
 			factory->mMgr = mSelfPtr;
-			factory->RegisterMsg();
+			factory->RegisterMsg(this);
 			mFactoryList.insert(actorType, factory);
 		}
 

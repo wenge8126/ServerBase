@@ -20,6 +20,9 @@ Actor
 2 通知消息, 支持广播(全部, 按类型)
 3 支持异步DB, 结合ShareSQLUpdate 可以实现安全落地
 4 在节点中跳转
+特别注意:
+	1 相同的消息可以注册到不同类型的Actor
+	2 不同组件不可共用想同的消息, 会出现覆盖, 其中一个组件的消息得不到执行, 可直接 继承消息定义一个新的消息类型使用到不同的组件
 //-------------------------------------------------------------------------*/
 #define ACTOR_UPDATE_DATA_SECOND		(10)
 
@@ -65,7 +68,7 @@ namespace NetCloud
 	public:
 		virtual AUnit NewActor() = 0;
 		//Call pActorMsr->RegisterActorMsg(msgName, fun)
-		virtual void RegisterMsg() = 0;
+		virtual void RegisterMsg(ActorManager *pMgr) = 0;
 
 		virtual AUnit _NewActor();
 
@@ -396,10 +399,10 @@ class DefineActorFactory : public ActorFactory
 public:
 	virtual AUnit NewActor() { return MEM_NEW T(); }
 	//Call pActorMsr->RegisterActorMsg(msgName, fun)
-	virtual void RegisterMsg() override
+	virtual void RegisterMsg(NetCloud::ActorManager *pMgr) override
 	{
-		HandActor actor = NewActor();
-		actor->RegisterMsg(NULL);
+		HandActor actor = _NewActor();
+		actor->RegisterMsg(pMgr);
 	}
 };
 

@@ -414,15 +414,15 @@ void WebLoginThread::DoCommand(const AString &commandString, StringArray &paramA
 			{
 				AString json = paramArray[2];
 
-				Hand<NoSQLUserComponent> user = mLoginActor->GetComponent("NoSQLUserComponent");
-				user->mData.mKey = paramArray[1];
-				user->mData.mNiceData = MEM_NEW NiceData();
-				if (user->mData.mNiceData->FullJSON(json))
+				Hand<RecordNoSQLUserComponent> user = mLoginActor->GetComponent("RecordNoSQLUserComponent");
+				user->mKey = paramArray[1];
+				AutoNice data = MEM_NEW NiceData();
+				if (data->FullJSON(json))
 				{
-					AutoField field = MEM_NEW FieldIndex(NULL, user->mData.mNiceData->count());
+					AutoField field = MEM_NEW FieldIndex(NULL, data->count());
 					//AutoTable t = tBaseTable::NewBaseTable();
 					int col = 0;
-					for (auto it=user->mData.mNiceData->begin(); it; ++it)
+					for (auto it=data->begin(); it; ++it)
 					{
 						AString name = it.key();
 						AData &d = it.get();
@@ -434,13 +434,13 @@ void WebLoginThread::DoCommand(const AString &commandString, StringArray &paramA
 						return;
 					}
 
-					user->mData.InitField(field);
-					for (auto it = user->mData.mNiceData->begin(); it; ++it)
+					user->InitField(field);
+					for (auto it = data->begin(); it; ++it)
 					{
 						AString name = it.key();
 						AData &d = it.get();
 						Data dd(&d);
-						user->mData.mDataRecord->set(name, dd);
+						user->mDataRecord->set(name, dd);
 					}
 
 					if (user->Save())
@@ -466,12 +466,12 @@ void WebLoginThread::DoCommand(const AString &commandString, StringArray &paramA
 			{
 			
 
-				Hand<NoSQLUserComponent> user = mLoginActor->GetComponent("NoSQLUserComponent");
-				user->mData.mKey = paramArray[1];
+				Hand<RecordNoSQLUserComponent> user = mLoginActor->GetComponent("RecordNoSQLUserComponent");
+				user->mKey = paramArray[1];
 				//user->mData.mNiceData = MEM_NEW NiceData();
 				if (user->Load(true))
 				{		
-					AutoNice dd = user->mData.mDataRecord->ToNiceData();
+					AutoNice dd = user->mDataRecord->ToNiceData();
 					//AString json = user->mData.mNiceData->ToJSON();
 					AString json = dd->ToJSON();
 					if (json.length()>0)
