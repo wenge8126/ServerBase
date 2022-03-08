@@ -10,9 +10,6 @@ using namespace Logic;
 
 namespace NetCloud
 {
-	typedef int(*pActorMsgCall)(Actor*, DataStream*, TransferPacket*);
-	typedef void(*pActorNotifyMsgCall)(Actor*, DataStream*, UnitID);
-
 	class ActorManager;
 	class ActorDBMgr : public DBTableManager
 	{
@@ -49,7 +46,7 @@ namespace NetCloud
 		{
 			factory->SetType(actorType);
 			factory->mMgr = mSelfPtr;
-			factory->RegisterMsg(this);
+			factory->RegisterMsg();
 			mFactoryList.insert(actorType, factory);
 		}
 

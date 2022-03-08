@@ -420,7 +420,7 @@ void WebLoginThread::DoCommand(const AString &commandString, StringArray &paramA
 				if (user->mData.mNiceData->FullJSON(json))
 				{
 					AutoField field = MEM_NEW FieldIndex(NULL, user->mData.mNiceData->count());
-					AutoTable t = tBaseTable::NewBaseTable();
+					//AutoTable t = tBaseTable::NewBaseTable();
 					int col = 0;
 					for (auto it=user->mData.mNiceData->begin(); it; ++it)
 					{

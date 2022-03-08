@@ -30,8 +30,8 @@ Actor
 #define REG_COMPONENT(pActorMgr, ComponentClass) pActorMgr->RegisterComponect(#ComponentClass, MEM_NEW Logic::EventFactory<ComponentClass>());
 
 // 注册Actor消息处理
-#define REG_ACTOR_MSG(ActorClass, RQ, RS)		pActorMgr->RegisterActorMsg(#RQ, &Actor::OnMsg<ActorClass, RQ, RS>);
-#define REG_NOTIFY_MSG(ActorClass, MSG)		pActorMgr->RegisterNotifyMsg(#MSG, &Actor::OnNotify<ActorClass, MSG>);
+#define REG_ACTOR_MSG(ActorClass, RQ, RS)		mActorFactory->RegisterActorMsg(#RQ, &Actor::OnMsg<ActorClass, RQ, RS>);
+#define REG_NOTIFY_MSG(ActorClass, MSG)		mActorFactory->RegisterNotifyMsg(#MSG, &Actor::OnNotify<ActorClass, MSG>);
 // 注册组件消息处理
 #define REG_COMP_MSG(ComponentClass, RQ, RS)		pActorMgr->RegisterActorMsg(#RQ, &Actor::OnComponentMsg<ComponentClass, RQ, RS>);
 #define REG_COMP_NOTIFY(ComponentClass, MSG)		pActorMgr->RegisterNotifyMsg(#MSG, &Actor::OnComponentNotify<ComponentClass, MSG>);
@@ -55,22 +55,39 @@ namespace NetCloud
 	};
 
 	typedef Auto<ActorMgrPtr>	AutoActorMsgPtr;
+
+	typedef int(*pActorMsgCall)(Actor*, DataStream*, TransferPacket*);
+	typedef void(*pActorNotifyMsgCall)(Actor*, DataStream*, UnitID);
+
 	//-------------------------------------------------------------------------
 	class ActorDBLib_Export ActorFactory : public AutoBase
 	{
 	public:
 		virtual AUnit NewActor() = 0;
 		//Call pActorMsr->RegisterActorMsg(msgName, fun)
-		virtual void RegisterMsg(ActorManager *pActorMgr) = 0;
+		virtual void RegisterMsg() = 0;
 
 		virtual AUnit _NewActor();
 
 		void SetType(int actorType) { mActorType = actorType; }
 		virtual int GetType() const { return mActorType; }
 
+		void RegisterActorMsg(const AString &msgName, pActorMsgCall  pFun)
+		{
+			mOnMsgFunctionList.insert(msgName, pFun);
+		}
+
+		void RegisterNotifyMsg(const AString &notifyMsgName, pActorNotifyMsgCall  pFun)
+		{
+			mOnNotifyMsgFunctionList.insert(notifyMsgName, pFun);
+		}
+
 	public:
 		AutoActorMsgPtr		mMgr;
 		int								mActorType = 0;
+
+		FastHash<AString, pActorMsgCall>			mOnMsgFunctionList;
+		FastHash<AString, pActorNotifyMsgCall>	mOnNotifyMsgFunctionList;
 	};
 
 	//-------------------------------------------------------------------------
@@ -379,10 +396,10 @@ class DefineActorFactory : public ActorFactory
 public:
 	virtual AUnit NewActor() { return MEM_NEW T(); }
 	//Call pActorMsr->RegisterActorMsg(msgName, fun)
-	virtual void RegisterMsg(ActorManager *pActorMgr) override
+	virtual void RegisterMsg() override
 	{
 		HandActor actor = NewActor();
-		actor->RegisterMsg(pActorMgr);
+		actor->RegisterMsg(NULL);
 	}
 };
 

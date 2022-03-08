@@ -31,13 +31,13 @@ namespace NetCloud
 	public:
 		virtual void Init() override
 		{
-			AddComponent("NoSQLUserComponent");
+			AddComponent("RecordNoSQLUserComponent");
 		}
 
 	public:
 		virtual void RegisterMsg(ActorManager *pActorMgr) override
 		{
-			REG_COMPONENT(pActorMgr, NoSQLUserComponent);
+			REG_COMPONENT(pActorMgr, RecordNoSQLUserComponent);
 		}
 		//-------------------------------------------------------------------------
 	};

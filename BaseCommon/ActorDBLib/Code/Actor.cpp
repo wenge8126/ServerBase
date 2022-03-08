@@ -177,7 +177,9 @@ bool NetCloud::Actor::OnReceiveProcess(NodePacket *pNodePacket)
 		}
 		case eActorMsg_Reqeust:
 		{	
-			auto fun = GetMgr()->mOnMsgFunctionList.find(msgName);
+			auto fun = mActorFactory->mOnMsgFunctionList.find(msgName);
+			if (fun==NULL)
+				fun = GetMgr()->mOnMsgFunctionList.find(msgName);
 			if (fun != NULL)
 			{
 				CoroutineTool::AsyncCall([=]()
@@ -201,7 +203,9 @@ bool NetCloud::Actor::OnReceiveProcess(NodePacket *pNodePacket)
 
 		case eActorMsg_Notify:
 		{			
-			auto fun = GetMgr()->mOnNotifyMsgFunctionList.find(msgName);
+			auto fun = mActorFactory->mOnNotifyMsgFunctionList.find(msgName);
+			if (fun == NULL)
+				fun = GetMgr()->mOnNotifyMsgFunctionList.find(msgName);
 			if (fun != NULL)
 			{
 				CoroutineTool::AsyncCall([=]()
