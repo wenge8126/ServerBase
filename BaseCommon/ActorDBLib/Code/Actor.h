@@ -160,7 +160,7 @@ namespace NetCloud
 			Auto<TransferPacket> tranPak = protocol->CreatePacket(eNGN_TransferMsg);
 			tranPak->mData.clear(false);
 			// 在数据开关写入请求消息名称
-			tranPak->mData.write(respMsg.GetAttachValue());
+			tranPak->mData.write(reqestMsg.GetAttachValue());
 			tranPak->mData.writeString(reqestMsg.GetMsgName());
 			reqestMsg.serialize(&tranPak->mData);
 			AutoNice respNice = Await(tranPak, targetID, waitMilSecond);

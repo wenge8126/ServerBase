@@ -27,7 +27,7 @@ public:
 			"#ifndef _%s_H_\r\n"
 			"#define _%s_H_\r\n"
 			"\r\n"
-			"#include \"NoSQLComponent.h\" \r\n\r\n"
+			"#include \"NoSQLUserComponent.h\" \r\n\r\n"
 			"class %s : public RecordNoSQLUserComponent\r\n{\r\npublic:\r\n"       
 			"    AString mKey;\r\n\r\npublic:\r\n"
 			"	%s(){}\r\n\r\n"
@@ -38,22 +38,7 @@ public:
 			);
 
 		AString temp;
-		
-		//temp.Format(
-		//	"	virtual bool InitRecord(ARecord re) override\r\n	{\r\n"
-		//	"       if (re)\r\n        {\r\n"
-		//	"           if (re->GetTable()==NULL)\r\n            {\r\n                ERROR(\"Reocrd table is NULL\"); return *this;\r\n            }\r\n"
-		//	"           if (re->getField()->GetCheckCode()!=%d)\r\n            {\r\n                ERROR(\"Reocrd field check fail\"); return *this;\r\n            }\r\n"
-		//	"        }\r\n"
-		//	"       InitRecord(re);\r\n"
-		//	"		if (mDataRecord) mKey = mDataRecord[0]; else mKey = '';\r\n"
-		//	"		return mDataRecord;\r\n	}\r\n\r\n"
-		//	, szTableName
-		//	, mTable->GetField()->GetCheckCode()
-		//);
-		//mCodeString += temp;
-
-
+	
 
 		AString fieldNameList;
 		AutoField f = mTable->GetField();

@@ -2,23 +2,23 @@
 #ifndef _TESTNOSQLUSERCOMPONENT_H_
 #define _TESTNOSQLUSERCOMPONENT_H_
 
-#include "NoSQLComponent.h" 
-#include "NoSQLUserComponent.h"
+#include "NoSQLUserComponent.h" 
 
 class TestNoSQLUserComponent : public RecordNoSQLUserComponent
 {
 public:
-	AString mKey;
+    AString mKey;
 
 public:
 	TestNoSQLUserComponent(){}
 
-	Data ID(/*INT*/) { if (mDataRecord) return mDataRecord->get(0); ERROR_LOG("No exist record %s", mKey.c_str()); return Data(); }
+	Data ID(/*STRING*/) { if (mDataRecord) return mDataRecord->get(0); ERROR_LOG("No exist record %s", mKey.c_str()); return Data(); }
 	Data NAME(/*STRING*/) { if (mDataRecord) return mDataRecord->get(1); ERROR_LOG("No exist record %s", mKey.c_str()); return Data(); }
 	Data TYPE(/*STRING*/) { if (mDataRecord) return mDataRecord->get(2); ERROR_LOG("No exist record %s", mKey.c_str()); return Data(); }
 
 
-	int nID() const { int v = 0; if (mDataRecord) {  mDataRecord->get(0, v); return v; } ERROR_LOG("No exist record %s", mKey.c_str()); return v; }
+	const char* szID() const { if (mDataRecord)  return  mDataRecord->getString(0); ERROR_LOG("No exist record %s", mKey.c_str()); return ""; }
+	const AString& strID() const { if (mDataRecord)  return  mDataRecord->getAString(0); ERROR_LOG("No exist record %s", mKey.c_str()); static AString s; return s; }
 	const char* szNAME() const { if (mDataRecord)  return  mDataRecord->getString(1); ERROR_LOG("No exist record %s", mKey.c_str()); return ""; }
 	const AString& strNAME() const { if (mDataRecord)  return  mDataRecord->getAString(1); ERROR_LOG("No exist record %s", mKey.c_str()); static AString s; return s; }
 	const char* szTYPE() const { if (mDataRecord)  return  mDataRecord->getString(2); ERROR_LOG("No exist record %s", mKey.c_str()); return ""; }
@@ -27,7 +27,7 @@ public:
 	virtual bool InitRecord(ARecord record) override
 	{
 		AutoField f = record->getField();
-		if (!f || !f->CheckSame(-726408713))
+		if (!f || !f->CheckSame(130195173))
 		{
 			ERROR_LOG("No same check code of %s", record->GetTable()->GetTableName());
            return false;
@@ -47,7 +47,7 @@ public:
     static AutoTable CreateTable()
     {
         AutoTable table = MEM_NEW StructBaseTable();
-        table->AppendField("ID", "INT");
+        table->AppendField("ID", "STRING");
         table->AppendField("NAME", "STRING");
         table->AppendField("TYPE", "STRING");
         return table;

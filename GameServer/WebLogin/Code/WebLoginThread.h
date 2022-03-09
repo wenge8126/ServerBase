@@ -19,6 +19,7 @@
 #include "NoSQLComponent.h"
 
 #include "TestNoSQLUserComponent.h"
+#include "Test2Component.h"
 
 using namespace NetCloud;
 
@@ -154,6 +155,8 @@ public:
 	virtual void Init() override
 	{
 		AddComponent("TestNoSQLUserComponent");
+		AddComponent("Test2Component");
+		AddComponent("RecordNoSQLUserComponent");
 		Hand<HttpComponect> comp = AddComponent("HttpComponect");
 		comp->mPort = 5000;		
 
@@ -163,7 +166,7 @@ public:
 		
 		tcpNet->mSafeCode = 11;
 		Hand<tBaseEventNet> net = tcpNet->GetNet();
-		//net->SetNetProtocol();
+		//net->SetNetProtocol();`
 
 		AddComponent("LoginNetComponect");
 	}
@@ -172,6 +175,8 @@ public:
 	{
 		REG_COMPONENT(pActorMgr, WssWebComponent);
 		REG_COMPONENT(pActorMgr, TestNoSQLUserComponent);
+		REG_COMPONENT(pActorMgr, Test2Component);
+		REG_COMPONENT(pActorMgr, RecordNoSQLUserComponent);
 	}
 };
 

@@ -467,7 +467,7 @@ void WebLoginThread::DoCommand(const AString &commandString, StringArray &paramA
 			{
 
 
-				Hand<RecordNoSQLUserComponent> user = mLoginActor->GetComponent("TestNoSQLUserComponent");
+				Hand<RecordNoSQLUserComponent> user = mLoginActor->GetComponent("RecordNoSQLUserComponent");
 				AString key = paramArray[1];
 				//user->mData.mNiceData = MEM_NEW NiceData();
 				if (user->Load(key, true))
@@ -510,7 +510,30 @@ void WebLoginThread::DoCommand(const AString &commandString, StringArray &paramA
 			);
 		}
 	}
-
+	else if (commandString == "t3")
+	{
+		if (paramArray.size() < 4)
+		{
+			ERROR_LOG("t : test no sql must 4 param, second is key, thrid is value(json)");
+		}
+		else
+		{
+			CoroutineTool::AsyncCall([=]()
+			{
+				Hand<Test2Component > user = mLoginActor->GetComponent<Test2Component>();
+				//if (!user->mDataRecord)
+				{
+					AutoTable t = user->CreateTable();
+					ARecord re = t->CreateRecord(paramArray[1], true);
+					user->InitRecord(re);
+					user->TYPE() = paramArray[2];
+					user->YYY() = paramArray[3];
+					user->Save();
+				}
+			}
+			);
+		}
+	}
 }
 
 template<bool bSSL>
