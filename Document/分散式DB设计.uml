@@ -4746,8 +4746,8 @@
 <XPD:ATTR name="FillColor" type="string">$00B9FFFF</XPD:ATTR>
 <XPD:ATTR name="Left" type="integer">68</XPD:ATTR>
 <XPD:ATTR name="Top" type="integer">72</XPD:ATTR>
-<XPD:ATTR name="Width" type="integer">356</XPD:ATTR>
-<XPD:ATTR name="Height" type="integer">113</XPD:ATTR>
+<XPD:ATTR name="Width" type="integer">375</XPD:ATTR>
+<XPD:ATTR name="Height" type="integer">233</XPD:ATTR>
 <XPD:ATTR name="Text" type="string">一 键值方式存储
 1 值为表记录数据, 可以通过导出消息对象使用(序列为记录数据)
 2 键为字符串
@@ -4755,6 +4755,14 @@
 二 存储可设置为自动备份不少于两份
 1 存储时会自动根据备份要求, 备份最少1份
 2 取值时, 自动查找到一份
+
+三 对于多记录(如邮件,物品), KEY 为 ID_数组下标, 如物品操作如下:
+1 保存在组件使用ArrayList, 玩家信息里保存当前物品记录数量
+2 加载物品时,根据PlayerID_下标, 调取(可根据客户端请求,分步获取)
+3 删除时,会把最后的移到到删除的物品上, 
+  先保存删除位置更新好的最后数据,
+  再删除最后位置记录(可忽略,下次增加物品时即可会覆盖保存)
+4 物品ID递增,查找时,直接遍历查找或使用EashMap索引
 </XPD:ATTR>
 </XPD:OBJ>
 <XPD:OBJ name="OwnedViews[1]" type="UMLClassView" guid="Hi5qYjihj0qCC4xavkp2jwAA">
