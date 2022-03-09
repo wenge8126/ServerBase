@@ -9,7 +9,7 @@ bool NetCloud::RecordNoSQLUserComponent::Load(const AString &key, bool bNeedLoad
 	loadMsg.mbNeedField = bNeedLoadField;
 	loadMsg.mKey = key;
 	SQL_ResponseNoSQLData resp;
-	if (mpActor->Await(GetNoSQLID(), loadMsg, resp, 10000))
+	if (mpActor->Await(GetNoSQLID(key), loadMsg, resp, 10000))
 	{
 		if (resp.mData->dataSize() <= 0)
 		{
@@ -32,7 +32,7 @@ bool NetCloud::RecordNoSQLUserComponent::Load(const AString &key, bool bNeedLoad
 				ERROR_LOG("Restore field fail");
 				return false;
 			}
-			mDataRecord = t->CreateRecord(key, true);
+			mDataRecord = t->NewRecord();
 		}
 
 		resp.mData->seek(0);

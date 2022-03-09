@@ -27,27 +27,26 @@ namespace NetCloud
 	public:
 		virtual bool GetData(DataStream *pDestData) = 0;
 		virtual bool Load(const AString &key, bool bNeedLoadField) = 0;
-		virtual AString GetKey() = 0;
 		virtual int GetFieldHash() = 0;
 
 	public:
 		virtual int GetNoSQLCount() { return 1; }
 
-		UnitID GetNoSQLID()
+		UnitID GetNoSQLID( const AString &key )
 		{
-			return UnitID(NOSQL_DB_TYPE, ((size_t)GetKey()) % GetNoSQLCount());
+			return UnitID(NOSQL_DB_TYPE, ((size_t)key) % GetNoSQLCount());
 		}
 
-		bool Save()
+		bool Save(const AString &key)
 		{
 			SQL_SaveNoSQLData saveMsg;
 			saveMsg.mData = MEM_NEW DataBuffer();
 			if (GetData(saveMsg.mData.getPtr()))
 			{
 				saveMsg.mFieldHash = GetFieldHash();
-				saveMsg.mKey = GetKey();
+				saveMsg.mKey = key;
 				saveMsg.SetAttachValue(GetEventFactory()->GetNameIndex());
-				return mpActor->SendMsg(saveMsg, GetNoSQLID());
+				return mpActor->SendMsg(saveMsg, GetNoSQLID(key));
 			}
 			return false;
 		}
@@ -57,7 +56,6 @@ namespace NetCloud
 	class ActorDBLib_Export NiceNoSQLUserComponent : public NoSQLUserComponent
 	{
 	public:
-		AString			mKey;
 		AutoNice		mNiceData;
 
 	public:
@@ -66,7 +64,6 @@ namespace NetCloud
 			mNiceData = MEM_NEW NiceData();
 		}
 
-		virtual AString GetKey() override { return mKey; }
 		virtual int GetFieldHash() override { return 0; }
 
 		virtual bool GetData(DataStream *pDestData) override
@@ -80,12 +77,11 @@ namespace NetCloud
 
 		virtual bool Load(const AString &key, bool) override
 		{
-			mKey = key;
 			SQL_LoadNoSQLData loadMsg;
 			loadMsg.mbNeedField = false;
-			loadMsg.mKey = mKey;
+			loadMsg.mKey = key;
 			SQL_ResponseNoSQLData resp;
-			if (mpActor->Await(GetNoSQLID(), loadMsg, resp, 10000))
+			if (mpActor->Await(GetNoSQLID(key), loadMsg, resp, 10000))
 			{
 				resp.mData->seek(0);
 				if (mNiceData->restore(resp.mData.getPtr()))
@@ -109,13 +105,6 @@ namespace NetCloud
 			return true;
 		}
 
-		virtual AString GetKey() override 
-		{
-			if (mDataRecord)
-				return mDataRecord[0].string();
-
-			return AString();
-		}
 
 		virtual int GetFieldHash()
 		{
@@ -195,12 +184,12 @@ namespace NetCloud
 
 			AString key;
 			key.Format("%s_%d", mKey.c_str(), (int)mRecordArray.size());
-			record->set(0, key);
+			//record->set(0, key);
 			mRecordArray.add(record);
 			mRecordIndex.insert(record[mIDCol], mRecordArray.size() - 1);
 
 			pUser->InitRecord(record);
-			pUser->Save();
+			pUser->Save(key);
 		}
 
 		bool Remove(ARecord  record, RecordNoSQLUserComponent *pUser)
@@ -219,9 +208,9 @@ namespace NetCloud
 					ARecord lastRecord = mRecordArray[*pos];
 					AString key = mKey;
 					key.Format("%s_%d", mKey.c_str(), *pos);
-					lastRecord->set(0, key);
+					//lastRecord->set(0, key);
 					pUser->InitRecord(lastRecord);
-					pUser->Save();
+					pUser->Save(key);
 					// 最后删除的忽略删除, 下次增加后会被覆盖
 				}
 				return true;
@@ -240,11 +229,30 @@ namespace NetCloud
 			return mRecordArray[*pos];
 		}
 
-		void LoadAll(RecordNoSQLUserComponent *pUser)
+		AString GetRecordKey(ARecord re)
 		{
+			AString key;
+			int id = re[mIDCol];
+			int *pos = mRecordIndex.findPtr(id);
+			if (pos != NULL)
+			{
+				if (*pos < mRecordArray.size() && mRecordArray[*pos] == re)
+					key.Format("%s_%d", mKey.c_str(), *pos);
+				else
+					ERROR_LOG("%d Is not same record at array", id);
+			}
+			else
+				ERROR_LOG("No find record pos id : %d", id);
+			return AString();
+		}
+
+		bool LoadAll(int count, RecordNoSQLUserComponent *pUser)
+		{
+			mRecordArray.clear(false);
+			mRecordIndex.clear(false);
 			AutoTable t;
 			int i = 0;
-			while (true)
+			while (i<count)
 			{
 				if (t)
 					pUser->InitRecord(t->CreateRecord(0, 0));
@@ -261,6 +269,7 @@ namespace NetCloud
 					break;
 			}
 			pUser->mDataRecord.setNull();
+			return mRecordArray.size() == count;
 		}
 
 	protected:

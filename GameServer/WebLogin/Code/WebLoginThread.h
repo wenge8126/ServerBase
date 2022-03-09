@@ -157,7 +157,7 @@ public:
 
 	ARecord CreateItem()
 	{
-		ARecord itemRe = mItemTable->CreateRecord(0, 0);
+		ARecord itemRe = mItemTable->NewRecord();
 		mItemData.Insert(itemRe, this);
 		return itemRe;
 	}

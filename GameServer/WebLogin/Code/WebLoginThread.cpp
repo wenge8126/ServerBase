@@ -444,7 +444,7 @@ void WebLoginThread::DoCommand(const AString &commandString, StringArray &paramA
 						user->mDataRecord->set(name, dd);
 					}
 
-					if (user->Save())
+					if (user->Save(key))
 						NOTE_LOG("Save succeed")
 					else
 						ERROR_LOG("Save fail");
@@ -504,7 +504,7 @@ void WebLoginThread::DoCommand(const AString &commandString, StringArray &paramA
 					ARecord re = t->CreateRecord(paramArray[1], true);
 					user->InitRecord(re);
 					user->TYPE() = paramArray[2];
-					user->Save();
+					user->Save(paramArray[1]);
 				}
 			}
 			);
@@ -528,7 +528,7 @@ void WebLoginThread::DoCommand(const AString &commandString, StringArray &paramA
 					user->InitRecord(re);
 					user->TYPE() = paramArray[2];
 					user->YYY() = paramArray[3];
-					user->Save();
+					user->Save(paramArray[1]);
 				}
 			}
 			);
@@ -551,7 +551,7 @@ void WebLoginThread::DoCommand(const AString &commandString, StringArray &paramA
 					item->NAME() = paramArray[1];
 					item->TYPE() = paramArray[2];
 					item->COUNT() = paramArray[3];
-					item->Save();
+					item->Save(item->mItemData.GetRecordKey(re));
 				}
 			}
 			);
@@ -587,10 +587,14 @@ void WebLoginThread::DoCommand(const AString &commandString, StringArray &paramA
 	}
 	else if (commandString == "l3")
 	{
+	if (paramArray.size() < 2)
+		{
+			ERROR_LOG("t : test no sql must 2 param, second is key, thrid is value(json)");
+		}
 		CoroutineTool::AsyncCall([=]()
 		{
 			Hand<PlayerItemComp > item = mLoginActor->GetComponent<PlayerItemComp>();
-			item->mItemData.LoadAll(item.getPtr());
+			item->mItemData.LoadAll(TOINT(paramArray[1].c_str()), item.getPtr());
 		}
 		);
 	}
