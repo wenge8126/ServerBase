@@ -180,18 +180,76 @@ protected:
 	AString			mTableName;
 };
 //-------------------------------------------------------------------------*
-// 只保存表结构, 不保存索引记录的表
-class BaseCommon_Export_H StructBaseTable : public SkipBaseTable
+// 只保存表结构, 不保存索引记录的表, 用于创建自由使用的记录
+// 记录中保存此表格的AutoTable, 直到所有创建的记录都释放后,才会释放此表格
+//-------------------------------------------------------------------------
+class BaseCommon_Export StructBaseTable : public tBaseTable
 {
 public:
 	StructBaseTable(INIT_FIELD_MODE initMode = eInitCreateField)
-		: SkipBaseTable(initMode) {}
+		: tBaseTable() 
+	{
+		if (initMode==eInitCreateField)
+			mOwnerPtr->mField = MEM_NEW  BaseFieldIndex();
+	}
 
 public:
-	virtual bool AppendRecord(ARecord scrRecord, bool bReplace, bool bRestore = false) override
+
+	virtual ARecord GetRecord(Int64 nIndex) { AssertEx(0, "Can not use StructBaseTable::GetRecord"); return ARecord(); }
+	virtual ARecord GetRecord(float fIndex) { AssertEx(0, "Can not use StructBaseTable::GetRecord"); return ARecord(); }
+	virtual ARecord GetRecord(const char* szIndex) { AssertEx(0, "Can not use StructBaseTable::GetRecord"); return ARecord(); }
+	virtual ARecord GetRecord(int nIndex) { AssertEx(0, "Can not use StructBaseTable::GetRecord"); return ARecord(); }
+	virtual ARecord GetRecord(UInt64 nIndex) { AssertEx(0, "Can not use StructBaseTable::GetRecord"); return ARecord(); }
+	virtual ARecord GetRecord(const AString &strKey) { AssertEx(0, "Can not use StructBaseTable::GetRecord"); return ARecord(); }
+
+	virtual ARecord CreateRecord(Int64 nIndex, bool bReplace)
 	{
-		return true;
+		ARecord re = _NewRecord();
+		re->set(0, nIndex);
+		return re;
 	}
+	virtual ARecord CreateRecord(float fIndex, bool bReplace) 
+	{
+		ARecord re = _NewRecord();
+		re->set(0, fIndex);
+		return re;
+	}
+	virtual ARecord CreateRecord(const char* szIndex, bool bReplace) 
+	{
+		ARecord re = _NewRecord();
+		re->set(0, szIndex);
+		return re;
+	}
+	virtual ARecord CreateRecord(const AString &strIndex, bool bReplace) { return CreateRecord(strIndex.c_str(), bReplace); }
+	virtual ARecord CreateRecord(int nIndex, bool bReplace) { return CreateRecord((Int64)nIndex, bReplace); }
+
+	// bRestore : true TableDataLoader:LoadTable 时, 恢复后, 同步更改到独立DB子表
+	virtual bool AppendRecord(ARecord scrRecord, bool bReplace, bool bRestore = false) override { return true; }
+
+	virtual bool RemoveRecord(Int64 nIndex) { AssertEx(0, "Can not use StructBaseTable::RemoveRecord"); return false; }
+	virtual bool RemoveRecord(float fIndex) { AssertEx(0, "Can not use StructBaseTable::RemoveRecord"); return false; }
+	virtual bool RemoveRecord(const char* szIndex) { AssertEx(0, "Can not use StructBaseTable::RemoveRecord"); return false; }
+	virtual bool RemoveRecord(int nIndex) { AssertEx(0, "Can not use StructBaseTable::RemoveRecord"); return false; }
+
+	virtual bool RemoveRecord(ARecord record) { AssertEx(0, "Can not use StructBaseTable::RemoveRecord"); return false; }
+
+	// 删除DB数据库中的记录, 且只能通过此功能删除
+	virtual bool DeleteRecord(ARecord record) { AssertEx(0, "Can not use StructBaseTable::DeleteRecord"); return false; }
+
+	virtual ARecord NewRecord() { return _NewRecord(); }
+	virtual ARecord _NewRecord() override;
+
+public:
+	virtual ARecordIt GetRecordIt() { AssertEx(0, "Can not use StructBaseTable::GetRecordIt"); return ARecordIt(); }
+
+	virtual ARecordIt GetRecordIt(ARecord targetRecord) { AssertEx(0, "Can not use StructBaseTable::GetRecordIt"); return ARecordIt(); }
+	virtual AutoIndex GetMainIndex() { AssertEx(0, "Can not use StructBaseTable::GetMainIndex"); return AutoIndex(); }
+
+	virtual const char* GetTableType() override { return "StructTable"; }
+
+	virtual void OnRecordDataChanged(ARecord re, int col, Int64 scrValue) {}
+	virtual void OnRecordDataChanged(ARecord re, int col, const char *scrValue) {}
+
 };
 //-------------------------------------------------------------------------
 #endif

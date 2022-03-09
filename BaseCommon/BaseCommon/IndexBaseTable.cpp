@@ -323,3 +323,32 @@ int BaseFieldIndex::_generateCode() const
 	return MAKE_INDEX_ID(str.c_str());
 }
 //-------------------------------------------------------------------------
+// 不会组合保存在表格中的记录, 可以自由使用
+//-------------------------------------------------------------------------
+class FreeBaseRecord : public BaseRecord
+{
+public:
+	AutoTable	mTable;
+
+public:
+	FreeBaseRecord() {};
+
+	FreeBaseRecord(AutoTable t)
+		: mTable(t)
+	{
+
+	}
+
+public:
+	virtual tBaseTable* GetTable() override { return mTable.getPtr(); }
+	virtual AutoField getField() const override { return mTable ? mTable->GetField() : AutoField(); }
+};
+
+ARecord StructBaseTable::_NewRecord()
+{
+	FreeBaseRecord *pRe =  MEM_NEW FreeBaseRecord(GetSelf());	
+	pRe->_alloctData(0);
+	return pRe;
+}
+
+//-------------------------------------------------------------------------

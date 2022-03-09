@@ -19,16 +19,6 @@
 
 namespace NetCloud
 {
-	//-------------------------------------------------------------------------
-	class NoSQLUserRecord : public IndexDBRecord
-	{
-	public:
-		virtual AutoField getField() const { return mField; }
-		virtual tBaseTable* GetTable() override { return NULL; }
-
-	public:
-		AutoField mField;
-	};
 
 	//-------------------------------------------------------------------------
 	// Ê¹ÓÃ¶Ë	
@@ -124,11 +114,9 @@ namespace NetCloud
 			mFieldHash = MAKE_INDEX_ID(mField->ToString().c_str());
 			if (!mDataRecord)
 			{
-				mDataRecord = MEM_NEW NoSQLUserRecord();
-				Auto<NoSQLUserRecord> re = mDataRecord;
-				re->mField = field;
-				mDataRecord->_alloctData(0);
-				mDataRecord->set(0, mKey);
+				AutoTable t = MEM_NEW StructBaseTable();
+				t->InitField(mField);
+				mDataRecord = t->CreateRecord(mKey, true);
 			}
 		}
 
