@@ -33,7 +33,7 @@ namespace NetCloud
 	class ActorDBLib_Export NoSQLComponent : public Component
 	{
 	public:
-		virtual void Awake() 
+		virtual void Awake()
 		{
 			mFieldTable = mpActor->GetDBMgr()->GetTable(NOSQL_FIELD_TABLE);
 			mDataTable = mpActor->GetDBMgr()->GetTable(NOSQL_DATA_TABLE);
@@ -58,7 +58,7 @@ namespace NetCloud
 			auto *pNow = beginNode;
 			for (int i = 0; i < count; ++i)
 			{
-				
+
 				if (nowSec - pNow->mValue->mActiveMilSecond > 3)
 				{
 					Auto<LogicDBRecord> re = pNow->mValue->mDataRecord;
@@ -71,14 +71,14 @@ namespace NetCloud
 					mActiveList.loop();
 
 				pNow = mActiveList.__getRoot();
-				if (pNow==NULL || pNow == beginNode)
+				if (pNow == NULL || pNow == beginNode)
 					break;
 			}
 		}
 
 		void SaveData(const AString &key, DataStream  *data)
 		{
-			
+
 		}
 
 		ANoSQLData CheckReload(const AString &key, bool bCreate, DB_HASH fieldHash)
@@ -106,7 +106,7 @@ namespace NetCloud
 				{
 					if (bCreate)
 					{
-						re = mDataTable->CreateRecord(key.c_str(), true);					
+						re = mDataTable->CreateRecord(key.c_str(), true);
 						re->set(NOSQL_FIELD_HASH_COL, fieldHash);
 					}
 					else
@@ -152,8 +152,33 @@ namespace NetCloud
 		{
 			//CoroutineTool::AsyncCall([=]()
 			//{
-				if (resp.mFieldHash == 0 || CheckExistFieldData(resp.mFieldHash))
+			if (resp.mFieldHash == 0 || CheckExistFieldData(resp.mFieldHash))
+			{
+				auto existData = CheckReload(resp.mKey, true, resp.mFieldHash);
+				if (!existData)
 				{
+					AssertNote(0, "Create or reload data fail : %s", resp.mKey.c_str());
+					return;
+				}
+				CopyData(existData->mDataRecord, resp.mData);
+				existData->mDataRecord->SaveUpdate();
+				existData->mActiveMilSecond = TimeManager::Now();
+				return;
+			}
+
+			SQL_RequestFieldData reqMsg;
+			reqMsg.mKey = resp.mKey;
+			SQL_ResponseFieldData respField;
+			if (mpActor->Await(senderID, reqMsg, respField, 10000))
+			{
+				if (respField.mFieldHash == resp.mFieldHash)
+				{
+					ARecord fieldRe = mFieldTable->CreateRecord(resp.mFieldHash, true);
+					CopyData(fieldRe, respField.mData);
+					//fieldRe->set(NOSQL_DATA_COL, respField.mData);
+					fieldRe->SaveUpdate();
+					mFieldList.insert(resp.mFieldHash, fieldRe);
+
 					auto existData = CheckReload(resp.mKey, true, resp.mFieldHash);
 					if (!existData)
 					{
@@ -161,38 +186,13 @@ namespace NetCloud
 						return;
 					}
 					CopyData(existData->mDataRecord, resp.mData);
+					existData->mDataRecord->set(NOSQL_FIELD_HASH_COL, resp.mFieldHash);
 					existData->mDataRecord->SaveUpdate();
-					existData->mActiveMilSecond = TimeManager::Now();
 					return;
 				}
-				
-					SQL_RequestFieldData reqMsg;
-					reqMsg.mKey = resp.mKey;
-					SQL_ResponseFieldData respField;
-					if (mpActor->Await(senderID, reqMsg, respField, 10000))
-					{
-						if (respField.mFieldHash == resp.mFieldHash)
-						{
-							ARecord fieldRe = mFieldTable->CreateRecord(resp.mFieldHash, true);
-							CopyData(fieldRe, respField.mData);
-							//fieldRe->set(NOSQL_DATA_COL, respField.mData);
-							fieldRe->SaveUpdate();
-							mFieldList.insert(resp.mFieldHash, fieldRe);
-							
-							auto existData = CheckReload(resp.mKey, true, resp.mFieldHash);
-							if (!existData)
-							{
-								AssertNote(0, "Create or reload data fail : %s", resp.mKey.c_str());
-								return;
-							}
-							CopyData(existData->mDataRecord, resp.mData);
-							existData->mDataRecord->set(NOSQL_FIELD_HASH_COL, resp.mFieldHash);
-							existData->mDataRecord->SaveUpdate();
-							return;
-						}
-					}
-					ERROR_LOG("Save fail");
-			
+			}
+			ERROR_LOG("Save fail");
+
 			//});
 		}
 
@@ -204,8 +204,8 @@ namespace NetCloud
 				DEBUG_LOG("No exist data %s", req.mKey.c_str());
 				return;
 			}
-			
-			
+
+
 			resp.mData = (DataStream*)d->mDataRecord[NOSQL_DATA_COL];
 			// 获取字段数据
 			if (req.mbNeedField)
@@ -264,156 +264,6 @@ namespace NetCloud
 		Auto<LogicDBTable> mDataTable;
 	};
 
-
-	//-------------------------------------------------------------------------
-	class NoSQLUserRecord : public IndexDBRecord
-	{
-	public:
-		virtual AutoField getField() const { return mField; }
-		virtual tBaseTable* GetTable() override { return NULL; }
-
-	public:
-		AutoField mField;
-	};
-
-	//-------------------------------------------------------------------------
-	// 使用端	
-	class ActorDBLib_Export NoSQLUserComponent : public Component
-	{
-	public:
-		AString			mKey;
-		DB_HASH		mFieldHash = 0;
-
-	public:
-		virtual bool GetData(DataStream *pDestData) = 0;
-		virtual bool Load(bool bNeedLoadField) = 0;
-
-	public:
-		virtual int GetNoSQLCount() { return 1; }
-				
-		UnitID GetNoSQLID()
-		{
-			return UnitID(NOSQL_DB_TYPE, ((size_t)mKey) % GetNoSQLCount());
-		}
-
-		bool Save()
-		{
-			SQL_SaveNoSQLData saveMsg;
-			saveMsg.mData = MEM_NEW DataBuffer();
-			if (GetData(saveMsg.mData.getPtr()))
-			{
-				saveMsg.mFieldHash = mFieldHash;
-				saveMsg.mKey = mKey;
-				return mpActor->SendMsg(saveMsg, GetNoSQLID());
-			}
-			return false;
-		}
-	};
-	//-------------------------------------------------------------------------
-	// NiceData 数据使用
-	class ActorDBLib_Export NiceNoSQLUserComponent : public NoSQLUserComponent
-	{
-	public:
-		AutoNice		mNiceData;
-
-	public:
-		virtual void Awake() override
-		{
-			mNiceData = MEM_NEW NiceData();
-		}
-
-		virtual bool GetData(DataStream *pDestData) override
-		{
-			if (mNiceData->serialize(pDestData))
-				return true;
-
-			ERROR_LOG("Save data fail");
-			return false;
-		}
-
-		virtual bool Load(bool) override
-		{
-			SQL_LoadNoSQLData loadMsg;
-			loadMsg.mbNeedField = false;
-			loadMsg.mKey = mKey;
-			SQL_ResponseNoSQLData resp;
-			if (mpActor->Await(GetNoSQLID(), loadMsg, resp, 10000))
-			{
-				resp.mData->seek(0);
-				if (mNiceData->restore(resp.mData.getPtr()))
-					return true;
-				ERROR_LOG("Restore nicedata fail");
-			}
-			return false;
-		}
-	};
-	//-------------------------------------------------------------------------
-	// 记录数值
-	class ActorDBLib_Export RecordNoSQLUserComponent : public NoSQLUserComponent
-	{
-	public:
-		ARecord		mDataRecord;
-		AutoField		mField;
-
-	public:
-		virtual bool InitRecord(ARecord recode)
-		{
-			mDataRecord = recode;
-			mDataRecord->get(0, mKey);
-			InitField(mDataRecord->getField());			
-			return true;
-		}
-
-		void InitField(AutoField  field)
-		{
-			mField = field;
-			mFieldHash = MAKE_INDEX_ID(mField->ToString().c_str());
-			if (!mDataRecord)
-			{
-				mDataRecord = MEM_NEW NoSQLUserRecord();
-				Auto<NoSQLUserRecord> re = mDataRecord;
-				re->mField = field;
-				mDataRecord->_alloctData(0);
-				mDataRecord->set(0, mKey);
-			}
-		}
-
-		virtual bool GetData(DataStream *pDestData) override
-		{
-			if (!mDataRecord)
-			{
-				ERROR_LOG("No init create record");
-				return false;
-			}
-			if (mDataRecord->saveData(pDestData))
-				return true;
-
-			ERROR_LOG("Save record data fail");
-			return false;
-		}
-
-		virtual bool Load(bool bNeedLoadField) override;
-
-	public:
-		void On(SQL_RequestFieldData &req, SQL_ResponseFieldData &resp, UnitID sender)
-		{
-			resp.mData = MEM_NEW DataBuffer();
-
-			if (mField && mField->saveToData(resp.mData.getPtr()))
-			{
-				resp.mFieldHash = mFieldHash;
-			}
-			else
-			{
-				resp.mData.setNull();
-				ERROR_LOG("Field is Null");
-			}
-		}
-
-		virtual void RegisterMsg(ActorManager *pActorMgr)
-		{
-			REG_COMP_MSG(RecordNoSQLUserComponent, SQL_RequestFieldData, SQL_ResponseFieldData);
-		}
-	};
 }
+
 #endif //_INCLDUE_NOSQLCOMPONECNT_H_

@@ -185,7 +185,7 @@ public:
 		mCodeString += temp;
 		
 		temp.Format("\r\n    static AutoTable CreateTable()\r\n    {\r\n"
-			"        AutoTable table = tBaseTable::NewBaseTable();\r\n"
+			"        AutoTable table = MEM_NEW StructBaseTable();\r\n"
 			"%s"
 			"        return table;\r\n    }\r\n\r\n"
 			, createTableString.c_str()

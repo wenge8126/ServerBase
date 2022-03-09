@@ -80,6 +80,9 @@
     <ClInclude Include="Code\LoginNetProtocol.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Code\TestNoSQLUserComponent.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="WebLogin.rc">

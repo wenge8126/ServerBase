@@ -3,6 +3,7 @@
 #define _TESTNOSQLUSERCOMPONENT_H_
 
 #include "NoSQLComponent.h" 
+#include "NoSQLUserComponent.h"
 
 class TestNoSQLUserComponent : public RecordNoSQLUserComponent
 {
@@ -42,7 +43,7 @@ public:
 
     static AutoTable CreateTable()
     {
-        AutoTable table = tBaseTable::NewBaseTable();
+        AutoTable table = MEM_NEW StructBaseTable();
         table->AppendField("ID", "INT");
         table->AppendField("NAME", "STRING");
         table->AppendField("TYPE", "STRING");

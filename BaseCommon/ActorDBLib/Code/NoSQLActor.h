@@ -4,6 +4,7 @@
 #pragma once
 
 #include "NoSQLComponent.h"
+#include "NoSQLUserComponent.h"
 
 namespace NetCloud
 {

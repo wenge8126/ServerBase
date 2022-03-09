@@ -522,6 +522,7 @@ xcopy $(COMMON_BASE_LIB)\Bin\$(TargetName).pdb $(Server_Out_Dir)\  /y
     <ClInclude Include="Code\LoginNetComponect.h" />
     <ClInclude Include="Code\NetWorkerComponent.h" />
     <ClInclude Include="Code\TcpComponent.h" />
+    <ClInclude Include="Code\TestNoSQLUserComponent.h" />
     <ClInclude Include="Code\WebLoginThread.h" />
     <ClInclude Include="Code\WebTools.h" />
     <ClInclude Include="Code\WssWebComponent.h" />

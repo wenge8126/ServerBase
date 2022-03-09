@@ -163,7 +163,7 @@ public:
 };
 //-------------------------------------------------------------------------
 // 具有名称的表格，排除字段子表
-class SkipBaseTable : public NormalBaseTable
+class BaseCommon_Export_H SkipBaseTable : public NormalBaseTable
 {
 public:
 	SkipBaseTable(INIT_FIELD_MODE initMode)
@@ -180,4 +180,18 @@ protected:
 	AString			mTableName;
 };
 //-------------------------------------------------------------------------*
+// 只保存表结构, 不保存索引记录的表
+class BaseCommon_Export_H StructBaseTable : public SkipBaseTable
+{
+public:
+	StructBaseTable(INIT_FIELD_MODE initMode = eInitCreateField)
+		: SkipBaseTable(initMode) {}
+
+public:
+	virtual bool AppendRecord(ARecord scrRecord, bool bReplace, bool bRestore = false) override
+	{
+		return true;
+	}
+};
+//-------------------------------------------------------------------------
 #endif

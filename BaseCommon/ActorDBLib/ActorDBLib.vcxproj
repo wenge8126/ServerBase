@@ -247,6 +247,7 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
     <ClCompile Include="Code\LogicDBTable.cpp" />
     <ClCompile Include="Code\NoSQLActor.cpp" />
     <ClCompile Include="Code\NoSQLComponent.cpp" />
+    <ClCompile Include="Code\NoSQLUserComponent.cpp" />
     <ClCompile Include="Code\SQLComponent.cpp" />
     <ClCompile Include="Code\SQLThread.cpp" />
     <ClCompile Include="dllmain.cpp" />
@@ -265,6 +266,7 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
     <ClInclude Include="Code\NoSQLActor.h" />
     <ClInclude Include="Code\NoSQLComponent.h" />
     <ClInclude Include="Code\NoSQLNetMsg.h" />
+    <ClInclude Include="Code\NoSQLUserComponent.h" />
     <ClInclude Include="Code\SQLComponent.h" />
     <ClInclude Include="Code\SQLThread.h" />
   </ItemGroup>
