@@ -8,6 +8,9 @@
 class TestNoSQLUserComponent : public RecordNoSQLUserComponent
 {
 public:
+	AString mKey;
+
+public:
 	TestNoSQLUserComponent(){}
 
 	Data ID(/*INT*/) { if (mDataRecord) return mDataRecord->get(0); ERROR_LOG("No exist record %s", mKey.c_str()); return Data(); }

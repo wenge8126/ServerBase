@@ -415,11 +415,12 @@ void WebLoginThread::DoCommand(const AString &commandString, StringArray &paramA
 				AString json = paramArray[2];
 
 				Hand<RecordNoSQLUserComponent> user = mLoginActor->GetComponent("TestNoSQLUserComponent");
-				user->mKey = paramArray[1];
+				AString key = paramArray[1];
 				AutoNice data = MEM_NEW NiceData();
 				if (data->FullJSON(json))
 				{
-					AutoField field = MEM_NEW FieldIndex(NULL, data->count());
+					AutoTable t = user->NewTable();
+					AutoField field = t->GetField(); // MEM_NEW FieldIndex(NULL, data->count());
 					//AutoTable t = tBaseTable::NewBaseTable();
 					int col = 0;
 					for (auto it = data->begin(); it; ++it)
@@ -433,8 +434,8 @@ void WebLoginThread::DoCommand(const AString &commandString, StringArray &paramA
 						ERROR_LOG("Field init set fail");
 						return;
 					}
-
-					user->InitField(field);
+					
+					user->InitRecord(t->CreateRecord(0, true));
 					for (auto it = data->begin(); it; ++it)
 					{
 						AString name = it.key();
@@ -467,9 +468,9 @@ void WebLoginThread::DoCommand(const AString &commandString, StringArray &paramA
 
 
 				Hand<RecordNoSQLUserComponent> user = mLoginActor->GetComponent("TestNoSQLUserComponent");
-				user->mKey = paramArray[1];
+				AString key = paramArray[1];
 				//user->mData.mNiceData = MEM_NEW NiceData();
-				if (user->Load(true))
+				if (user->Load(key, true))
 				{
 					AutoNice dd = user->mDataRecord->ToNiceData();
 					//AString json = user->mData.mNiceData->ToJSON();

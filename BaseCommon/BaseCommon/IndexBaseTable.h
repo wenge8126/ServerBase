@@ -122,7 +122,7 @@ public:
 
 	// 检查是否为相同的字段
 	virtual bool needCheck() const { return true; }
-	virtual int GetCheckCode() const 
+	virtual int GetCheckCode() const override
 	{
 		if (mCheckCode==0 || mbChanged)
 		{

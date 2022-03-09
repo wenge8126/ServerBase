@@ -29,6 +29,7 @@ public:
 			"\r\n"
 			"#include \"NoSQLComponent.h\" \r\n\r\n"
 			"class %s : public RecordNoSQLUserComponent\r\n{\r\npublic:\r\n"       
+			"    AString mKey;\r\n\r\npublic:\r\n"
 			"	%s(){}\r\n\r\n"
 			, name.c_str()
 			, name.c_str()

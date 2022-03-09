@@ -25,19 +25,16 @@ namespace NetCloud
 	class ActorDBLib_Export NoSQLUserComponent : public Component
 	{
 	public:
-		AString			mKey;
-		DB_HASH		mFieldHash = 0;
-
-	public:
 		virtual bool GetData(DataStream *pDestData) = 0;
-		virtual bool Load(bool bNeedLoadField) = 0;
+		virtual bool Load(const AString &key, bool bNeedLoadField) = 0;
+		virtual AString GetKey() = 0;
 
 	public:
 		virtual int GetNoSQLCount() { return 1; }
 
 		UnitID GetNoSQLID()
 		{
-			return UnitID(NOSQL_DB_TYPE, ((size_t)mKey) % GetNoSQLCount());
+			return UnitID(NOSQL_DB_TYPE, ((size_t)GetKey()) % GetNoSQLCount());
 		}
 
 		bool Save()
@@ -46,8 +43,8 @@ namespace NetCloud
 			saveMsg.mData = MEM_NEW DataBuffer();
 			if (GetData(saveMsg.mData.getPtr()))
 			{
-				saveMsg.mFieldHash = mFieldHash;
-				saveMsg.mKey = mKey;
+				saveMsg.mFieldHash = 0;
+				saveMsg.mKey = GetKey();
 				return mpActor->SendMsg(saveMsg, GetNoSQLID());
 			}
 			return false;
@@ -58,6 +55,7 @@ namespace NetCloud
 	class ActorDBLib_Export NiceNoSQLUserComponent : public NoSQLUserComponent
 	{
 	public:
+		AString			mKey;
 		AutoNice		mNiceData;
 
 	public:
@@ -65,6 +63,8 @@ namespace NetCloud
 		{
 			mNiceData = MEM_NEW NiceData();
 		}
+
+		virtual AString GetKey() override { return mKey; }
 
 		virtual bool GetData(DataStream *pDestData) override
 		{
@@ -75,8 +75,9 @@ namespace NetCloud
 			return false;
 		}
 
-		virtual bool Load(bool) override
+		virtual bool Load(const AString &key, bool) override
 		{
+			mKey = key;
 			SQL_LoadNoSQLData loadMsg;
 			loadMsg.mbNeedField = false;
 			loadMsg.mKey = mKey;
@@ -96,28 +97,21 @@ namespace NetCloud
 	class ActorDBLib_Export RecordNoSQLUserComponent : public NoSQLUserComponent
 	{
 	public:
-		ARecord		mDataRecord;
-		AutoField		mField;
+		ARecord			mDataRecord;
 
 	public:
 		virtual bool InitRecord(ARecord recode)
 		{
-			mDataRecord = recode;
-			mDataRecord->get(0, mKey);
-			InitField(mDataRecord->getField());
+			mDataRecord = recode;	
 			return true;
 		}
 
-		void InitField(AutoField  field)
+		virtual AString GetKey() override 
 		{
-			mField = field;
-			mFieldHash = MAKE_INDEX_ID(mField->ToString().c_str());
-			if (!mDataRecord)
-			{
-				AutoTable t = MEM_NEW StructBaseTable();
-				t->InitField(mField);
-				mDataRecord = t->CreateRecord(mKey, true);
-			}
+			if (mDataRecord)
+				return mDataRecord[0].string();
+
+			return AString();
 		}
 
 		virtual bool GetData(DataStream *pDestData) override
@@ -134,21 +128,23 @@ namespace NetCloud
 			return false;
 		}
 
-		virtual bool Load(bool bNeedLoadField) override;
+		virtual bool Load(const AString &key, bool bNeedLoadField) override;
+
+		virtual AutoTable NewTable() { return MEM_NEW StructBaseTable(); }
 
 	public:
 		void On(SQL_RequestFieldData &req, SQL_ResponseFieldData &resp, UnitID sender)
 		{
 			resp.mData = MEM_NEW DataBuffer();
-
-			if (mField && mField->saveToData(resp.mData.getPtr()))
+			
+			if (mDataRecord && mDataRecord->getField()->saveToData(resp.mData.getPtr()))
 			{
-				resp.mFieldHash = mFieldHash;
+				resp.mFieldHash = mDataRecord->getField()->GetCheckCode();
 			}
 			else
 			{
 				resp.mData.setNull();
-				ERROR_LOG("Field is Null");
+				ERROR_LOG("DataRecord or Field is Null");
 			}
 		}
 
