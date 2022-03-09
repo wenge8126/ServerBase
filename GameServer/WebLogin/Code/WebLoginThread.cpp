@@ -534,6 +534,66 @@ void WebLoginThread::DoCommand(const AString &commandString, StringArray &paramA
 			);
 		}
 	}
+	else if (commandString == "i1")
+	{
+		if (paramArray.size() < 4)
+		{
+			ERROR_LOG("t : test no sql must 4 param, second is key, thrid is value(json)");
+		}
+		else
+		{
+			CoroutineTool::AsyncCall([=]()
+			{
+				Hand<PlayerItemComp > item = mLoginActor->GetComponent<PlayerItemComp>();
+				//if (!user->mDataRecord)
+				{								
+					ARecord re = item->CreateItem();
+					item->NAME() = paramArray[1];
+					item->TYPE() = paramArray[2];
+					item->COUNT() = paramArray[3];
+					item->Save();
+				}
+			}
+			);
+		}
+	}
+	else if (commandString == "l2")
+	{
+		//if (paramArray.size() < 4)
+		//{
+		//	ERROR_LOG("t : test no sql must 4 param, second is key, thrid is value(json)");
+		//}
+
+		CoroutineTool::AsyncCall([=]()
+		{
+			Hand<PlayerItemComp > item = mLoginActor->GetComponent<PlayerItemComp>();
+			//if (!user->mDataRecord)
+			{
+				int i = 0;
+				while (true)
+				{
+					AString key = "ptest_";
+					key += i++;
+					if (item->Load(key, true))
+					{
+						NOTE_LOG("Item : %s \r\n%s", key.c_str(), item->mDataRecord->ToNiceData()->dump().c_str());
+					}
+					else
+						break;
+				}
+			}
+		}
+		);
+	}
+	else if (commandString == "l3")
+	{
+		CoroutineTool::AsyncCall([=]()
+		{
+			Hand<PlayerItemComp > item = mLoginActor->GetComponent<PlayerItemComp>();
+			item->mItemData.LoadAll(item.getPtr());
+		}
+		);
+	}
 }
 
 template<bool bSSL>

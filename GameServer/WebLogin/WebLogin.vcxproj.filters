@@ -86,6 +86,9 @@
     <ClInclude Include="Code\Test2Component.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Code\ItemDataComponent.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="WebLogin.rc">

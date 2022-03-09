@@ -11,6 +11,11 @@ bool NetCloud::RecordNoSQLUserComponent::Load(const AString &key, bool bNeedLoad
 	SQL_ResponseNoSQLData resp;
 	if (mpActor->Await(GetNoSQLID(), loadMsg, resp, 10000))
 	{
+		if (resp.mData->dataSize() <= 0)
+		{
+			WARN_LOG("Load %s fail", key.c_str());
+			return false;
+		}
 		if (bNeedLoadField)
 		{
 			if (!resp.mFieldData)

@@ -517,6 +517,7 @@ xcopy $(COMMON_BASE_LIB)\Bin\$(TargetName).pdb $(Server_Out_Dir)\  /y
   <ItemGroup>
     <ClInclude Include="..\Common\SDK\HttpClient.h" />
     <ClInclude Include="..\Common\SDK\SDK.h" />
+    <ClInclude Include="Code\ItemDataComponent.h" />
     <ClInclude Include="Code\LoginNetProtocol.h" />
     <ClInclude Include="Code\HttpComponect.h" />
     <ClInclude Include="Code\LoginNetComponect.h" />

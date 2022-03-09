@@ -191,7 +191,7 @@ namespace NetCloud
 				if (id > lastID)
 					lastID = id;
 			}
-			record->set(mIDCol, lastID);
+			record->set(mIDCol, lastID+1);
 
 			AString key;
 			key.Format("%s_%d", mKey.c_str(), (int)mRecordArray.size());
@@ -238,6 +238,29 @@ namespace NetCloud
 				return ARecord();
 			}
 			return mRecordArray[*pos];
+		}
+
+		void LoadAll(RecordNoSQLUserComponent *pUser)
+		{
+			AutoTable t;
+			int i = 0;
+			while (true)
+			{
+				if (t)
+					pUser->InitRecord(t->CreateRecord(0, 0));
+				AString key;
+				key.Format("%s_%d", mKey.c_str(), i++);
+				if (pUser->Load(key, !t))
+				{
+					t = pUser->mDataRecord->GetTable();
+					mRecordArray.add(pUser->mDataRecord);
+					mRecordIndex.insert(pUser->mDataRecord[mIDCol], mRecordArray.size() - 1);
+					NOTE_LOG("Item : %s \r\n%s", key.c_str(), pUser->mDataRecord->ToNiceData()->dump().c_str());
+				}
+				else
+					break;
+			}
+			pUser->mDataRecord.setNull();
 		}
 
 	protected:

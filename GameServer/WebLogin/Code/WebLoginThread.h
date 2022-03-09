@@ -20,6 +20,7 @@
 
 #include "TestNoSQLUserComponent.h"
 #include "Test2Component.h"
+#include "ItemDataComponent.h"
 
 using namespace NetCloud;
 
@@ -143,6 +144,25 @@ public:
 //	Auto<tBaseMsg> On()
 //};
 
+class PlayerItemComp : public ItemDataComponent
+{
+public:
+	RecordArray		mItemData;
+	AutoTable			mItemTable = CreateTable();
+
+	PlayerItemComp()
+	{
+		mItemData.Init("ptest", 1);
+	}
+
+	ARecord CreateItem()
+	{
+		ARecord itemRe = mItemTable->CreateRecord(0, 0);
+		mItemData.Insert(itemRe, this);
+		return itemRe;
+	}
+};
+
 class LoginActor : public NetCloud::Actor
 {
 public:
@@ -157,6 +177,7 @@ public:
 		AddComponent("TestNoSQLUserComponent");
 		AddComponent("Test2Component");
 		AddComponent("RecordNoSQLUserComponent");
+		AddComponent("PlayerItemComp");
 		Hand<HttpComponect> comp = AddComponent("HttpComponect");
 		comp->mPort = 5000;		
 
@@ -177,6 +198,7 @@ public:
 		REG_COMPONENT(pActorMgr, TestNoSQLUserComponent);
 		REG_COMPONENT(pActorMgr, Test2Component);
 		REG_COMPONENT(pActorMgr, RecordNoSQLUserComponent);
+		REG_COMPONENT(pActorMgr, PlayerItemComp);
 	}
 };
 
