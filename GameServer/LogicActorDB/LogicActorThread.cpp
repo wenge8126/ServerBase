@@ -53,7 +53,7 @@ public:
 					info.Format("Succeed create table %s", it.key().c_str());
 				}			
 #else
-				GenerateNoSQLUser::generate(configTable, "../GameServer/WebLogin/Code/", false);
+				GenerateNoSQLUser::generate(it.key(), configTable, "../GameServer/WebLogin/Code/", false);
 #endif
 			}
 			else
