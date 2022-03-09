@@ -400,7 +400,8 @@ public:
 		return serialize(&oStream); 
 	}
 
-	//virtual UINT		Execute(tNetConnect* pConnect) { return 0; }
+	void SetAttachValue(int nValue) { mID = nValue; }
+	int GetAttachValue() { return mID; }
 
 
 };

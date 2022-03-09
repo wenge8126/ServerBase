@@ -52,7 +52,7 @@ public:
 		//AddComponent("DDCom");
 	}
 
-	void On(RQ_CheckAndCreateAccount &msg, RS_CheckAndCreateAccount &resp, UnitID senderID)
+	void On(RQ_CheckAndCreateAccount &msg, RS_CheckAndCreateAccount &resp, UnitID senderID, int)
 	{
 		t_account accountRe = mAccountList.find(msg.mAccount);
 		if (!accountRe)

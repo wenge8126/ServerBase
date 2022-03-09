@@ -28,6 +28,7 @@ namespace NetCloud
 		virtual bool GetData(DataStream *pDestData) = 0;
 		virtual bool Load(const AString &key, bool bNeedLoadField) = 0;
 		virtual AString GetKey() = 0;
+		virtual int GetFieldHash() = 0;
 
 	public:
 		virtual int GetNoSQLCount() { return 1; }
@@ -43,8 +44,9 @@ namespace NetCloud
 			saveMsg.mData = MEM_NEW DataBuffer();
 			if (GetData(saveMsg.mData.getPtr()))
 			{
-				saveMsg.mFieldHash = 0;
+				saveMsg.mFieldHash = GetFieldHash();
 				saveMsg.mKey = GetKey();
+				saveMsg.SetAttachValue(GetEventFactory()->GetNameIndex());
 				return mpActor->SendMsg(saveMsg, GetNoSQLID());
 			}
 			return false;
@@ -65,6 +67,7 @@ namespace NetCloud
 		}
 
 		virtual AString GetKey() override { return mKey; }
+		virtual int GetFieldHash() override { return 0; }
 
 		virtual bool GetData(DataStream *pDestData) override
 		{
@@ -114,6 +117,13 @@ namespace NetCloud
 			return AString();
 		}
 
+		virtual int GetFieldHash()
+		{
+			if (mDataRecord)
+				return mDataRecord->getField()->GetCheckCode();
+			return -1;
+		}
+
 		virtual bool GetData(DataStream *pDestData) override
 		{
 			if (!mDataRecord)
@@ -133,7 +143,7 @@ namespace NetCloud
 		virtual AutoTable NewTable() { return MEM_NEW StructBaseTable(); }
 
 	public:
-		void On(SQL_RequestFieldData &req, SQL_ResponseFieldData &resp, UnitID sender)
+		void On(SQL_RequestFieldData &req, SQL_ResponseFieldData &resp, UnitID sender, int)
 		{
 			resp.mData = MEM_NEW DataBuffer();
 			

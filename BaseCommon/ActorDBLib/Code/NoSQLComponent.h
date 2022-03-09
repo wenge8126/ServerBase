@@ -9,7 +9,6 @@
 #include "FastHash.h"
 #include "Actor.h"
 #include "ActorManager.h"
-#include "SQLComponent.h"
 #include "PoolLoop.h"
 
 #define NOSQL_DB_TYPE			(-10000)
@@ -30,20 +29,20 @@ namespace NetCloud
 	};
 	typedef Auto<NoSQLData> ANoSQLData;
 	//-------------------------------------------------------------------------
-	class ActorDBLib_Export NoSQLComponent : public Component
+	class ActorDBLib_Export NoSQLActor : public Actor
 	{
 	public:
-		virtual void Awake()
+		virtual void Init() override
 		{
-			mFieldTable = mpActor->GetDBMgr()->GetTable(NOSQL_FIELD_TABLE);
-			mDataTable = mpActor->GetDBMgr()->GetTable(NOSQL_DATA_TABLE);
+			mFieldTable = GetDBMgr()->GetTable(NOSQL_FIELD_TABLE);
+			mDataTable = GetDBMgr()->GetTable(NOSQL_DATA_TABLE);
 			if (mFieldTable && mDataTable)
 				NOTE_LOG("NoSQL DB table ready OK")
 			else
 				ERROR_LOG("NoSQL DB table ready fail : %s : %s", NOSQL_FIELD_TABLE, NOSQL_DATA_TABLE);
 		}
 
-		virtual void LowUpdate() override
+		virtual void LowProcess() override
 		{
 			CheckCool();
 		}
@@ -148,7 +147,7 @@ namespace NetCloud
 		}
 
 	public:
-		void Notify(SQL_SaveNoSQLData &resp, UnitID senderID)
+		void Notify(SQL_SaveNoSQLData &resp, UnitID senderID, int nCompIndex)
 		{
 			//CoroutineTool::AsyncCall([=]()
 			//{
@@ -168,8 +167,9 @@ namespace NetCloud
 
 			SQL_RequestFieldData reqMsg;
 			reqMsg.mKey = resp.mKey;
+			reqMsg.SetAttachValue(nCompIndex);
 			SQL_ResponseFieldData respField;
-			if (mpActor->Await(senderID, reqMsg, respField, 10000))
+			if (Await(senderID, reqMsg, respField, 10000))
 			{
 				if (respField.mFieldHash == resp.mFieldHash)
 				{
@@ -196,7 +196,7 @@ namespace NetCloud
 			//});
 		}
 
-		void On(SQL_LoadNoSQLData &req, SQL_ResponseNoSQLData &resp, UnitID sender)
+		void On(SQL_LoadNoSQLData &req, SQL_ResponseNoSQLData &resp, UnitID sender, int)
 		{
 			auto d = CheckReload(req.mKey, false, 0);
 			if (!d)
@@ -218,7 +218,7 @@ namespace NetCloud
 			}
 		}
 
-		void On(SQL_RequestFieldData &req, SQL_ResponseFieldData &resp, UnitID sender)
+		void On(SQL_RequestFieldData &req, SQL_ResponseFieldData &resp, UnitID sender, int)
 		{
 			DB_HASH x = req.mFieldHash;
 			if (x == 0)
@@ -244,12 +244,12 @@ namespace NetCloud
 
 		virtual void RegisterMsg(ActorManager *pActorMgr) override
 		{
-			REG_COMP_NOTIFY(NoSQLComponent, SQL_SaveNoSQLData);
-			REG_COMP_MSG(NoSQLComponent, SQL_LoadNoSQLData, SQL_ResponseNoSQLData);
-			REG_COMP_MSG(NoSQLComponent, SQL_RequestFieldData, SQL_ResponseFieldData);
+			REG_NOTIFY_MSG(NoSQLActor, SQL_SaveNoSQLData);
+			REG_ACTOR_MSG(NoSQLActor, SQL_LoadNoSQLData, SQL_ResponseNoSQLData);
+			REG_ACTOR_MSG(NoSQLActor, SQL_RequestFieldData, SQL_ResponseFieldData);
 		}
 
-		NoSQLComponent()
+		NoSQLActor()
 			: mActiveList(100000)
 		{
 

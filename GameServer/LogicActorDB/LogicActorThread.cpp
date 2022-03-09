@@ -29,14 +29,14 @@ class WorkerActor : public DBActor
 {
 public:
 	// ´´½¨Íæ¼Ò
-	void On(RQ_CreatePlayerActor &msg, RS_CreatePlayerActor &resp, UnitID senderID)
+	void On(RQ_CreatePlayerActor &msg, RS_CreatePlayerActor &resp, UnitID senderID, int)
 	{
 		Hand<PlayerActor> player = GetMgr()->CreateActor(Actor_Player, msg.mPlayerID);
 		player->Init();
 		resp.mResult = eNoneError;
 	}
 
-	void On(RQ_CreateDBTable &msg, RS_CreateDBTable &resp, UnitID senderID)
+	void On(RQ_CreateDBTable &msg, RS_CreateDBTable &resp, UnitID senderID, int)
 	{
 		LOG("Rev %s msg %s :\r\n%s", senderID.dump().c_str(), msg.GetMsgName(), msg.dump().c_str());		
 

@@ -131,6 +131,7 @@ bool NetCloud::Actor::SendMsg(const AString &msgName, tBaseMsg &msg, UnitID targ
 	pak->mSenderID = GetID();
 
 	pak->mData.clear(false);
+	pak->mData.write(msg.GetAttachValue());
 	pak->mData.writeString(msgName);
 	msg.serialize(&pak->mData);
 
@@ -152,13 +153,7 @@ bool NetCloud::Actor::OnReceiveProcess(NodePacket *pNodePacket)
 			ERROR_LOG("Actor %s Node is NULL, May be not append node", GetID().dump().c_str());
 			return AutoNice();
 		}
-		AString msgName;
-		pak->mData.seek(0);
-		if (!pak->mData.readString(msgName))
-		{
-			ERROR_LOG("Read msg name fail");
-			return true;
-		}
+
 		switch (pak->mMsgType)
 		{
 		case eActorMsg_response:
@@ -177,6 +172,15 @@ bool NetCloud::Actor::OnReceiveProcess(NodePacket *pNodePacket)
 		}
 		case eActorMsg_Reqeust:
 		{	
+			int nCompValue = 0;
+			AString msgName;
+			pak->mData.seek(0);
+			pak->mData.read(nCompValue);
+			if (!pak->mData.readString(msgName))
+			{
+				ERROR_LOG("Read msg name fail");
+				return true;
+			}
 			auto fun = mActorFactory->mOnMsgFunctionList.find(msgName);
 			if (fun==NULL)
 				fun = GetMgr()->mOnMsgFunctionList.find(msgName);
@@ -187,7 +191,7 @@ bool NetCloud::Actor::OnReceiveProcess(NodePacket *pNodePacket)
 					Auto< AsyncProtocol> protocol = pNetNode->GetNet()->GetNetProtocol();
 					Auto<TransferPacket> respPacket = protocol->CreatePacket(eNGN_TransferMsg);
 					respPacket->mSenderID = pak->mSenderID;
-					(*fun)(this, (DataStream*)&pak->mData, respPacket.getPtr());
+					(*fun)(this, (DataStream*)&pak->mData, respPacket.getPtr(), nCompValue);
 					respPacket->mSenderID = GetID();
 					respPacket->mTargetID = pak->mSenderID;
 					respPacket->mRequestID = pak->mRequestID;
@@ -203,6 +207,15 @@ bool NetCloud::Actor::OnReceiveProcess(NodePacket *pNodePacket)
 
 		case eActorMsg_Notify:
 		{			
+			int nCompValue = 0;
+			AString msgName;
+			pak->mData.seek(0);
+			pak->mData.read(nCompValue);
+			if (!pak->mData.readString(msgName))
+			{
+				ERROR_LOG("Read msg name fail");
+				return true;
+			}
 			auto fun = mActorFactory->mOnNotifyMsgFunctionList.find(msgName);
 			if (fun == NULL)
 				fun = GetMgr()->mOnNotifyMsgFunctionList.find(msgName);
@@ -210,7 +223,7 @@ bool NetCloud::Actor::OnReceiveProcess(NodePacket *pNodePacket)
 			{
 				CoroutineTool::AsyncCall([=]()
 				{
-					(*fun)(this, (DataStream*)&pak->mData, pak->mSenderID);
+					(*fun)(this, (DataStream*)&pak->mData, pak->mSenderID, nCompValue);
 				});
 			}
 			else

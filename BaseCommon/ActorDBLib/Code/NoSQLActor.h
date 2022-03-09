@@ -9,22 +9,22 @@
 namespace NetCloud
 {
 
-	class NoSQLActor : public Actor
-	{
-	public:
-		virtual void Init() override
-		{
-			AddComponent("NoSQLComponent");
-			//AddComponent("DBMySQLComponent");
-		}
+	//class NoSQLActor : public Actor
+	//{
+	//public:
+	//	virtual void Init() override
+	//	{
+	//		AddComponent("NoSQLComponent");
+	//		//AddComponent("DBMySQLComponent");
+	//	}
 
-	public:
-		virtual void RegisterMsg(ActorManager *pActorMgr) override
-		{
-			REG_COMPONENT(pActorMgr, NoSQLComponent);
-			//REG_COMPONENT(pActorMgr, DBMySQLComponent);
-		}
-	};
+	//public:
+	//	virtual void RegisterMsg(ActorManager *pActorMgr) override
+	//	{
+	//		REG_COMPONENT(pActorMgr, NoSQLComponent);
+	//		//REG_COMPONENT(pActorMgr, DBMySQLComponent);
+	//	}
+	//};
 	//-------------------------------------------------------------------------
 	class NoSQLUserActor : public Actor
 	{

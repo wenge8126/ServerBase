@@ -61,7 +61,7 @@ public:
 			int type = get("UNIT_TYPE");
 			Int64 id = get("UNIT_ID");
 
-			GetResponseEvent()["RESP"] = GetActor()->Await({ type, id }, msgName, GetData(), 6000).getPtr();
+			GetResponseEvent()["RESP"] = GetActor()->Await({ type, id }, msgName, GetData(), 6000, 0).getPtr();
 		}
 		Finish();
 	}

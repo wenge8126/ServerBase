@@ -23,7 +23,7 @@ DEFINE_RUN_CONFIG(LogicActorDBConfig)
 class WorkerActor : public DBActor
 {
 public:
-	void On(RQ_CreateDBTable &msg, RS_CreateDBTable &resp, UnitID senderID)
+	void On(RQ_CreateDBTable &msg, RS_CreateDBTable &resp, UnitID senderID, int)
 	{
 		LOG("Rev %s msg %s :\r\n%s", senderID.dump().c_str(), msg.GetMsgName(), msg.dump().c_str());
 

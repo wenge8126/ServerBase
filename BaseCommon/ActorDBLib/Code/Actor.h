@@ -59,8 +59,8 @@ namespace NetCloud
 
 	typedef Auto<ActorMgrPtr>	AutoActorMsgPtr;
 
-	typedef int(*pActorMsgCall)(Actor*, DataStream*, TransferPacket*);
-	typedef void(*pActorNotifyMsgCall)(Actor*, DataStream*, UnitID);
+	typedef int(*pActorMsgCall)(Actor*, DataStream*, TransferPacket*, int);
+	typedef void(*pActorNotifyMsgCall)(Actor*, DataStream*, UnitID, int);
 
 	//-------------------------------------------------------------------------
 	class ActorDBLib_Export ActorFactory : public AutoBase
@@ -114,6 +114,17 @@ namespace NetCloud
 			return mComponentList.find(compName);
 		}
 
+		AComponent GetComponent(int nCompNameIndex)
+		{
+			for (int i = 0; i < mComponentList.size(); ++i)
+			{
+				AComponent comp = mComponentList.get(i);
+				if (comp && comp->GetEventFactory()->GetNameIndex()==nCompNameIndex)
+					return comp;
+			}
+			return AComponent();
+		}
+
 		template<typename T>
 		Hand<T> GetComponent()
 		{
@@ -149,6 +160,7 @@ namespace NetCloud
 			Auto<TransferPacket> tranPak = protocol->CreatePacket(eNGN_TransferMsg);
 			tranPak->mData.clear(false);
 			// 在数据开关写入请求消息名称
+			tranPak->mData.write(respMsg.GetAttachValue());
 			tranPak->mData.writeString(reqestMsg.GetMsgName());
 			reqestMsg.serialize(&tranPak->mData);
 			AutoNice respNice = Await(tranPak, targetID, waitMilSecond);
@@ -161,7 +173,7 @@ namespace NetCloud
 		}
 	
 	
-		AutoNice Await(UnitID targetID, const AString &requestMsgName, tNiceData &reqestMsg, int waitMilSecond)
+		AutoNice Await(UnitID targetID, const AString &requestMsgName, tNiceData &reqestMsg, int waitMilSecond, int nCompIndex)
 		{
 			if (CORO == 0)
 			{
@@ -181,6 +193,7 @@ namespace NetCloud
 			Auto<TransferPacket> tranPak = protocol->CreatePacket(eNGN_TransferMsg);
 			tranPak->mData.clear(false);
 			// 在数据开关写入请求消息名称
+			tranPak->mData.write(nCompIndex);
 			tranPak->mData.writeString(requestMsgName);
 			reqestMsg.serialize(&tranPak->mData);
 			return Await(tranPak, targetID, waitMilSecond);
@@ -201,7 +214,7 @@ namespace NetCloud
 		// 注册 pActorMgr->RegisterActorMsg(#RQ, &Actor::OnMsg<ActorClass, RQ, RS>);
 		// 已经在协程内处理
 		template<typename T, typename ReqMsg, typename RespMsg>
-		static int OnMsg(Actor *pActor, DataStream *pReqestMsgData, TransferPacket *pResponse)
+		static int OnMsg(Actor *pActor, DataStream *pReqestMsgData, TransferPacket *pResponse, int nCompIndex)
 		{			
 			ReqMsg pMsg;			
 			//pReqestMsgData->seek(0);
@@ -217,7 +230,7 @@ namespace NetCloud
 				ERROR_LOG("%s parent class is not Actor", typeid(T).name());
 				return eSourceCodeError;
 			}
-			p->On(pMsg, respMsg, pResponse->mSenderID);
+			p->On(pMsg, respMsg, pResponse->mSenderID, nCompIndex);
 			//pResponse->mResultType = eNoneError;
 			//LOG("Respons msg %s:\r\n%s", respMsg.GetMsgName(), respMsg.dump().c_str());
 			pResponse->mData.clear();
@@ -229,7 +242,7 @@ namespace NetCloud
 		// 处理一般通知消息
 		// 注册 pActorMgr->RegisterActorMsg(#RQ, &Actor::OnNotify<ActorClass, RQ>);
 		template<typename T, typename Msg>
-		static void OnNotify(Actor *pActor, DataStream *pMsgData, UnitID senderID)
+		static void OnNotify(Actor *pActor, DataStream *pMsgData, UnitID senderID, int nCompIndex)
 		{
 			Msg pMsg;
 			//pMsgData->seek(0);
@@ -244,12 +257,12 @@ namespace NetCloud
 				ERROR_LOG("%s parent class is not Actor", typeid(T).name());
 				return;
 			}
-			p->Notify(pMsg, senderID);			
+			p->Notify(pMsg, senderID, nCompIndex);			
 		}
 
 		// 注册 pActorMgr->RegisterActorMsg(#RQ, &Actor::OnComponentNotify<ComponentClass, RQ>);
 		template<typename T, typename Msg>
-		static void OnComponentNotify(Actor *pActor, DataStream *pMsgData, UnitID senderID)
+		static void OnComponentNotify(Actor *pActor, DataStream *pMsgData, UnitID senderID, int nCompIndex)
 		{
 			Msg pMsg;
 			//pMsgData->seek(0);
@@ -258,18 +271,26 @@ namespace NetCloud
 				ERROR_LOG("%s restore fail", pMsg.GetMsgName());
 				return;
 			}
-			Hand<T> comp = pActor->GetComponent<T>();
+			Hand<T> comp;
+			if (nCompIndex == 0)
+				comp = pActor->GetComponent<T>();
+			else
+			{
+				comp = pActor->GetComponent(nCompIndex);
+				if (!comp)
+					comp = pActor->GetComponent<T>();
+			}
 			if (!comp)
 			{
 				ERROR_LOG("%s parent class is not Componect %s", typeid(*pActor).name(), typeid(T).name());
 				return;
 			}
-			comp->Notify(pMsg, senderID);
+			comp->Notify(pMsg, senderID, nCompIndex);
 		}
 
 		// 注册 pActorMgr->RegisterActorMsg(#RQ, &Actor::OnComponentMsg<ComponentClass, RQ, RS>);
 		template<typename T, typename ReqMsg, typename RespMsg>
-		static int OnComponentMsg(Actor *pActor, DataStream *pReqestMsgData, TransferPacket *pResponse)
+		static int OnComponentMsg(Actor *pActor, DataStream *pReqestMsgData, TransferPacket *pResponse, int nCompIndex)
 		{
 			ReqMsg pMsg;
 			//!!! 新的协议数据开头为消息名称,后面即为消息数据 pReqestMsgData->seek(0);
@@ -280,13 +301,21 @@ namespace NetCloud
 			}
 			RespMsg respMsg;
 
-			Hand<T> comp = pActor->GetComponent<T>();		
+			Hand<T> comp;
+			if (nCompIndex == 0)
+				comp = pActor->GetComponent<T>();
+			else
+			{
+				comp = pActor->GetComponent(nCompIndex);
+				if (!comp)
+					comp = pActor->GetComponent<T>();
+			}
 			if (!comp)
 			{
 				ERROR_LOG("%s parent class is not Componect %s", typeid(*pActor).name(), typeid(T).name());
 				return eSourceCodeError;
 			}
-			comp->On(pMsg, respMsg, pResponse->mSenderID);
+			comp->On(pMsg, respMsg, pResponse->mSenderID, nCompIndex);
 			//pResponse->mResultType = eNoneError;
 			//LOG("Respons msg %s:\r\n%s", respMsg.GetMsgName(), respMsg.dump().c_str());
 			pResponse->mData.clear();

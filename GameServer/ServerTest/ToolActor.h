@@ -6,7 +6,7 @@
 class FFComp : public Component
 {
 public:
-	void Notify(RQ_CheckAndCreateAccount &msg, UnitID sender)
+	void Notify(RQ_CheckAndCreateAccount &msg, UnitID sender, int)
 	{
 		LOG("cccccccc %s", msg.dump().c_str());
 	}

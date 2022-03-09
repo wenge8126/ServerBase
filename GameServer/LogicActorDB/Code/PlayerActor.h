@@ -5,7 +5,7 @@
 class PlayerActor : public NetCloud::DBActor
 {
 public:
-	void On(RQ_PlayerBaseData &msg, RS_PlayerBaseData &resp, UnitID)
+	void On(RQ_PlayerBaseData &msg, RS_PlayerBaseData &resp, UnitID, int)
 	{
 		if (mData)
 			resp.mPlayerData = mData.mRecord->ToNiceData();
@@ -35,7 +35,7 @@ public:
 class GameServerActor : public NetCloud::DBActor
 {
 public:
-	void On(RQ_CreatePlayerData &msg, RS_CreatePlayerData &resp, UnitID senderID)
+	void On(RQ_CreatePlayerData &msg, RS_CreatePlayerData &resp, UnitID senderID, int)
 	{
 		t_player data = GetDBMgr()->GetTable(TABLE_PLAYER)->GrowthNewRecord();
 		data.ACCOUNT() = msg.mAccount;
