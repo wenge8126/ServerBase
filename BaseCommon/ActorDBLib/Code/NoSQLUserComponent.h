@@ -169,8 +169,13 @@ namespace NetCloud
 		int GetCount() { return mRecordArray.size(); }
 
 		// 调用Insert插入后, 再保存, 主要是重新设置KEY
-		void Insert(ARecord  record, RecordNoSQLUserComponent *pUser)
+		bool Insert(ARecord  record, RecordNoSQLUserComponent *pUser)
 		{
+			if (!mbLoaded)
+			{
+				ERROR_LOG("Now is not init load, Can not inset record");
+				return false;
+			}
 			// 设置最大ID
 			int lastID = 0;
 			for (int i=0; i<mRecordArray.size(); ++i)
@@ -194,6 +199,11 @@ namespace NetCloud
 
 		bool Remove(ARecord  record, RecordNoSQLUserComponent *pUser)
 		{
+			if (!mbLoaded)
+			{
+				ERROR_LOG("Now is not init load, Can not inset record");
+				return false;
+			}
 			int *pos = mRecordIndex.findPtr(record[mIDCol]);
 			if (pos == NULL)
 			{
@@ -269,6 +279,7 @@ namespace NetCloud
 					break;
 			}
 			pUser->mDataRecord.setNull();
+			mbLoaded = mRecordArray.size() == count;
 			return mRecordArray.size() == count;
 		}
 
@@ -277,6 +288,7 @@ namespace NetCloud
 		EasyMap<Int64, int>				mRecordIndex;
 		AString		mKey;
 		int			mIDCol = 1;					// ID在记录中的列
+		bool			mbLoaded = false;
 	};
 	//-------------------------------------------------------------------------
 }
