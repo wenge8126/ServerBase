@@ -152,7 +152,7 @@ public:
 
 	PlayerItemComp()
 	{
-		mItemData.Init("ptest", 1);
+		mItemData.Init("Test");
 	}
 
 	ARecord CreateItem()

@@ -159,17 +159,16 @@ namespace NetCloud
 	class ActorDBLib_Export_H RecordArray : public AutoBase
 	{
 	public:
-		void Init(AString key, int idCol)
+		void Init(AString key)
 		{
 			mKey = key;
-			mIDCol = idCol;
 		}
 
 		// 用于保存信息
 		int GetCount() { return mRecordArray.size(); }
 
 		// 调用Insert插入后, 再保存, 主要是重新设置KEY
-		bool Insert(ARecord  record, RecordNoSQLUserComponent *pUser)
+		bool Insert(ARecord  record, RecordNoSQLUserComponent *pUser, int nIDCol = 0)
 		{
 			if (!mbLoaded)
 			{
@@ -181,85 +180,96 @@ namespace NetCloud
 			for (int i=0; i<mRecordArray.size(); ++i)
 			{
 				ARecord re = mRecordArray[i];
-				int id = re[mIDCol];
+				int id = re[nIDCol];
 				if (id > lastID)
 					lastID = id;
 			}
-			record->set(mIDCol, lastID+1);
+			record->set(nIDCol, lastID+1);
 
 			AString key;
 			key.Format("%s_%d", mKey.c_str(), (int)mRecordArray.size());
-			//record->set(0, key);
 			mRecordArray.add(record);
-			mRecordIndex.insert(record[mIDCol], mRecordArray.size() - 1);
 
 			pUser->InitRecord(record);
-			pUser->Save(key);
+			return pUser->Save(key);
 		}
 
-		bool Remove(ARecord  record, RecordNoSQLUserComponent *pUser)
+		bool Remove(ARecord  record, RecordNoSQLUserComponent *pUser, int nIDCol = 0)
 		{
 			if (!mbLoaded)
 			{
 				ERROR_LOG("Now is not init load, Can not inset record");
 				return false;
 			}
-			int *pos = mRecordIndex.findPtr(record[mIDCol]);
-			if (pos == NULL)
+			int pos = FindArrayIndex(record);
+			if (pos == NULL_POS)
 			{
-				ERROR_LOG("No exist record %s %d", record[0].c_str(), (int)record[mIDCol]);
+				ERROR_LOG("No exist record %s %d", record[0].c_str(), (int)record[nIDCol]);
 				return false;
 			}
-			if (mRecordArray.removeAt((size_t)*pos))
+			
+			
+			if (pos < mRecordArray.size() - 1)
 			{
-				if (*pos < mRecordArray.size())
-				{
-					// 移动到删除位置了
-					ARecord lastRecord = mRecordArray[*pos];
-					AString key = mKey;
-					key.Format("%s_%d", mKey.c_str(), *pos);
-					//lastRecord->set(0, key);
-					pUser->InitRecord(lastRecord);
-					pUser->Save(key);
-					// 最后删除的忽略删除, 下次增加后会被覆盖
-				}
-				return true;
+				// 移动到删除位置了
+				ARecord lastRecord = mRecordArray[mRecordArray.size() - 1];
+				AString key = mKey;
+				key.Format("%s_%d", mKey.c_str(), pos);
+				pUser->InitRecord(lastRecord);
+				pUser->Save(key);
+				// 最后删除的忽略删除, 下次增加后会被覆盖
 			}
-			return false;
+				
+			return mRecordArray.removeAt((size_t)pos);						
 		}
 
-		ARecord Find(int id)
+		virtual ARecord Find(int id, int nIDCol = 0, int *nArrayIndex = NULL)
 		{
-			int *pos = mRecordIndex.findPtr(id);
-			if (pos == NULL)
+			for (int i=0; i<mRecordArray.size(); ++i)
 			{
-				ERROR_LOG("No exist record %d", id);
-				return ARecord();
+				ARecord re = mRecordArray[i];
+				if ((int)re[nIDCol] == id)
+				{
+					if (nArrayIndex!=NULL)
+						*nArrayIndex = i;
+					return re;
+				}
 			}
-			return mRecordArray[*pos];
+			if (nArrayIndex != NULL)
+				*nArrayIndex = NULL_POS;
+			return ARecord();
 		}
+
+		virtual int FindArrayIndex(ARecord record)
+		{
+			for (int i = 0; i < mRecordArray.size(); ++i)
+			{
+				if (record == mRecordArray[i])				
+				{					
+					return i;
+				}
+			}
+			return NULL_POS;			
+		}
+
 
 		AString GetRecordKey(ARecord re)
 		{
 			AString key;
-			int id = re[mIDCol];
-			int *pos = mRecordIndex.findPtr(id);
-			if (pos != NULL)
+		
+			int pos = FindArrayIndex(re);
+			if (pos != NULL_POS)
 			{
-				if (*pos < mRecordArray.size() && mRecordArray[*pos] == re)
-					key.Format("%s_%d", mKey.c_str(), *pos);
-				else
-					ERROR_LOG("%d Is not same record at array", id);
+				key.Format("%s_%d", mKey.c_str(), pos);								
 			}
 			else
-				ERROR_LOG("No find record pos id : %d", id);
-			return AString();
+				ERROR_LOG("No find record pos id : %d", re->ToNiceData()->ToJSON().c_str());
+			return key;
 		}
 
 		bool LoadAll(int count, RecordNoSQLUserComponent *pUser)
 		{
 			mRecordArray.clear(false);
-			mRecordIndex.clear(false);
 			AutoTable t;
 			int i = 0;
 			while (i<count)
@@ -272,7 +282,6 @@ namespace NetCloud
 				{
 					t = pUser->mDataRecord->GetTable();
 					mRecordArray.add(pUser->mDataRecord);
-					mRecordIndex.insert(pUser->mDataRecord[mIDCol], mRecordArray.size() - 1);
 					NOTE_LOG("Item : %s \r\n%s", key.c_str(), pUser->mDataRecord->ToNiceData()->dump().c_str());
 				}
 				else
@@ -280,14 +289,14 @@ namespace NetCloud
 			}
 			pUser->mDataRecord.setNull();
 			mbLoaded = mRecordArray.size() == count;
+			if (!mbLoaded)
+				ERROR_LOG("Load count %d != %d", (int)mRecordArray.size(), count);
 			return mRecordArray.size() == count;
 		}
 
 	protected:
 		ArrayList<ARecord>				mRecordArray;
-		EasyMap<Int64, int>				mRecordIndex;
 		AString		mKey;
-		int			mIDCol = 1;					// ID在记录中的列
 		bool			mbLoaded = false;
 	};
 	//-------------------------------------------------------------------------

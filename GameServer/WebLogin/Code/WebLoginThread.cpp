@@ -587,14 +587,34 @@ void WebLoginThread::DoCommand(const AString &commandString, StringArray &paramA
 	}
 	else if (commandString == "l3")
 	{
-	if (paramArray.size() < 2)
+		if (paramArray.size() < 2)
 		{
 			ERROR_LOG("t : test no sql must 2 param, second is key, thrid is value(json)");
+			return;
 		}
 		CoroutineTool::AsyncCall([=]()
 		{
 			Hand<PlayerItemComp > item = mLoginActor->GetComponent<PlayerItemComp>();
 			item->mItemData.LoadAll(TOINT(paramArray[1].c_str()), item.getPtr());
+		}
+		);
+	}
+	else if (commandString == "r")
+	{
+		if (paramArray.size() < 2)
+		{
+			ERROR_LOG("t : test no sql must 2 param, second is key, thrid is value(json)");
+			return;
+		}
+		CoroutineTool::AsyncCall([=]()
+		{
+			int id = TOINT(paramArray[1].c_str());
+			Hand<PlayerItemComp > item = mLoginActor->GetComponent<PlayerItemComp>();
+			ARecord re = item->mItemData.Find(id);
+			if (re)
+				item->mItemData.Remove(re, item.getPtr());
+			else
+				ERROR_LOG("No find item %d", id)
 		}
 		);
 	}
