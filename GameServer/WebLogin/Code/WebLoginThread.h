@@ -32,6 +32,10 @@ class WebLoginThread : public ServerThread
 {
 public:
 	WebLoginThread();
+	~WebLoginThread()
+	{
+		mServerList._free();
+	}
 
 	virtual AString GetTitle() override;
 	virtual void SetTitle(const AString &title);
@@ -63,8 +67,8 @@ public:
 	virtual void LowProcess(int spaceTime) override
 	{
 		ServerThread::LowProcess(spaceTime);
-
-		mActorManager->LowProcess();
+		if (mActorManager)
+			mActorManager->LowProcess();
 	}
 
 	virtual bool StartError() { return !mbStartOk; }

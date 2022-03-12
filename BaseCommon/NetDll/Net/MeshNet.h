@@ -38,6 +38,10 @@ public:
 
 public:
 	MeshNet(int nCode, size_t maxConnectCount = NET_CONNECT_MAX, int threadNum = _IOCP_THREAD_NUM);
+	~MeshNet()
+	{
+		mNodeClientNet._free();
+	}
 
 public:
 	virtual void OnConnectNode(AConnectData nodeData){ }
@@ -67,6 +71,8 @@ public:
 	{
 		mbClose = true;
 		IOCPServerNet::StopNet();
+		mNodeClientNet->StopNet();
+		mServerNodeList.clear();
 	}
 
 	virtual void Process() override

@@ -88,6 +88,12 @@ public:
 
 	void OnDestory() override;
 
+public:
+	~TcpComponent()
+	{
+		mTcpNet._free();
+	}
+
 protected:
 	AutoNet		mTcpNet;
 

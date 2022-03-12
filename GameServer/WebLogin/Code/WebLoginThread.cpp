@@ -267,6 +267,7 @@ void WebLoginThread::OnStart(void*)
 	}
 }
 
+bool gbCanClose = false;
 
 bool WebLoginThread::NotifyThreadClose()
 {
@@ -290,7 +291,18 @@ bool WebLoginThread::NotifyThreadClose()
 		TimeManager::Sleep(100);
 	}
 
-	return ServerThread::NotifyThreadClose();
+	CoroutineTool::AsyncCall([=]()
+	{
+		mActorManager->Close();
+		tTimer::AWaitTime(6000);
+		mActorManager._free();
+		gbCanClose = true;
+		setActive(false);
+	}
+	);
+
+	return false;
+	//return ServerThread::NotifyThreadClose();
 }
 
 void WebLoginThread::Process(void*)

@@ -88,10 +88,17 @@ namespace NetCloud
 
 		virtual void LowProcess();
 
+		void Close()
+		{
+			if (mNetNode)
+				mNetNode->CloseNode();
+		}
+
 	public:
 		ActorManager(const char *szCloudNodeIp, int nCloudNodePort, int nSafeCheck, int threadNum = 2);
 		~ActorManager()
 		{
+			mNetNode._free();
 			mSelfPtr->mpMgr = nullptr;
 			mEventCenter._free();
 		}

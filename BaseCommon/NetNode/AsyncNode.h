@@ -11,6 +11,14 @@ class Net_Export  AsyncNode : public tNetProcess
 {
 public:
 	AsyncNode();
+	~AsyncNode()
+	{
+		mGateList.clear();
+		mUnitList.clear();
+		mUnitNodeIndex.clear();
+		mWaitAppendList.clear();
+		mNodeNet._free();
+	}
 
 public:
 	virtual void StartNode(const char *szNodeIP, int nPort, int nSafeCheck)
