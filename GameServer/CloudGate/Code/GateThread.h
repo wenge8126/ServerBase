@@ -32,6 +32,7 @@ public:
 	virtual bool NotifyThreadClose() override
 	{
 		mGate->CloseGate();
+		mGate._free();
 		return ServerThread::NotifyThreadClose();
 	}
 

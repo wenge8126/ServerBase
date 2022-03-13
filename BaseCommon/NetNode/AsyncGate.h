@@ -14,6 +14,10 @@ class Net_Export AsyncGate : public tNetProcess
 {
 public:
 	AsyncGate(size_t maxConnectCount = NET_CONNECT_MAX, int threadNum = _IOCP_THREAD_NUM);
+	~AsyncGate()
+	{
+		mGateNet._free();
+	}
 
 public:
 	void StartGate(int gateCount, int gateCode, const char* szGateIP, int gatePort, const char *szMainIP, int mainPort, int nSafeCode)
@@ -29,6 +33,8 @@ public:
 
 	void CloseGate()
 	{
+		mUnitList.clear();
+		mNodeList.clear();
 		mGateNet->StopNet();
 	}
 

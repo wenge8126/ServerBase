@@ -206,11 +206,10 @@ void NoSQLDBThread::OnStart(void*)
 
 bool NoSQLDBThread::NotifyThreadClose()
 {
-
+	mWorkerActor._free();
+	mNoSQLDBActor._free();
 	// 等待所有的落地操作完成
 	mActorManager->Close();
-
-
 
 	const int waitSecondTime = 3;  // 10
 	int nowPassSecond = 0;

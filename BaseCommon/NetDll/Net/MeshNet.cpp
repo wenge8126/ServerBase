@@ -52,16 +52,18 @@ public:
 
 		if (!mpOwnerNet->mbClose)
 		{
+			AString ip = pConnect->GetIp();
+			int port = pConnect->GetPort();
 			CoroutineTool::AsyncCall(
 				[=]()
-			{
-				tTimer::AWaitTime(100);
-				while (!mpOwnerNet->mbClose)
-				{
-					HandConnect nodeConnect = AwaitConnect(pConnect->GetIp(), pConnect->GetPort(), 3000);
-					if (nodeConnect)
-						break;
-				}
+			{			
+					tTimer::AWaitTime(100);
+					while (!mpOwnerNet->mbClose)
+					{
+						HandConnect nodeConnect = AwaitConnect(ip.c_str(), port, 3000);
+						if (nodeConnect)
+							break;
+					}				
 			}
 			);
 		}

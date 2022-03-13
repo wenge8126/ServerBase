@@ -38,7 +38,7 @@ public:
     virtual void OnStart(void*);
     virtual void OnStop(void*) 
     {
-
+		
     }
 	// √ø√Î1ÕÚ¥ŒLoop
     virtual int OnceTime(void) const { return 20; }
