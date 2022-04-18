@@ -81,22 +81,22 @@ namespace AI
 			if (OnTrigger(eventType, pData))
 				return true;
 
-			if (up)
-			{
-				if (mParent)
-				{				
-					return mParent->_Trigger(eventType, pData, up);
-				}
-			}
-			else
-			{
-				for (auto it=mChildrenList.begin(); it; ++it)
-				{
-					ANode n = *it;
-					if (n->_Trigger(eventType, pData, up))
-						return true;
-				}					
-			}
+			//if (up)
+			//{
+			//	if (mParent)
+			//	{				
+			//		return mParent->_Trigger(eventType, pData, up);
+			//	}
+			//}
+			//else
+			//{
+			//	for (auto it=mChildrenList.begin(); it; ++it)
+			//	{
+			//		ANode n = *it;
+			//		if (n->_Trigger(eventType, pData, up))
+			//			return true;
+			//	}					
+			//}
 			return false;
 		}
 

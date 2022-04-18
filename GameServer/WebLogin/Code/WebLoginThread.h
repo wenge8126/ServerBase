@@ -21,6 +21,7 @@
 #include "TestNoSQLUserComponent.h"
 #include "Test2Component.h"
 #include "ItemDataComponent.h"
+#include "LoginNetComponect.h"
 
 using namespace NetCloud;
 
@@ -203,6 +204,7 @@ public:
 		REG_COMPONENT(pActorMgr, Test2Component);
 		REG_COMPONENT(pActorMgr, RecordNoSQLUserComponent);
 		REG_COMPONENT(pActorMgr, PlayerItemComp);
+		REG_COMPONENT(pActorMgr, LoginNetComponect);
 	}
 };
 

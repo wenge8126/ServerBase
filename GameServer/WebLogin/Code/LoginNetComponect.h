@@ -2,6 +2,7 @@
 
 #include "NetWorkerComponent.h"
 #include "MsgData.h"
+#include "CommonDefine.h"
 
 using namespace NetCloud;
 
