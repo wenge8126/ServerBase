@@ -22,6 +22,8 @@
 #include "LoginNetComponect.h"
 #include "AsyncLoop.h"
 
+#include "DBUserComponent.h"
+
 using namespace uWS;
 
 using namespace NetCloud;

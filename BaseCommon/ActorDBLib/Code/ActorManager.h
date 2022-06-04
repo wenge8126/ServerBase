@@ -57,13 +57,18 @@ namespace NetCloud
 			//ActorRequestPacket::RegisterDBPacket(mNetNode.getPtr());
 		}
 
-		void RegisterActorMsg(const AString &msgName, pActorMsgCall  pFun)
+		// 当前一类消息只能被一种组件使用, 可以通过"组件名_消息名" 方式实现一类消息被多种组件使用, 发送时需要注意组件名前缀(需要区分是否为组件消息, 所以当前定义多种相同消息即可解决)		
+		void RegisterActorComMsg(const AString &msgName, pActorMsgCall  pFun)
 		{
+			if (mOnMsgFunctionList.exist(msgName))
+				WARN_LOG("Aleardy exist component msg [%s]", msgName.c_str());
 			mOnMsgFunctionList.insert(msgName, pFun);
 		}
 
-		void RegisterNotifyMsg(const AString &notifyMsgName, pActorNotifyMsgCall  pFun)
+		void RegisterComNotifyMsg(const AString &notifyMsgName, pActorNotifyMsgCall  pFun)
 		{
+			if (mOnNotifyMsgFunctionList.exist(notifyMsgName))
+				WARN_LOG("Aleardy exist component notify msg [%s]", notifyMsgName.c_str());
 			mOnNotifyMsgFunctionList.insert(notifyMsgName, pFun);
 		}
 

@@ -36,8 +36,8 @@ Actor
 #define REG_ACTOR_MSG(ActorClass, RQ, RS)		mActorFactory->RegisterActorMsg(#RQ, &Actor::OnMsg<ActorClass, RQ, RS>);
 #define REG_NOTIFY_MSG(ActorClass, MSG)		mActorFactory->RegisterNotifyMsg(#MSG, &Actor::OnNotify<ActorClass, MSG>);
 // 注册组件消息处理
-#define REG_COMP_MSG(ComponentClass, RQ, RS)		pActorMgr->RegisterActorMsg(#RQ, &Actor::OnComponentMsg<ComponentClass, RQ, RS>);
-#define REG_COMP_NOTIFY(ComponentClass, MSG)		pActorMgr->RegisterNotifyMsg(#MSG, &Actor::OnComponentNotify<ComponentClass, MSG>);
+#define REG_COMP_MSG(ComponentClass, RQ, RS)		pActorMgr->RegisterActorComMsg(#RQ, &Actor::OnComponentMsg<ComponentClass, RQ, RS>);
+#define REG_COMP_NOTIFY(ComponentClass, MSG)		pActorMgr->RegisterComNotifyMsg(#MSG, &Actor::OnComponentNotify<ComponentClass, MSG>);
 //-------------------------------------------------------------------------
 enum ActorMsgType
 {
@@ -77,11 +77,15 @@ namespace NetCloud
 
 		void RegisterActorMsg(const AString &msgName, pActorMsgCall  pFun)
 		{
+			if (mOnMsgFunctionList.exist(msgName))
+				WARN_LOG("Aleardy exist actor request msg [%s]", msgName.c_str());
 			mOnMsgFunctionList.insert(msgName, pFun);
 		}
 
 		void RegisterNotifyMsg(const AString &notifyMsgName, pActorNotifyMsgCall  pFun)
 		{
+			if (mOnNotifyMsgFunctionList.exist(notifyMsgName))
+				WARN_LOG("Aleardy exist actor notify msg [%s]", notifyMsgName.c_str());
 			mOnNotifyMsgFunctionList.insert(notifyMsgName, pFun);
 		}
 

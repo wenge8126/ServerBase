@@ -116,6 +116,12 @@
     <ClInclude Include="Code\NoSQLUserComponent.h">
       <Filter>DBCode</Filter>
     </ClInclude>
+    <ClInclude Include="Code\DBUserComponent.h">
+      <Filter>DBCode</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\GenerateDBUser.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ActorDB说明.txt">

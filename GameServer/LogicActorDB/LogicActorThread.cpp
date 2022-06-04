@@ -17,6 +17,9 @@
 #include "PlayerActor.h"
 
 #include "GenerateNoSQLUser.h"
+#include "GenerateDBUser.h"
+
+#include "Test2Component.h"
 
 #define CREATE_DB		0
 
@@ -53,7 +56,8 @@ public:
 					info.Format("Succeed create table %s", it.key().c_str());
 				}			
 #else
-				GenerateNoSQLUser::generate(it.key(), configTable, "../GameServer/WebLogin/Code/", false);
+				//GenerateNoSQLUser::generate(it.key(), configTable, "../GameServer/WebLogin/Code/", false);
+				GenerateDBUser::generate(it.key(), configTable, "../GameServer/Common/", false);
 #endif
 			}
 			else

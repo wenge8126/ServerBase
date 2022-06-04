@@ -181,6 +181,7 @@ bool NetCloud::Actor::OnReceiveProcess(NodePacket *pNodePacket)
 				ERROR_LOG("Read msg name fail");
 				return true;
 			}
+			// 先查找是否注册了Actor处理, 再从Mgr查找注册的组件消息处理函数
 			auto fun = mActorFactory->mOnMsgFunctionList.find(msgName);
 			if (fun==NULL)
 				fun = GetMgr()->mOnMsgFunctionList.find(msgName);
