@@ -21,7 +21,7 @@ public:
 
 	virtual bool OnConnected(HandConnect connect) 
 	{
-		connect->SetUserData(this);
+		//connect->SetUserData(this);
 		return true;
 	}
 	virtual void OnDisconnect(HandConnect connect) {}

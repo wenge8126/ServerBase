@@ -95,7 +95,7 @@ enum UNIT_TYPE
 	Actor_Account = 1001,
 	Actor_GameServer = 1002,
 	Actor_Player = 1003,
-
+	Actor_Client = 1004,
 };
 
 enum MSG_TYPE

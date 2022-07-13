@@ -252,6 +252,8 @@ void WebLoginThread::OnStart(void*)
 		mActorManager->RegisterComponect("HttpComponect", MEM_NEW EventFactory<HttpComponect>());
 		mActorManager->RegisterComponect("TcpComponent", MEM_NEW EventFactory< TcpComponent>());
 
+		mActorManager->RegisterActor(Actor_Client, MEM_NEW DefineActorFactory<ClientActor>());
+
 		mLoginActor = mActorManager->CreateActor(Unit_Login, config.login_id);
 
 

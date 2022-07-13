@@ -3,6 +3,7 @@
 #include "NetWorkerComponent.h"
 #include "MsgData.h"
 #include "CommonDefine.h"
+#include "ClientActor.h"
 
 using namespace NetCloud;
 
@@ -86,5 +87,23 @@ class LoginNetComponect : public NetWorkerComponent
 	{
 		// 启动等待登陆事件, 长时间未登陆, 则清理
 		return NetWorkerComponent::OnConnected(connect);
+	}
+
+	virtual void OnDisconnect(HandConnect connect) override
+	{
+		Hand<ClientActor> actor = connect->GetUserData();
+		if (actor)
+		{
+			actor->OnDisconnected();
+			actor->mpClientConnect = NULL;
+			connect->SetUserData(AutoAny());
+		}
+	}
+
+	void CreateClientActor(HandConnect connect, Int64 id)
+	{
+		Hand<ClientActor> actor = mpActor->GetMgr()->CreateActor(Actor_Client, id);
+		connect->SetUserData(actor);
+		actor->mpClientConnect = connect.getPtr();
 	}
 };

@@ -54,10 +54,12 @@ public:
 				if (GetDBMgr()->CreateDBTable(it.key().c_str(), configTable, info))
 				{
 					info.Format("Succeed create table %s", it.key().c_str());
+					AutoTable t = GetDBMgr()->GetTable(it.key().c_str());
+					GenerateDBUser::generate(it.key(), t, "../GameServer/Common/", false);
 				}			
 #else
-				//GenerateNoSQLUser::generate(it.key(), configTable, "../GameServer/WebLogin/Code/", false);
-				GenerateDBUser::generate(it.key(), configTable, "../GameServer/Common/", false);
+				GenerateNoSQLUser::generate(it.key(), configTable, "../GameServer/WebLogin/Code/", false);
+				
 #endif
 			}
 			else
