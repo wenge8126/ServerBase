@@ -20,7 +20,7 @@ public:
 	virtual void OnDisconnected() {}
 
 public:
-	tNetConnect		*mpClientConnect;
+	tNetConnect		*mpClientConnect = NULL;
 };
 
 /* Í¸´«ÏûÏ¢

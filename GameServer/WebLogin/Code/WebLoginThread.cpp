@@ -23,6 +23,7 @@
 #include "AsyncLoop.h"
 
 #include "DBUserComponent.h"
+#include "LoginActor.h"
 
 using namespace uWS;
 

@@ -7,6 +7,7 @@
 #include "NetHead.h"
 #include "BaseMsg.h"
 #include "CoroutineTool.h"
+#include "AnyData.h"
 
 //-------------------------------------------------------------------------
 class tNetProcess;
@@ -18,7 +19,7 @@ public:
 
 typedef Auto<NetProcessPtr> AProcess;
 
-class Net_Export tNetProcess : public Base<tNetProcess>
+class Net_Export tNetProcess : public AnyData
 {
 public:
 	tNetProcess()

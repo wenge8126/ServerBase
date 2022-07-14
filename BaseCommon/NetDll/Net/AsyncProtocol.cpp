@@ -1,7 +1,8 @@
 #include "AsyncProtocol.h"
 #include "DefinePacketFactory.h"
 
-
+//-------------------------------------------------------------------------
+// 高8位表示变化数, 每次重用后自增1, 低24位表示数组下标, 用于快速查找
 //-------------------------------------------------------------------------
 #define _MOVE_BIT 24
 static const UINT msMaxPosValue = ~((0xFFFFFFFF >> _MOVE_BIT) << _MOVE_BIT);

@@ -31,7 +31,7 @@ namespace NetCloud
 	// mID 由申请创建的Gate创建, 哈希可以得到Gate
 	// 其他此对象发送到其他ID时, 如果本地节点里不存在则直接发到对应的Gate, 然后连接Gate并索引具体对象
 	//-------------------------------------------------------------------------
-	class Net_Export tNetUnit : public AnyData
+	class Net_Export tNetUnit : public tNetProcess
 	{
 		friend class tGate;
 

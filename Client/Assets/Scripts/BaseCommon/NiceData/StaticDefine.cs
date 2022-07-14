@@ -17,6 +17,7 @@ public enum FIELD_TYPE
     FIELD_BOOL,
     FIELD_BYTE,
     FIELD_SHORT,
+    FIELD_INT64,
     FIELD_INT_RELATION,
     FIELD_STRING_RELATION,
     FIELD_DATA,
@@ -28,8 +29,16 @@ public enum FIELD_TYPE
     FIELD_SKIP_2,
     FIELD_UINT64,
     FIELD_CHAR_STRING,
+    FIELD_NET_CONNECT,
+//	FIELD_BINARY,
+    FIELD_DB_TABLE,
+    FIELD_ARRAYDATA,
+    FIELD_DBNICE,					// DB或表格中使用的具有共用名称索引的数据, 特点是只保存名称索引ID与数据
+    FIELD_CLOUD_NICE,			// 保存NiceData > UInt64 key 索引
+    FIELD_SQLDATA,					// 即时保存或读取SQL数据, 只用于DB记录字段
     FIELD_TYPE_MAX
 };
+
 
 public struct StaticDefine
 {

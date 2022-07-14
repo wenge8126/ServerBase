@@ -234,7 +234,7 @@ public class NiceData : tNiceData
         //byte nicetype = (byte)NICEDATA_TYPE.NICEDATA; // mbSaveIDData ? (byte)NICEDATA_TYPE.ID_NICEDATA : (byte)NICEDATA_TYPE.NICEDATA;
         //resultData.write(nicetype);          
         // save count
-        byte count = (byte)mDataMap.Count;
+        short count = (byte)mDataMap.Count;
         resultData.write(count);
         // each save data
         foreach (KeyValuePair<string, object> it in mDataMap)
@@ -288,9 +288,10 @@ public class NiceData : tNiceData
         //}
 
         // read count
-        byte count;
+        short count;
         if (!scrData.read(out count))
             return false;
+        
         for (int i = 0; i < count; ++i)
         {
             // read id

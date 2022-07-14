@@ -22,18 +22,6 @@ using System.Threading;
 
 namespace Logic
 {
-    enum NET_PACKET_ID
-    {
-        PACKET_CHECK_REQUEST = 1,
-        PACKET_CHECK_RESPONSE = 2,
-        PACKET_COMPRESS_EVENT = 3,
-        PACKET_EVENT = 7,
-        PACKET_TRANSFER_DATA = 8,
-        eNotifyNetEventID = 9,
-        eNotifyHeartBeat = 10,
-        PACKET_MAX,
-    };
-
     public enum TARGET_NET_FLAG
     {
         eNetFlagNone,
@@ -43,91 +31,11 @@ namespace Logic
         eCLIENT, // 指定客户端
         eDB_NODE, // DB节点
         eDB_DATANODE, // 发送到 t_playerdata 表格记录所在的DBNODE
-        eNet_SafeCode = 10,
+        eNet_SafeCode = 11,
     };
     //---------------------------------------------------------------------------------------------------------
 
-    public abstract class Packet
-    {
-        public abstract byte GetPacketID();
-        public abstract uint GetState();
-        public abstract void SetState(uint stateData);
 
-        public abstract bool Read(DataBuffer iStream, uint packetSize);
-        public abstract bool Write(ref DataBuffer oStream);
-        public abstract void Execute(tNetTool net);
-
-        public abstract Packet New();
-        public abstract void InitData();
-    }
-
-    public delegate void ProcessFunction(tNetTool, NetPacket);
-
-    public abstract class NetPacket : Packet
-    {
-        public NiceData mMsgData = new NiceData();
-        public ProcessFunction mProcessFunction;
-        
-        public override uint GetState()
-        {
-            return 0;
-        }
-
-        public override void SetState(uint stateData)
-        {
-        }
-
-        public override bool Read(DataBuffer iStream, uint packetSize)
-        {
-            return mMsgData.restore(ref iStream);
-        }
-
-        public override bool Write(ref DataBuffer oStream)
-        {
-            return mMsgData.serialize(ref oStream);
-        }
-
-
-        public override void InitData()
-        {
-            mMsgData.clear();
-        }
-
-        public override void Execute(tNetTool net)
-        {
-            if (mProcessFunction != null)
-                mProcessFunction(net, this);
-        }
-    }
-
-    public class RequestPacket : NetPacket
-    {
-        public RequestFunction mRequestFunction;
-        
-        public uint mRequestID {
-            set { mMsgData.set("mRequestID", value); }
-            get { return (uint) mMsgData.get("mRequestID"); }
-        }
-    }
-
-    public class ResponsePacket : NetPacket
-    {
-        public uint mRequestID = 0;
-        
-        public override bool Read(DataBuffer iStream, uint packetSize)
-        {
-            iStream.read(out mRequestID);
-            return mMsgData.restore(ref iStream);
-        }
-
-        public override bool Write(ref DataBuffer oStream)
-        {
-            oStream.write(mRequestID);
-            return mMsgData.serialize(ref oStream);
-        }
-    }
-    
-    public delegate ResponsePacket RequestFunction(tNetTool, RequestPacket);
 
     //---------------------------------------------------------------------------------------------------------
     public abstract class NetDataStream
@@ -211,17 +119,19 @@ namespace Logic
         //-----------------------------------------------------------------------------
         public BaseNetTool()
         {
-
+            RegisterPacket((int)NET_PACKET_ID.PACKET_RESPONSE_MSG, new ResponsePacket(), RequestPacket.OnResponse);
         }
 
-        public void RegisterPacket(NetPacket msgPacket, ProcessFunction processFunction)
+        public void RegisterPacket(int packetID, NetPacket msgPacket, ProcessFunction processFunction)
         {
+            msgPacket.mID = (byte)packetID;
             msgPacket.mProcessFunction = processFunction;
             mNetPacketList[msgPacket.GetPacketID()] = msgPacket;
         }
         
-        public void RegisterPacket(RequestPacket msgPacket, RequestFunction function)
+        public void RegisterPacket(int packetID, RequestPacket msgPacket, RequestFunction function)
         {
+            msgPacket.mID = (byte)packetID;
             msgPacket.mRequestFunction = function;
             mNetPacketList[msgPacket.GetPacketID()] = msgPacket;
         }
@@ -266,7 +176,7 @@ namespace Logic
 
         public void Log(string info)
         {
-            if (null != mEventCenter) LOG.log(info);
+            LOG.log(info);
         }
 
         public override void SetEventCenter(tEventCenter eventCenter)
@@ -362,7 +272,7 @@ namespace Logic
             mDatabuffer.seek(0);
             mDatabuffer.write(id);
             mDatabuffer.write((byte) 0);
-            mDatabuffer.write((uint)count); // <--save data size
+            mDatabuffer.write((uint)(count-CONFIG_PACKHEAD_LENGTH)); // <--save data size
             // uint infoData = 0;
             // if (bEncrypt)
             //     infoData = ((uint) EEventPacketState.ePacketStateEncrypt) << 24;
@@ -485,7 +395,7 @@ namespace Logic
 
                     //if (packSize <= 0)
                     //    throw new Exception("Error: have packet size is zero, net error, please must close net.");
-                    uint packSize = BitConverter.ToUInt32(d, sizeof(short));
+                    packSize = BitConverter.ToUInt32(d, sizeof(short));
                     if (mRevBuffer.DataSize() < CONFIG_PACKHEAD_LENGTH + packSize)
                         break;
 

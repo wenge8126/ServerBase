@@ -168,45 +168,6 @@ public:
 	}
 };
 
-class LoginActor : public NetCloud::Actor
-{
-public:
-	WebLoginThread* GetLoginThread()
-	{
-		Auto<LoginActorManager> mgr = GetMgr();
-		return mgr->mpThread;
-	}
-
-	virtual void Init() override
-	{
-		AddComponent("TestNoSQLUserComponent");
-		AddComponent("Test2Component");
-		AddComponent("RecordNoSQLUserComponent");
-		AddComponent("PlayerItemComp");
-		Hand<HttpComponect> comp = AddComponent("HttpComponect");
-		comp->mPort = 5000;		
-
-		Hand<TcpComponent> tcpNet = AddComponent("TcpComponent");
-		tcpNet->mServerIp = "127.0.0.1";
-		tcpNet->mServerPort = 4001;		
-		
-		tcpNet->mSafeCode = 11;
-		Hand<tBaseEventNet> net = tcpNet->GetNet();
-		//net->SetNetProtocol();`
-
-		AddComponent("LoginNetComponect");
-	}
-
-	void RegisterMsg(ActorManager *pActorMgr)
-	{
-		REG_COMPONENT(pActorMgr, WssWebComponent);
-		REG_COMPONENT(pActorMgr, TestNoSQLUserComponent);
-		REG_COMPONENT(pActorMgr, Test2Component);
-		REG_COMPONENT(pActorMgr, RecordNoSQLUserComponent);
-		REG_COMPONENT(pActorMgr, PlayerItemComp);
-		REG_COMPONENT(pActorMgr, LoginNetComponect);
-	}
-};
 
 
 
