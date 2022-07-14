@@ -516,7 +516,7 @@ public class DataBuffer
     }
 
     // 如果目标Buffer太小，会修改为足够大
-    public int readData(ref DataBuffer destBuffer)
+    public bool readData(ref DataBuffer destBuffer)
     {
         int len = 0;
         if (read(out len))
@@ -527,11 +527,11 @@ public class DataBuffer
                     destBuffer._resize(len);
 
                 if (!read(ref destBuffer.mData, len))
-                    return 0;
+                    return false;
             }
-            return len;
+            return true;
         }
-        return 0;
+        return false;
     }
 
     public bool writeData(ref DataBuffer scrData, int size = 0)

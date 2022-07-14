@@ -35,6 +35,11 @@ public struct Data
         return toInt(current.mObj);
     }
     
+    static public implicit operator uint(Data current)
+    {
+        return (uint)toInt(current.mObj);
+    }
+    
     static public int toInt(object value)
     {
         if (/*current==null ||*/ value == null)

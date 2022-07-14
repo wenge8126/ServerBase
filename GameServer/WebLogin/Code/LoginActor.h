@@ -44,11 +44,29 @@ public:
 		AddComponent("LoginNetComponect");
 	}
 
-	void On(tNetConnect *, NG_RequestGateInfo &req, GN_NotifyNodeInfo &resp)
+	void On(tNetConnect *pConnect, NG_RequestGateInfo &req, GN_NotifyNodeInfo &resp)
 	{
 		NOTE_LOG(req.dump().c_str());
 		resp.mNodeKey = 8888;
 		
+		CoroutineTool::AsyncCall([=]()
+		{
+			// 3秒后发送一个测试请求
+			tTimer::AWaitTime(3000);
+			NG_RequestGateInfo req;
+			GN_NotifyNodeInfo resp;
+			req.mNodeKey = 66667777;
+			if (tNetProcess::Await(pConnect, 41, req, resp, 6000))
+			{
+				NOTE_LOG("=====");
+				NOTE_LOG(resp.dump().c_str());
+			}
+			else
+			{
+				ERROR_LOG("Test request fail");
+			}
+		});
+
 	}
 
 	void RegisterMsg(ActorManager *pActorMgr)

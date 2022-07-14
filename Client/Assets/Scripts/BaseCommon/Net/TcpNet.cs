@@ -119,13 +119,15 @@ namespace Logic
         //-----------------------------------------------------------------------------
         public BaseNetTool()
         {
-            RegisterPacket((int)NET_PACKET_ID.PACKET_RESPONSE_MSG, new ResponsePacket(), RequestPacket.OnResponse);
+            RegisterPacket((int)NET_PACKET_ID.PACKET_RESPONSE_MSG, new ResponsePacket(), null);
         }
 
         public void RegisterPacket(int packetID, NetPacket msgPacket, ProcessFunction processFunction)
         {
             msgPacket.mID = (byte)packetID;
-            msgPacket.mProcessFunction = processFunction;
+            var p = msgPacket as BasePacket;
+            if (p!=null)
+                p.mProcessFunction = processFunction;
             mNetPacketList[msgPacket.GetPacketID()] = msgPacket;
         }
         

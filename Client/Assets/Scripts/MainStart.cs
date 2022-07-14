@@ -16,7 +16,7 @@ public class NG_RequestGateInfo : RequestPacket
     }
 }
 
-public class GN_NotifyNodeInfo : NetPacket
+public class GN_NotifyNodeInfo : BasePacket
 {
     public UInt64 mNodeKey
     {
@@ -37,7 +37,7 @@ public class ConnectFinishEvent : BaseEvent
         //MainStart.mNet.SendPacket(msg);
         var response = await msg.AsyncRequest(MainStart.mNet);
         if (response != null)
-            response.mMsgData.dump("ok=========");
+            response.dump("ok=========");
         else
         {
             LOG.log("Request fail, response null");
@@ -58,9 +58,17 @@ public class MainStart : MonoBehaviour
         
         mNet.RegisterPacket((int)NET_PACKET_ID.eNotifyHeartBeat, new PingPacket(), null);
         mNet.RegisterPacket((int)NET_PACKET_ID.eNotifyNetEventID, new PingPacket(), null);
+        
+        mNet.RegisterPacket((int)41, new NG_RequestGateInfo(), RequestFunction);
     }
 
-
+    NiceData RequestFunction(tNetTool netTool, RequestPacket packet)
+    {
+        packet.mMsgData.dump("kkk: RequestFunction *********");
+        GN_NotifyNodeInfo resp = new GN_NotifyNodeInfo();
+        resp.mNodeKey = 5555;
+        return resp.mMsgData;
+    }
 
     // Update is called once per frame
     void Update()

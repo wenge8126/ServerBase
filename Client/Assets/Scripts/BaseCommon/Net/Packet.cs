@@ -5,6 +5,8 @@ using UnityEngine.Rendering;
 
 namespace Logic
 {
+    public delegate void ProcessFunction(tNetTool netTool, NetPacket packet);
+    public delegate NiceData RequestFunction(tNetTool netTool, RequestPacket packet);
     
     public enum NET_PACKET_ID
     {
@@ -37,13 +39,11 @@ namespace Logic
         public abstract void InitData();
     }
 
-    public delegate void ProcessFunction(tNetTool netTool, NetPacket packet);
 
     public class NetPacket : Packet
     {
         public byte mID = 0;
-        public NiceData mMsgData = new NiceData();
-        public ProcessFunction mProcessFunction;
+
 
         public override byte GetPacketID()
         {
@@ -59,6 +59,33 @@ namespace Logic
         {
         }
 
+        public override bool Read(DataBuffer iStream, uint packetSize)
+        {
+            return true;
+        }
+
+        public override bool Write(ref DataBuffer oStream)
+        {
+            return true;
+        }
+
+
+        public override void InitData()
+        {
+            
+        }
+
+        public override void Execute(tNetTool net)
+        {
+            LOG.logError("No write code : Execute");
+        }
+    }
+    
+    public class BasePacket : NetPacket
+    {
+        public NiceData mMsgData = new NiceData();
+        public ProcessFunction mProcessFunction;
+        
         public override bool Read(DataBuffer iStream, uint packetSize)
         {
             return mMsgData.restore(ref iStream);
@@ -100,11 +127,11 @@ namespace Logic
         }
     }
 
-    public class RequestPacket : NetPacket
+    public class RequestPacket : BasePacket
     {
         public RequestFunction mRequestFunction;
         
-        public TaskCompletionSource<ResponsePacket> mTcs = null;
+        public TaskCompletionSource<NiceData> mTcs = null;
         
         public uint mRequestID
         {
@@ -112,11 +139,41 @@ namespace Logic
             get { return (uint) mMsgData.get("mRequestID"); }
         }
 
-        public async Task<ResponsePacket> AsyncRequest(tNetTool net)
+        /// <summary>
+        /// 异步请求
+        /// </summary>
+        /// <param name="net"></param>
+        /// <returns></returns>
+        public async Task<NiceData> AsyncRequest(tNetTool net)
         {
             AllotWaitID(this);
             net.SendPacket(this);
             return await mTcs.Task;
+        }
+        
+        public override void Execute(tNetTool net)
+        {
+            if (mRequestFunction != null)
+            {
+                NiceData responseMsg = mRequestFunction(net, this);
+                if (responseMsg != null)
+                {
+                    ResponsePacket responsePacket = net.CreatePacket((byte)NET_PACKET_ID.PACKET_RESPONSE_MSG) as ResponsePacket;
+                    responsePacket.InitData();
+                    responsePacket.mRequestID = mRequestID;
+                    if (responseMsg.serialize(ref responsePacket.mResponseData))
+                        net.SendPacket(responsePacket);
+                    else
+                    {
+                        LOG.logError("Serialize response msg fail");
+                        responseMsg.dump("Serialize response msg fail");
+                    }
+                }
+            }
+            else
+            {
+                LOG.logError("No register request process function");
+            }
         }
 
         public static Dictionary<uint, RequestPacket> mRequestList = new Dictionary<uint, RequestPacket>();
@@ -125,7 +182,7 @@ namespace Logic
         
         public static uint AllotWaitID(RequestPacket request)
         {
-            request.mTcs = new TaskCompletionSource<ResponsePacket>();
+            request.mTcs = new TaskCompletionSource<NiceData>();
             uint x = ++msNowCode;
             
                 request.mRequestID = x;
@@ -156,12 +213,25 @@ namespace Logic
             if (response != null)
             {
                 RequestPacket waitRequest = FindWaitResponse(response.mRequestID);
-                if (waitRequest != null && waitRequest.mTcs!=null)
-                    waitRequest.mTcs.SetResult(response);
+                if (waitRequest != null && waitRequest.mTcs != null)
+                {
+                    var data = new NiceData();
+                    response.mResponseData.seek(0);
+                    if (data.restore(ref response.mResponseData))
+                    {
+                        waitRequest.mTcs.SetResult(data);
+                        return;
+                    }
+                    else
+                    {
+                        LOG.logError("Response msg restore fail");
+                    }
+                    waitRequest.mTcs.SetResult(null);
+                }
                 else
                 {
                     LOG.logWarn("No exist wait request : "+response.mRequestID.ToString());
-                    response.mMsgData.dump("X: No exist wait reqeust");
+                    //response.mMsgData.dump("X: No exist wait reqeust");
                 }
             }
             else
@@ -175,23 +245,37 @@ namespace Logic
     {
         public uint mRequestID = 0;
 
+        public DataBuffer mResponseData = new DataBuffer();
+
+        public override byte GetPacketID()
+        {
+            return (byte)NET_PACKET_ID.PACKET_RESPONSE_MSG;
+        }
+        
         public override bool Read(DataBuffer iStream, uint packetSize)
         {
             iStream.read(out mRequestID);
             
-            // 因为C++代码是保存了BufferData, 有4个字节的int长度值
-            int dataSize;
-            iStream.read(out dataSize);
-            return mMsgData.restore(ref iStream);
+            return iStream.readData(ref mResponseData);
         }
 
         public override bool Write(ref DataBuffer oStream)
         {
             oStream.write(mRequestID);
-            return mMsgData.serialize(ref oStream);
+            return oStream.writeData(ref mResponseData, mResponseData.tell());
+        }
+
+        public override void InitData()
+        {
+            mResponseData.clear(false);
+        }
+        
+        public override void Execute(tNetTool net)
+        {
+            RequestPacket.OnResponse(net, this);
         }
     }
 
-    public delegate ResponsePacket RequestFunction(tNetTool netTool, RequestPacket packet);
+    
 
 }
