@@ -22,3 +22,11 @@ ServerRun
 ServerRun2
 build
 /Document/分散式DB设计.~ml
+/Client/Library
+/Client/obj
+/Client/Temp
+/GameServer/ServerTest/x64/Debug
+/GameServer/x64/DebugDevelop
+/BaseCommon/ActorDBLib/x64/Debug
+/GameServer/.idea/.idea.GameServer_Actor/.idea
+/Client/.idea
