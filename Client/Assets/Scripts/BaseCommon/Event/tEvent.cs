@@ -17,7 +17,7 @@ namespace Logic
        
         //-----------------------------------
      
-        public abstract void WaitTime(float waitTime);
+        public abstract void WaitTime(float waitTimeSecond);
         public abstract void StartUpdate();
         public abstract void StopWaitTime();
         public abstract void StopUpdate();

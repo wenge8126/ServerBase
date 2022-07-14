@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using Logic;
 using UnityEngine;
 
@@ -47,12 +48,15 @@ public class ConnectFinishEvent : BaseEvent
 
 public class MainStart : MonoBehaviour
 {
-    public static Logic.TcpClientNet mNet = new TcpClientNet();
+    public static Logic.TcpClientNet mNet;
     // Start is called before the first frame update
     void Start()
     {
         EventCenter.Instance = new EventCenter();
         EventCenter.StaticRegister("ConnectFinishEvent", new DefineFactory<ConnectFinishEvent>());
+        
+        mNet = new TcpClientNet();
+        
         mNet.mNotifyConnectFinishEvent = EventCenter.Instance.StartEvent("ConnectFinishEvent");
         mNet.Connect("127.0.0.1", 4001);
         
@@ -60,6 +64,9 @@ public class MainStart : MonoBehaviour
         mNet.RegisterPacket((int)NET_PACKET_ID.eNotifyNetEventID, new PingPacket(), null);
         
         mNet.RegisterPacket((int)41, new NG_RequestGateInfo(), RequestFunction);
+
+        //await Task.Delay(3);
+        //mNet.mNotifyConnectFinishEvent.Do();
     }
 
     NiceData RequestFunction(tNetTool netTool, RequestPacket packet)

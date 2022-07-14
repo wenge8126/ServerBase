@@ -1,6 +1,7 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.Rendering;
 
 namespace Logic
@@ -132,6 +133,8 @@ namespace Logic
         public RequestFunction mRequestFunction;
         
         public TaskCompletionSource<NiceData> mTcs = null;
+        public float mBeginWaitSecond = 0;
+        public float mOverTimeSecond = 10;
         
         public uint mRequestID
         {
@@ -144,8 +147,10 @@ namespace Logic
         /// </summary>
         /// <param name="net"></param>
         /// <returns></returns>
-        public async Task<NiceData> AsyncRequest(tNetTool net)
+        public async Task<NiceData> AsyncRequest(tNetTool net, float overSecond = 10)
         {
+            mOverTimeSecond = overSecond;
+            mBeginWaitSecond = Time.time;
             AllotWaitID(this);
             net.SendPacket(this);
             return await mTcs.Task;
@@ -215,6 +220,7 @@ namespace Logic
                 RequestPacket waitRequest = FindWaitResponse(response.mRequestID);
                 if (waitRequest != null && waitRequest.mTcs != null)
                 {
+                    mRequestList.Remove(response.mRequestID);
                     var data = new NiceData();
                     response.mResponseData.seek(0);
                     if (data.restore(ref response.mResponseData))
@@ -238,6 +244,29 @@ namespace Logic
             {
                 LOG.logError("Is not ResponsePacket");
             }
+        }
+
+        static List<RequestPacket> mTempList = new List<RequestPacket>();
+        /// <summary>
+        /// 低速循环检测请求消息是否超时
+        /// </summary>
+        public static void LowProcess()
+        {
+            foreach (var vk in mRequestList)
+            {
+                if (Time.time - vk.Value.mBeginWaitSecond > vk.Value.mOverTimeSecond)
+                {
+                    LOG.logError($"Request {vk.Value.GetPacketID().ToString()} msg over time");
+                    mTempList.Add(vk.Value);
+                }
+            }
+
+            foreach (var reqMsg in mTempList)
+            {
+                FreeWaitID(reqMsg);
+                reqMsg.mTcs.SetResult(null);
+            }
+            mTempList.Clear();
         }
     }
 
@@ -275,7 +304,26 @@ namespace Logic
             RequestPacket.OnResponse(net, this);
         }
     }
+    //---------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 低速循环时间事件
+    /// </summary>
+    public class LowUpdateEvent : BaseEvent
+    {
+        private float mWaitSecond = 0;
 
-    
+        public override void WaitTime(float fSecond)
+        {
+            mWaitSecond = fSecond;
+            base.WaitTime(fSecond);
+        }
+        
+        public override void OnTimeOver()
+        {
+            RequestPacket.LowProcess();
+            WaitTime(mWaitSecond);
+        }
+    }
+    //---------------------------------------------------------------------------------------------------------
 
 }

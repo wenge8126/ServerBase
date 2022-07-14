@@ -46,9 +46,9 @@ namespace Logic
         }
         //----------------------------------- 
 
-        public override void WaitTime(float waitTime)
+        public override void WaitTime(float waitTimeSecond)
         {
-            GetEventCenter().OnEventWaitTime(this, waitTime);            
+            GetEventCenter().OnEventWaitTime(this, waitTimeSecond);            
         }
 
         public override void StartUpdate()

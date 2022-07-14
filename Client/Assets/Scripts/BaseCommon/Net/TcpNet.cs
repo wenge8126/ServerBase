@@ -120,6 +120,10 @@ namespace Logic
         public BaseNetTool()
         {
             RegisterPacket((int)NET_PACKET_ID.PACKET_RESPONSE_MSG, new ResponsePacket(), null);
+            
+            EventCenter.Instance.RegisterEvent("LowUpdateEvent", new DefineFactory<LowUpdateEvent>());
+            var evt = EventCenter.Instance.StartEvent("LowUpdateEvent");
+            evt.WaitTime(3);
         }
 
         public void RegisterPacket(int packetID, NetPacket msgPacket, ProcessFunction processFunction)
