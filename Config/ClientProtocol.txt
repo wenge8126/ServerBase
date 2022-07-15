@@ -1,0 +1,27 @@
+
+CS_ClientRequest :RQ
+{	
+	uint64 mTargetActorID;
+	string mRequestMsgName;
+	nicedata mActorMsg;
+}
+
+SC_ResponseMsg
+{
+	nicedata mResponseData;
+}
+
+SC_ResponseTest
+{
+	string mInfo;
+}
+
+CS_RequestTest :RQ
+{
+	string mInfo;
+}
+
+MSG_Test
+{
+	string mTest;
+}

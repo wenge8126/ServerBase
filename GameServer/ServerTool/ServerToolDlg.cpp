@@ -482,8 +482,11 @@ void CServerToolDlg::OnBnExportRunConfig()
 	if (1)
 	{
 		AString fileName;
-		fileName.Format("%s/NoSQLProtocol.txt", (LPCTSTR)configPath);
-		info = GenerateProtocol(fileName, "", "../BaseCommon/ActorDBLib/Code", "NoSQLNetMsg", false, err);
+		//fileName.Format("%s/NoSQLProtocol.txt", (LPCTSTR)configPath);
+		//info = GenerateProtocol(fileName, "", "../BaseCommon/ActorDBLib/Code", "ClientMsg", false, err);
+
+		fileName.Format("%s/ClientProtocol.txt", (LPCTSTR)configPath); 
+		info = GenerateProtocol(fileName, "", "../GameServer/Common", "ClientMsg", false, err);
 	}
 
 	LOG("%s", err.c_str());

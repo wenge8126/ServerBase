@@ -249,13 +249,13 @@ void WebLoginThread::OnStart(void*)
 
 
 
-		mActorManager->RegisterActor(Unit_Login, MEM_NEW DefineActorFactory<LoginActor>());
+		mActorManager->RegisterActor(Actor_Login, MEM_NEW DefineActorFactory<LoginActor>());
 		mActorManager->RegisterComponect("HttpComponect", MEM_NEW EventFactory<HttpComponect>());
 		mActorManager->RegisterComponect("TcpComponent", MEM_NEW EventFactory< TcpComponent>());
 
 		mActorManager->RegisterActor(Actor_Client, MEM_NEW DefineActorFactory<ClientActor>());
 
-		mLoginActor = mActorManager->CreateActor(Unit_Login, config.login_id);
+		mLoginActor = mActorManager->CreateActor(Actor_Login, config.login_id);
 
 
 		mSdkMgr.InitThread();

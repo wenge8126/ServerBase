@@ -85,6 +85,7 @@ class LoginNetComponect : public NetWorkerComponent
 
 	virtual bool OnConnected(HandConnect connect)
 	{
+		CreateClientActor(connect, 1);
 		// 启动等待登陆事件, 长时间未登陆, 则清理
 		return NetWorkerComponent::OnConnected(connect);
 	}

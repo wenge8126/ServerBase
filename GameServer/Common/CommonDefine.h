@@ -86,8 +86,8 @@ enum WEB_BASE_MSG
 
 enum UNIT_TYPE
 {
-	Unit_Login = 100,
-	Unit_DB = 101,
+	Actor_Login = 100,
+	Actor_DB = 101,
 	Actor_WebLogin = 103,  // 只用来提供帐号web http 获取服务器列表, 帐号web分配 的单元ID
 	Actor_DBWorker = 104,
 	Actor_ToolWorker = 105,

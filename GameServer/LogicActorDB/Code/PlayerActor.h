@@ -14,6 +14,7 @@ public:
 	virtual void RegisterMsg(ActorManager *pActorMgr)
 	{
 		REG_ACTOR_MSG(PlayerActor, RQ_PlayerBaseData, RS_PlayerBaseData);
+		
 	}
 
 public:
@@ -25,6 +26,7 @@ public:
 		else
 			ERROR_LOG("No exist player data %s", mID.dump().c_str());
 	}
+
 
 public:
 	t_player		mData;

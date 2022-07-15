@@ -515,6 +515,7 @@ xcopy $(COMMON_BASE_LIB)\Bin\$(TargetName).pdb $(Server_Out_Dir)\  /y
     <ClCompile Include="WebLogin.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Common\ClientMsg.h" />
     <ClInclude Include="..\Common\SDK\HttpClient.h" />
     <ClInclude Include="..\Common\SDK\SDK.h" />
     <ClInclude Include="Code\ClientActor.h" />

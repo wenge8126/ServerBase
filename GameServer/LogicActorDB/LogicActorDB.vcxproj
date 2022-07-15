@@ -397,6 +397,7 @@ xcopy $(COMMON_BASE_LIB)\Bin\$(TargetName).pdb $(Server_Out_Dir)\  /y</Command>
     <ClInclude Include="..\Common\t_player.h" />
     <ClInclude Include="Code\AccountActor.h" />
     <ClInclude Include="Code\PlayerActor.h" />
+    <ClInclude Include="Code\TestClientMsg.h" />
     <ClInclude Include="LogicActorThread.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

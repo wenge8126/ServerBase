@@ -20,6 +20,7 @@
 #include "GenerateDBUser.h"
 
 #include "Test2Component.h"
+#include "ClientMsg.h"
 
 #define CREATE_DB		0
 
@@ -76,11 +77,21 @@ public:
 #endif
 	}		
 
+	// 直通客户端消息
+	void On(CS_RequestTest  &msg, MSG_Test &resp, UnitID, int)
+	{
+		NOTE_LOG("Test msg : \r\n%s", msg.dump().c_str());
+		resp.mTest = "ok : 888";
+	}
+
+
 	virtual void RegisterMsg(ActorManager *pActorMgr) override
 	{
 		//pActorMgr->RegisterActorMsg("RQ_FirstRmbReward", &Actor::OnMsg<TestActor, RQ_FirstRmbReward, RS_FirstRmbReward>);
 		REG_ACTOR_MSG(WorkerActor, RQ_CreateDBTable, RS_CreateDBTable);
 		REG_ACTOR_MSG(WorkerActor, RQ_CreatePlayerActor, RS_CreatePlayerActor);
+
+		REG_ACTOR_MSG(WorkerActor, CS_RequestTest, MSG_Test);
 	}
 
 public:
@@ -165,7 +176,7 @@ void LogicActorThread::SetTitle(const AString &title)
 
 void AsyncReadyDB(LogicActorThread *pThread)
 {
-	if (!pThread->mActorManager->mNetNode->AwaitConnectGate("127.0.0.1", 10000, 60000))
+	if (!pThread->mActorManager->mNetNode->AwaitConnectGate(config.data_db_node.gate.ip.c_str(), config.data_db_node.gate.port, 60000))
 	{
 		ERROR_LOG("Connect gate fail");
 		return;
@@ -203,7 +214,7 @@ void AsyncReadyDB(LogicActorThread *pThread)
 
 void LogicActorThread::OnStart(void*)
 {
-	mActorManager = MEM_NEW CDBMgr(this, "127.0.0.1", 10001, 10, 2);
+	mActorManager = MEM_NEW CDBMgr(this, config.data_db_node.node.ip.c_str(), config.data_db_node.node.port, config.data_db_node.node.saft_code, 2);
 
 	// 账号对象
 	mActorManager->RegisterActor(Actor_Account, MEM_NEW DefineActorFactory< AccountActor>());

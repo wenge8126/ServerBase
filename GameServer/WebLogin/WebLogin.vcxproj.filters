@@ -95,6 +95,9 @@
     <ClInclude Include="Code\LoginActor.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\Common\ClientMsg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="WebLogin.rc">

@@ -26,17 +26,50 @@ public class GN_NotifyNodeInfo : BasePacket
     }
 }
 
+public class CS_RequestTest : RequestPacket
+{
+    public string mInfo
+    {
+        set { mMsgData.set("mInfo", value); }
+        get { return (string)mMsgData.get("mInfo"); }
+    }
+}
+public class MSG_Test : BasePacket
+{
+    public string mInfo
+    {
+        set { mMsgData.set("mInfo", value); }
+        get { return (string)mMsgData.get("mInfo"); }
+    }
+}
+
+
 public class ConnectFinishEvent : BaseEvent
 {
     public override async void Do()
     {
         LOG.log("Connect ok, then start send test");
-        NG_RequestGateInfo msg = new NG_RequestGateInfo();
-        msg.mID = 30;
-        msg.mRequestID = 77;
-        msg.mNodeKey = 999;
-        //MainStart.mNet.SendPacket(msg);
-        var response = await msg.AsyncRequest(MainStart.mNet);
+        // NG_RequestGateInfo msg = new NG_RequestGateInfo();
+        // msg.mID = 30;
+        // msg.mRequestID = 77;
+        // msg.mNodeKey = 999;
+        // //MainStart.mNet.SendPacket(msg);
+        // var response = await msg.AsyncRequest(MainStart.mNet);
+        // if (response != null)
+        //     response.dump("ok=========");
+        // else
+        // {
+        //     LOG.log("Request fail, response null");
+        // }
+
+        CS_RequestTest testMsg = new CS_RequestTest();
+        testMsg.mInfo = "&&&&& test info *********";
+        testMsg.mRequestID = 1111;
+        CS_ClientRequest requestPacket = new CS_ClientRequest();
+        requestPacket.mTargetActorID = 999;
+        requestPacket.mRequestMsgName = "CS_RequestTest";
+        requestPacket.mActorMsg = testMsg.mMsgData;
+        var response = await requestPacket.AsyncRequest(MainStart.mNet);
         if (response != null)
             response.dump("ok=========");
         else

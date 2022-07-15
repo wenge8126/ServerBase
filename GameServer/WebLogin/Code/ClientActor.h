@@ -17,7 +17,29 @@ public:
 			mpClientConnect->SetUserData(AutoAny());
 	}
 
+	virtual void Init() override
+	{
+		
+	}
+
 	virtual void OnDisconnected() {}
+
+public:
+	AutoNet GetClientNet()
+	{
+		if (mpClientConnect!=NULL)
+			return	mpClientConnect->GetNetHandle();
+		
+		return AutoNet();
+	}
+
+	// 这个只执行一次
+	void RegisterMsg(ActorManager *pActorMgr) override
+	{
+
+	}
+
+	
 
 public:
 	tNetConnect		*mpClientConnect = NULL;
