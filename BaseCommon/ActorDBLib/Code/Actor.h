@@ -203,6 +203,33 @@ namespace NetCloud
 			return Await(tranPak, targetID, waitMilSecond);
 		}
 
+		AutoNice Await(UnitID targetID, const AString &requestMsgName, DataStream *pRequestMsgData, int waitMilSecond, int nCompIndex)
+		{
+			if (CORO == 0)
+			{
+				ERROR_LOG("AwaitConnect must in coro");
+				return AutoNice();
+			}
+
+			AsyncNode *pNetNode = GetNetNode();
+			if (pNetNode == NULL)
+			{
+				ERROR_LOG("Actor %s Node is NULL, May be not append node", GetID().dump().c_str());
+				return AutoNice();
+			}
+
+			Auto< AsyncProtocol> protocol = pNetNode->mNodeNet->GetNetProtocol();
+
+			Auto<TransferPacket> tranPak = protocol->CreatePacket(eNGN_TransferMsg);
+			tranPak->mData.clear(false);
+			// 在数据开关写入请求消息名称
+			tranPak->mData.write(nCompIndex);
+			tranPak->mData.writeString(requestMsgName);
+			tranPak->mData._write(pRequestMsgData->data(), pRequestMsgData->dataSize());
+			
+			return Await(tranPak, targetID, waitMilSecond);
+		}
+
 		AutoNice Await(Auto<TransferPacket> tranPak, UnitID targetID, int overMilSecond);
 
 		bool SendMsg(tBaseMsg &msg, UnitID targetID, BROADCAST_MODE eMode = eBroadcastNone)

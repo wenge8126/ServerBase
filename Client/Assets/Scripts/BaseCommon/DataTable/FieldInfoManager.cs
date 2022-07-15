@@ -28,8 +28,8 @@ namespace Logic
             _RegisterFieldInfo(info);
             //info = new TableFieldInfoFactory();
             //_RegisterFieldInfo(info);
-            //info = new DataFieldInfoFactory();
-            //_RegisterFieldInfo(info);
+            info = new DataFieldInfoFactory();
+            _RegisterFieldInfo(info);
 
             info = new ByteFieldInfoFactory();
             _RegisterFieldInfo(info);

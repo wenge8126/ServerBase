@@ -8,8 +8,8 @@
 class CS_ClientRequest : public tRequestMsg
 { 
 public:
-    AutoNice mActorMsg;		
     int mRequestID;		
+    AutoData mRequestMsgData;		
     AString mRequestMsgName;		
     UInt64 mTargetActorID;		
 
@@ -20,16 +20,16 @@ public:
    virtual  void Full(AutoNice scrData) override
     {
         clear(false);
-        mActorMsg = (tNiceData*)scrData["mActorMsg"];
         CheckGet(scrData, mRequestID);
+        mRequestMsgData = (DataStream*)scrData["mRequestMsgData"];
         CheckGet(scrData, mRequestMsgName);
         CheckGet(scrData, mTargetActorID);
     }
 
     virtual void ToData(AutoNice &destData) override
     {
-        destData["mActorMsg"] = mActorMsg.getPtr();
         destData["mRequestID"] = mRequestID;
+        destData["mRequestMsgData"] = mRequestMsgData.getPtr();
         destData["mRequestMsgName"] = mRequestMsgName;
         destData["mTargetActorID"] = mTargetActorID;
     }
@@ -38,8 +38,8 @@ public:
     {
         destData->write((short)4);
 
-        SAVE_MSG_NICE(mActorMsg);
         SAVE_MSG_VALUE(mRequestID, 1);
+        SAVE_MSG_DATA(mRequestMsgData);
         SAVE_MSG_VALUE(mRequestMsgName, 4);
         SAVE_MSG_VALUE(mTargetActorID, 18);
         return true;
@@ -47,8 +47,8 @@ public:
 
     void clear(bool bClearBuffer=false) override 
     {
-        if (mActorMsg) mActorMsg.setNull();
         mRequestID = 0;
+        if (mRequestMsgData) mRequestMsgData.setNull();
         mRequestMsgName.setNull();
         mTargetActorID = 0;
     }
@@ -56,8 +56,8 @@ public:
     void copy(const tBaseMsg &otherMsg) override 
     {
         if (strcmp("CS_ClientRequest", otherMsg.GetMsgName())!=0) { LOG("%s is not CS_ClientRequest", otherMsg.GetMsgName()); return; }; const CS_ClientRequest &other = *(const CS_ClientRequest*)(&otherMsg);
-        COPY_MSG_NICE(other.mActorMsg, mActorMsg);
         mRequestID = other.mRequestID;
+        COPY_MSG_DATA(other.mRequestMsgData, mRequestMsgData);
         mRequestMsgName = other.mRequestMsgName;
         mTargetActorID = other.mTargetActorID;
     }
@@ -81,6 +81,85 @@ public:
         if (strcmp(szMember, "mRequestID")==0) { mRequestID = value; return true; };
         if (strcmp(szMember, "mRequestMsgName")==0) { mRequestMsgName = value; return true; };
         if (strcmp(szMember, "mTargetActorID")==0) { mTargetActorID = value; return true; };
+        LOG("No exist > %%s", szMember);  return false;
+    }
+
+    AData operator [] (const char *szMember) const 
+    {
+        return get(szMember);
+    }
+
+    AData operator [] (const AString &member) const 
+    {
+        return get(member.c_str());
+    }
+
+};
+
+class SC_ServerRequest : public tBaseMsg
+{ 
+public:
+    UInt64 mClientActorID;		
+    AutoData mRequestMsgData;		
+    AString mRequestMsgName;		
+
+public:
+    SC_ServerRequest() { clear(false); };
+
+
+   virtual  void Full(AutoNice scrData) override
+    {
+        clear(false);
+        CheckGet(scrData, mClientActorID);
+        mRequestMsgData = (DataStream*)scrData["mRequestMsgData"];
+        CheckGet(scrData, mRequestMsgName);
+    }
+
+    virtual void ToData(AutoNice &destData) override
+    {
+        destData["mClientActorID"] = mClientActorID;
+        destData["mRequestMsgData"] = mRequestMsgData.getPtr();
+        destData["mRequestMsgName"] = mRequestMsgName;
+    }
+
+    bool serialize(DataStream *destData) const override
+    {
+        destData->write((short)3);
+
+        SAVE_MSG_VALUE(mClientActorID, 18);
+        SAVE_MSG_DATA(mRequestMsgData);
+        SAVE_MSG_VALUE(mRequestMsgName, 4);
+        return true;
+    }
+
+    void clear(bool bClearBuffer=false) override 
+    {
+        mClientActorID = 0;
+        if (mRequestMsgData) mRequestMsgData.setNull();
+        mRequestMsgName.setNull();
+    }
+
+    void copy(const tBaseMsg &otherMsg) override 
+    {
+        if (strcmp("SC_ServerRequest", otherMsg.GetMsgName())!=0) { LOG("%s is not SC_ServerRequest", otherMsg.GetMsgName()); return; }; const SC_ServerRequest &other = *(const SC_ServerRequest*)(&otherMsg);
+        mClientActorID = other.mClientActorID;
+        COPY_MSG_DATA(other.mRequestMsgData, mRequestMsgData);
+        mRequestMsgName = other.mRequestMsgName;
+    }
+
+    virtual const char* GetMsgName() const override { return "SC_ServerRequest"; }
+
+    AData get(const char *szMember) const 
+    {
+        if (strcmp(szMember, "mClientActorID")==0) { AData value; value = mClientActorID; return value; }
+        if (strcmp(szMember, "mRequestMsgName")==0) { AData value; value = mRequestMsgName; return value; }
+        return AData();
+    }
+
+    bool set(const char *szMember, AData value) 
+    {
+        if (strcmp(szMember, "mClientActorID")==0) { mClientActorID = value; return true; };
+        if (strcmp(szMember, "mRequestMsgName")==0) { mRequestMsgName = value; return true; };
         LOG("No exist > %%s", szMember);  return false;
     }
 
@@ -235,16 +314,11 @@ public:
 
 
    virtual  void Full(AutoNice scrData) override
-    {	   
-        clear(false);		
-        CheckGet(scrData, mInfo);		
+    {
+        clear(false);
+        CheckGet(scrData, mInfo);
         CheckGet(scrData, mRequestID);
     }
-
-   virtual bool restore(DataStream *scrData) override
-   {
-	   return tRequestMsg::restore(scrData);
-   }
 
     virtual void ToData(AutoNice &destData) override
     {

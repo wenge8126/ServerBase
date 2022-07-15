@@ -30,10 +30,10 @@ public class CS_ClientRequest: RequestPacket
         get { return (string)mMsgData.get("mRequestMsgName"); }
     }
     
-    public NiceData mActorMsg
+    public DataBuffer mRequestMsgData
     {
-        set { mMsgData.set("mActorMsg", value); }
-        get { return mMsgData.getObject("mActorMsg") as NiceData; }
+        set { mMsgData.set("mRequestMsgData", value); }
+        get { return mMsgData.getObject("mRequestMsgData") as DataBuffer; }
     }
 }
 

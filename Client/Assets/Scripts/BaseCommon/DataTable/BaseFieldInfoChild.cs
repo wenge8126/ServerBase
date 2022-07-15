@@ -1110,6 +1110,81 @@ namespace Logic
     };
 
     //--------------------------------------------------------------------------------
+    class DataFieldInfo : BaseFieldInfo
+    {
+        public override FIELD_TYPE getType() { return FIELD_TYPE.FIELD_DATA; }
+        //--------------------------------------------------------------------------------
 
+        public override bool serialize(object data, ref DataBuffer resultData)
+        {
+            DataBuffer d = data as DataBuffer;
+            
+            if (d != null)
+                return resultData.writeData(ref d, d.size());
+            return true;
+        }
+        //--------------------------------------------------------------------------------
+
+        public override bool restore(out object data, ref DataBuffer scrData)
+        {
+            var d = new DataBuffer();
+            data = d;
+            if (!scrData.readData(ref d))
+            {
+                LOG.logError("Read data fail");
+                return true;
+            }
+            return false;
+        }
+        //--------------------------------------------------------------------------------
+
+        public override bool set(ref object[] dataList, object obj)
+        {
+            if (mPosition < dataList.Length)
+            {
+                if (obj.GetType() == typeof(DataBuffer))
+                {
+                    dataList[mPosition] = obj;
+                    return true;
+                }
+            }
+            return false;
+        }
+        //--------------------------------------------------------------------------------
+
+        public override object get(object[] dataList)
+        {
+            if (mPosition < dataList.Length)
+            {
+                return dataList[mPosition];
+            }
+            return null;
+        }
+        //--------------------------------------------------------------------------------
+
+        public override bool get(object[] dataList, out int nVal)
+        {
+
+            nVal = 0;
+            return false;
+        }
+        //--------------------------------------------------------------------------------
+
+        public override bool get(object[] dataList, out float fVal)
+        {
+
+            fVal = 0.0f;
+            return false;
+        }
+        //--------------------------------------------------------------------------------
+
+        public override bool get(object[] dataList, out string strVal)
+        {
+
+            strVal = "";
+            return false;
+        }
+    };
+    //--------------------------------------------------------------------------------
 
 }

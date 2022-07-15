@@ -64,6 +64,17 @@ namespace Logic
         }
     };
     //--------------------------------------------------------------------------------
+    class DataFieldInfoFactory : tFieldInfoFactory
+    {
+        public override FIELD_TYPE getType() { return FIELD_TYPE.FIELD_DATA; }
+
+        public override tFieldInfo NewFieldInfo()
+        {
+            return new DataFieldInfo();
+        }
+    };
+    
+    //--------------------------------------------------------------------------------
 
     class FloatFieldInfoFactory : tFieldInfoFactory
     {

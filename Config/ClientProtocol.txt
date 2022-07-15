@@ -3,8 +3,16 @@ CS_ClientRequest :RQ
 {	
 	uint64 mTargetActorID;
 	string mRequestMsgName;
-	nicedata mActorMsg;
+	data mRequestMsgData;
 }
+
+SC_ServerRequest
+{
+	uint64 mClientActorID;
+	string mRequestMsgName;
+	data mRequestMsgData;
+}
+
 
 SC_ResponseMsg
 {

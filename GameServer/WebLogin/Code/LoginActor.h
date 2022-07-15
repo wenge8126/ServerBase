@@ -59,14 +59,13 @@ public:
 
 	void OnAsyncRequest(HandConnect connect, const CS_ClientRequest  &req, SC_ResponseMsg &resp)
 	{
-		NOTE_LOG(req.dump().c_str());
-		//resp.mNodeKey = 8888;
-		
+		//NOTE_LOG(req.dump().c_str());
+
 		Hand<ClientActor> client = connect->GetUserData();
 		if (client)
 		{
-			AutoNice msgData = req.mActorMsg;
-			AutoNice respData = client->Await(UnitID(Actor_DBWorker, 1), req.mRequestMsgName, *msgData, 10000, 0);
+			AutoData msgData = req.mRequestMsgData;
+			AutoNice respData = client->Await(req.mTargetActorID, req.mRequestMsgName, msgData.getPtr(), 10000, 0);
 			resp.mResponseData = respData;
 			if (respData)
 				NOTE_LOG("Actor response : \r\n%s", respData->dump().c_str());

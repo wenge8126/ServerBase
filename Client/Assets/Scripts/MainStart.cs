@@ -65,11 +65,22 @@ public class ConnectFinishEvent : BaseEvent
         CS_RequestTest testMsg = new CS_RequestTest();
         testMsg.mInfo = "&&&&& test info *********";
         testMsg.mRequestID = 1111;
-        CS_ClientRequest requestPacket = new CS_ClientRequest();
-        requestPacket.mTargetActorID = 999;
-        requestPacket.mRequestMsgName = "CS_RequestTest";
-        requestPacket.mActorMsg = testMsg.mMsgData;
-        var response = await requestPacket.AsyncRequest(MainStart.mNet);
+
+        var uid = new UnitID(104, 1);
+
+        UInt64 x = uid;
+
+        var mm = new UnitID(x);
+        
+        LOG.log($"{uid.dump()}  === {mm.dump()} *** {x.ToString()}");
+        
+        
+        // CS_ClientRequest requestPacket = new CS_ClientRequest();
+        // requestPacket.mTargetActorID = 999;
+        // requestPacket.mRequestMsgName = "CS_RequestTest";
+        // requestPacket.mActorMsg = testMsg.mMsgData;
+        // var response = await requestPacket.AsyncRequest(MainStart.mNet);
+        var response = await MainStart.mNet.AsyncRequest(new UnitID(104, 1), "CS_RequestTest", testMsg, 6000);
         if (response != null)
             response.dump("ok=========");
         else

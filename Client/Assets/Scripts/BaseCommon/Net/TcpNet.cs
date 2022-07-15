@@ -18,6 +18,7 @@ using System.Text;
 using System.Net.Sockets;
 using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 
 
 namespace Logic
@@ -124,6 +125,29 @@ namespace Logic
             EventCenter.Instance.RegisterEvent("LowUpdateEvent", new DefineFactory<LowUpdateEvent>());
             var evt = EventCenter.Instance.StartEvent("LowUpdateEvent");
             evt.WaitTime(3);
+        }
+
+        public async Task<NiceData> AsyncRequest(UInt64 targetActorID, string requestMsgName, NiceData requestMsgData, int nOverMilSecond)
+        {
+            CS_ClientRequest requestPacket = new CS_ClientRequest();
+            requestPacket.mTargetActorID = targetActorID;
+            requestPacket.mRequestMsgName = requestMsgName;
+            var msgData = new DataBuffer();
+            requestPacket.mRequestMsgData = msgData;
+            requestMsgData.serialize(ref msgData);
+            var response = await requestPacket.AsyncRequest(this, nOverMilSecond*0.001f);
+            if (response == null)
+            {
+                LOG.log("Request fail, response null");
+            }
+
+            return response;
+        }
+
+        public async Task<NiceData> AsyncRequest(UInt64 targetActorID, string requestMsgName, BasePacket requestMsg,
+            int nOverMilSecond)
+        {
+            return await AsyncRequest(targetActorID, requestMsgName, requestMsg.mMsgData, nOverMilSecond);
         }
 
         public void RegisterPacket(int packetID, NetPacket msgPacket, ProcessFunction processFunction)
