@@ -92,17 +92,21 @@ public class ConnectFinishEvent : BaseEvent
 
 public class MainStart : MonoBehaviour
 {
+    public static ActorManager mActorMgr;
     public static Logic.TcpClientNet mNet;
+
+    public Actor mActor;
     // Start is called before the first frame update
     void Start()
     {
         EventCenter.Instance = new EventCenter();
+        mActorMgr = new ActorManager();
         EventCenter.StaticRegister("ConnectFinishEvent", new DefineFactory<ConnectFinishEvent>());
         
         mNet = new TcpClientNet();
         
         mNet.mNotifyConnectFinishEvent = EventCenter.Instance.StartEvent("ConnectFinishEvent");
-        mNet.Connect("127.0.0.1", 4001);
+        //mNet.Connect("127.0.0.1", 4001);
         
         mNet.RegisterPacket((int)NET_PACKET_ID.eNotifyHeartBeat, new PingPacket(), null);
         mNet.RegisterPacket((int)NET_PACKET_ID.eNotifyNetEventID, new PingPacket(), null);
@@ -111,6 +115,18 @@ public class MainStart : MonoBehaviour
 
         //await Task.Delay(3);
         //mNet.mNotifyConnectFinishEvent.Do();
+
+        
+        mActorMgr.RegisterActor(new DefineActorFactory<TestActor>(1));
+
+        mActor = mActorMgr.CreateActor(1, 111);
+
+        EventCenter.WaitAction(TestDestoryActor, 6);
+    }
+
+    void TestDestoryActor()
+    {
+        mActor.Destory();
     }
 
     NiceData RequestFunction(tNetTool netTool, RequestPacket packet)
@@ -126,5 +142,26 @@ public class MainStart : MonoBehaviour
     {
         EventCenter.Instance.Process();
         mNet.Process(0.001f);
+        mActorMgr.Process();
+    }
+}
+
+public class TestActor : Actor
+{
+
+    public override void  Awake()
+    {
+        Log("TestActor : Awake");
+
+    }
+
+    public override void Start()
+    {
+        Log("TestActor : Start");
+    }
+    
+    public override void OnDestory()
+    {
+        Log("TestActor : OnDestory");
     }
 }

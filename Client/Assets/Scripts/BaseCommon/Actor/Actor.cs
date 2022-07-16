@@ -1,52 +1,99 @@
-﻿namespace Logic
+﻿using System.Collections.Generic;
+using UnityEngine;
+
+namespace Logic
 {
     public class Actor : IActor
     {
-        private UnitID mID = new UnitID();
+        public UnitID mID = new UnitID();
+        public ActorFactory mFactory = null;
 
-        UnitID GetID()
+        public Dictionary<string, tComponent> mComponentList = new Dictionary<string, tComponent>();
+
+        public UnitID GetID()
         {
             return mID;
         }
 
-        IComponent AddComponent(string componentName)
+        public ActorManager GetMgr()
         {
+            return mFactory.mManager;
+        }
+
+        public tComponent AddComponent(string componentName)
+        {
+            tComponent comp = EventCenter.Instance.StartEvent(componentName) as tComponent;
+            if (comp != null)
+            {
+                comp.mActor = this;
+                mComponentList[componentName] = comp;
+                comp.Awake();
+                EventCenter.WaitAction(comp.Start, 0);
+            }
             return null;
         }
 
-        IComponent RemoveComponent(string componentName)
+        public tComponent RemoveComponent(string componentName)
         {
+            tComponent comp;
+            if (mComponentList.TryGetValue(componentName, out comp))
+            {
+                RemoveComponent(comp);
+                return comp;
+            }
             return null;
         }
 
-        bool RemoveComponent(IComponent component)
+        public bool RemoveComponent(tComponent tComponent)
         {
+            ComponentWaitRemoveEvent evt =
+                EventCenter.Instance.StartEvent("ComponentWaitRemoveEvent") as ComponentWaitRemoveEvent;
+            evt.MActorTComponent = tComponent;
+            evt.WaitTime(0);
             return false;
         }
             
-        void Awake()
+        public virtual void Awake()
         {
             
         }
 
-        void Start()
+        public virtual void Start()
         {
             
         }
 
-        void Process()
+        public void Process()
+        {
+            foreach (var v in mComponentList.Values)
+            {
+                v.Process();
+            }
+        }
+
+        public void LowProcess()
+        {
+            foreach (var v in mComponentList.Values)
+            {
+                v.LowProcess();
+            }
+        }
+
+        public virtual void OnDestory()
         {
             
         }
-
-        void LowProcess()
+        
+        public void Destory()
         {
-            
+            GetMgr().DestoryActor(this);
         }
 
-        void OnDestory()
+        public void Log(string info)
         {
-            
+            LOG.log(info);    
         }
     }
+    
+    
 }

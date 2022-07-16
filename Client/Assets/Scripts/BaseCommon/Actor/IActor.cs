@@ -4,11 +4,11 @@
     {
         UnitID GetID();
 
-        IComponent AddComponent(string componentName);
+        tComponent AddComponent(string componentName);
 
-        IComponent RemoveComponent(string componentName);
+        tComponent RemoveComponent(string componentName);
 
-        bool RemoveComponent(IComponent component);
+        bool RemoveComponent(tComponent tComponent);
         
         void Awake();
         void Start();

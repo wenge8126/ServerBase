@@ -1,30 +1,37 @@
 ﻿namespace Logic
 {
-    public class Component : IComponent
+    public class tComponent : BaseEvent , IComponent
     {
-        void Awake()
+        public Actor mActor;
+        
+        public virtual void Awake()
         {
             
         }
 
-        void Start()
+        public virtual void Start()
         {
             
         }
 
-        void Process()
+        public virtual void Process()
         {
             
         }
 
-        void LowProcess()
+        public virtual void LowProcess()
         {
             
         }
 
-        void OnRemove()
+        public virtual void OnRemove()
         {
             
+        }
+        
+        void Log(string log)
+        {
+            LOG.log(log);    
         }
     }
 }
