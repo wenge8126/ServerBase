@@ -65,10 +65,11 @@ namespace Logic
 
         public void Process()
         {
-            foreach (var v in mComponentList.Values)
-            {
-                v.Process();
-            }
+            // 具体需要快速Process的组件, 直接使用StartUpdate()
+            // foreach (var v in mComponentList.Values)
+            // {
+            //     v.Process();
+            // }
         }
 
         public void LowProcess()
