@@ -57,7 +57,26 @@ class WssWebNet : public uWS::tWssServerNet<bSSL>
 public:
 	virtual bool OnAddConnect(tNetConnect *pConnect)
 	{
+		mConnectList.add(HandConnect(pConnect));
 		return mpComponent->OnConnected(pConnect);
+	}
+
+	virtual void OnCloseConnect(tNetConnect *pConnect) override
+	{
+
+	}
+
+	virtual void LowProcess(int spaceTime) override
+	{
+		uWS::tWssServerNet<bSSL>::LowProcess(spaceTime);
+		for (int i=mConnectList.size()-1; i>=0; --i)
+		{
+			Hand< BaseWebConnect> conn = mConnectList[i];
+			if (conn)
+				conn->ProcessPing();
+			else
+				mConnectList.removeAt(i);				
+		}
 	}
 
 	virtual HandConnect CreateConnect() override
@@ -78,8 +97,21 @@ public:
 		: mpComponent(pComp)
 	{}
 
+	virtual void StopNet(void) override
+	{
+		for (int i = mConnectList.size() - 1; i >= 0; --i)
+		{
+			Hand< BaseWebConnect> conn = mConnectList[i];
+			conn._free();
+		}
+		mConnectList.clear();
+		uWS::tWssServerNet<bSSL>::StopNet();
+	}
+
 protected:
 	SocketComponent		*mpComponent;
+
+	ArrayList<HandConnect>	mConnectList;
 };
 
 //-------------------------------------------------------------------------

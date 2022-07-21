@@ -49,6 +49,11 @@ public:
 		tcpNet->mServerIp = "127.0.0.1";
 		tcpNet->mServerPort = 4001;
 
+		// 同时支持多种网络模式
+		Hand<WssWebComponent> wssNet = AddComponent("WssWebComponent");
+		wssNet->mServerIp = "127.0.0.1";
+		wssNet->mServerPort = 4002;
+
 		tcpNet->mSafeCode = 11;
 		Hand<tBaseEventNet> net = tcpNet->GetNet();
 		net->GetNetProtocol()->RegisterNetPacket(MEM_NEW AsyncProcessReqeustMsgFactory<eMsg_ClientRequestServer, CS_ClientRequest, SC_ResponseMsg, LoginActor>(this));

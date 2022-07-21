@@ -343,7 +343,7 @@ namespace uWS
 		app.ws<PerSocketData>("/*", (typename TemplatedApp<bUSE_SSL>::WebSocketBehavior&&)wsWsBehavior);
 		app.listen(mPort, [=](auto *token) {
 			if (token) {
-				std::cout << "Listening on port " << serverPort << std::endl;
+				std::cout << "Wss listening on port " << serverPort << std::endl;
 				mStartState = eWssStateStartSucceed;
 			}
 			else

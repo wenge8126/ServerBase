@@ -31,16 +31,17 @@ void TcpComponent::Start()
 
 void TcpComponent::OnDestory()
 {
-	Hand<NetWorkerComponent> comp = GetNetWorkerComponent();
-	if (comp)
-	{
-		FastHash<Int64, HandConnect> temp;
-		temp.swap(comp->mConnectList);
-		for (auto it = temp.begin(); it; ++it)
-		{
-			it.get()._free();
-		}
-	}
+	//Hand<NetWorkerComponent> comp = GetNetWorkerComponent();
+	//if (comp)
+	//{
+	//	FastHash<Int64, HandConnect> temp;
+	//	temp.swap(comp->mConnectList);
+	//	for (auto it = temp.begin(); it; ++it)
+	//	{
+	//		it.get()._free();
+	//	}
+	//}
+	mTcpNet->StopNet();
 	mTcpNet._free();
 }
 
