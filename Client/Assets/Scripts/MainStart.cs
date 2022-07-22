@@ -105,6 +105,8 @@ public class MainStart : MonoBehaviour
         
         mNet = new TcpClientNet();
         
+        LuaMain.StartLua();
+        
         mNet.mNotifyConnectFinishEvent = EventCenter.Instance.StartEvent("ConnectFinishEvent");
         //mNet.Connect("127.0.0.1", 4001);
         
@@ -118,9 +120,7 @@ public class MainStart : MonoBehaviour
 
         
         mActorMgr.RegisterActor(new DefineActorFactory<TestActor>(1));
-
         mActor = mActorMgr.CreateActor(1, 111);
-
         EventCenter.WaitAction(TestDestoryActor, 6);
     }
 
@@ -143,6 +143,11 @@ public class MainStart : MonoBehaviour
         EventCenter.Instance.Process();
         mNet.Process(0.001f);
         mActorMgr.Process();
+    }
+
+    public static async Task WaitTest()
+    {
+        await Task.Delay(4000);
     }
 }
 

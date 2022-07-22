@@ -48,7 +48,7 @@ namespace Logic
         {
             ComponentWaitRemoveEvent evt =
                 EventCenter.Instance.StartEvent("ComponentWaitRemoveEvent") as ComponentWaitRemoveEvent;
-            evt.MActorTComponent = tComponent;
+            evt.mActorTComponent = tComponent;
             evt.WaitTime(0);
             return false;
         }

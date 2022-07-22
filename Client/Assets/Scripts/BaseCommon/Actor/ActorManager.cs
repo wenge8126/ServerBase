@@ -106,11 +106,11 @@ namespace Logic
     
     public class ComponentWaitRemoveEvent : BaseEvent
     {
-        public tComponent MActorTComponent;
+        public tComponent mActorTComponent;
         public override void OnTimeOver()
         {
-            MActorTComponent.OnRemove();
-            MActorTComponent.mActor.mComponentList.Remove(MActorTComponent.GetEventName());
+            mActorTComponent.OnRemove();
+            mActorTComponent.mActor.mComponentList.Remove(mActorTComponent.GetEventName());
         }
     }
 }

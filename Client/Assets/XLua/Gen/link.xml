@@ -1,0 +1,15 @@
+﻿
+
+<linker>
+
+	<assembly fullname="UnityEngine.CoreModule">
+	    <type fullname="UnityEngine.WaitForSeconds" preserve="all"/>
+		
+	</assembly>
+
+	<assembly fullname="mscorlib">
+	    <type fullname="System.Threading.Tasks.Task" preserve="all"/>
+		
+	</assembly>
+
+</linker>
