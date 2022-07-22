@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Rendering;
-using XLua.Cast;
+
 
 namespace Logic
 {
@@ -314,10 +314,11 @@ namespace Logic
     }
     
     // 接收请求处理的消息(回复请求处理过程)
-    class ProcessRequestPacket : BasePacket
+    public class ProcessRequestPacket : BasePacket
     {
         public uint mRequestID = 0;
-        public UInt64 mClientActorID = 0;
+        public string mRequestName = "";
+        public System.UInt64 mClientActorID = 0;
 
         public override byte GetPacketID()
         {
@@ -328,6 +329,7 @@ namespace Logic
         {
             iStream.read(out mRequestID);
             iStream.read(out mClientActorID);
+            iStream.readString(out mRequestName);
             return mMsgData.restore(ref iStream);
         }
 
@@ -335,7 +337,7 @@ namespace Logic
         {
             oStream.write(mRequestID);
             oStream.write(mClientActorID);
-            
+            oStream.writeString(mRequestName);
             return mMsgData.serialize(ref oStream);
         }
         
@@ -344,13 +346,13 @@ namespace Logic
             var actor = ActorManager.Instance.FindActor(mRequestID);
             if (actor != null)
             {
-                NiceData resp = await actor.OnRequestMsg(mMsgData);
+                NiceData resp = await actor.OnRequestMsg(mRequestName, mMsgData);
                 if (resp != null)
                 {
                     var respPak = new ResponsePacket();
                     respPak.mRequestID = mRequestID;
                     if (resp.serialize(ref respPak.mResponseData))
-                        net.SendPacket(resp);
+                        net.SendPacket(respPak);
                     else
                     {
                         LOG.logError("Save response data fail");
@@ -367,7 +369,7 @@ namespace Logic
         {
             mRequestID = 0;
             mClientActorID = 0;
-            mMsgData.clear(false);
+            mMsgData.clear();
         }
     }
     

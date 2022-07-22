@@ -125,6 +125,7 @@ public class MainStart : MonoBehaviour
         
         mActorMgr.RegisterActor(new DefineActorFactory<TestActor>(1));
         mActor = mActorMgr.CreateActor(1, 111);
+        mActor.mFactory.RegisterActorMsg("GN_NotifyNodeInfo", TestActor.On);
         EventCenter.WaitAction(TestDestoryActor, 6);
         
         EventCenter.StaticRegister("TestComponent", new DefineFactory<TestComponent>());
@@ -134,6 +135,7 @@ public class MainStart : MonoBehaviour
 
     void TestDestoryActor()
     {
+        
         mActor.Destory();
     }
 
@@ -168,15 +170,34 @@ public class TestActor : Actor
 
     }
 
-    public override void Start()
+    public override async void Start()
     {
         Log("TestActor : Start");
+        
+        var msg = new GN_NotifyNodeInfo();
+        msg.mNodeKey = 8877;
+        var d = await OnRequestMsg("GN_NotifyNodeInfo", msg.mMsgData);
+        d.dump("^^^^^^^^^^^^");
     }
     
     public override void OnDestory()
     {
         Log("TestActor : OnDestory");
     }
+
+    static public async Task<NiceData> On(Actor actor, NiceData reqData) 
+    {
+        var req = new GN_NotifyNodeInfo();
+        req.mMsgData = reqData;
+        LOG.log("888888@@@@@@@@@@@@ " + req.GetType());
+        //(actor as TestActor).On(req);
+        req.mMsgData.dump("===========");
+        MSG_Test t = new MSG_Test();
+        t.mInfo = "pppp+++9999";
+        return t.mMsgData;
+    }
+
+  
 }
 
 public class TestComponent : tComponent

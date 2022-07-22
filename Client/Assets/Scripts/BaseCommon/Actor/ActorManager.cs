@@ -18,7 +18,7 @@ namespace Logic
             EventCenter.Instance.RegisterEvent("ComponentWaitRemoveEvent", new DefineFactory<ComponentWaitRemoveEvent>());
         }
 
-        public ~ActorManagfer()
+        ~ActorManager()
         {
             Instance = null;
         }

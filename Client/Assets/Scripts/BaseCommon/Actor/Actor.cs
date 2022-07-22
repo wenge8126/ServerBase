@@ -16,12 +16,15 @@ namespace Logic
             return mID;
         }
 
-        public virtual async Task<NiceData> OnRequestMsg(string requestName, NiceData requestData)
+        public async Task<NiceData> OnRequestMsg(string requestName, NiceData requestData)
         {
+            var fun = mFactory.FindProcessRequestFunction(requestName);
+            if (fun != null)
+                return await fun(this, requestData);
             return null;
         }
 
-        public NiceData AsyncRequestMsg(UnitID targetActorID, BasePacket requestMsg, int overMilSecond = 10000)
+        public async Task<NiceData> AsyncRequestMsg(UnitID targetActorID, BasePacket requestMsg, int overMilSecond = 10000)
         {
             var response = await MainStart.mNet.AsyncRequest(new UnitID(104, 1), requestMsg.MsgName(), requestMsg, overMilSecond);
             if (response != null)
@@ -34,7 +37,7 @@ namespace Logic
             return response;
         }
         
-        public NiceData AsyncRequestMsg(UnitID targetActorID, string msgName, NiceData requestMsgData, int overMilSecond = 10000)
+        public async Task<NiceData> AsyncRequestMsg(UnitID targetActorID, string msgName, NiceData requestMsgData, int overMilSecond = 10000)
         {
             var response = await MainStart.mNet.AsyncRequest(new UnitID(104, 1), msgName, requestMsgData, overMilSecond);
             if (response != null)
@@ -126,6 +129,8 @@ namespace Logic
         {
             LOG.log(info);    
         }
+
+       
     }
     
     
