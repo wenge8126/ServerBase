@@ -30,9 +30,7 @@ public class GameCommon
     {
         get
         {
-            return IsDevelopTest
-                ? "https://ryu-cn-dev.obs.cn-east-3.myhuaweicloud.com/Ryu/"
-                : "https://ryu-cdn-obs-tt.mobage.cn/ryu/";
+            return "";
         }
     }
 
