@@ -100,6 +100,11 @@ namespace Logic
         public override void OnTimeOver()
         {
             mActor.OnDestory();
+            foreach (var v in mActor.mComponentList.Values)
+            {
+                v.OnRemove();
+            }
+            mActor.mComponentList.Clear();
             mActor.GetMgr().RemoveActor(mActor);
         }
     }

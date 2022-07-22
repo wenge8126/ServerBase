@@ -122,6 +122,10 @@ public class MainStart : MonoBehaviour
         mActorMgr.RegisterActor(new DefineActorFactory<TestActor>(1));
         mActor = mActorMgr.CreateActor(1, 111);
         EventCenter.WaitAction(TestDestoryActor, 6);
+        
+        EventCenter.StaticRegister("TestComponent", new DefineFactory<TestComponent>());
+
+        mActor.AddComponent("TestComponent");
     }
 
     void TestDestoryActor()
@@ -168,5 +172,24 @@ public class TestActor : Actor
     public override void OnDestory()
     {
         Log("TestActor : OnDestory");
+    }
+}
+
+public class TestComponent : tComponent
+{
+    public override void  Awake()
+    {
+        Log("TestComponent : Awake");
+
+    }
+
+    public override void Start()
+    {
+        Log("TestComponent : Start");
+    }
+    
+    public override void OnRemove()
+    {
+        Log("TestComponent : OnRemove");
     }
 }
