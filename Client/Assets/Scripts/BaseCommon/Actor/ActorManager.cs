@@ -5,14 +5,22 @@ namespace Logic
 {
     public class ActorManager
     {
+        static public ActorManager Instance = null;
+        
         private Dictionary<UInt64, Actor> mActorList = new Dictionary<ulong, Actor>();
         private Dictionary<int, ActorFactory> mActorFactoryList = new Dictionary<int, ActorFactory>();
 
         public ActorManager()
         {
+            Instance = this;
             EventCenter.Instance.RegisterEvent("ActorWaitStartEvent",  new DefineFactory<ActorWaitStartEvent>());
             EventCenter.Instance.RegisterEvent("ActorWaitDestoryEvent", new DefineFactory<ActorWaitDestoryEvent>());
             EventCenter.Instance.RegisterEvent("ComponentWaitRemoveEvent", new DefineFactory<ComponentWaitRemoveEvent>());
+        }
+
+        public ~ActorManagfer()
+        {
+            Instance = null;
         }
 
         public void RegisterActor(ActorFactory factory)

@@ -121,6 +121,7 @@ namespace Logic
         public BaseNetTool()
         {
             RegisterPacket((int)NET_PACKET_ID.PACKET_RESPONSE_MSG, new ResponsePacket(), null);
+            RegisterPacket((int)NET_PACKET_ID.PACKET_REQUEST_CLIENTACTOR, new ProcessRequestPacket(), null);
             
             EventCenter.Instance.RegisterEvent("LowUpdateEvent", new DefineFactory<LowUpdateEvent>());
             var evt = EventCenter.Instance.StartEvent("LowUpdateEvent");

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Logic
@@ -13,6 +14,37 @@ namespace Logic
         public UnitID GetID()
         {
             return mID;
+        }
+
+        public virtual async Task<NiceData> OnRequestMsg(string requestName, NiceData requestData)
+        {
+            return null;
+        }
+
+        public NiceData AsyncRequestMsg(UnitID targetActorID, BasePacket requestMsg, int overMilSecond = 10000)
+        {
+            var response = await MainStart.mNet.AsyncRequest(new UnitID(104, 1), requestMsg.MsgName(), requestMsg, overMilSecond);
+            if (response != null)
+                response.dump("ok=========");
+            else
+            {
+                LOG.log("Request fail, response null");
+            }
+
+            return response;
+        }
+        
+        public NiceData AsyncRequestMsg(UnitID targetActorID, string msgName, NiceData requestMsgData, int overMilSecond = 10000)
+        {
+            var response = await MainStart.mNet.AsyncRequest(new UnitID(104, 1), msgName, requestMsgData, overMilSecond);
+            if (response != null)
+                response.dump("ok=========");
+            else
+            {
+                LOG.log("Request fail, response null");
+            }
+
+            return response;
         }
 
         public ActorManager GetMgr()

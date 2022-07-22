@@ -28,6 +28,10 @@ public class GN_NotifyNodeInfo : BasePacket
 
 public class CS_RequestTest : RequestPacket
 {
+    public override string MsgName()
+    {
+        return "CS_RequestTest";
+    }
     public string mInfo
     {
         set { mMsgData.set("mInfo", value); }

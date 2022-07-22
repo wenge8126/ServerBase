@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Rendering;
+using XLua.Cast;
 
 namespace Logic
 {
@@ -24,6 +25,7 @@ namespace Logic
         eNotifyHeartBeat = 10,		// 心跳包，由服务器统一每隔约10，向所有连接发送一次心跳包
         PACKET_EVENT_PROCESS = 11, // 直接读取处理的事件包 
         PACKET_MAX,
+        PACKET_REQUEST_CLIENTACTOR = PACKET_MAX+50,
     };
 
     public abstract class Packet
@@ -86,6 +88,12 @@ namespace Logic
     {
         public NiceData mMsgData = new NiceData();
         public ProcessFunction mProcessFunction;
+
+        public virtual string MsgName()
+        {
+            return "Unkwon";
+            
+        }
         
         public override bool Read(DataBuffer iStream, uint packetSize)
         {
@@ -304,6 +312,65 @@ namespace Logic
             RequestPacket.OnResponse(net, this);
         }
     }
+    
+    // 接收请求处理的消息(回复请求处理过程)
+    class ProcessRequestPacket : BasePacket
+    {
+        public uint mRequestID = 0;
+        public UInt64 mClientActorID = 0;
+
+        public override byte GetPacketID()
+        {
+            return (byte)NET_PACKET_ID.PACKET_REQUEST_CLIENTACTOR;
+        }
+        
+        public override bool Read(DataBuffer iStream, uint packetSize)
+        {
+            iStream.read(out mRequestID);
+            iStream.read(out mClientActorID);
+            return mMsgData.restore(ref iStream);
+        }
+
+        public override bool Write(ref DataBuffer oStream)
+        {
+            oStream.write(mRequestID);
+            oStream.write(mClientActorID);
+            
+            return mMsgData.serialize(ref oStream);
+        }
+        
+        public override async void Execute(tNetTool net)
+        {
+            var actor = ActorManager.Instance.FindActor(mRequestID);
+            if (actor != null)
+            {
+                NiceData resp = await actor.OnRequestMsg(mMsgData);
+                if (resp != null)
+                {
+                    var respPak = new ResponsePacket();
+                    respPak.mRequestID = mRequestID;
+                    if (resp.serialize(ref respPak.mResponseData))
+                        net.SendPacket(resp);
+                    else
+                    {
+                        LOG.logError("Save response data fail");
+                    }
+                }
+                else
+                {
+                    LOG.logError("No response data");
+                }
+            }
+        }
+        
+        public override void InitData()
+        {
+            mRequestID = 0;
+            mClientActorID = 0;
+            mMsgData.clear(false);
+        }
+    }
+    
     //---------------------------------------------------------------------------------------------------------
     /// <summary>
     /// 低速循环时间事件
