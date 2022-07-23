@@ -36,16 +36,7 @@
     <ClCompile Include="Code\HttpComponect.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Code\TcpComponent.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\NetWorkerComponent.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Code\WssWebComponent.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ClientActor.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -65,18 +56,6 @@
     <ClInclude Include="..\Common\SDK\SDK.h">
       <Filter>SDK</Filter>
     </ClInclude>
-    <ClInclude Include="Code\HttpComponect.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\TcpComponent.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\WssWebComponent.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\NetWorkerComponent.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Code\LoginNetComponect.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -92,13 +71,13 @@
     <ClInclude Include="Code\ItemDataComponent.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Code\ClientActor.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Code\LoginActor.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\ClientMsg.h">
+    <ClInclude Include="Code\HttpComponect.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\WssWebComponent.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

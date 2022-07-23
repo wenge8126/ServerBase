@@ -241,15 +241,18 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
     <ClCompile Include="Code\Actor.cpp" />
     <ClCompile Include="Code\ActorGate.cpp" />
     <ClCompile Include="Code\ActorManager.cpp" />
+    <ClCompile Include="Code\ClientActor.cpp" />
     <ClCompile Include="Code\Component.cpp" />
     <ClCompile Include="Code\DBTable.cpp" />
     <ClCompile Include="Code\DBTableManager.cpp" />
     <ClCompile Include="Code\LogicDBTable.cpp" />
+    <ClCompile Include="Code\NetWorkerComponent.cpp" />
     <ClCompile Include="Code\NoSQLActor.cpp" />
     <ClCompile Include="Code\NoSQLComponent.cpp" />
     <ClCompile Include="Code\NoSQLUserComponent.cpp" />
     <ClCompile Include="Code\SQLComponent.cpp" />
     <ClCompile Include="Code\SQLThread.cpp" />
+    <ClCompile Include="Code\TcpComponent.cpp" />
     <ClCompile Include="dllmain.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -257,6 +260,11 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
     <ClInclude Include="Code\ActorDBLib.h" />
     <ClInclude Include="Code\ActorGate.h" />
     <ClInclude Include="Code\ActorManager.h" />
+    <ClInclude Include="Code\ClientActor.h" />
+    <ClInclude Include="Code\LoginNetActor.h" />
+    <ClInclude Include="Code\NetWorkerComponent.h" />
+    <ClInclude Include="Code\SCActor.h" />
+    <ClInclude Include="Code\ServerClientMsg.h" />
     <ClInclude Include="Code\Component.h" />
     <ClInclude Include="Code\DBTableLoadSQL.h" />
     <ClInclude Include="Code\DBTable.h" />
@@ -271,6 +279,7 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
     <ClInclude Include="Code\NoSQLUserComponent.h" />
     <ClInclude Include="Code\SQLComponent.h" />
     <ClInclude Include="Code\SQLThread.h" />
+    <ClInclude Include="Code\TcpComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Proj2017\BaseCommon.vcxproj">

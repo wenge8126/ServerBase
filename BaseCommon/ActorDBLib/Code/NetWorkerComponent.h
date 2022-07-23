@@ -1,4 +1,8 @@
 #pragma once
+
+#ifndef _INCLUDE_NETWORKERCOMPONENT_H
+#define _INCLUDE_NETWORKERCOMPONENT_H
+
 #include "Component.h"
 #include "NetHandle.h"
 
@@ -14,7 +18,7 @@ using namespace NetCloud;
 
 //-------------------------------------------------------------------------
 // 使用网络功能的组件, 关于网络逻辑组件可以继承此组件直接使用网络服务功能
-class NetWorkerComponent : public Component
+class ActorDBLib_Export_H NetWorkerComponent : public Component
 {
 public:
 	virtual void _RegisterMsg(Logic::tEventCenter *pCenter) {}
@@ -53,39 +57,6 @@ public:
 };
 
 //-------------------------------------------------------------------------
-// 用到的相关消息事件
-class ComponectNetMsg : public Logic::tBaseNetEvent
-{
-public:
-	NetCloud::HandActor GetActor();
-
-	Hand< NetWorkerComponent> GetNetWorker();
-};
-
-class ComponectResponseMsg : public Logic::tClientEvent
-{
-public:
-	virtual void Async() {}
-		
-public:
-	HandActor GetActor();
-
-	Hand< NetWorkerComponent> GetNetWorker();
 
 
-	virtual bool _DoEvent() override
-	{
-		ASYNC(&ComponectResponseMsg::Async, this);
-		return true;
-	}
-};
-
-
-class ComponectRequestMsg : public Logic::tServerEvent
-{
-public:
-	HandActor GetActor();
-
-	Hand< NetWorkerComponent> GetNetWorker();
-};
-//-------------------------------------------------------------------------
+#endif //_INCLUDE_NETWORKERCOMPONENT_H

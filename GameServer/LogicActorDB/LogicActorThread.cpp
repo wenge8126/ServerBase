@@ -20,7 +20,7 @@
 #include "GenerateDBUser.h"
 
 #include "Test2Component.h"
-#include "ClientMsg.h"
+#include "ServerClientMsg.h"
 
 #define CREATE_DB		0
 

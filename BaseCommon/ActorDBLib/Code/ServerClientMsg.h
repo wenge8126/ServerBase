@@ -1,5 +1,7 @@
 //Auto genereate msg data code		
 #pragma once
+#ifndef _INCLUDE_SERVERCLIENTMSG_H_
+#define _INCLUDE_SERVERCLIENTMSG_H_
 
 #include "BaseMsg.h"
 #include "Array.h"
@@ -533,3 +535,6 @@ public:
 
 };
 
+
+
+#endif //_INCLUDE_SERVERCLIENTMSG_H_

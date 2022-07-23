@@ -11,7 +11,8 @@
 #include "ItemDataComponent.h"
 #include "LoginNetComponect.h"
 #include "DefineMsgFactory.h"
-#include "ClientMsg.h"
+#include "ServerClientMsg.h"
+#include "LoginNetActor.h"
 
 using namespace NetCloud;
 
@@ -21,13 +22,12 @@ using namespace NetCloud;
 // ClientActor 接收到回复后, LogicAtor 构建新的回复消息, 回复至客户端
 // Client 再根据等待着的Actor 返回回复结果
 //-------------------------------------------------------------------------
-enum CS_MSG_ID
-{
-	eMsg_ClientRequestServer = 101,
-	eMsg_ServerRequestClient = 102,
-};
 
-class LoginActor : public NetCloud::Actor
+
+//-------------------------------------------------------------------------
+// 用于接受处理客户端连接, 并响应客户端请求服务器Actor消息
+//-------------------------------------------------------------------------
+class LoginActor : public LoginNetActor
 {
 public:
 	WebLoginThread* GetLoginThread()
@@ -62,41 +62,7 @@ public:
 		AddComponent("LoginNetComponect");
 	}
 
-	void OnAsyncRequest(HandConnect connect, const CS_ClientRequest  &req, SC_ResponseMsg &resp)
-	{
-		//NOTE_LOG(req.dump().c_str());
 
-		Hand<ClientActor> client = connect->GetUserData();
-		if (client)
-		{
-			AutoData msgData = req.mRequestMsgData;
-			AutoNice respData = client->Await(req.mTargetActorID, req.mRequestMsgName, msgData.getPtr(), 10000, 0);
-			resp.mResponseData = respData;
-			if (respData)
-				NOTE_LOG("Actor response : \r\n%s", respData->dump().c_str());
-		}
-		else
-			ERROR_LOG("No exist client actor");
-
-		//CoroutineTool::AsyncCall([=]()
-		//{
-		//	// 3秒后发送一个测试请求
-		//	tTimer::AWaitTime(3000);
-		//	NG_RequestGateInfo req;
-		//	GN_NotifyNodeInfo resp;
-		//	req.mNodeKey = 66667777;
-		//	if (tNetProcess::Await(pConnect, 41, req, resp, 6000))
-		//	{
-		//		NOTE_LOG("=====");
-		//		NOTE_LOG(resp.dump().c_str());
-		//	}
-		//	else
-		//	{
-		//		ERROR_LOG("Test request fail");
-		//	}
-		//});
-
-	}
 
 	void RegisterMsg(ActorManager *pActorMgr)
 	{

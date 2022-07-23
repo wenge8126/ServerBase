@@ -4,17 +4,17 @@
 #define _INCLUDE_CLIENTACTOR_H_
 
 #include "Actor.h"
-#include "ClientMsg.h"
+#include "ServerClientMsg.h"
 
 //-------------------------------------------------------------------------
 // 客户端连接Actor, 用于客户端与服务器内部沟通
 // Actor 内绑定 ConnectPtr, Connect 设置数据为对应 的Actor
 //-------------------------------------------------------------------------
-class ClientActor : public Actor
+class ActorDBLib_Export tClientActor : public Actor
 {
 public:
-	ClientActor() {}
-	~ClientActor()
+	tClientActor() {}
+	~tClientActor()
 	{
 		if (mpClientConnect != NULL)
 			mpClientConnect->SetUserData(AutoAny());
@@ -39,7 +39,7 @@ public:
 	// 这个只执行一次
 	void RegisterMsg(ActorManager *pActorMgr) override
 	{
-		REG_ACTOR_MSG(ClientActor, SC_ActorRequestClientMsg, CS_ResponceServerActorMsg);
+		REG_ACTOR_MSG(tClientActor, SC_ActorRequestClientMsg, CS_ResponceServerActorMsg);
 	}
 
 	void On(SC_ActorRequestClientMsg &reqMsg, CS_ResponceServerActorMsg &clientResponse, UnitID sender, int);

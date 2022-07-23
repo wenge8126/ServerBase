@@ -2,7 +2,7 @@
 
 
 
-void ClientActor::On(SC_ActorRequestClientMsg &reqMsg, CS_ResponceServerActorMsg &clientResponse, UnitID sender, int)
+void tClientActor::On(SC_ActorRequestClientMsg &reqMsg, CS_ResponceServerActorMsg &clientResponse, UnitID sender, int)
 {
 	// 异步请求客户端再回复
 	SC_ServerRequestClientMsg req;

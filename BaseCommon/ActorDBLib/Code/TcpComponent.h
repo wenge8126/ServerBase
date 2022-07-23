@@ -10,7 +10,7 @@
 
 //-------------------------------------------------------------------------
 //网络界面组件, 继承实现网络功能 (Tcp WebSocket kcp ...)
-class SocketComponent : public NetCloud::ProcessComponent
+class ActorDBLib_Export SocketComponent : public NetCloud::ProcessComponent
 {
 public:
 	AString mServerIp;
@@ -45,7 +45,7 @@ protected:
 //-------------------------------------------------------------------------
 
 
-class TcpComponent : public SocketComponent
+class ActorDBLib_Export TcpComponent : public SocketComponent
 {
 public:
 	int		mMaxConnectCount = 16;

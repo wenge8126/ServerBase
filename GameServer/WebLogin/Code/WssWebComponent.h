@@ -1,10 +1,13 @@
 #pragma once
 
+#ifndef _INCLUDEWSSWEBCOMPONENT_H_
+#define _INCLUDEWSSWEBCOMPONENT_H_
+
 #include "TcpComponent.h"
 #include "WebServerNet.h"
 
 //-------------------------------------------------------------------------
-class WssWebComponent : public SocketComponent
+class  WssWebComponent : public SocketComponent
 {
 public:
 	virtual void RegisterMsg(const AString &msgName, AutoEventFactory msgFactory)
@@ -52,7 +55,7 @@ public:
 //-------------------------------------------------------------------------
 
 template<bool bSSL>
-class WssWebNet : public uWS::tWssServerNet<bSSL>
+class ActorDBLib_Export_H WssWebNet : public uWS::tWssServerNet<bSSL>
 {
 public:
 	virtual bool OnAddConnect(tNetConnect *pConnect)
@@ -115,3 +118,5 @@ protected:
 };
 
 //-------------------------------------------------------------------------
+
+#endif //_INCLUDEWSSWEBCOMPONENT_H_
