@@ -19,17 +19,23 @@ namespace Logic
         public async Task<NiceData> OnRequestMsg(string requestName, NiceData requestData)
         {
             var fun = mFactory.FindProcessRequestFunction(requestName);
+            if (fun == null)
+                fun = GetMgr().FindProcessRequestFunction(requestName);
             if (fun != null)
                 return await fun.ProcessRequest(this, requestData);
             return null;
         }
 
-        public static async Task<NiceData> ProcessRequest<REQUEST>(Actor actor, NiceData requestData)
-            where REQUEST : BasePacket, new()
+        public virtual void RegisterMsg()
         {
-            var requestMsg = new REQUEST();
-            requestMsg.mMsgData = requestData; 
-            return await actor.On<REQUEST>(requestMsg);
+        }
+
+        public void RegisterServerRequestMsg<ACTOR, REQUEST>(ProcessServerRequest<ACTOR, REQUEST>.ProcessFunction fun)
+            where REQUEST : BasePacket, new()
+            where ACTOR : Actor
+        {
+            var f = new ProcessServerRequest<ACTOR, REQUEST>(fun);
+            mFactory.RegisterActorMsg(f);
         }
 
         public async Task<NiceData> AsyncRequestMsg(UnitID targetActorID, BasePacket requestMsg, int overMilSecond = 10000)
@@ -153,11 +159,7 @@ namespace Logic
             LOG.log(info);    
         }
 
-        public virtual async Task<NiceData> On<T>(T req)
-        {
-            LOG.logError("No write process function code : "+typeof(T).Name);
-            return null;
-        }
+   
     }
 
 

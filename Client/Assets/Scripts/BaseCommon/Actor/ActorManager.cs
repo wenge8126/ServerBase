@@ -9,6 +9,8 @@ namespace Logic
         
         private Dictionary<UInt64, Actor> mActorList = new Dictionary<ulong, Actor>();
         private Dictionary<int, ActorFactory> mActorFactoryList = new Dictionary<int, ActorFactory>();
+        public Dictionary<string, tProcessServerRequest> mProcessRequestFunList = new Dictionary<string, tProcessServerRequest>();
+
 
         public ActorManager()
         {
@@ -29,6 +31,16 @@ namespace Logic
                 LOG.logWarn("No exist : "+factory.GetType().ToString());
             factory.mManager = this;
             mActorFactoryList[factory.GetType()] = factory;
+            var actor = factory.CreateActor();
+            actor.RegisterMsg();
+        }
+
+        public void RegisterComponent<T>()
+            where T : tComponent, new()
+        {
+            EventCenter.StaticRegister(typeof(T).Name, new DefineFactory<T>());
+            var comp = new T();
+            comp.RegisterMsg(this);
         }
         
         public Actor CreateActor(int type, Int64 id)
@@ -89,6 +101,25 @@ namespace Logic
             {
                 v.LowProcess();
             }
+        }
+        
+        public void RegisterRequestMsg<ACTOR_COMP, REQUEST>(ComponentProcessServerRequest<ACTOR_COMP, REQUEST>.ProcessFunction fun)
+            where REQUEST : BasePacket, new()
+            where ACTOR_COMP : tComponent
+        {
+            var f = new ComponentProcessServerRequest<ACTOR_COMP, REQUEST>(fun);
+            RegisterRequestMsg(f.GetRequestMsgName(), f);
+        }
+        public void RegisterRequestMsg(string msgName, tProcessServerRequest fun)
+        {
+            mProcessRequestFunList[msgName] = fun;
+        }
+        
+        public tProcessServerRequest FindProcessRequestFunction(string msgName)
+        {
+            tProcessServerRequest fun = null;
+            mProcessRequestFunList.TryGetValue(msgName, out fun);
+            return fun;
         }
     }
     

@@ -122,10 +122,11 @@ public class MainStart : MonoBehaviour
 
         mActorMgr.RegisterActor(new DefineActorFactory<TestActor>(1));
         mActor = mActorMgr.CreateActor(1, 111);
-        mActor.mFactory.RegisterActorMsg(new ComponentProcessServerRequest<TestComponent, GN_NotifyNodeInfo>(TestComponent.On));
-        //EventCenter.WaitAction(TestDestoryActor, 6);
         
-        EventCenter.StaticRegister("TestComponent", new DefineFactory<TestComponent>());
+        //mActor.mFactory.RegisterActorMsg(new ComponentProcessServerRequest<TestComponent, GN_NotifyNodeInfo>(TestComponent.On));
+        //EventCenter.WaitAction(TestDestoryActor, 6);
+        mActorMgr.RegisterComponent<TestComponent>();
+        //EventCenter.StaticRegister("TestComponent", new DefineFactory<TestComponent>());
 
         mActor.AddComponent("TestComponent");
         
@@ -197,6 +198,11 @@ public class TestActor : Actor
         return t.mMsgData;
     }
 
+    public override void RegisterMsg()
+    {
+        //RegisterServerRequestMsg<TestActor, GN_NotifyNodeInfo>(TestActor.On);
+    }
+
     // public override async Task<NiceData> On<T>(T reqMsg)
     //     //where T:GN_NotifyNodeInfo
     // {
@@ -238,5 +244,10 @@ public class TestComponent : tComponent
         MSG_Test t = new MSG_Test();
         t.mTest = "~~~~~~~~~~~~~~kkkkkpppp+++9999";
         return t.mMsgData;
+    }
+
+    public override void RegisterMsg(ActorManager mgr)
+    {
+        mgr.RegisterRequestMsg<TestComponent, GN_NotifyNodeInfo>(TestComponent.On);
     }
 }

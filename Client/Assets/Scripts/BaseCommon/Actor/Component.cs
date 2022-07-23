@@ -29,6 +29,8 @@
             
         }
         
+        public virtual void RegisterMsg(ActorManager mgr){}
+        
         void Log(string log)
         {
             LOG.log(log);    
