@@ -19,11 +19,11 @@ namespace Logic
             return actor;
         }
 
-        public virtual void RegisterActorMsg(string msgName, ProcessServerRequestFunction fun)
+        public virtual void RegisterActorMsg(string msgName, tProcessServerRequest fun)
         {
         }
 
-        public virtual ProcessServerRequestFunction FindProcessRequestFunction(string msgName)
+        public virtual tProcessServerRequest FindProcessRequestFunction(string msgName)
         {
             return null;
         }
@@ -33,21 +33,21 @@ namespace Logic
     {
         public int mType = 0;
 
-        public Dictionary<string, ProcessServerRequestFunction> mProcessRequestFunList = new Dictionary<string, ProcessServerRequestFunction>();
+        public Dictionary<string, tProcessServerRequest> mProcessRequestFunList = new Dictionary<string, tProcessServerRequest>();
 
         public override int GetType()
         {
             return mType; 
         }
         
-        public override void RegisterActorMsg(string msgName, ProcessServerRequestFunction fun)
+        public override void RegisterActorMsg(string msgName, tProcessServerRequest fun)
         {
             mProcessRequestFunList[msgName] = fun;
         }
         
-        public override ProcessServerRequestFunction FindProcessRequestFunction(string msgName)
+        public override tProcessServerRequest FindProcessRequestFunction(string msgName)
         {
-            ProcessServerRequestFunction fun = null;
+            tProcessServerRequest fun = null;
             mProcessRequestFunList.TryGetValue(msgName, out fun);
             return fun;
         }

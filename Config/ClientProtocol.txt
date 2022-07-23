@@ -6,11 +6,18 @@ CS_ClientRequest :RQ
 	data mRequestMsgData;
 }
 
-SC_ServerRequest
+
+// 服务器内部Actor请求客户端消息发向ClientActor, 再通过ClientActor 请求客户端SC_ServerRequestClientMsg
+SC_ActorRequestClientMsg
 {
 	uint64 mClientActorID;
 	string mRequestMsgName;
 	data mRequestMsgData;
+}
+
+CS_ResponceServerActorMsg
+{
+	data mResponseMsgData;
 }
 
 

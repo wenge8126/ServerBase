@@ -20,8 +20,16 @@ namespace Logic
         {
             var fun = mFactory.FindProcessRequestFunction(requestName);
             if (fun != null)
-                return await fun(this, requestData);
+                return await fun.ProcessRequest(this, requestData);
             return null;
+        }
+
+        public static async Task<NiceData> ProcessRequest<REQUEST>(Actor actor, NiceData requestData)
+            where REQUEST : BasePacket, new()
+        {
+            var requestMsg = new REQUEST();
+            requestMsg.mMsgData = requestData; 
+            return await actor.On<REQUEST>(requestMsg);
         }
 
         public async Task<NiceData> AsyncRequestMsg(UnitID targetActorID, BasePacket requestMsg, int overMilSecond = 10000)
@@ -66,6 +74,21 @@ namespace Logic
                 EventCenter.WaitAction(comp.Start, 0);
             }
             return null;
+        }
+
+        public tComponent FindComponent(string componentName)
+        {
+            tComponent comp = null;
+            mComponentList.TryGetValue(componentName, out comp);
+            return comp;
+        }
+
+        public tComponent FindComponent<T>()
+            where T : tComponent
+        {
+            tComponent comp = null;
+            mComponentList.TryGetValue(typeof(T).Name, out comp);
+            return comp;
         }
 
         public tComponent RemoveComponent(string componentName)
@@ -130,8 +153,14 @@ namespace Logic
             LOG.log(info);    
         }
 
-       
+        public virtual async Task<NiceData> On<T>(T req)
+        {
+            LOG.logError("No write process function code : "+typeof(T).Name);
+            return null;
+        }
     }
-    
-    
+
+
+
+
 }

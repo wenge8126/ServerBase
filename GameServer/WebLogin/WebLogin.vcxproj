@@ -507,6 +507,7 @@ xcopy $(COMMON_BASE_LIB)\Bin\$(TargetName).pdb $(Server_Out_Dir)\  /y
   <ItemGroup>
     <ClCompile Include="..\Common\SDK\HttpClient.cpp" />
     <ClCompile Include="..\Common\SDK\SDK.cpp" />
+    <ClCompile Include="Code\ClientActor.cpp" />
     <ClCompile Include="Code\HttpComponect.cpp" />
     <ClCompile Include="Code\NetWorkerComponent.cpp" />
     <ClCompile Include="Code\TcpComponent.cpp" />

@@ -40,10 +40,10 @@ public class CS_RequestTest : RequestPacket
 }
 public class MSG_Test : BasePacket
 {
-    public string mInfo
+    public string mTest
     {
-        set { mMsgData.set("mInfo", value); }
-        get { return (string)mMsgData.get("mInfo"); }
+        set { mMsgData.set("mTest", value); }
+        get { return (string)mMsgData.get("mTest"); }
     }
 }
 
@@ -109,28 +109,28 @@ public class MainStart : MonoBehaviour
         
         mNet = new TcpClientNet();
         
-        LuaMain.StartLua();
+        //LuaMain.StartLua();
         
         mNet.mNotifyConnectFinishEvent = EventCenter.Instance.StartEvent("ConnectFinishEvent");
-        //mNet.Connect("127.0.0.1", 4001);
+        mNet.Connect("127.0.0.1", 4001);
         
         mNet.RegisterPacket((int)NET_PACKET_ID.eNotifyHeartBeat, new PingPacket(), null);
         mNet.RegisterPacket((int)NET_PACKET_ID.eNotifyNetEventID, new PingPacket(), null);
         
         mNet.RegisterPacket((int)41, new NG_RequestGateInfo(), RequestFunction);
 
-        //await Task.Delay(3);
-        //mNet.mNotifyConnectFinishEvent.Do();
 
-        
         mActorMgr.RegisterActor(new DefineActorFactory<TestActor>(1));
         mActor = mActorMgr.CreateActor(1, 111);
-        mActor.mFactory.RegisterActorMsg("GN_NotifyNodeInfo", TestActor.On);
-        EventCenter.WaitAction(TestDestoryActor, 6);
+        mActor.mFactory.RegisterActorMsg("GN_NotifyNodeInfo", new ComponentProcessServerRequest<TestComponent, GN_NotifyNodeInfo>(TestComponent.On));
+        //EventCenter.WaitAction(TestDestoryActor, 6);
         
         EventCenter.StaticRegister("TestComponent", new DefineFactory<TestComponent>());
 
         mActor.AddComponent("TestComponent");
+        
+        //await Task.Delay(3);
+        //mNet.mNotifyConnectFinishEvent.Do();
     }
 
     void TestDestoryActor()
@@ -174,10 +174,10 @@ public class TestActor : Actor
     {
         Log("TestActor : Start");
         
-        var msg = new GN_NotifyNodeInfo();
-        msg.mNodeKey = 8877;
-        var d = await OnRequestMsg("GN_NotifyNodeInfo", msg.mMsgData);
-        d.dump("^^^^^^^^^^^^");
+        // var msg = new GN_NotifyNodeInfo();
+        // msg.mNodeKey = 8877;
+        // var d = await OnRequestMsg("GN_NotifyNodeInfo", msg.mMsgData);
+        // d.dump("^^^^^^^^^^^^");
     }
     
     public override void OnDestory()
@@ -185,19 +185,29 @@ public class TestActor : Actor
         Log("TestActor : OnDestory");
     }
 
-    static public async Task<NiceData> On(Actor actor, NiceData reqData) 
+    static public async Task<NiceData> On(TestActor actor, GN_NotifyNodeInfo req) 
     {
-        var req = new GN_NotifyNodeInfo();
-        req.mMsgData = reqData;
+        //var req = new GN_NotifyNodeInfo();
+        //req.mMsgData = reqData;
         LOG.log("888888@@@@@@@@@@@@ " + req.GetType());
         //(actor as TestActor).On(req);
         req.mMsgData.dump("===========");
         MSG_Test t = new MSG_Test();
-        t.mInfo = "pppp+++9999";
+        t.mTest = "pppp+++9999";
         return t.mMsgData;
     }
 
-  
+    // public override async Task<NiceData> On<T>(T reqMsg)
+    //     //where T:GN_NotifyNodeInfo
+    // {
+    //     var req = reqMsg as GN_NotifyNodeInfo;
+    //     LOG.log("888888@@@@@@@@@@@@ " + req.GetType());
+    //     //(actor as TestActor).On(req);
+    //     req.mMsgData.dump("===========");
+    //     MSG_Test t = new MSG_Test();
+    //     t.mInfo = "pppp+++9999";
+    //     return t.mMsgData;
+    // }
 }
 
 public class TestComponent : tComponent
@@ -216,5 +226,17 @@ public class TestComponent : tComponent
     public override void OnRemove()
     {
         Log("TestComponent : OnRemove");
+    }
+    
+    static public async Task<NiceData> On(TestComponent comp, GN_NotifyNodeInfo req) 
+    {
+        //var req = new GN_NotifyNodeInfo();
+        //req.mMsgData = reqData;
+        LOG.log( comp.GetType().Name+ " 6666888888@@@@@@@@@@@@ " + req.GetType());
+        //(actor as TestActor).On(req);
+        req.mMsgData.dump("===========");
+        MSG_Test t = new MSG_Test();
+        t.mTest = "~~~~~~~~~~~~~~kkkkkpppp+++9999";
+        return t.mMsgData;
     }
 }
