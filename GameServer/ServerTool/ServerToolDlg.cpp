@@ -486,7 +486,7 @@ void CServerToolDlg::OnBnExportRunConfig()
 		//info = GenerateProtocol(fileName, "", "../BaseCommon/ActorDBLib/Code", "ClientMsg", false, err);
 
 		fileName.Format("%s/ClientProtocol.txt", (LPCTSTR)configPath); 
-		info = GenerateProtocol(fileName, "", "../GameServer/Common", "ClientMsg", false, err);
+		info = GenerateProtocol(fileName, "", "../GameServer/Debug", "ServerClientMsg", false, err);
 	}
 
 	LOG("%s", err.c_str());

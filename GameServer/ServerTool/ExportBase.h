@@ -1516,7 +1516,7 @@ AutoNice GenerateProtocol(const AString &fileName, const AString tsPath, const A
 
 		//LOG("C++ ----------------------\r\n%s", proNotes->dump().c_str());
 
-		AString codeFileName = "D:/ServerBase/Client/Assets/Scripts/NetMsg";
+		AString codeFileName = cppPath;
 		codeFileName += "/";
 		codeFileName += targetName;
 		codeFileName += ".cs";
