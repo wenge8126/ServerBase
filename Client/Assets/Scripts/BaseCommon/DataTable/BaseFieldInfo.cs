@@ -3,7 +3,7 @@
 
 namespace Logic
 {
-    abstract class BaseFieldInfo : tFieldInfo
+    public abstract class BaseFieldInfo : tFieldInfo
     {
         protected string mName = null;
         protected int mPosition = 0;

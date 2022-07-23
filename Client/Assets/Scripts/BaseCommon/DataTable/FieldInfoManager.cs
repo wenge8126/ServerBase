@@ -35,6 +35,9 @@ namespace Logic
             _RegisterFieldInfo(info);
             info = new UINT64FieldInfoFactory();
             _RegisterFieldInfo(info);
+            
+            info = new INT64FieldInfoFactory();
+            _RegisterFieldInfo(info);
 
             info = new ShortFieldInfoFactory();
             _RegisterFieldInfo(info);

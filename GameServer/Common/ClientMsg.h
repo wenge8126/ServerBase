@@ -447,7 +447,10 @@ public:
 class MSG_Test : public tBaseMsg
 { 
 public:
+    float mF;		
     AString mTest;		
+    int mX;		
+    Int64 mXX;		
 
 public:
     MSG_Test() { clear(false); };
@@ -456,44 +459,65 @@ public:
    virtual  void Full(AutoNice scrData) override
     {
         clear(false);
+        CheckGet(scrData, mF);
         CheckGet(scrData, mTest);
+        CheckGet(scrData, mX);
+        CheckGet(scrData, mXX);
     }
 
     virtual void ToData(AutoNice &destData) override
     {
+        destData["mF"] = mF;
         destData["mTest"] = mTest;
+        destData["mX"] = mX;
+        destData["mXX"] = mXX;
     }
 
     bool serialize(DataStream *destData) const override
     {
-        destData->write((short)1);
+        destData->write((short)4);
 
+        SAVE_MSG_VALUE(mF, 2);
         SAVE_MSG_VALUE(mTest, 4);
+        SAVE_MSG_VALUE(mX, 1);
+        SAVE_MSG_VALUE(mXX, 8);
         return true;
     }
 
     void clear(bool bClearBuffer=false) override 
     {
+        mF = 0;
         mTest.setNull();
+        mX = 0;
+        mXX = 0;
     }
 
     void copy(const tBaseMsg &otherMsg) override 
     {
         if (strcmp("MSG_Test", otherMsg.GetMsgName())!=0) { LOG("%s is not MSG_Test", otherMsg.GetMsgName()); return; }; const MSG_Test &other = *(const MSG_Test*)(&otherMsg);
+        mF = other.mF;
         mTest = other.mTest;
+        mX = other.mX;
+        mXX = other.mXX;
     }
 
     virtual const char* GetMsgName() const override { return "MSG_Test"; }
 
     AData get(const char *szMember) const 
     {
+        if (strcmp(szMember, "mF")==0) { AData value; value = mF; return value; }
         if (strcmp(szMember, "mTest")==0) { AData value; value = mTest; return value; }
+        if (strcmp(szMember, "mX")==0) { AData value; value = mX; return value; }
+        if (strcmp(szMember, "mXX")==0) { AData value; value = mXX; return value; }
         return AData();
     }
 
     bool set(const char *szMember, AData value) 
     {
+        if (strcmp(szMember, "mF")==0) { mF = value; return true; };
         if (strcmp(szMember, "mTest")==0) { mTest = value; return true; };
+        if (strcmp(szMember, "mX")==0) { mX = value; return true; };
+        if (strcmp(szMember, "mXX")==0) { mXX = value; return true; };
         LOG("No exist > %%s", szMember);  return false;
     }
 

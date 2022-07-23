@@ -52,6 +52,17 @@ namespace Logic
             return new UINT64FieldInfo();
         }
     };
+    
+
+    class INT64FieldInfoFactory : tFieldInfoFactory
+    {
+        public override FIELD_TYPE getType() { return FIELD_TYPE.FIELD_INT64; }
+
+        public override tFieldInfo NewFieldInfo()
+        {
+            return new INT64FieldInfo();
+        }
+    };
     //--------------------------------------------------------------------------------
 
     class NiceDataFieldInfoFactory : tFieldInfoFactory

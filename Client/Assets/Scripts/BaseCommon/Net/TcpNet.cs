@@ -131,6 +131,7 @@ namespace Logic
         public async Task<NiceData> AsyncRequest(UInt64 targetActorID, string requestMsgName, NiceData requestMsgData, int nOverMilSecond)
         {
             CS_ClientRequest requestPacket = new CS_ClientRequest();
+            requestPacket.mID = (byte) CS_MSG_ID.eMsg_ClientRequestServer;
             requestPacket.mTargetActorID = targetActorID;
             requestPacket.mRequestMsgName = requestMsgName;
             var msgData = new DataBuffer();

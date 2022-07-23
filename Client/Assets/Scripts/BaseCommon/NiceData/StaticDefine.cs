@@ -105,6 +105,8 @@ public struct StaticDefine
             case FIELD_TYPE.FIELD_DATA:
                 return typeof(DataBuffer);
 
+            case FIELD_TYPE.FIELD_INT64:
+                return typeof(Int64);
             case FIELD_TYPE.FIELD_UINT64:
                 return typeof(UInt64);
 
@@ -134,6 +136,9 @@ public struct StaticDefine
                 return "BYTE";
             case FIELD_TYPE.FIELD_UINT64:
                 return "UINT64";
+            
+            case FIELD_TYPE.FIELD_INT64:
+                return "INT64";
 
             case FIELD_TYPE.FIELD_NICEDATA:
                 return "NICEDATA";
@@ -174,6 +179,8 @@ public struct StaticDefine
                 return FIELD_TYPE.FIELD_BOOL;
             case "BYTE":
                 return FIELD_TYPE.FIELD_BYTE;
+            case "INT64":
+                return FIELD_TYPE.FIELD_INT64;
             case "UINT64":
                 return FIELD_TYPE.FIELD_UINT64;
 
@@ -214,6 +221,8 @@ public struct StaticDefine
             return (int)FIELD_TYPE.FIELD_DATA;
         else if (obj.GetType() == typeof(UInt64))
             return (int)FIELD_TYPE.FIELD_UINT64;
+        else if (obj.GetType() == typeof(Int64))
+            return (int) FIELD_TYPE.FIELD_INT64;
 
         return (int)FIELD_TYPE.FIELD_NULL;
     }

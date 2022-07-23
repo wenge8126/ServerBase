@@ -892,6 +892,401 @@ AString GenerateMsgProtocolTSCode(AutoNice proList, AutoNice proNotes, Array<ASt
 	return comString + tsCode;
 }
 
+// 导出C# 消息代码
+AString GenerateMsgProtocolC4Code(AutoNice proList, AutoNice proNotes, Array<AString> &structNameList, EasyHash<AString, bool> &exportRunHash, bool bFirst, bool bRunConfig, bool bIncludeMsgStruct)
+{
+	AString cppCode = "//Auto genereate msg data code		";
+	//cppCode += TimeManager::GetMe().GetDateTime();
+	cppCode += "\r\n"
+		"using System;\r\n"
+		"using System.Collections;\r\n"
+		"using System.Collections.Generic;\r\n"
+		"using Logic;\r\n"
+		"\r\n\r\n";
+
+
+
+	for (int i = 0; i < structNameList.size(); ++i)
+	{
+		AString name = structNameList[i];
+
+		AutoNice d = (tNiceData*)proList[name];
+
+		if (!d)
+			continue;
+
+		AutoNice noteData = proNotes[name];
+
+		AString strInfo = proNotes[name + "_info_"];
+		if (strInfo.length() > 0)
+		{
+			cppCode += "// ";
+			cppCode += strInfo;
+			cppCode += "\r\n";
+		}
+
+		cppCode += "public class ";
+		cppCode += name;
+		if (d->exist("mRequestID"))
+			cppCode += " : RequestPacket";
+		else
+			cppCode += " : BasePacket";
+		AString structNote = GetMemberNote(noteData, "_struct_");
+		if (structNote.length() > 0)
+		{
+			cppCode += "	";
+			cppCode += structNote;
+		}
+		cppCode += "\r\n{\r\n";
+
+		AString getCode;
+		AString code;
+		//AString toDataCode;
+
+		AString clearCode;
+		//AString saveCode;
+		//AString copyCode;
+
+		//AString getIntTypeCode;
+		//AString setIntTypeCode;
+
+		bool bHaveArray = false;
+		bool bOnlyOneArray = exportRunHash.exist(name) && !exportRunHash.find(name);
+		if (bOnlyOneArray && d->count() != 1)
+		{
+			LOG("如果只导出为一个数组结构, 只能定义一个arraydata<>成员, 当前按一般结构处理");
+			bOnlyOneArray = false;
+		}
+
+		for (auto m = d->begin(); m; ++m)
+		{
+			AString key = m.key();
+			AString type = m.get();
+
+			// 找不到类型, 即作为存在的结构处理
+			FieldInfo info = GetFieldInfoByTypeString(type);
+			if (info == NULL || proList->exist(type.c_str()))
+			{
+				if (type.sub(0, 3) == "map")
+				{
+					bool bIsBase = false;
+					AString subType = splitTemplateType(type, false, &bIsBase);
+					if (subType.length() > 0)
+					{
+					}
+					LOG("Type error > %s ", type.c_str());
+					continue;
+				}
+
+				code.Format("    %s %s;		%s\r\n", type.c_str(), m.key().c_str(), GetMemberNote(noteData, m.key()).c_str());
+				cppCode += code;
+
+				code.Format("        {\r\n            AutoNice d = (tNiceData*)scrData[\"%s\"];\r\n            if (d) %s.Full(d); else LOG(\"No exist data %s\");\r\n        }\r\n", m.key().c_str(), m.key().c_str(), m.key().c_str());
+				getCode += code;
+
+				//code.Format("        {\r\n            AutoNice d = destData->NewNice(); d->msKey = \"%s\"; %s.ToData(d);\r\n            destData[\"%s\"] = d.getPtr();\r\n        }\r\n", type.c_str(), m.key().c_str(), m.key().c_str());
+				//toDataCode += code;
+
+				code.Format("        %s.clear(false);\r\n", key.c_str());
+				clearCode += code;
+
+				//code.Format("        SAVE_MSG_STRUCT(%s);\r\n", key.c_str());
+				//saveCode += code;
+
+				//code.Format("        %s.copy(other.%s);\r\n", key.c_str(), key.c_str());
+				//copyCode += code;
+
+				continue;
+			}
+
+			//FieldInfo info = GetFieldInfoByTypeString(type);
+			//if (info == NULL)
+			//{
+			//	LOG("Table %s > %s : %s can not to c++", name.c_str(), m.key().c_str(), type.c_str());
+			//	continue;
+			//}
+
+			const char *szType = NULL;
+			AString clearString;
+			switch (info->getType())
+			{
+			case FIELD_STRING:
+			case FIELD_CHAR_STRING:
+				szType = "string";
+				clearString = " = \"\"";
+				break;
+
+			case FIELD_BYTE:
+				szType = "byte";
+				clearString = " = 0";
+				break;
+
+			case FIELD_INT:
+				szType = "int";
+				clearString = " = 0";
+				break;
+
+			case FIELD_SHORT:
+				szType = "short";
+				clearString = " = 0";
+				break;
+
+			case FIELD_INT64:
+				szType = "Int64";
+				clearString = " = 0";
+				break;
+
+			case FIELD_UINT64:
+				szType = "UInt64";
+				clearString = " = 0";
+				break;
+
+			case FIELD_FLOAT:
+				szType = "float";
+				clearString = " = 0";
+				break;
+
+			case FIELD_DOUBLE:
+				szType = "double";
+				clearString = " = 0";
+				break;
+
+			case  FIELD_BOOL:
+				szType = "bool";
+				clearString = " = false";
+				break;
+
+			case FIELD_ARRAYDATA:
+				szType = "ArrayList";
+				clearString = ".clear(false)";
+				break;
+
+			case  FIELD_NICEDATA:
+			{
+				szType = "NiceData";
+				clearString = ".clear()";
+				break;
+			}
+			case FIELD_DATA:
+			{
+				szType = "DataBuffer";
+				clearString = ".clear(true)";
+				break;
+			}
+			}
+			if (szType == NULL)
+			{
+				LOG("Table %s > %s : %s can not to c++", name.c_str(), m.key().c_str(), info->getTypeString());
+				continue;
+			}
+			else
+			{
+
+				if (info->getType() == FIELD_NICEDATA || info->getType() == FIELD_DATA)
+					code.Format("        if (%s!=null) %s%s;\r\n", key.c_str(), key.c_str(), clearString.c_str());
+				else
+				{
+					code.Format("        %s%s;\r\n", key.c_str(), clearString.c_str());
+
+				}
+				clearCode += code;
+
+				if (info->getType() == FIELD_ARRAYDATA)
+				{
+					bHaveArray = true;
+					bool bIsBase = false;
+					code.Format("    %s<%s> %s;	%s\r\n", szType, splitTemplateType(type, false, &bIsBase).c_str(), m.key().c_str(), GetMemberNote(noteData, m.key()).c_str());
+					cppCode += code;
+					if (bIsBase)
+					{
+						if (bOnlyOneArray)
+							code.Format("        FullArray(scrData, %s);\r\n", m.key().c_str());
+						else
+							code.Format("        FullArray(scrData, %s, \"%s\");\r\n", m.key().c_str(), m.key().c_str());
+					}
+					else
+						code.Format("        FullStuctArray(scrData, %s, \"%s\");\r\n", m.key().c_str(), m.key().c_str());
+
+					getCode += code;
+
+					//if (bIsBase)
+					//{
+					//	if (bOnlyOneArray)
+					//		code.Format("        ArrayToData(destData, %s);\r\n", m.key().c_str());
+					//	else
+					//		code.Format("        ArrayToData(destData, %s, \"%s\");\r\n", m.key().c_str(), m.key().c_str());
+					//}
+					//else
+					//	code.Format("        StuctArrayToData(destData, %s, \"%s\");\r\n", m.key().c_str(), m.key().c_str());
+
+					//toDataCode += code;
+
+					// ArrayNiceData:: serialize
+					//if (bIsBase)
+					//{
+					//	if (bOnlyOneArray)
+					//		code.Format("        SaveArray(%s, destData);\r\n", key.c_str());
+					//	else
+					//		code.Format("        SaveArray(\"%s\", %s, destData);\r\n", key.c_str(), key.c_str());
+					//}
+					//else
+					//	code.Format("        SaveMsgArray(\"%s\", %s, destData);\r\n", key.c_str(), key.c_str());
+					//saveCode += code;
+
+					//if (bIsBase)
+					//	code.Format("        %s = other.%s;\r\n", key.c_str(), key.c_str());
+					//else
+					//	code.Format("        CopyMsgArray(other.%s, %s);\r\n", key.c_str(), key.c_str());
+					//copyCode += code;
+				}
+				else
+				{
+					code.Format("    public %s %s		%s\r\n", szType, m.key().c_str(), GetMemberNote(noteData, m.key()).c_str());
+					cppCode += code;
+
+					if (info->getType() == FIELD_NICEDATA || info->getType() == FIELD_DATA)
+						code.Format("    {\r\n        set { mMsgData.set(\"%s\",  value); }\r\n        get { return mMsgData.getObject(\"%s\") as %s; }\r\n    }\r\n\r\n", m.key().c_str(), m.key().c_str(), szType);
+					else
+						code.Format("    {\r\n        set { mMsgData.set(\"%s\",  value); }\r\n        get { return (%s)mMsgData.getObject(\"%s\"); }\r\n    }\r\n\r\n", m.key().c_str(), szType, m.key().c_str());
+					cppCode += code;
+
+					//if (info->getType() == FIELD_NICEDATA)
+					//{
+					//	code.Format("        %s = (tNiceData*)scrData[\"%s\"];\r\n", m.key().c_str(), m.key().c_str());
+					//	getCode += code;
+
+					//	//code.Format("        destData[\"%s\"] = %s.getPtr();\r\n", m.key().c_str(), m.key().c_str());
+					//	//toDataCode += code;
+
+					//	//// AutoNiceFieldInfo::saveData
+					//	//code.Format("        SAVE_MSG_NICE(%s);\r\n", key.c_str());
+					//	//saveCode += code;
+
+					//	//code.Format("        COPY_MSG_NICE(other.%s, %s);\r\n", key.c_str(), key.c_str());
+					//	//copyCode += code;
+					//}
+					//else if (info->getType() == FIELD_DATA)
+					//{
+					//	code.Format("        %s = scrData.getObject(\"%s\") as DataBuffer;\r\n", m.key().c_str(), m.key().c_str());
+					//	getCode += code;
+
+					//	//code.Format("        destData[\"%s\"] = %s.getPtr();\r\n", m.key().c_str(), m.key().c_str());
+					//	//toDataCode += code;
+
+					//	//// AutoNiceFieldInfo::saveData
+					//	//code.Format("        SAVE_MSG_DATA(%s);\r\n", key.c_str());
+					//	//saveCode += code;
+
+					//	//code.Format("        COPY_MSG_DATA(other.%s, %s);\r\n", key.c_str(), key.c_str());
+					//	//copyCode += code;
+					//}
+					//else
+					{
+						//mMsgData.set("mRequestID", scrData.getObject("mRequestID");
+						code.Format("        mMsgData.set(\"%s\", scrData.getObject(\"%s\"));\r\n", m.key().c_str(), m.key().c_str());
+						getCode += code;
+
+						//code.Format("        destData[\"%s\"] = %s;\r\n", m.key().c_str(), m.key().c_str());
+						//toDataCode += code;
+
+						//code.Format("        SAVE_MSG_VALUE(%s, %d);\r\n", key.c_str(), info->getType());
+						//saveCode += code;
+
+						//code.Format("        %s = other.%s;\r\n", key.c_str(), key.c_str());
+						//copyCode += code;
+					}
+				}
+			}
+		}
+
+		code.Format("\r\n\r\n    public %s() { InitData(); }\r\n\r\n", name.c_str());
+		cppCode += code;
+
+		cppCode += "\r\n   public override  void Full(NiceData scrData) \r\n    {\r\n        InitData();\r\n";
+		cppCode += getCode;
+		cppCode += "    }\r\n\r\n";
+
+		//cppCode += "    virtual void ToData(AutoNice &destData) override\r\n    {\r\n";
+		//cppCode += toDataCode;
+		//cppCode += "    }\r\n\r\n";
+
+		//cppCode += "\r\n    virtual void FullFromRecord(ARecord scrData) override\r\n    {\r\n        clear(false);\r\n";
+		//cppCode += getCode;
+		//cppCode += "    }\r\n\r\n";
+
+		//cppCode += "    virtual void SaveToRecord(ARecord &destData) override\r\n    {\r\n";
+		//cppCode += toDataCode;
+		//cppCode += "    }\r\n\r\n";
+
+		//cppCode += "    bool serialize(DataStream *destData)\r\n    {\r\n";
+		//if (bOnlyOneArray)
+		//{
+		//	code.setNull();
+		//	if (!bHaveArray)
+		//		LOG("只导出数组时, 必须定义为数据类型成员 arraydata<>");
+		//}
+		//else
+		//	code.Format("        destData->write((short)%d);\r\n\r\n", (int)d->count());
+
+		//cppCode += code;
+		//cppCode += saveCode;
+		//cppCode += "        return true;\r\n    }\r\n\r\n";
+
+		cppCode += "    public override void InitData() \r\n    {\r\n";
+		cppCode += clearCode;
+		cppCode += "    }\r\n\r\n";
+
+		//code.Format("    void copy(const tBaseMsg &otherMsg) override \r\n    {\r\n        if (strcmp(\"%s\", otherMsg.GetMsgName())!=0) { LOG(\"%%s is not %s\", otherMsg.GetMsgName()); return; }; const %s &other = *(const %s*)(&otherMsg);\r\n", name.c_str(), name.c_str(), name.c_str(), name.c_str());
+		//cppCode += code;
+		//cppCode += copyCode;
+		//cppCode += "    }\r\n\r\n";
+
+		code.Format("    public override string MsgName()   { return \"%s\"; }\r\n\r\n", name.c_str());
+		cppCode += code;
+
+		//if (d->exist("mRequestID"))
+		//{
+		//	code.Format("    override void SetRequestID(MSG_ID id)   { mRequestID = (int)id; }\r\n\r\n");
+		//	cppCode += code;
+
+		//	code.Format("    override MSG_ID GetRequestID()  override { return (MSG_ID)mRequestID; }\r\n\r\n");
+		//	cppCode += code;
+		//}
+
+		//if (exportRunHash.find(name))
+		//	cppCode += "    virtual int Run(ShareMemCloudDBNode *pNode, const AString &tableName, AutoNice &paramData, AutoNice &resultData) override;\r\n\r\n";
+
+		//cppCode += "    AData get(const char *szMember) const \r\n    {\r\n";
+		//cppCode += getIntTypeCode;
+		//cppCode += "        return AData();\r\n    }\r\n\r\n";
+
+		//cppCode += "    bool set(const char *szMember, AData value) \r\n    {\r\n";
+		//cppCode += setIntTypeCode;
+		//cppCode += "        LOG(\"No exist > %%s\", szMember);  return false;\r\n    }\r\n\r\n";
+
+		//cppCode += "    AData operator [] (const char *szMember) const \r\n    {\r\n";
+		//cppCode += "        return get(szMember);\r\n";
+		//cppCode += "    }\r\n\r\n";
+
+		//cppCode += "    AData operator [] (const AString &member) const \r\n    {\r\n";
+		//cppCode += "        return get(member.c_str());\r\n";
+		//cppCode += "    }\r\n\r\n";
+
+		cppCode += "};\r\n\r\n";
+	}
+
+	if (bRunConfig)
+	{
+		AString infoString = proNotes->ToJSON();
+
+		AString str = Base64Tool::encode(infoString.c_str(), infoString.length());
+
+		cppCode += "class _comment {\r\npublic:\r\n    static const char* CommentString()\r\n     {\r\n        static const char *gCommentString = \r\n                \"";
+		cppCode += str;
+		cppCode += "\";\r\n        return gCommentString; \r\n    }\r\n };\r\n\r\n";
+	}
+	return cppCode;
+}
 
 AutoNice GenerateProtocol(const AString &fileName, const AString tsPath, const AString cppPath, const AString &targetName, bool bTSCode, AString error, bool bExportComment = false, bool bIncludeMsgStruct = false)
 {
@@ -1098,20 +1493,39 @@ AutoNice GenerateProtocol(const AString &fileName, const AString tsPath, const A
 		LOG("Genereate ts code > n%s", tsFileName.c_str());
 	}
 	//------------------------------------------------------------------------
-	// 生成C++
-	AString cppCode = GenerateMsgProtocolCppCode(proList, proNotes, structNameList, exportRunHash, false, bExportComment, bIncludeMsgStruct);
+	{
+		// 生成C++
+		AString cppCode = GenerateMsgProtocolCppCode(proList, proNotes, structNameList, exportRunHash, false, bExportComment, bIncludeMsgStruct);
 
-	//LOG("C++ ----------------------\r\n%s", proNotes->dump().c_str());
+		//LOG("C++ ----------------------\r\n%s", proNotes->dump().c_str());
 
-	AString codeFileName = cppPath;
-	codeFileName += "/";
-	codeFileName += targetName;
-	codeFileName += ".h";
-	FileDataStream  cppCodeFile(codeFileName.c_str(), FILE_CREATE_UTF8);
-	cppCodeFile._write((void*)cppCode.c_str(), cppCode.length());
-	cppCodeFile.close();
+		AString codeFileName = cppPath;
+		codeFileName += "/";
+		codeFileName += targetName;
+		codeFileName += ".h";
+		FileDataStream  cppCodeFile(codeFileName.c_str(), FILE_CREATE_UTF8);
+		cppCodeFile._write((void*)cppCode.c_str(), cppCode.length());
+		cppCodeFile.close();
 
-	LOG("Genereate c++ code > n%s", codeFileName.c_str());
+		LOG("Genereate c++ code > n%s", codeFileName.c_str());
+	}
+
+	{
+		// 生成C#
+		AString cppCode = GenerateMsgProtocolC4Code(proList, proNotes, structNameList, exportRunHash, false, bExportComment, bIncludeMsgStruct);
+
+		//LOG("C++ ----------------------\r\n%s", proNotes->dump().c_str());
+
+		AString codeFileName = "D:/ServerBase/Client/Assets/Scripts/NetMsg";
+		codeFileName += "/";
+		codeFileName += targetName;
+		codeFileName += ".cs";
+		FileDataStream  cppCodeFile(codeFileName.c_str(), FILE_CREATE_UTF8);
+		cppCodeFile._write((void*)cppCode.c_str(), cppCode.length());
+		cppCodeFile.close();
+
+		LOG("Genereate c++ code > n%s", codeFileName.c_str());
+	}
 
 	return proNotes;
 }

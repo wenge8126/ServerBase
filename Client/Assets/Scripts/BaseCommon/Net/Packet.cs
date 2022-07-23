@@ -116,6 +116,10 @@ namespace Logic
             if (mProcessFunction != null)
                 mProcessFunction(net, this);
         }
+
+        public virtual void Full(NiceData scrData)
+        {
+        }
     }
 
     public class PingPacket : NetPacket

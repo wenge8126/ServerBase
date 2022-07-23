@@ -26,26 +26,26 @@ public class GN_NotifyNodeInfo : BasePacket
     }
 }
 
-public class CS_RequestTest : RequestPacket
-{
-    public override string MsgName()
-    {
-        return "CS_RequestTest";
-    }
-    public string mInfo
-    {
-        set { mMsgData.set("mInfo", value); }
-        get { return (string)mMsgData.get("mInfo"); }
-    }
-}
-public class MSG_Test : BasePacket
-{
-    public string mTest
-    {
-        set { mMsgData.set("mTest", value); }
-        get { return (string)mMsgData.get("mTest"); }
-    }
-}
+// public class CS_RequestTest : RequestPacket
+// {
+//     public override string MsgName()
+//     {
+//         return "CS_RequestTest";
+//     }
+//     public string mInfo
+//     {
+//         set { mMsgData.set("mInfo", value); }
+//         get { return (string)mMsgData.get("mInfo"); }
+//     }
+// }
+// public class MSG_Test : BasePacket
+// {
+//     public string mTest
+//     {
+//         set { mMsgData.set("mTest", value); }
+//         get { return (string)mMsgData.get("mTest"); }
+//     }
+// }
 
 
 public class ConnectFinishEvent : BaseEvent

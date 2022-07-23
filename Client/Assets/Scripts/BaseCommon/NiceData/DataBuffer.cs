@@ -260,6 +260,12 @@ public class DataBuffer
         byte[] temp = BitConverter.GetBytes(val);
         write(temp, temp.Length);
     }
+    
+    public void write(Int64 val)
+    {
+        byte[] temp = BitConverter.GetBytes(val);
+        write(temp, temp.Length);
+    }
 
     virtual public bool writeOne(string strVal)
     {
@@ -418,6 +424,18 @@ public class DataBuffer
         {
             dest = BitConverter.ToUInt64(mData, mCurrent);
             mCurrent += sizeof(UInt64);
+            return true;
+        }
+        dest = 0;
+        return false;
+    }
+    
+    public bool read(out Int64 dest)
+    {
+        if (mCurrent + sizeof(Int64) <= mData.Length)
+        {
+            dest = BitConverter.ToInt64(mData, mCurrent);
+            mCurrent += sizeof(Int64);
             return true;
         }
         dest = 0;

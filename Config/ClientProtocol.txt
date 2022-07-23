@@ -39,4 +39,7 @@ CS_RequestTest :RQ
 MSG_Test
 {
 	string mTest;
+	int mX;
+	int64 mXX;
+	float mF;
 }
