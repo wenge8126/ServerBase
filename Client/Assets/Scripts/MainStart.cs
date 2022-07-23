@@ -122,7 +122,7 @@ public class MainStart : MonoBehaviour
 
         mActorMgr.RegisterActor(new DefineActorFactory<TestActor>(1));
         mActor = mActorMgr.CreateActor(1, 111);
-        mActor.mFactory.RegisterActorMsg("GN_NotifyNodeInfo", new ComponentProcessServerRequest<TestComponent, GN_NotifyNodeInfo>(TestComponent.On));
+        mActor.mFactory.RegisterActorMsg(new ComponentProcessServerRequest<TestComponent, GN_NotifyNodeInfo>(TestComponent.On));
         //EventCenter.WaitAction(TestDestoryActor, 6);
         
         EventCenter.StaticRegister("TestComponent", new DefineFactory<TestComponent>());

@@ -4,6 +4,7 @@ namespace Logic
 {
     public abstract class tProcessServerRequest
     {
+        public abstract string GetRequestMsgName();
         public virtual async Task<NiceData> ProcessRequest(Actor actor, NiceData requestData)
         {
             return null;
@@ -19,6 +20,11 @@ namespace Logic
         where REQUEST : BasePacket, new()
         where ACTOR : Actor
     {
+        public override string GetRequestMsgName()
+        {
+            return typeof(REQUEST).Name;
+        }
+        
         public delegate Task<NiceData> ProcessFunction(ACTOR actor, REQUEST req);
 
         public ProcessFunction mFunction;
@@ -39,6 +45,12 @@ namespace Logic
         where REQUEST : BasePacket, new()
         where ACTOR_COMP : tComponent
     {
+        
+        public override string GetRequestMsgName()
+        {
+            return typeof(REQUEST).Name;
+        }
+        
         public delegate Task<NiceData> ProcessFunction(ACTOR_COMP actor, REQUEST req);
 
         public ProcessFunction mFunction;

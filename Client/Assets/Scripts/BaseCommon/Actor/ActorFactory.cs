@@ -23,6 +23,11 @@ namespace Logic
         {
         }
 
+        public virtual void RegisterActorMsg(tProcessServerRequest fun)
+        {
+            RegisterActorMsg(fun.GetRequestMsgName(), fun);
+        }
+
         public virtual tProcessServerRequest FindProcessRequestFunction(string msgName)
         {
             return null;
