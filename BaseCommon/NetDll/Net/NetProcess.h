@@ -8,6 +8,7 @@
 #include "BaseMsg.h"
 #include "CoroutineTool.h"
 #include "AnyData.h"
+#include "AsyncProtocol.h"
 
 //-------------------------------------------------------------------------
 class tNetProcess;
@@ -35,6 +36,8 @@ public:
 
 public:
 	static AutoNice Await(tNetConnect *pConnect, int msgID, tRequestMsg &req, int overMilSecond);
+
+	static Auto<ResponseMsgPacket> AwaitRequest(tNetConnect *pConnect, int msgID, tRequestMsg &req, int overMilSecond);
 
 	template<typename RespMsg>
 	static bool Await(tNetConnect *pConnect, int msgID, tRequestMsg &req, RespMsg &respMsg, int overMilSecond)

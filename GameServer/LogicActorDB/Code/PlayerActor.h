@@ -1,8 +1,40 @@
 #pragma once
 
 #include "Actor.h"
+#include "ClientMsg.h"
 
-class PlayerActor : public NetCloud::DBActor
+//-------------------------------------------------------------------------
+// å…·æœ‰ç›´æ¥ä¸å®¢æˆ·ç«¯Actoré€šè®¯åŠŸèƒ½
+class SCActor :  public NetCloud::Actor
+{
+public:
+	template<typename RespMsg>
+	bool AwaitClient(UnitID clientActorID, tBaseMsg &requestMsg, RespMsg &responseMsg, int overMilSecond)
+	{
+		SC_ActorRequestClientMsg msg;
+		msg.mClientActorID = clientActorID;
+		msg.mRequestMsgName = requestMsg.GetMsgName();
+		msg.mRequestMsgData = MEM_NEW DataBuffer();
+		requestMsg.serialize(msg.mRequestMsgData.getPtr());
+
+		CS_ResponceServerActorMsg resp;
+
+		if (Await(UnitID(Actor_Client, 1), msg, resp, overMilSecond) && resp.mResponseMsgData)
+		{
+			resp.mResponseMsgData->seek(0);
+			responseMsg.restore(resp.mResponseMsgData.getPtr());
+
+			return true;
+		}
+		else
+			ERROR_LOG("AwaitClient fail");
+
+		return false;
+	}
+};
+//-------------------------------------------------------------------------
+
+class PlayerActor : public SCActor
 {
 public:
 	void On(RQ_PlayerBaseData &msg, RS_PlayerBaseData &resp, UnitID, int)
@@ -33,7 +65,7 @@ public:
 };
 
 
-// ÓÎÏ··şÎñÇø, Ò»¸öÓÎÏ·ÇøÒ»¸ö´Ë¶ÔÏó
+// æ¸¸æˆæœåŠ¡åŒº, ä¸€ä¸ªæ¸¸æˆåŒºä¸€ä¸ªæ­¤å¯¹è±¡
 class GameServerActor : public NetCloud::DBActor
 {
 public:

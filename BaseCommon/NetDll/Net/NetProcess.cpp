@@ -35,3 +35,33 @@ AutoNice tNetProcess::Await(tNetConnect *pConnect, int msgID, tRequestMsg &req, 
 	protocol->FreeWaitID(pWait.getPtr());
 	return resp;
 }
+
+Auto<ResponseMsgPacket> tNetProcess::AwaitRequest(tNetConnect *pConnect, int msgID, tRequestMsg &req, int overMilSecond)
+{
+	if (CORO == 0)
+	{
+		ERROR_LOG("AwaitConnect must in coro");
+		return AutoData();
+	}
+	Auto< AsyncProtocol> protocol = pConnect->GetNetHandle()->GetNetProtocol();
+	Auto< ResponseMsgPacket> resp;
+	AWaitResponse pWait = protocol->AllotWaitID();
+
+	req.SetRequestID(pWait->mRequestMsgID);
+	if (!pConnect->Send(msgID, &req))
+		return resp;
+	pWait->mWaitCoroID = CORO;
+	pWait->Wait(overMilSecond);
+
+	YIELD;
+	pWait->StopWait();
+	if (pWait->mResponsePacket)
+	{
+		Auto< ResponseMsgPacket> pResp = pWait->mResponsePacket;
+
+		pResp->mData.seek(0);
+		resp = pResp;
+	}
+	protocol->FreeWaitID(pWait.getPtr());
+	return resp;
+}
