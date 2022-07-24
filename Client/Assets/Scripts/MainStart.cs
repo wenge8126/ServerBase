@@ -66,7 +66,7 @@ public class ConnectFinishEvent : BaseEvent
         //     LOG.log("Request fail, response null");
         // }
 
-        if (true)
+        if (false)
         {
             var msg = new SCS_NotifyMsg();
             msg.mID = (byte)CS_MSG_ID.eMsg_ServerClientNotify;
@@ -85,7 +85,7 @@ public class ConnectFinishEvent : BaseEvent
             MainStart.mNet.SendPacket(msg);
         }
 
-        if (false)
+        if (true)
         {
             CS_RequestTest testMsg = new CS_RequestTest();
             testMsg.mInfo = "&&&&& test info *********";
@@ -227,8 +227,8 @@ public class TestActor : Actor
 
     public override void RegisterMsg()
     {
-        //RegisterServerRequestMsg<TestActor, GN_NotifyNodeInfo>(On);
-        RegisterServerNotifyMsg<TestActor, SC_ResponseTest>(Notify);
+        RegisterMsg<TestActor, GN_NotifyNodeInfo>(On);
+        RegisterMsg<TestActor, SC_ResponseTest>(Notify);
     }
 
     // public override async Task<NiceData> On<T>(T reqMsg)
@@ -281,7 +281,7 @@ public class TestComponent : tComponent
 
     public override void RegisterMsg(ActorManager mgr)
     {
-        mgr.RegisterRequestMsg<TestComponent, GN_NotifyNodeInfo>(On);
-        mgr.RegisterNotifyMsg<TestComponent, SC_ResponseTest>(Notify);
+        mgr.RegisterMsg<TestComponent, GN_NotifyNodeInfo>(On);
+        mgr.RegisterMsg<TestComponent, SC_ResponseTest>(Notify);
     }
 }

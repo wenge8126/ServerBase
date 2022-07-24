@@ -103,7 +103,7 @@ namespace Logic
             }
         }
         
-        public void RegisterRequestMsg<ACTOR_COMP, REQUEST>(ComponentProcessServerRequest<ACTOR_COMP, REQUEST>.ProcessFunction fun)
+        public void RegisterMsg<ACTOR_COMP, REQUEST>(ComponentProcessServerRequest<ACTOR_COMP, REQUEST>.ProcessFunction fun)
             where REQUEST : BasePacket, new()
             where ACTOR_COMP : tComponent
         {
@@ -124,7 +124,7 @@ namespace Logic
         
         
         // 通知消息处理
-        public void RegisterNotifyMsg<ACTOR_COMP, NOTIFY_MSG>(ComponentProcessServerNotify<ACTOR_COMP, NOTIFY_MSG>.ProcessFunction fun)
+        public void RegisterMsg<ACTOR_COMP, NOTIFY_MSG>(ComponentProcessServerNotify<ACTOR_COMP, NOTIFY_MSG>.ProcessFunction fun)
             where NOTIFY_MSG : BasePacket, new()
             where ACTOR_COMP : tComponent
         {

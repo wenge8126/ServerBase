@@ -31,7 +31,7 @@ namespace Logic
         {
         }
 
-        public void RegisterServerRequestMsg<ACTOR, REQUEST>(ProcessServerRequest<ACTOR, REQUEST>.ProcessFunction fun)
+        public void RegisterMsg<ACTOR, REQUEST>(ProcessServerRequest<ACTOR, REQUEST>.ProcessFunction fun)
             where REQUEST : BasePacket, new()
             where ACTOR : Actor
         {
@@ -39,7 +39,7 @@ namespace Logic
             mFactory.RegisterActorMsg(f);
         }
         
-        public void RegisterServerNotifyMsg<ACTOR, NOTIFY_MSG>(ProcessServerNotify<ACTOR, NOTIFY_MSG>.ProcessFunction fun)
+        public void RegisterMsg<ACTOR, NOTIFY_MSG>(ProcessServerNotify<ACTOR, NOTIFY_MSG>.ProcessFunction fun)
             where NOTIFY_MSG : BasePacket, new()
             where ACTOR : Actor
         {
