@@ -92,36 +92,36 @@ public:
 
 			MSG_Test respTestMsg;
 
-			AwaitClient(UnitID(1, 111), testReq, respTestMsg, 16000);
+			AwaitClient(1, UnitID(1, 111), testReq, respTestMsg, 16000);
 
 			NOTE_LOG(" -------@@@@ %s", respTestMsg.dump().c_str());
 
 		});
 	}
 
-	template<typename RespMsg>
-	bool AwaitClient(UnitID clientActorID, tBaseMsg &requestMsg, RespMsg &responseMsg, int overMilSecond)
-	{
-		SC_ActorRequestClientMsg msg;
-		msg.mClientActorID = clientActorID;
-		msg.mRequestMsgName = requestMsg.GetMsgName();
-		msg.mRequestMsgData = MEM_NEW DataBuffer();
-		requestMsg.serialize(msg.mRequestMsgData.getPtr());
+	//template<typename RespMsg>
+	//bool AwaitClient(UnitID clientActorID, tBaseMsg &requestMsg, RespMsg &responseMsg, int overMilSecond)
+	//{
+	//	SC_ActorRequestClientMsg msg;
+	//	msg.mClientActorID = clientActorID;
+	//	msg.mRequestMsgName = requestMsg.GetMsgName();
+	//	msg.mRequestMsgData = MEM_NEW DataBuffer();
+	//	requestMsg.serialize(msg.mRequestMsgData.getPtr());
 
-		CS_ResponceServerActorMsg resp;
+	//	CS_ResponceServerActorMsg resp;
 
-		if (Await(UnitID(Actor_Client, 1), msg, resp, overMilSecond) && resp.mResponseMsgData)
-		{
-			resp.mResponseMsgData->seek(0);
-			responseMsg.restore(resp.mResponseMsgData.getPtr());
+	//	if (Await(UnitID(Actor_Client, 1), msg, resp, overMilSecond) && resp.mResponseMsgData)
+	//	{
+	//		resp.mResponseMsgData->seek(0);
+	//		responseMsg.restore(resp.mResponseMsgData.getPtr());
 
-			return true;
-		}
-		else
-			ERROR_LOG("AwaitClient fail");
+	//		return true;
+	//	}
+	//	else
+	//		ERROR_LOG("AwaitClient fail");
 
-		return false;
-	}
+	//	return false;
+	//}
 
 	void Notify(MSG_Test &msg, UnitID sender, int)
 	{

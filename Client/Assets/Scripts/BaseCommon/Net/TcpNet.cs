@@ -13,6 +13,7 @@ using System.Collections;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 using System.Net.Sockets;
@@ -671,6 +672,10 @@ namespace Logic
 #endif
         object mStreamLock = new object();
 
+        private TaskCompletionSource<bool> mConnectTcs = null;
+        private Stopwatch mBeginConnectTime = null;
+        private int mConnectOverMilSecond = 10000;
+
         public struct SyncTool
         {
             public TcpClientNet net;
@@ -686,7 +691,19 @@ namespace Logic
             mTcpClient.ReceiveTimeout = 20;
             mTcpClient.SendBufferSize = 1024 * 64;
             mTcpClient.SendTimeout = 100;
+            
+        }
 
+        public async Task<bool> AsyncConnect(string ip, int port, int overMilSecond)
+        {
+            mConnectOverMilSecond = overMilSecond;
+            mConnectTcs = new TaskCompletionSource<bool>();
+            mBeginConnectTime = Stopwatch.StartNew();
+            Connect(ip, port);
+            bool bOK = await mConnectTcs.Task;
+            mConnectTcs = null;
+            mBeginConnectTime = null;
+            return bOK;
         }
 
         public override string GetIP()
@@ -928,6 +945,8 @@ namespace Logic
                     {
                         Log("send check code succeed");
                         SetOk(true);
+                        if (mConnectTcs!=null)
+                            mConnectTcs.SetResult(true);
 #if USE_TCP_THREAD_RECEIVE
                         StartThreadReceive();
 #endif
@@ -941,6 +960,11 @@ namespace Logic
                     OnError("Error: get stream >>> " + e.ToString());
                     OnConnectFail();
                 }
+            }
+            else if (mBeginConnectTime!=null && mConnectTcs!=null)
+            {
+                if (mBeginConnectTime.ElapsedMilliseconds>mConnectOverMilSecond)
+                    mConnectTcs.SetResult(false);
             }
 
             // 如果当前帧或与上次检查时间之隔大于2秒，则重置, 如果阻塞在当前帧时，执行到这里耗时已经很长了

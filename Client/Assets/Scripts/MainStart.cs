@@ -65,28 +65,60 @@ public class ConnectFinishEvent : BaseEvent
         // {
         //     LOG.log("Request fail, response null");
         // }
+        
 
-        if (false)
-        {
-            var msg = new SCS_NotifyMsg();
-            msg.mID = (byte)CS_MSG_ID.eMsg_ServerClientNotify;
-            msg.mMsgName = "MSG_Test";
-            var notifyData = new DataBuffer();
-            msg.mNotifyMsgData = notifyData;
-            msg.mActorID = new UnitID(104, 1);
+        
+    }
+}
 
-            var notifyMsg = new MSG_Test();
-            notifyMsg.mF = 0.999f;
-            notifyMsg.mTest = "**jjjjjjjjjjkkkkkkkk**";
-            notifyMsg.mXX = 999999994444444;
+public class MainStart : MonoBehaviour
+{
+    public static ActorManager mActorMgr;
+    public static Logic.TcpClientNet mNet;
 
-            notifyMsg.Write(ref notifyData);
+    public Actor mActor;
+    // Start is called before the first frame update
+    async void Start()
+    {
+        EventCenter.Instance = new EventCenter();
+        mActorMgr = new ActorManager();
+        EventCenter.StaticRegister("ConnectFinishEvent", new DefineFactory<ConnectFinishEvent>());
+        
+        mNet = new TcpClientNet();
+        
+        //LuaMain.StartLua();
+        
+        mNet.mNotifyConnectFinishEvent = EventCenter.Instance.StartEvent("ConnectFinishEvent");
+        //mNet.Connect("127.0.0.1", 4001);
+        
+        mNet.RegisterPacket((int)NET_PACKET_ID.eNotifyHeartBeat, new PingPacket(), null);
+        mNet.RegisterPacket((int)NET_PACKET_ID.eNotifyNetEventID, new PingPacket(), null);
+        
+        mNet.RegisterPacket((int)41, new NG_RequestGateInfo(), RequestFunction);
 
-            MainStart.mNet.SendPacket(msg);
-        }
 
-        if (true)
-        {
+        mActorMgr.RegisterActor(new DefineActorFactory<TestActor>(1));
+        mActor = mActorMgr.CreateActor(1, 111);
+        
+        //mActor.mFactory.RegisterActorMsg(new ComponentProcessServerRequest<TestComponent, GN_NotifyNodeInfo>(TestComponent.On));
+        //EventCenter.WaitAction(TestDestoryActor, 6);
+        mActorMgr.RegisterComponent<TestComponent>();
+        //EventCenter.StaticRegister("TestComponent", new DefineFactory<TestComponent>());
+
+        mActor.AddComponent("TestComponent");
+        
+        //await Task.Delay(3);
+        //mNet.mNotifyConnectFinishEvent.Do();
+
+        bool bOk = await mNet.AsyncConnect("127.0.0.1", 4001, 3000);
+        LOG.log($"Connect {bOk.ToString()}");
+        if (bOk)
+            TestRequestMsg();
+    }
+
+    async void TestRequestMsg()
+    {
+        
             CS_RequestTest testMsg = new CS_RequestTest();
             testMsg.mInfo = "&&&&& test info *********";
             testMsg.mRequestID = 1111;
@@ -112,48 +144,26 @@ public class ConnectFinishEvent : BaseEvent
             {
                 LOG.log("Request fail, response null");
             }
-        }
+        
     }
-}
 
-public class MainStart : MonoBehaviour
-{
-    public static ActorManager mActorMgr;
-    public static Logic.TcpClientNet mNet;
-
-    public Actor mActor;
-    // Start is called before the first frame update
-    void Start()
+    void TestNotifyMsg()
     {
-        EventCenter.Instance = new EventCenter();
-        mActorMgr = new ActorManager();
-        EventCenter.StaticRegister("ConnectFinishEvent", new DefineFactory<ConnectFinishEvent>());
-        
-        mNet = new TcpClientNet();
-        
-        //LuaMain.StartLua();
-        
-        mNet.mNotifyConnectFinishEvent = EventCenter.Instance.StartEvent("ConnectFinishEvent");
-        mNet.Connect("127.0.0.1", 4001);
-        
-        mNet.RegisterPacket((int)NET_PACKET_ID.eNotifyHeartBeat, new PingPacket(), null);
-        mNet.RegisterPacket((int)NET_PACKET_ID.eNotifyNetEventID, new PingPacket(), null);
-        
-        mNet.RegisterPacket((int)41, new NG_RequestGateInfo(), RequestFunction);
+        var msg = new SCS_NotifyMsg();
+        msg.mID = (byte)CS_MSG_ID.eMsg_ServerClientNotify;
+        msg.mMsgName = "MSG_Test";
+        var notifyData = new DataBuffer();
+        msg.mNotifyMsgData = notifyData;
+        msg.mActorID = new UnitID(104, 1);
 
+        var notifyMsg = new MSG_Test();
+        notifyMsg.mF = 0.999f;
+        notifyMsg.mTest = "**jjjjjjjjjjkkkkkkkk**";
+        notifyMsg.mXX = 999999994444444;
 
-        mActorMgr.RegisterActor(new DefineActorFactory<TestActor>(1));
-        mActor = mActorMgr.CreateActor(1, 111);
-        
-        //mActor.mFactory.RegisterActorMsg(new ComponentProcessServerRequest<TestComponent, GN_NotifyNodeInfo>(TestComponent.On));
-        //EventCenter.WaitAction(TestDestoryActor, 6);
-        mActorMgr.RegisterComponent<TestComponent>();
-        //EventCenter.StaticRegister("TestComponent", new DefineFactory<TestComponent>());
+        notifyMsg.Write(ref notifyData);
 
-        mActor.AddComponent("TestComponent");
-        
-        //await Task.Delay(3);
-        //mNet.mNotifyConnectFinishEvent.Do();
+        MainStart.mNet.SendPacket(msg);
     }
 
     void TestDestoryActor()
