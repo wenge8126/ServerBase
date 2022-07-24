@@ -66,30 +66,52 @@ public class ConnectFinishEvent : BaseEvent
         //     LOG.log("Request fail, response null");
         // }
 
-        CS_RequestTest testMsg = new CS_RequestTest();
-        testMsg.mInfo = "&&&&& test info *********";
-        testMsg.mRequestID = 1111;
-
-        var uid = new UnitID(104, 1);
-
-        UInt64 x = uid;
-
-        var mm = new UnitID(x);
-        
-        LOG.log($"{uid.dump()}  === {mm.dump()} *** {x.ToString()}");
-        
-        
-        // CS_ClientRequest requestPacket = new CS_ClientRequest();
-        // requestPacket.mTargetActorID = 999;
-        // requestPacket.mRequestMsgName = "CS_RequestTest";
-        // requestPacket.mActorMsg = testMsg.mMsgData;
-        // var response = await requestPacket.AsyncRequest(MainStart.mNet);
-        var response = await MainStart.mNet.AsyncRequest(new UnitID(104, 1), "CS_RequestTest", testMsg, 6000);
-        if (response != null)
-            response.dump("ok=========");
-        else
+        if (true)
         {
-            LOG.log("Request fail, response null");
+            var msg = new SCS_NotifyMsg();
+            msg.mID = (byte)CS_MSG_ID.eMsg_ServerClientNotify;
+            msg.mMsgName = "MSG_Test";
+            var notifyData = new DataBuffer();
+            msg.mNotifyMsgData = notifyData;
+            msg.mActorID = new UnitID(104, 1);
+
+            var notifyMsg = new MSG_Test();
+            notifyMsg.mF = 0.999f;
+            notifyMsg.mTest = "**jjjjjjjjjjkkkkkkkk**";
+            notifyMsg.mXX = 999999994444444;
+
+            notifyMsg.Write(ref notifyData);
+
+            MainStart.mNet.SendPacket(msg);
+        }
+
+        if (false)
+        {
+            CS_RequestTest testMsg = new CS_RequestTest();
+            testMsg.mInfo = "&&&&& test info *********";
+            testMsg.mRequestID = 1111;
+
+            var uid = new UnitID(104, 1);
+
+            UInt64 x = uid;
+
+            var mm = new UnitID(x);
+
+            LOG.log($"{uid.dump()}  === {mm.dump()} *** {x.ToString()}");
+
+
+            // CS_ClientRequest requestPacket = new CS_ClientRequest();
+            // requestPacket.mTargetActorID = 999;
+            // requestPacket.mRequestMsgName = "CS_RequestTest";
+            // requestPacket.mActorMsg = testMsg.mMsgData;
+            // var response = await requestPacket.AsyncRequest(MainStart.mNet);
+            var response = await MainStart.mNet.AsyncRequest(new UnitID(104, 1), "CS_RequestTest", testMsg, 6000);
+            if (response != null)
+                response.dump("ok=========");
+            else
+            {
+                LOG.log("Request fail, response null");
+            }
         }
     }
 }
@@ -198,9 +220,15 @@ public class TestActor : Actor
         return t.mMsgData;
     }
 
+    static public void Notify(TestActor actor, SC_ResponseTest req)
+    {
+        req.mMsgData.dump("---------------**********");
+    }
+
     public override void RegisterMsg()
     {
-        //RegisterServerRequestMsg<TestActor, GN_NotifyNodeInfo>(TestActor.On);
+        //RegisterServerRequestMsg<TestActor, GN_NotifyNodeInfo>(On);
+        RegisterServerNotifyMsg<TestActor, SC_ResponseTest>(Notify);
     }
 
     // public override async Task<NiceData> On<T>(T reqMsg)
@@ -245,9 +273,15 @@ public class TestComponent : tComponent
         t.mTest = "~~~~~~~~~~~~~~kkkkkpppp+++9999";
         return t.mMsgData;
     }
+    
+    static public void Notify(TestComponent actor, SC_ResponseTest req)
+    {
+        req.mMsgData.dump("444444444&&&&&&&&&&**********");
+    }
 
     public override void RegisterMsg(ActorManager mgr)
     {
-        mgr.RegisterRequestMsg<TestComponent, GN_NotifyNodeInfo>(TestComponent.On);
+        mgr.RegisterRequestMsg<TestComponent, GN_NotifyNodeInfo>(On);
+        mgr.RegisterNotifyMsg<TestComponent, SC_ResponseTest>(Notify);
     }
 }

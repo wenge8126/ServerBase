@@ -38,6 +38,7 @@ public:
 
 	virtual void Init() override
 	{
+		LoginNetActor::Init();
 		AddComponent("TestNoSQLUserComponent");
 		AddComponent("Test2Component");
 		AddComponent("RecordNoSQLUserComponent");
@@ -45,21 +46,21 @@ public:
 		Hand<HttpComponect> comp = AddComponent("HttpComponect");
 		comp->mPort = 5000;
 
-		Hand<TcpComponent> tcpNet = AddComponent("TcpComponent");
-		tcpNet->mServerIp = "127.0.0.1";
-		tcpNet->mServerPort = 4001;
+		//Hand<TcpComponent> tcpNet = AddComponent("TcpComponent");
+		//tcpNet->mServerIp = "127.0.0.1";
+		//tcpNet->mServerPort = 4001;
 
 		// 同时支持多种网络模式
 		Hand<WssWebComponent> wssNet = AddComponent("WssWebComponent");
 		wssNet->mServerIp = "127.0.0.1";
 		wssNet->mServerPort = 4002;
 
-		tcpNet->mSafeCode = 11;
-		Hand<tBaseEventNet> net = tcpNet->GetNet();
-		net->GetNetProtocol()->RegisterNetPacket(MEM_NEW AsyncProcessReqeustMsgFactory<eMsg_ClientRequestServer, CS_ClientRequest, SC_ResponseMsg, LoginActor>(this));
-		//net->SetNetProtocol();`
+		//tcpNet->mSafeCode = 11;
+		//Hand<tBaseEventNet> net = tcpNet->GetNet();
+		//net->GetNetProtocol()->RegisterNetPacket(MEM_NEW AsyncProcessReqeustMsgFactory<eMsg_ClientRequestServer, CS_ClientRequest, SC_ResponseMsg, LoginActor>(this));
+		////net->SetNetProtocol();`
 
-		AddComponent("LoginNetComponect");
+		//AddComponent("LoginNetComponect");
 	}
 
 

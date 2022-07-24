@@ -23,6 +23,7 @@ namespace Logic
                 fun = GetMgr().FindProcessRequestFunction(requestName);
             if (fun != null)
                 return await fun.ProcessRequest(this, requestData);
+            LOG.logError("No exist process request fun : "+requestName);
             return null;
         }
 
@@ -36,6 +37,14 @@ namespace Logic
         {
             var f = new ProcessServerRequest<ACTOR, REQUEST>(fun);
             mFactory.RegisterActorMsg(f);
+        }
+        
+        public void RegisterServerNotifyMsg<ACTOR, NOTIFY_MSG>(ProcessServerNotify<ACTOR, NOTIFY_MSG>.ProcessFunction fun)
+            where NOTIFY_MSG : BasePacket, new()
+            where ACTOR : Actor
+        {
+            var f = new ProcessServerNotify<ACTOR, NOTIFY_MSG>(fun);
+            mFactory.RegisterNotifyMsg(f);
         }
 
         public async Task<NiceData> AsyncRequestMsg(UnitID targetActorID, BasePacket requestMsg, int overMilSecond = 10000)
@@ -62,6 +71,20 @@ namespace Logic
             }
 
             return response;
+        }
+
+        public void OnNotify(string msgName, NiceData msgData)
+        {
+            var fun = mFactory.FindProcessNotifyFunction(msgName);
+            if (fun == null)
+                fun = GetMgr().FindProcessNotifyFunction(msgName);
+            if (fun != null)
+            {
+                fun.ProcessNotify(this, msgData);
+                return;
+            }
+
+            LOG.logError("No exist process notify fun : "+msgName);
         }
 
         public ActorManager GetMgr()

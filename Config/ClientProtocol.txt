@@ -15,6 +15,14 @@ SC_ActorRequestClientMsg
 	data mRequestMsgData;
 }
 
+// 服务器与客户端Actor间互传通知消息
+SCS_NotifyMsg
+{
+	uint64 mActorID; // 服务器或客户端ActorID
+	string mMsgName;
+	data mNotifyMsgData;
+}
+
 CS_ResponceServerActorMsg
 {
 	data mResponseMsgData;

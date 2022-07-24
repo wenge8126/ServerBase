@@ -102,6 +102,51 @@ public class SC_ActorRequestClientMsg : BasePacket
 
 };
 
+//  服务器与客户端Actor间互传通知消息
+public class SCS_NotifyMsg : BasePacket
+{
+    public UInt64 mActorID		//  服务器或客户端ActorID
+    {
+        set { mMsgData.set("mActorID",  value); }
+        get { return (UInt64)mMsgData.getObject("mActorID"); }
+    }
+
+    public string mMsgName		
+    {
+        set { mMsgData.set("mMsgName",  value); }
+        get { return (string)mMsgData.getObject("mMsgName"); }
+    }
+
+    public DataBuffer mNotifyMsgData		
+    {
+        set { mMsgData.set("mNotifyMsgData",  value); }
+        get { return mMsgData.getObject("mNotifyMsgData") as DataBuffer; }
+    }
+
+
+
+    public SCS_NotifyMsg() { InitData(); }
+
+
+   public override  void Full(NiceData scrData) 
+    {
+        InitData();
+        mMsgData.set("mActorID", scrData.getObject("mActorID"));
+        mMsgData.set("mMsgName", scrData.getObject("mMsgName"));
+        mMsgData.set("mNotifyMsgData", scrData.getObject("mNotifyMsgData"));
+    }
+
+    public override void InitData() 
+    {
+        mActorID = 0;
+        mMsgName = "";
+        if (mNotifyMsgData!=null) mNotifyMsgData.clear(true);
+    }
+
+    public override string MsgName()   { return "SCS_NotifyMsg"; }
+
+};
+
 public class CS_ResponceServerActorMsg : BasePacket
 {
     public DataBuffer mResponseMsgData		

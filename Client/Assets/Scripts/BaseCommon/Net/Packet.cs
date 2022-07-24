@@ -25,7 +25,14 @@ namespace Logic
         eNotifyHeartBeat = 10,		// 心跳包，由服务器统一每隔约10，向所有连接发送一次心跳包
         PACKET_EVENT_PROCESS = 11, // 直接读取处理的事件包 
         PACKET_MAX,
-        PACKET_REQUEST_CLIENTACTOR = PACKET_MAX+50,
+    };
+    
+    public enum CS_MSG_ID
+    {
+        eMsg_RequestClientActor = NET_PACKET_ID.PACKET_MAX + 50,
+        eMsg_ClientRequestServer ,
+        eMsg_ServerRequestClient,
+        eMsg_ServerClientNotify,
     };
 
     public abstract class Packet

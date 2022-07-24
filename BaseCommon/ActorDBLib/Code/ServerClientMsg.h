@@ -1,7 +1,5 @@
 //Auto genereate msg data code		
 #pragma once
-#ifndef _INCLUDE_SERVERCLIENTMSG_H_
-#define _INCLUDE_SERVERCLIENTMSG_H_
 
 #include "BaseMsg.h"
 #include "Array.h"
@@ -163,6 +161,86 @@ public:
     {
         if (strcmp(szMember, "mClientActorID")==0) { mClientActorID = value; return true; };
         if (strcmp(szMember, "mRequestMsgName")==0) { mRequestMsgName = value; return true; };
+        LOG("No exist > %%s", szMember);  return false;
+    }
+
+    AData operator [] (const char *szMember) const 
+    {
+        return get(szMember);
+    }
+
+    AData operator [] (const AString &member) const 
+    {
+        return get(member.c_str());
+    }
+
+};
+
+//  服务器与客户端Actor间互传通知消息
+class SCS_NotifyMsg : public tBaseMsg
+{ 
+public:
+    UInt64 mActorID;		//  服务器或客户端ActorID
+    AString mMsgName;		
+    AutoData mNotifyMsgData;		
+
+public:
+    SCS_NotifyMsg() { clear(false); };
+
+
+   virtual  void Full(AutoNice scrData) override
+    {
+        clear(false);
+        CheckGet(scrData, mActorID);
+        CheckGet(scrData, mMsgName);
+        mNotifyMsgData = (DataStream*)scrData["mNotifyMsgData"];
+    }
+
+    virtual void ToData(AutoNice &destData) override
+    {
+        destData["mActorID"] = mActorID;
+        destData["mMsgName"] = mMsgName;
+        destData["mNotifyMsgData"] = mNotifyMsgData.getPtr();
+    }
+
+    bool serialize(DataStream *destData) const override
+    {
+        destData->write((short)3);
+
+        SAVE_MSG_VALUE(mActorID, 18);
+        SAVE_MSG_VALUE(mMsgName, 4);
+        SAVE_MSG_DATA(mNotifyMsgData);
+        return true;
+    }
+
+    void clear(bool bClearBuffer=false) override 
+    {
+        mActorID = 0;
+        mMsgName.setNull();
+        if (mNotifyMsgData) mNotifyMsgData.setNull();
+    }
+
+    void copy(const tBaseMsg &otherMsg) override 
+    {
+        if (strcmp("SCS_NotifyMsg", otherMsg.GetMsgName())!=0) { LOG("%s is not SCS_NotifyMsg", otherMsg.GetMsgName()); return; }; const SCS_NotifyMsg &other = *(const SCS_NotifyMsg*)(&otherMsg);
+        mActorID = other.mActorID;
+        mMsgName = other.mMsgName;
+        COPY_MSG_DATA(other.mNotifyMsgData, mNotifyMsgData);
+    }
+
+    virtual const char* GetMsgName() const override { return "SCS_NotifyMsg"; }
+
+    AData get(const char *szMember) const 
+    {
+        if (strcmp(szMember, "mActorID")==0) { AData value; value = mActorID; return value; }
+        if (strcmp(szMember, "mMsgName")==0) { AData value; value = mMsgName; return value; }
+        return AData();
+    }
+
+    bool set(const char *szMember, AData value) 
+    {
+        if (strcmp(szMember, "mActorID")==0) { mActorID = value; return true; };
+        if (strcmp(szMember, "mMsgName")==0) { mMsgName = value; return true; };
         LOG("No exist > %%s", szMember);  return false;
     }
 
@@ -535,6 +613,3 @@ public:
 
 };
 
-
-
-#endif //_INCLUDE_SERVERCLIENTMSG_H_

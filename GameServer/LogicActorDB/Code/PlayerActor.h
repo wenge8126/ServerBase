@@ -20,7 +20,7 @@ public:
 	virtual void RegisterMsg(ActorManager *pActorMgr)
 	{
 		REG_ACTOR_MSG(PlayerActor, RQ_PlayerBaseData, RS_PlayerBaseData);
-		
+		SCActor::RegisterMsg(pActorMgr);
 	}
 
 public:

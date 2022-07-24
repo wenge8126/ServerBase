@@ -40,9 +40,17 @@ public:
 	void RegisterMsg(ActorManager *pActorMgr) override
 	{
 		REG_ACTOR_MSG(tClientActor, SC_ActorRequestClientMsg, CS_ResponceServerActorMsg);
+		REG_NOTIFY_MSG(tClientActor, SCS_NotifyMsg);
 	}
 
 	void On(SC_ActorRequestClientMsg &reqMsg, CS_ResponceServerActorMsg &clientResponse, UnitID sender, int);
+
+	// 中转服务器Actor发向客户端Actor消息
+	void Notify(SCS_NotifyMsg &notifyMsg, UnitID sender, int)
+	{
+		if (mpClientConnect != NULL)
+			mpClientConnect->Send(eMsg_ServerClientNotify, &notifyMsg);
+	}
 
 public:
 	tNetConnect		*mpClientConnect = NULL;
@@ -51,12 +59,6 @@ public:
 // 转发Actor 请求客户端Actor消息
 class SC_ServerRequestClientMsg : public tRequestMsg
 {
-public:
-	enum
-	{
-		PACKET_REQUEST_CLIENTACTOR = PACKET_MAX + 50,
-	};
-
 public:
 	int mRequestID;
 	UInt64 mClientActorID;

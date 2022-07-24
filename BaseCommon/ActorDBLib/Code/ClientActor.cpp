@@ -12,7 +12,7 @@ void tClientActor::On(SC_ActorRequestClientMsg &reqMsg, CS_ResponceServerActorMs
 	req.mRequestMsgName = reqMsg.mRequestMsgName;
 	reqMsg.mRequestMsgData.setNull();
 
-	auto resp = tNetProcess::AwaitRequest(mpClientConnect, SC_ServerRequestClientMsg::PACKET_REQUEST_CLIENTACTOR, req, 16000);
+	auto resp = tNetProcess::AwaitRequest(mpClientConnect, eMsg_RequestClientActor, req, 16000);
 	if (resp)
 	{				
 		clientResponse.mResponseMsgData = MEM_NEW DataBuffer(resp->mData.dataSize());

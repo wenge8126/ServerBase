@@ -9,7 +9,7 @@
 
 #include "NoSQLComponent.h"
 
-#include "LoginNetComponect.h"
+
 #include "DefineMsgFactory.h"
 #include "ServerClientMsg.h"
 
@@ -21,11 +21,7 @@ using namespace NetCloud;
 // ClientActor 接收到回复后, LogicAtor 构建新的回复消息, 回复至客户端
 // Client 再根据等待着的Actor 返回回复结果
 //-------------------------------------------------------------------------
-enum CS_MSG_ID
-{
-	eMsg_ClientRequestServer = 101,
-	eMsg_ServerRequestClient = 102,
-};
+
 
 // 用于处理登陆消息组件
 
@@ -84,11 +80,14 @@ public:
 		tcpNet->mSafeCode = 11;
 		Hand<tBaseEventNet> net = tcpNet->GetNet();
 		net->GetNetProtocol()->RegisterNetPacket(MEM_NEW AsyncProcessReqeustMsgFactory<eMsg_ClientRequestServer, CS_ClientRequest, SC_ResponseMsg, LoginNetActor>(this));
+		net->GetNetProtocol()->RegisterNetPacket(MEM_NEW DefaultMsgFactory<eMsg_ServerClientNotify, SCS_NotifyMsg, LoginNetActor>(this));
+
 		//net->SetNetProtocol();`
 
 		AddComponent("LoginNetComponect");
 	}
 
+	// 中转客户端请求服务器Actor消息
 	void OnAsyncRequest(HandConnect connect, const CS_ClientRequest  &req, SC_ResponseMsg &resp)
 	{
 		//NOTE_LOG(req.dump().c_str());
@@ -105,6 +104,19 @@ public:
 		else
 			ERROR_LOG("No exist client actor");
 
+	}
+
+	// 中转客户端发向服务器Actor 通知消息
+	void On(HandConnect connect, SCS_NotifyMsg &notifyMsg)
+	{
+		Hand<ClientActor> client = connect->GetUserData();
+		if (client)
+		{			
+			if (!client->SendMsg(notifyMsg, notifyMsg.mActorID))
+				ERROR_LOG("Send to actor notify msg fail");
+		}
+		else
+			ERROR_LOG("No exist client actor");
 	}
 
 	void RegisterMsg(ActorManager *pActorMgr)

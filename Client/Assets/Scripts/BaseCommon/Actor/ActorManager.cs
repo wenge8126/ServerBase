@@ -10,7 +10,7 @@ namespace Logic
         private Dictionary<UInt64, Actor> mActorList = new Dictionary<ulong, Actor>();
         private Dictionary<int, ActorFactory> mActorFactoryList = new Dictionary<int, ActorFactory>();
         public Dictionary<string, tProcessServerRequest> mProcessRequestFunList = new Dictionary<string, tProcessServerRequest>();
-
+        public Dictionary<string, tProcessServerNotify> mProcessNotifyFunList = new Dictionary<string, tProcessServerNotify>();
 
         public ActorManager()
         {
@@ -121,6 +121,28 @@ namespace Logic
             mProcessRequestFunList.TryGetValue(msgName, out fun);
             return fun;
         }
+        
+        
+        // 通知消息处理
+        public void RegisterNotifyMsg<ACTOR_COMP, NOTIFY_MSG>(ComponentProcessServerNotify<ACTOR_COMP, NOTIFY_MSG>.ProcessFunction fun)
+            where NOTIFY_MSG : BasePacket, new()
+            where ACTOR_COMP : tComponent
+        {
+            var f = new ComponentProcessServerNotify<ACTOR_COMP, NOTIFY_MSG>(fun);
+            RegisterNotifyMsg(f.GetMsgName(), f);
+        }
+        public virtual tProcessServerNotify FindProcessNotifyFunction(string msgName)
+        {
+            tProcessServerNotify fun = null;
+            mProcessNotifyFunList.TryGetValue(msgName, out fun);
+            return fun;
+        }
+        
+        public virtual void RegisterNotifyMsg(string msgName, tProcessServerNotify fun)
+        {
+            mProcessNotifyFunList[msgName] = fun;
+        }
+
     }
     
     // 用于Actor 创建后, 下一个循环内执行Start

@@ -999,9 +999,9 @@ namespace Logic
             if (!scrData.readData(ref d))
             {
                 LOG.logError("Read data fail");
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
         //--------------------------------------------------------------------------------
 

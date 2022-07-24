@@ -27,11 +27,28 @@ namespace Logic
         {
             RegisterActorMsg(fun.GetRequestMsgName(), fun);
         }
-
+        
         public virtual tProcessServerRequest FindProcessRequestFunction(string msgName)
         {
             return null;
         }
+
+        // 通知消息处理
+        public virtual tProcessServerNotify FindProcessNotifyFunction(string msgName)
+        {
+            return null;
+        }
+        
+        public virtual void RegisterNotifyMsg(string msgName, tProcessServerNotify fun)
+        {
+        }
+
+        public virtual void RegisterNotifyMsg(tProcessServerNotify fun)
+        {
+            RegisterNotifyMsg(fun.GetMsgName(), fun);
+        }
+
+       
     }
 
     public abstract class tActorFactor : ActorFactory
@@ -39,6 +56,7 @@ namespace Logic
         public int mType = 0;
 
         public Dictionary<string, tProcessServerRequest> mProcessRequestFunList = new Dictionary<string, tProcessServerRequest>();
+        public Dictionary<string, tProcessServerNotify> mProcessNotifyFunList = new Dictionary<string, tProcessServerNotify>();
 
         public override int GetType()
         {
@@ -56,6 +74,22 @@ namespace Logic
             mProcessRequestFunList.TryGetValue(msgName, out fun);
             return fun;
         }
+        
+        // 通知消息处理
+        public override tProcessServerNotify FindProcessNotifyFunction(string msgName)
+        {
+            tProcessServerNotify fun = null;
+            mProcessNotifyFunList.TryGetValue(msgName, out fun);
+            return fun;
+        }
+        
+        public override void RegisterNotifyMsg(string msgName, tProcessServerNotify fun)
+        {
+            mProcessNotifyFunList[msgName] = fun;
+        }
+        
+
+      
     }
     
     public class DefineActorFactory<T> : tActorFactor where T : Actor, new()

@@ -29,7 +29,7 @@ using namespace NetCloud;
 DEFINE_RUN_CONFIG(LogicActorDBConfig)
 //-------------------------------------------------------------------------
 
-class WorkerActor : public DBActor
+class WorkerActor : public SCActor
 {
 public:
 	// ´´½¨Íæ¼Ò
@@ -123,6 +123,17 @@ public:
 		return false;
 	}
 
+	void Notify(MSG_Test &msg, UnitID sender, int)
+	{
+		NOTE_LOG("***********Client notify %s : %s", sender.dump().c_str(), msg.dump().c_str());
+
+		tTimer::AWaitTime(3000);
+
+		SC_ResponseTest  xx;
+		xx.mInfo = "=== $$$$$$$$$$$ yyyyyy ===";
+
+		SendClientMsg(1, UnitID(1, 111), xx);
+	}
 
 	virtual void RegisterMsg(ActorManager *pActorMgr) override
 	{
@@ -131,6 +142,9 @@ public:
 		REG_ACTOR_MSG(WorkerActor, RQ_CreatePlayerActor, RS_CreatePlayerActor);
 
 		REG_ACTOR_MSG(WorkerActor, CS_RequestTest, MSG_Test);
+		REG_NOTIFY_MSG(WorkerActor, MSG_Test);
+
+		SCActor::RegisterMsg(pActorMgr);
 	}
 
 public:
