@@ -5,10 +5,10 @@
 
 #include "Component.h"
 #include "WebServerNet.h"
-
+#include "CommonLib.h"
 //-------------------------------------------------------------------------
 // Https 组件, 可继承实现需要的功能
-class  HttpComponect : public NetCloud::ProcessComponent
+class CommonLib_Export  HttpComponect : public NetCloud::ProcessComponent
 {
 public:
 	virtual void Awake() override

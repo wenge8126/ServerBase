@@ -7,4 +7,8 @@
     <LocalDebuggerWorkingDirectory>$(Server_Out_Dir)\</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|x64'">
+    <LocalDebuggerWorkingDirectory>$(Server_Out_Dir)\</LocalDebuggerWorkingDirectory>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
 </Project>
