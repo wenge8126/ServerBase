@@ -27,18 +27,6 @@
     <ClCompile Include="WebLogin.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\SDK\HttpClient.cpp">
-      <Filter>SDK</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Common\SDK\SDK.cpp">
-      <Filter>SDK</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\HttpComponect.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\WssWebComponent.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\WebLoginThread.h">
@@ -49,12 +37,6 @@
     </ClInclude>
     <ClInclude Include="Code\WebTools.h">
       <Filter>Code</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Common\SDK\HttpClient.h">
-      <Filter>SDK</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Common\SDK\SDK.h">
-      <Filter>SDK</Filter>
     </ClInclude>
     <ClInclude Include="Code\LoginNetComponect.h">
       <Filter>头文件</Filter>
@@ -72,12 +54,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Code\LoginActor.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\HttpComponect.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\WssWebComponent.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

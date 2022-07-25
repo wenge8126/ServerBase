@@ -5,9 +5,9 @@
 
 #include "TcpComponent.h"
 #include "WebServerNet.h"
-
+#include "CommonLib.h"
 //-------------------------------------------------------------------------
-class  WssWebComponent : public SocketComponent
+class CommonLib_Export  WssWebComponent : public SocketComponent
 {
 public:
 	virtual void RegisterMsg(const AString &msgName, AutoEventFactory msgFactory)

@@ -29,7 +29,7 @@ typedef bool (*DllNotifyFun)(const char *szSid, int zoneID, const char *zoneName
 
 //-------------------------------------------------------------------------*/
 class TaskGetRequestEx;
-class SDK : public TaskManager
+class CommonLib_Export SDK : public TaskManager
 {
 public:
 	bool AwaitRequest(const char *szHttpAddr, AString &response, const char *postString = NULL);

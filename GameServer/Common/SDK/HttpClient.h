@@ -5,8 +5,9 @@
 //#define HTTP_ONLY
 
 #include <string>
+#include "CommonLib.h"
 
-class CHttpClient
+class CommonLib_Export CHttpClient
 {
 public:
 	CHttpClient(void);
