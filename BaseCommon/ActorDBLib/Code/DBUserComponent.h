@@ -17,6 +17,7 @@ namespace NetCloud
 	{
 	public:
 		virtual bool CheckTable(AutoTable t) = 0;
+		virtual void OnLoadRecord(ARecord record){}
 
 	public:
 		bool InitTable(const char *szTableName)
@@ -29,6 +30,8 @@ namespace NetCloud
 			}
 			return false;
 		}
+
+		AutoTable GetTable() { return mDBTable; }
 
 		AutoDBManager GetDBMgr()
 		{
@@ -72,6 +75,12 @@ namespace NetCloud
 			ERROR_LOG("No exist %s in table %s", STRING(nKey), mDBTable->GetTableName());
 
 			return ARecord();
+		}
+
+		virtual ARecord GrowthNewRecord()
+		{
+			mDataRecord = mDBTable->GrowthNewRecord();
+			return mDataRecord;
 		}
 
 	public:

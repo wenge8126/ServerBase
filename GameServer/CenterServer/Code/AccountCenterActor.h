@@ -6,6 +6,9 @@
 #include "DefineMsgFactory.h"
 
 #include "SCActor.h"
+#include "MsgData.h"
+#include "DBUser_t_account.h"
+#include "ServerMsg.h"
 
 using namespace NetCloud;
 
@@ -16,34 +19,115 @@ using namespace NetCloud;
 // Client 再根据等待着的Actor 返回回复结果
 //-------------------------------------------------------------------------
 
+class CenterThread;
+
+//-------------------------------------------------------------------------
+class AccountDBComponent : public DBUser_t_account
+{
+public:
+	virtual void OnLoadRecord(ARecord record) override;
+};
 
 //-------------------------------------------------------------------------
 // 用于接受处理客户端连接, 并响应客户端请求服务器Actor消息
 //-------------------------------------------------------------------------
 class AccountCenterActor : public SCActor
 {
-public:
-	CenterThread* GetLoginThread()
+	struct AccountData 
 	{
-		Auto<AccountActorManager> mgr = GetMgr();
-		return mgr->mpThread;
+		Int64 mDBID;
+		AString  mPassword;
+	};
+
+public:
+	Hand< DBUser_t_account> mAccountDBUser;
+	FastHash<AString, AccountData> mAccountHash;
+
+public:
+	// 创建帐号
+	void On(AC_RequestCreateAccount &req, CA_ResponseCreateAccount &response, UnitID sender, int)
+	{
+		AccountData *pExistAccount = mAccountHash.findPtr(req.mAccount);
+		if (pExistAccount != NULL)
+		{
+			response.mErrorCode = eErrorCode_ExistAccount;
+			response.mDBID = pExistAccount->mDBID;
+			return;
+		}
+
+		if (mAccountDBUser->GrowthNewRecord())
+		{
+			mAccountDBUser->SetACCOUNT(req.mAccount.c_str());
+			//??? mAccountDBUser->setPASSWORD(req.mPassword.c_str());
+			mAccountDBUser->INFO(true) = req.mInfoData.getPtr();
+			response.mErrorCode = eErrorCodeNone;
+			response.mDBID = mAccountDBUser->wDBID();
+			AccountData d;
+			d.mDBID = response.mDBID;
+			//??? d.mPassword = req.mPassword;
+			mAccountHash.insert(req.mAccount, d);
+		}
+		else
+		{
+			response.mErrorCode = eErrorCode_DBCreateFail;
+		}
+
 	}
+
+	void On(AC_RequestAccountData &req, CA_ResponseAccountData &response, UnitID sender, int)
+	{
+		AccountData *pExistAccount = mAccountHash.findPtr(req.mAccount);
+		if (pExistAccount != NULL)
+		{
+			//mAccountDBUser->LoadRecord(*pDBID);
+			response.mErrorCode = eErrorCodeNone;
+			response.mDBID = pExistAccount->mDBID;
+			response.mPassword = pExistAccount->mPassword;
+			return;
+		}
+		response.mErrorCode = eErrorCode_NoExistAccount;
+	}
+
+public:
+	CenterThread* GetLoginThread();
+
 
 	virtual void Init() override
 	{
 		SCActor::Init();
 
-		Hand<HttpComponect> comp = AddComponent("HttpComponect");
-		comp->mPort = 5000;
+		mAccountDBUser = AddComponent("DBUser_t_account");
 
+		if (!mAccountDBUser->InitTable("t_account"))
+		{
+			ERROR_LOG("Load t_account table fail");
+			return;
+		}
 
+		// 加载所有的
+		Auto<LogicDBTable> t = mAccountDBUser->GetTable();
+		t->LoadAllRecord(mAccountDBUser.getPtr());
 	}
 
+	virtual void OnLoadRecord(ARecord record)
+	{
+		AccountData d;
+		d.mDBID = record->get(0);
+		d.mPassword = record->get(2);
+		AString account = record->get(1);
+		mAccountHash.insert(account, d);
+	}
 
+public:
+	void On(RQ_CreateDBTable &msg, RS_CreateDBTable &resp, UnitID senderID, int);
 
 	void RegisterMsg(ActorManager *pActorMgr)
 	{
-		
+		REG_ACTOR_MSG(AccountCenterActor, RQ_CreateDBTable, RS_CreateDBTable);
+		REG_COMPONENT(DBUser_t_account);
+
+		REG_ACTOR_MSG(AccountCenterActor, AC_RequestCreateAccount, CA_ResponseCreateAccount);
+		REG_ACTOR_MSG(AccountCenterActor, AC_RequestAccountData, CA_ResponseAccountData);
 	}
 };
 

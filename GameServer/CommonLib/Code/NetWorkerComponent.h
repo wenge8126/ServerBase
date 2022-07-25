@@ -9,6 +9,7 @@
 #include "ClientEvent.h"
 #include "ServerEvent.h"
 #include "Actor.h"
+#include "CommonLib.h"
 
 using namespace Logic;
 using namespace NetCloud;
@@ -18,7 +19,7 @@ using namespace NetCloud;
 
 //-------------------------------------------------------------------------
 // 使用网络功能的组件, 关于网络逻辑组件可以继承此组件直接使用网络服务功能
-class ActorDBLib_Export_H NetWorkerComponent : public Component
+class CommonLib_Export_H NetWorkerComponent : public Component
 {
 public:
 	virtual void _RegisterMsg(Logic::tEventCenter *pCenter) {}
@@ -28,7 +29,7 @@ public:
 		//connect->SetUserData(this);
 		return true;
 	}
-	virtual void OnDisconnect(HandConnect connect) {}
+	virtual void OnDisconnect(HandConnect connect) {}	
 
 public:
 	//AutoNet GetNet();

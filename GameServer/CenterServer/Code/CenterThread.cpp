@@ -18,11 +18,12 @@
 #include "SystemInfo.h"
 
 #include <windows.h>
-
+#include <process.h>
 
 #include "AsyncLoop.h"
 
 #include "AccountCenterActor.h"
+#include "RunConfigStruct.h"
 
 using namespace uWS;
 
@@ -30,7 +31,7 @@ using namespace NetCloud;
 
 using namespace std;
 
-DEFINE_RUN_CONFIG(LoginConfig)
+DEFINE_RUN_CONFIG(CenterServerConfig)
 
 void Analysis(NiceData &msg, const AString &requestData)
 {
@@ -79,7 +80,7 @@ AString CenterThread::GetTitle()
 	//ARecord serverRe = table->GetRecord("ServerArea");
 	//AString serverName = serverRe["STRING"];
 
-	bool bAccountLogin = IsAccountWeb(); // ((int)webWsAddrRe["VALUE"] <= 0);
+	
 
 	char szDir[MAX_PATH];
 	::GetCurrentDirectory(MAX_PATH - 1, szDir);
@@ -87,15 +88,13 @@ AString CenterThread::GetTitle()
 
 	{
 		AString serverName = "AccountServer";
-		auto &config = CRunConfig<LoginConfig>::mConfig;
-		title.Format("%s_%s <%d : %s>[%s://%s:%d]  v[%s] %s > "
+		auto &config = CRunConfig<CenterServerConfig>::mConfig;
+		title.Format("%s_%s <%d : %s> v[%s] %s > "
 			, GetAppName()
 			, runMode.c_str()
 			, 0
 			, serverName.ANIS().c_str()
-			,"http"
-			, config.ws_ip.c_str()
-			, config.ws_port
+	
 
 			, SERVER_VERSION_FLAG
 			, szDir
@@ -192,43 +191,53 @@ void _ConnectGate(CenterThread *pThread)
 //-------------------------------------------------------------------------
 void CenterThread::OnStart(void*)
 {
-	NiceData lineParam;
+	ServerThread::OnStart(NULL);
 
 
-	mActorManager = MEM_NEW AccountActorManager(this, config.login_node.node.ip.c_str(), config.login_node.node.port, config.login_node.node.saft_code, 2);
+	mActorManager = MEM_NEW CenterActorManager(this, config.center_node.node.ip.c_str(), config.center_node.node.port, config.center_node.node.saft_code, 2);
 
 	// Login 启动
 	{
-		auto &config = CRunConfig<LoginConfig>::mConfig;
+	
 
-		SystemInfo::ReadCommandLineParam(GetCommandLine(), lineParam);
-		int addPort = lineParam["port"];
-		if (addPort != 0)
-		{
-			config.ws_port += addPort;
-
-			AutoNice d = MEM_NEW NiceData();
-			config.ToData(d);
-			AString info;
-			RunConfig::ShowConfig(d, "login_config", info);
-			LOG("配置变更: %d ***************************************************************\r\n====================================\r\n%s====================================\r\n", addPort, info.ANIS().c_str());
-		}
 		// 连接LogicDB
 
 
-		mActorManager->RegisterActor(Actor_Account, MEM_NEW DefineActorFactory<AccountCenterActor>());
-		mActorManager->RegisterComponect("HttpComponect", MEM_NEW EventFactory<HttpComponect>());
+		mActorManager->RegisterActor(Actor_AccountCenter, MEM_NEW DefineActorFactory<AccountCenterActor>());
+		
 
-
-		mLoginActor = mActorManager->CreateActor(Actor_Account, config.login_id);
+		
 
 
 		
 
 		//CoroutineTool::AsyncCall(_ConnectGate, this);
 
-		mActorManager->mNetNode->ConnectGate(config.login_node.gate.ip.c_str(), config.login_node.gate.port, 10000);
+		CoroutineTool::AsyncCall([&]()
+		{
+			mbStartOk = mActorManager->mNetNode->AwaitConnectGate(config.center_node.gate.ip.c_str(), config.center_node.gate.port, 10000);
 
+			AutoNice param = MEM_NEW NiceData();
+			param[DBBASE] = config.account_db.mDBBASE;
+			param[DBIP] = config.account_db.mDBIP;
+			param[DBPASSWORD] = config.account_db.mDBPASSWORD;
+			param[DBPORT] = config.account_db.mDBPORT;
+			param[DBUSER] = config.account_db.mDBUSER;
+			param[TABLE_LIST] = config.account_db.mTABLE_LIST;
+			param[DBPACKET_SIZE] = 16 * 1024 * 1024;
+
+			// Update共享缓存key使用 Actor_进行ID_线程ID 组成的字符串, 生成哈希的整数
+			AString keyString;
+			int proID = _getpid();
+			keyString.Format("Actor_%d_%llu", proID, GetThreadID());
+			
+			bool b = mActorManager->AsyncInitSQLUpdate(param, "127.0.0.1", config.share_server_port, config.share_server_code, MAKE_INDEX_ID(keyString.c_str()));
+
+			NOTE_LOG("*** DB Init result > %s\r\n", b ? "succeed" : "fail");
+			if (b)
+				mLoginActor = mActorManager->CreateActor(Actor_AccountCenter, 1);
+		}
+		);
 
 		//ServerThread::OnStart(NULL);
 		//TraverseDeleteBackFiles("./");
@@ -355,8 +364,9 @@ AString CenterThread::GetServerList()
 
 
 
-bool CenterThread::IsAccountWeb()
+
+const char* CenterThread::GetAppName()
 {
-	return true;
+	return CRunConfig<CenterServerConfig>::mConfig.title.c_str();
 }
 

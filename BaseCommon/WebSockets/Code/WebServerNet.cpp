@@ -101,9 +101,9 @@ namespace uWS
 	public:
 		void AsyncResponse()
 		{
-			std::string_view response;
-			mpNet->OnResponse(mRequestString, response, mbPost, mRequestAddress);
-			
+			AString responseStr;
+			mpNet->OnResponse(mRequestString, responseStr, mbPost, mRequestAddress);
+			std::string_view response(responseStr.c_str(), responseStr.length());
 			mpHttpResonse->end(response);
 		}
 

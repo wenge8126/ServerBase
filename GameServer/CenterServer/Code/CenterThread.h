@@ -33,11 +33,8 @@ public:
 	virtual AString GetTitle() override;
 	virtual void SetTitle(const AString &title);
 
-	static bool IsAccountWeb();
-	static const char* GetAppName()
-	{
-		return CRunConfig<LoginConfig>::mConfig.title.c_str();
-	}
+	
+	static const char* GetAppName();
 
 
 public:
@@ -117,11 +114,11 @@ public:
 
 //-------------------------------------------------------------------------
 
-class AccountActorManager : public NetCloud::ActorManager
+class CenterActorManager : public NetCloud::DBActorManager
 {
 public:
-	AccountActorManager(CenterThread *pThread, const char *szCloudNodeIp, int nCloudNodePort, int nSafeCheck, int threadNum = 2)
-		: NetCloud::ActorManager(szCloudNodeIp, nCloudNodePort, nSafeCheck, threadNum)
+	CenterActorManager(CenterThread *pThread, const char *szCloudNodeIp, int nCloudNodePort, int nSafeCheck, int threadNum = 2)
+		: NetCloud::DBActorManager(szCloudNodeIp, nCloudNodePort, nSafeCheck, threadNum)
 		, mpThread(pThread)
 	{
 	}

@@ -17,7 +17,7 @@ public:
     IPAddress() { clear(false); };
 
 
-    void Full(AutoNice scrData)
+   virtual  void Full(AutoNice scrData) override
     {
         clear(false);
         CheckGet(scrData, ip);
@@ -99,7 +99,7 @@ public:
     GateNode() { clear(false); };
 
 
-    void Full(AutoNice scrData)
+   virtual  void Full(AutoNice scrData) override
     {
         clear(false);
         {
@@ -186,7 +186,7 @@ public:
     GateServerConfig() { clear(false); };
 
 
-    void Full(AutoNice scrData)
+   virtual  void Full(AutoNice scrData) override
     {
         clear(false);
         {
@@ -286,7 +286,7 @@ public:
     ShareMem() { clear(false); };
 
 
-    void Full(AutoNice scrData)
+   virtual  void Full(AutoNice scrData) override
     {
         clear(false);
         CheckGet(scrData, key);
@@ -363,7 +363,7 @@ public:
     SqlDB() { clear(false); };
 
 
-    void Full(AutoNice scrData)
+   virtual  void Full(AutoNice scrData) override
     {
         clear(false);
         CheckGet(scrData, mDBBASE);
@@ -467,7 +467,7 @@ public:
     ShareMemDBConfig() { clear(false); };
 
 
-    void Full(AutoNice scrData)
+   virtual  void Full(AutoNice scrData) override
     {
         clear(false);
         {
@@ -567,7 +567,7 @@ public:
     UserNode() { clear(false); };
 
 
-    void Full(AutoNice scrData)
+   virtual  void Full(AutoNice scrData) override
     {
         clear(false);
         {
@@ -652,7 +652,7 @@ public:
     HttpWeb() { clear(false); };
 
 
-    void Full(AutoNice scrData)
+   virtual  void Full(AutoNice scrData) override
     {
         clear(false);
         CheckGet(scrData, cert_file);
@@ -749,7 +749,7 @@ public:
     DBConfig() { clear(false); };
 
 
-    void Full(AutoNice scrData)
+   virtual  void Full(AutoNice scrData) override
     {
         clear(false);
         CheckGet(scrData, db_code);
@@ -845,76 +845,84 @@ public:
 class AccountServerConfig : public tBaseMsg
 { 
 public:
-    DBConfig db_config;		//  帐号DB配置	
-    HttpWeb sdk_web;		//  SDK充值及更新服务回调web配置(开放Http端口及证书)	(运营查询方面的转移到SDK服务器中)
-    AString title;		//  程序运行的标题
+    int account_id;		//  帐号服务器编号, 用于多帐号服务器负载
+    UserNode actor_node;		
+    AString title;		//  程序运行的标题	
+    HttpWeb web_net;		//  WebHttpNet开放给客户端使用http请求创建或验证帐号
 
 public:
     AccountServerConfig() { clear(false); };
 
 
-    void Full(AutoNice scrData)
+   virtual  void Full(AutoNice scrData) override
     {
         clear(false);
+        CheckGet(scrData, account_id);
         {
-            AutoNice d = (tNiceData*)scrData["db_config"];
-            if (d) db_config.Full(d); else LOG("No exist data db_config");
-        }
-        {
-            AutoNice d = (tNiceData*)scrData["sdk_web"];
-            if (d) sdk_web.Full(d); else LOG("No exist data sdk_web");
+            AutoNice d = (tNiceData*)scrData["actor_node"];
+            if (d) actor_node.Full(d); else LOG("No exist data actor_node");
         }
         CheckGet(scrData, title);
+        {
+            AutoNice d = (tNiceData*)scrData["web_net"];
+            if (d) web_net.Full(d); else LOG("No exist data web_net");
+        }
     }
 
     virtual void ToData(AutoNice &destData) override
     {
+        destData["account_id"] = account_id;
         {
-            AutoNice d = destData->NewNice(); d->msKey = "DBConfig"; db_config.ToData(d);
-            destData["db_config"] = d.getPtr();
-        }
-        {
-            AutoNice d = destData->NewNice(); d->msKey = "HttpWeb"; sdk_web.ToData(d);
-            destData["sdk_web"] = d.getPtr();
+            AutoNice d = destData->NewNice(); d->msKey = "UserNode"; actor_node.ToData(d);
+            destData["actor_node"] = d.getPtr();
         }
         destData["title"] = title;
+        {
+            AutoNice d = destData->NewNice(); d->msKey = "HttpWeb"; web_net.ToData(d);
+            destData["web_net"] = d.getPtr();
+        }
     }
 
     bool serialize(DataStream *destData) const override
     {
-        destData->write((short)3);
+        destData->write((short)4);
 
-        SAVE_MSG_STRUCT(db_config);
-        SAVE_MSG_STRUCT(sdk_web);
+        SAVE_MSG_VALUE(account_id, 1);
+        SAVE_MSG_STRUCT(actor_node);
         SAVE_MSG_VALUE(title, 4);
+        SAVE_MSG_STRUCT(web_net);
         return true;
     }
 
     void clear(bool bClearBuffer=false) override 
     {
-        db_config.clear(false);
-        sdk_web.clear(false);
+        account_id = 0;
+        actor_node.clear(false);
         title.setNull();
+        web_net.clear(false);
     }
 
     void copy(const tBaseMsg &otherMsg) override 
     {
         if (strcmp("AccountServerConfig", otherMsg.GetMsgName())!=0) { LOG("%s is not AccountServerConfig", otherMsg.GetMsgName()); return; }; const AccountServerConfig &other = *(const AccountServerConfig*)(&otherMsg);
-        db_config.copy(other.db_config);
-        sdk_web.copy(other.sdk_web);
+        account_id = other.account_id;
+        actor_node.copy(other.actor_node);
         title = other.title;
+        web_net.copy(other.web_net);
     }
 
     virtual const char* GetMsgName() const override { return "AccountServerConfig"; }
 
     AData get(const char *szMember) const 
     {
+        if (strcmp(szMember, "account_id")==0) { AData value; value = account_id; return value; }
         if (strcmp(szMember, "title")==0) { AData value; value = title; return value; }
         return AData();
     }
 
     bool set(const char *szMember, AData value) 
     {
+        if (strcmp(szMember, "account_id")==0) { account_id = value; return true; };
         if (strcmp(szMember, "title")==0) { title = value; return true; };
         LOG("No exist > %%s", szMember);  return false;
     }
@@ -931,8 +939,8 @@ public:
 
 };
 
-//  LogicDB 进程配置
-class LogicDBConfig : public tBaseMsg
+//  GameServer 进程配置
+class GameServerConfig : public tBaseMsg
 { 
 public:
     AString OPEN_TIME;		//  开放时间
@@ -942,13 +950,14 @@ public:
     DBConfig db_config;		//  Logic DB 配置	
     SqlDB log_sql;		//  日志服配置
     AString manager_csv_file;		//  管理员CSV配置列表文件
+    UserNode server_node;		
     AString title;		//  程序运行的标题
 
 public:
-    LogicDBConfig() { clear(false); };
+    GameServerConfig() { clear(false); };
 
 
-    void Full(AutoNice scrData)
+   virtual  void Full(AutoNice scrData) override
     {
         clear(false);
         CheckGet(scrData, OPEN_TIME);
@@ -964,6 +973,10 @@ public:
             if (d) log_sql.Full(d); else LOG("No exist data log_sql");
         }
         CheckGet(scrData, manager_csv_file);
+        {
+            AutoNice d = (tNiceData*)scrData["server_node"];
+            if (d) server_node.Full(d); else LOG("No exist data server_node");
+        }
         CheckGet(scrData, title);
     }
 
@@ -982,12 +995,16 @@ public:
             destData["log_sql"] = d.getPtr();
         }
         destData["manager_csv_file"] = manager_csv_file;
+        {
+            AutoNice d = destData->NewNice(); d->msKey = "UserNode"; server_node.ToData(d);
+            destData["server_node"] = d.getPtr();
+        }
         destData["title"] = title;
     }
 
     bool serialize(DataStream *destData) const override
     {
-        destData->write((short)8);
+        destData->write((short)9);
 
         SAVE_MSG_VALUE(OPEN_TIME, 4);
         SAVE_MSG_VALUE(SERVER_ID, 1);
@@ -996,6 +1013,7 @@ public:
         SAVE_MSG_STRUCT(db_config);
         SAVE_MSG_STRUCT(log_sql);
         SAVE_MSG_VALUE(manager_csv_file, 4);
+        SAVE_MSG_STRUCT(server_node);
         SAVE_MSG_VALUE(title, 4);
         return true;
     }
@@ -1009,12 +1027,13 @@ public:
         db_config.clear(false);
         log_sql.clear(false);
         manager_csv_file.setNull();
+        server_node.clear(false);
         title.setNull();
     }
 
     void copy(const tBaseMsg &otherMsg) override 
     {
-        if (strcmp("LogicDBConfig", otherMsg.GetMsgName())!=0) { LOG("%s is not LogicDBConfig", otherMsg.GetMsgName()); return; }; const LogicDBConfig &other = *(const LogicDBConfig*)(&otherMsg);
+        if (strcmp("GameServerConfig", otherMsg.GetMsgName())!=0) { LOG("%s is not GameServerConfig", otherMsg.GetMsgName()); return; }; const GameServerConfig &other = *(const GameServerConfig*)(&otherMsg);
         OPEN_TIME = other.OPEN_TIME;
         SERVER_ID = other.SERVER_ID;
         SERVER_NAME = other.SERVER_NAME;
@@ -1022,10 +1041,11 @@ public:
         db_config.copy(other.db_config);
         log_sql.copy(other.log_sql);
         manager_csv_file = other.manager_csv_file;
+        server_node.copy(other.server_node);
         title = other.title;
     }
 
-    virtual const char* GetMsgName() const override { return "LogicDBConfig"; }
+    virtual const char* GetMsgName() const override { return "GameServerConfig"; }
 
     AData get(const char *szMember) const 
     {
@@ -1061,97 +1081,97 @@ public:
 
 };
 
-//  AccountWeb 配置
-class AccountWebConfig : public tBaseMsg
+//  CenterServer配置
+class CenterServerConfig : public tBaseMsg
 { 
 public:
-    UserNode account_db_node;		//  连接帐号DB节点配置
-    HttpWeb login_web;		//  接受客户端请求服务器列表的Web配置
+    SqlDB account_db;		//  帐号DB数据源
+    UserNode center_node;		//  连接帐号DB节点配置	
+    int share_server_code;		//  共享落地SQL安全码
+    int share_server_port;		//  共享落地服务网络端口
     AString title;		//  程序运行的标题
-    int user_id;		//  连接DB单元的ID
-    int worker_id;		//  辅助工具单元ID
 
 public:
-    AccountWebConfig() { clear(false); };
+    CenterServerConfig() { clear(false); };
 
 
-    void Full(AutoNice scrData)
+   virtual  void Full(AutoNice scrData) override
     {
         clear(false);
         {
-            AutoNice d = (tNiceData*)scrData["account_db_node"];
-            if (d) account_db_node.Full(d); else LOG("No exist data account_db_node");
+            AutoNice d = (tNiceData*)scrData["account_db"];
+            if (d) account_db.Full(d); else LOG("No exist data account_db");
         }
         {
-            AutoNice d = (tNiceData*)scrData["login_web"];
-            if (d) login_web.Full(d); else LOG("No exist data login_web");
+            AutoNice d = (tNiceData*)scrData["center_node"];
+            if (d) center_node.Full(d); else LOG("No exist data center_node");
         }
+        CheckGet(scrData, share_server_code);
+        CheckGet(scrData, share_server_port);
         CheckGet(scrData, title);
-        CheckGet(scrData, user_id);
-        CheckGet(scrData, worker_id);
     }
 
     virtual void ToData(AutoNice &destData) override
     {
         {
-            AutoNice d = destData->NewNice(); d->msKey = "UserNode"; account_db_node.ToData(d);
-            destData["account_db_node"] = d.getPtr();
+            AutoNice d = destData->NewNice(); d->msKey = "SqlDB"; account_db.ToData(d);
+            destData["account_db"] = d.getPtr();
         }
         {
-            AutoNice d = destData->NewNice(); d->msKey = "HttpWeb"; login_web.ToData(d);
-            destData["login_web"] = d.getPtr();
+            AutoNice d = destData->NewNice(); d->msKey = "UserNode"; center_node.ToData(d);
+            destData["center_node"] = d.getPtr();
         }
+        destData["share_server_code"] = share_server_code;
+        destData["share_server_port"] = share_server_port;
         destData["title"] = title;
-        destData["user_id"] = user_id;
-        destData["worker_id"] = worker_id;
     }
 
     bool serialize(DataStream *destData) const override
     {
         destData->write((short)5);
 
-        SAVE_MSG_STRUCT(account_db_node);
-        SAVE_MSG_STRUCT(login_web);
+        SAVE_MSG_STRUCT(account_db);
+        SAVE_MSG_STRUCT(center_node);
+        SAVE_MSG_VALUE(share_server_code, 1);
+        SAVE_MSG_VALUE(share_server_port, 1);
         SAVE_MSG_VALUE(title, 4);
-        SAVE_MSG_VALUE(user_id, 1);
-        SAVE_MSG_VALUE(worker_id, 1);
         return true;
     }
 
     void clear(bool bClearBuffer=false) override 
     {
-        account_db_node.clear(false);
-        login_web.clear(false);
+        account_db.clear(false);
+        center_node.clear(false);
+        share_server_code = 0;
+        share_server_port = 0;
         title.setNull();
-        user_id = 0;
-        worker_id = 0;
     }
 
     void copy(const tBaseMsg &otherMsg) override 
     {
-        if (strcmp("AccountWebConfig", otherMsg.GetMsgName())!=0) { LOG("%s is not AccountWebConfig", otherMsg.GetMsgName()); return; }; const AccountWebConfig &other = *(const AccountWebConfig*)(&otherMsg);
-        account_db_node.copy(other.account_db_node);
-        login_web.copy(other.login_web);
+        if (strcmp("CenterServerConfig", otherMsg.GetMsgName())!=0) { LOG("%s is not CenterServerConfig", otherMsg.GetMsgName()); return; }; const CenterServerConfig &other = *(const CenterServerConfig*)(&otherMsg);
+        account_db.copy(other.account_db);
+        center_node.copy(other.center_node);
+        share_server_code = other.share_server_code;
+        share_server_port = other.share_server_port;
         title = other.title;
-        user_id = other.user_id;
-        worker_id = other.worker_id;
     }
 
-    virtual const char* GetMsgName() const override { return "AccountWebConfig"; }
+    virtual const char* GetMsgName() const override { return "CenterServerConfig"; }
 
     AData get(const char *szMember) const 
     {
+        if (strcmp(szMember, "share_server_code")==0) { AData value; value = share_server_code; return value; }
+        if (strcmp(szMember, "share_server_port")==0) { AData value; value = share_server_port; return value; }
         if (strcmp(szMember, "title")==0) { AData value; value = title; return value; }
-        if (strcmp(szMember, "user_id")==0) { AData value; value = user_id; return value; }
-        if (strcmp(szMember, "worker_id")==0) { AData value; value = worker_id; return value; }
         return AData();
     }
 
     bool set(const char *szMember, AData value) 
     {
+        if (strcmp(szMember, "share_server_code")==0) { share_server_code = value; return true; };
+        if (strcmp(szMember, "share_server_port")==0) { share_server_port = value; return true; };
         if (strcmp(szMember, "title")==0) { title = value; return true; };
-        if (strcmp(szMember, "user_id")==0) { user_id = value; return true; };
-        if (strcmp(szMember, "worker_id")==0) { worker_id = value; return true; };
         LOG("No exist > %%s", szMember);  return false;
     }
 
@@ -1182,7 +1202,7 @@ public:
     DBBackConfig() { clear(false); };
 
 
-    void Full(AutoNice scrData)
+   virtual  void Full(AutoNice scrData) override
     {
         clear(false);
         CheckGet(scrData, cert_file);
@@ -1301,7 +1321,7 @@ public:
     LogServerConfig() { clear(false); };
 
 
-    void Full(AutoNice scrData)
+   virtual  void Full(AutoNice scrData) override
     {
         clear(false);
         CheckGet(scrData, AUTHORIZATION1);
@@ -1466,7 +1486,7 @@ public:
     ShareDBConfig() { clear(false); };
 
 
-    void Full(AutoNice scrData)
+   virtual  void Full(AutoNice scrData) override
     {
         clear(false);
         {
@@ -1548,7 +1568,7 @@ public:
     LogicActorDBConfig() { clear(false); };
 
 
-    void Full(AutoNice scrData)
+   virtual  void Full(AutoNice scrData) override
     {
         clear(false);
         {
@@ -1664,7 +1684,7 @@ public:
     LoginConfig() { clear(false); };
 
 
-    void Full(AutoNice scrData)
+   virtual  void Full(AutoNice scrData) override
     {
         clear(false);
         CheckGet(scrData, cert_file);
@@ -1777,6 +1797,9 @@ public:
 class RunConfigData : public tBaseMsg
 { 
 public:
+    AccountServerConfig account_config;		//  帐号服务器配置
+    CenterServerConfig center_config;		//  世界中心服务器配置
+    GameServerConfig game_config;		//  游戏服务器配置	
     GateServerConfig gate_config;		//  Gata配置	
     LogicActorDBConfig logic_actor_config;		//  逻辑Actor服务器配置
     LoginConfig login_config;		//  登陆进程配置
@@ -1786,9 +1809,21 @@ public:
     RunConfigData() { clear(false); };
 
 
-    void Full(AutoNice scrData)
+   virtual  void Full(AutoNice scrData) override
     {
         clear(false);
+        {
+            AutoNice d = (tNiceData*)scrData["account_config"];
+            if (d) account_config.Full(d); else LOG("No exist data account_config");
+        }
+        {
+            AutoNice d = (tNiceData*)scrData["center_config"];
+            if (d) center_config.Full(d); else LOG("No exist data center_config");
+        }
+        {
+            AutoNice d = (tNiceData*)scrData["game_config"];
+            if (d) game_config.Full(d); else LOG("No exist data game_config");
+        }
         {
             AutoNice d = (tNiceData*)scrData["gate_config"];
             if (d) gate_config.Full(d); else LOG("No exist data gate_config");
@@ -1810,6 +1845,18 @@ public:
     virtual void ToData(AutoNice &destData) override
     {
         {
+            AutoNice d = destData->NewNice(); d->msKey = "AccountServerConfig"; account_config.ToData(d);
+            destData["account_config"] = d.getPtr();
+        }
+        {
+            AutoNice d = destData->NewNice(); d->msKey = "CenterServerConfig"; center_config.ToData(d);
+            destData["center_config"] = d.getPtr();
+        }
+        {
+            AutoNice d = destData->NewNice(); d->msKey = "GameServerConfig"; game_config.ToData(d);
+            destData["game_config"] = d.getPtr();
+        }
+        {
             AutoNice d = destData->NewNice(); d->msKey = "GateServerConfig"; gate_config.ToData(d);
             destData["gate_config"] = d.getPtr();
         }
@@ -1829,8 +1876,11 @@ public:
 
     bool serialize(DataStream *destData) const override
     {
-        destData->write((short)4);
+        destData->write((short)7);
 
+        SAVE_MSG_STRUCT(account_config);
+        SAVE_MSG_STRUCT(center_config);
+        SAVE_MSG_STRUCT(game_config);
         SAVE_MSG_STRUCT(gate_config);
         SAVE_MSG_STRUCT(logic_actor_config);
         SAVE_MSG_STRUCT(login_config);
@@ -1840,6 +1890,9 @@ public:
 
     void clear(bool bClearBuffer=false) override 
     {
+        account_config.clear(false);
+        center_config.clear(false);
+        game_config.clear(false);
         gate_config.clear(false);
         logic_actor_config.clear(false);
         login_config.clear(false);
@@ -1849,6 +1902,9 @@ public:
     void copy(const tBaseMsg &otherMsg) override 
     {
         if (strcmp("RunConfigData", otherMsg.GetMsgName())!=0) { LOG("%s is not RunConfigData", otherMsg.GetMsgName()); return; }; const RunConfigData &other = *(const RunConfigData*)(&otherMsg);
+        account_config.copy(other.account_config);
+        center_config.copy(other.center_config);
+        game_config.copy(other.game_config);
         gate_config.copy(other.gate_config);
         logic_actor_config.copy(other.logic_actor_config);
         login_config.copy(other.login_config);
@@ -1884,7 +1940,7 @@ public:
     static const char* CommentString()
      {
         static const char *gCommentString = 
-                "ewogICAiQWNjb3VudFNlcnZlckNvbmZpZyIgOiB7CiAgICAgICJfc3RydWN0XyIgOiAiIiwKICAgICAgImRiX2NvbmZpZyIgOiAiIOW4kOWPt0RC6YWN572uXHQiLAogICAgICAiZGJfY29uZmlnX190eXBlX18iIDogIkRCQ29uZmlnIiwKICAgICAgInNka193ZWIiIDogIiBTREvlhYXlgLzlj4rmm7TmlrDmnI3liqHlm57osIN3ZWLphY3nva4o5byA5pS+SHR0cOerr+WPo+WPiuivgeS5pilcdCjov5DokKXmn6Xor6LmlrnpnaLnmoTovaznp7vliLBTREvmnI3liqHlmajkuK0pIiwKICAgICAgInNka193ZWJfX3R5cGVfXyIgOiAiSHR0cFdlYiIsCiAgICAgICJ0aXRsZSIgOiAiIOeoi+W6j+i/kOihjOeahOagh+mimCIKICAgfSwKICAgIkFjY291bnRTZXJ2ZXJDb25maWdfX2xpc3RfXyIgOiBbICJ0aXRsZSIsICJkYl9jb25maWciLCAic2RrX3dlYiIgXSwKICAgIkFjY291bnRTZXJ2ZXJDb25maWdfaW5mb18iIDogIiBBY2NvdW50REIg5biQ5Y+3RELov5vnqIvphY3nva4iLAogICAiQWNjb3VudFdlYkNvbmZpZyIgOiB7CiAgICAgICJfc3RydWN0XyIgOiAiIiwKICAgICAgImFjY291bnRfZGJfbm9kZSIgOiAiIOi/nuaOpeW4kOWPt0RC6IqC54K56YWN572uIiwKICAgICAgImFjY291bnRfZGJfbm9kZV9fdHlwZV9fIiA6ICJVc2VyTm9kZSIsCiAgICAgICJsb2dpbl93ZWIiIDogIiDmjqXlj5flrqLmiLfnq6/or7fmsYLmnI3liqHlmajliJfooajnmoRXZWLphY3nva4iLAogICAgICAibG9naW5fd2ViX190eXBlX18iIDogIkh0dHBXZWIiLAogICAgICAidGl0bGUiIDogIiDnqIvluo/ov5DooYznmoTmoIfpopgiLAogICAgICAidXNlcl9pZCIgOiAiIOi/nuaOpURC5Y2V5YWD55qESUQiLAogICAgICAid29ya2VyX2lkIiA6ICIg6L6F5Yqp5bel5YW35Y2V5YWDSUQiCiAgIH0sCiAgICJBY2NvdW50V2ViQ29uZmlnX19saXN0X18iIDogWyAidGl0bGUiLCAiYWNjb3VudF9kYl9ub2RlIiwgInVzZXJfaWQiLCAibG9naW5fd2ViIiwgIndvcmtlcl9pZCIgXSwKICAgIkFjY291bnRXZWJDb25maWdfaW5mb18iIDogIiBBY2NvdW50V2ViIOmFjee9riIsCiAgICJEQkJhY2tDb25maWciIDogewogICAgICAiX3N0cnVjdF8iIDogIiIsCiAgICAgICJjZXJ0X2ZpbGUiIDogIiBwZW3or4Hkuabmlofku7YiLAogICAgICAia2V5X2ZpbGUiIDogIiBzc2wgS2V5IOivgeS5piIsCiAgICAgICJwYXNzd29yZCIgOiAiIOWvhueggSIsCiAgICAgICJzcWxfY29uZmlnIiA6ICIgTVlTUUzphY3nva4iLAogICAgICAic3FsX2NvbmZpZ19fdHlwZV9fIiA6ICJTcWxEQiIsCiAgICAgICJ0aXRsZSIgOiAiIOeoi+W6j+i/kOihjOeahOagh+mimFx0IiwKICAgICAgIndzX3BvcnQiIDogIiDkuK3ovax3c+err+WPoyIKICAgfSwKICAgIkRCQmFja0NvbmZpZ19fbGlzdF9fIiA6IFsgInRpdGxlIiwgInNxbF9jb25maWciLCAid3NfcG9ydCIsICJrZXlfZmlsZSIsICJjZXJ0X2ZpbGUiLCAicGFzc3dvcmQiIF0sCiAgICJEQkJhY2tDb25maWdfaW5mb18iIDogIiDku47lupPlpIfku73ov5vnqIsiLAogICAiREJDb25maWciIDogewogICAgICAiX3N0cnVjdF8iIDogIiIsCiAgICAgICJkYl9jb2RlIiA6ICIgRELnvJblj7csIDDml7bkuLrkuLtEQiwg5o+Q5L6bRELooajmoLzmsYfmgLvmnI3liqEiLAogICAgICAiZGJfbm9kZSIgOiAiIERC5LqR6IqC54K55YiG6YWN5Zyw5Z2AKOS4juWFtuS7lui/nuaOpeWcqEdhdGXkuIrnmoToioLngrnkupLov54pIiwKICAgICAgImRiX25vZGVfX3R5cGVfXyIgOiAiVXNlck5vZGUiLAogICAgICAicmVjb3JkX3VwZGF0ZV9taWxzZWNvbmQiIDogIiDorrDlvZXmo4Dmn6Xmm7TmlrDokL3lnLDnmoTpl7TpmpTmr6vnp5Lml7bpl7QsIOeUqOS6juiwg+aVtERC5pW05L2T5oCn6IO9LCDmraTml7bpl7TotorlpKcsIOaAp+iDvei2iumrmCwg5L2G5a6J5YWo6JC95Zyw6aOO6Zmp6LaK5aSnICjmjqjojZDlgLw6IDEwMDB+MTAwMDApIiwKICAgICAgInNoYXJlX2tleSIgOiAiIERC5pWw5o2u5bqT6L+e5o6l55qE5YWx5Lqr5YaF5a2Y6YWN572uLCBNeXNxbCDkv6Hmga/pgJrov4fmtojmga/ku47lr7nlupTlhbHkuqvlhoXlrZjov5vnqIvojrflj5YiLAogICAgICAic2hhcmVfa2V5X190eXBlX18iIDogIlNoYXJlTWVtIiwKICAgICAgIndvcmtlcl9pZCIgOiAiIOi+heWKqeW3peWFt+WNleWFg0lEIgogICB9LAogICAiREJDb25maWdfX2xpc3RfXyIgOiBbCiAgICAgICJkYl9jb2RlIiwKICAgICAgImRiX25vZGUiLAogICAgICAic2hhcmVfa2V5IiwKICAgICAgIndvcmtlcl9pZCIsCiAgICAgICJyZWNvcmRfdXBkYXRlX21pbHNlY29uZCIKICAgXSwKICAgIkRCQ29uZmlnX2luZm9fIiA6ICIiLAogICAiR2F0ZU5vZGUiIDogewogICAgICAiX3N0cnVjdF8iIDogIiIsCiAgICAgICJhZGRyZXNzIiA6ICIgR2F0ZU5vZGXlnLDlnYAgIiwKICAgICAgImFkZHJlc3NfX3R5cGVfXyIgOiAiSVBBZGRyZXNzIiwKICAgICAgImZpeF9jb3VudCIgOiAiIOWbuuWumkdhdGXmlbDph48iLAogICAgICAiZ2F0ZV9jb2RlIiA6ICIg57yW5Y+3KDB+Zml4X2NvdW50LTEpIgogICB9LAogICAiR2F0ZU5vZGVfX2xpc3RfXyIgOiBbICJmaXhfY291bnQiLCAiZ2F0ZV9jb2RlIiwgImFkZHJlc3MiIF0sCiAgICJHYXRlTm9kZV9pbmZvXyIgOiAiIEdhdGVOb2RlIOeUqOS6jkdhdGXkuYvpl7Tnu4TnvZEiLAogICAiR2F0ZVNlcnZlckNvbmZpZyIgOiB7CiAgICAgICJfc3RydWN0XyIgOiAiIiwKICAgICAgImdhdGVfbm9kZSIgOiAiIEdhdGVOb2RlIOeUqOS6jkdhdGXkuYvpl7Tnu4TnvZEiLAogICAgICAiZ2F0ZV9ub2RlX190eXBlX18iIDogIkdhdGVOb2RlIiwKICAgICAgImdhdGVfc2VydmVyIiA6ICIgR2F0ZeaOpeWPl+WNleWFg+iKgueCuei/nuaOpeW8gOaUvueahOacjeWKoeWcsOWdgCIsCiAgICAgICJnYXRlX3NlcnZlcl9fdHlwZV9fIiA6ICJJUEFkZHJlc3MiLAogICAgICAibWFpbl9nYXRlIiA6ICIgR2F0ZeaOpeWPl+WNleWFg+iKgueCuei/nuaOpeW8gOaUvueahOacjeWKoeWcsOWdgCIsCiAgICAgICJtYWluX2dhdGVfX3R5cGVfXyIgOiAiSVBBZGRyZXNzIiwKICAgICAgInRpdGxlIiA6ICIg56iL5bqP6L+Q6KGM55qE5qCH6aKYIgogICB9LAogICAiR2F0ZVNlcnZlckNvbmZpZ19fbGlzdF9fIiA6IFsgInRpdGxlIiwgImdhdGVfbm9kZSIsICJnYXRlX3NlcnZlciIsICJtYWluX2dhdGUiIF0sCiAgICJHYXRlU2VydmVyQ29uZmlnX2luZm9fIiA6ICIgQ2xvdWRlR2F0ZSDnqIvluo/phY3nva4iLAogICAiSHR0cFdlYiIgOiB7CiAgICAgICJfc3RydWN0XyIgOiAiIiwKICAgICAgImNlcnRfZmlsZSIgOiAiIOivgeS5puaWh+S7tiIsCiAgICAgICJodHRwX2FkZHJlc3MiIDogIiDlvIDmlL5IVFRQ5Zyw5Z2AKOeUqOS6juaPkOS+m+e7mei/nuaOpei/m+eoiykiLAogICAgICAia2V5X2ZpbGUiIDogIiDor4HkuaZrZXkucGVt5paH5Lu2IiwKICAgICAgInBhc3N3b3JkIiA6ICIg6K+B5Lmm5a+G56CBIiwKICAgICAgInBvcnQiIDogIiDlvIDmlL7nq6/lj6MiCiAgIH0sCiAgICJIdHRwV2ViX19saXN0X18iIDogWyAiaHR0cF9hZGRyZXNzIiwgInBvcnQiLCAia2V5X2ZpbGUiLCAiY2VydF9maWxlIiwgInBhc3N3b3JkIiBdLAogICAiSHR0cFdlYl9pbmZvXyIgOiAiIEh0dHBXZWLmnI3liqEiLAogICAiSVBBZGRyZXNzIiA6IHsKICAgICAgIl9zdHJ1Y3RfIiA6ICIiLAogICAgICAiaXAiIDogIiBJUOWcsOWdgCzmlK/mjIHln5/lkI0iLAogICAgICAicG9ydCIgOiAiIOerr+WPoyIsCiAgICAgICJzYWZ0X2NvZGUiIDogIiDlronlhajnoIEsIOeUqOS6jumBv+WFjee9kee7nOi/nuaOpea3t+S5seWPiuinhOmBv+acquefpei/nuaOpeaOpeWFpSIKICAgfSwKICAgIklQQWRkcmVzc19fbGlzdF9fIiA6IFsgImlwIiwgInBvcnQiLCAic2FmdF9jb2RlIiBdLAogICAiSVBBZGRyZXNzX2luZm9fIiA6ICIg572R57uc5Zyw5Z2AIiwKICAgIkxvZ1NlcnZlckNvbmZpZyIgOiB7CiAgICAgICJBVVRIT1JJWkFUSU9OMSIgOiAiIOW8gOaUvuadg+mZkCIsCiAgICAgICJBVVRIT1JJWkFUSU9OMiIgOiAiICIsCiAgICAgICJfc3RydWN0XyIgOiAiIiwKICAgICAgImNlcnRfZmlsZSIgOiAiIHBlbeivgeS5puaWh+S7tiIsCiAgICAgICJrZXlfZmlsZSIgOiAiIHNzbCBLZXkg6K+B5LmmIiwKICAgICAgIm1EQklQIiA6ICIgTXlzcWwg5Zyw5Z2AIiwKICAgICAgIm1EQk5BTUUiIDogIiDlupPlkI0iLAogICAgICAibURCUEFTU1dPUkQiIDogIiDov57mjqXlr4bnoIEiLAogICAgICAibURCUE9SVCIgOiAiIE15c3FsIOerr+WPoyIsCiAgICAgICJtREJVU0VSIiA6ICIgTXlzcWznlKjmiLflkI0iLAogICAgICAibUlwIiA6ICIgVURQ5o6l5pS25Zyw5Z2AIiwKICAgICAgIm1Qb3J0IiA6ICIgVURQ5o6l5pS256uv5Y+jIiwKICAgICAgInBhc3N3b3JkIiA6ICIg5a+G56CBIiwKICAgICAgInRpdGxlIiA6ICIg56iL5bqP6L+Q6KGM55qE5qCH6aKYIiwKICAgICAgIndlYl9hZGRyIiA6ICIg5byA5pS+d3PlnLDlnYAiLAogICAgICAid2ViX3BvcnQiIDogIiDlvIDmlL53c+err+WPoyIKICAgfSwKICAgIkxvZ1NlcnZlckNvbmZpZ19fbGlzdF9fIiA6IFsKICAgICAgInRpdGxlIiwKICAgICAgIm1JcCIsCiAgICAgICJtUG9ydCIsCiAgICAgICJtREJOQU1FIiwKICAgICAgIm1EQklQIiwKICAgICAgIm1EQlBPUlQiLAogICAgICAibURCVVNFUiIsCiAgICAgICJtREJQQVNTV09SRCIsCiAgICAgICJBVVRIT1JJWkFUSU9OMSIsCiAgICAgICJBVVRIT1JJWkFUSU9OMiIsCiAgICAgICJ3ZWJfYWRkciIsCiAgICAgICJ3ZWJfcG9ydCIsCiAgICAgICJrZXlfZmlsZSIsCiAgICAgICJjZXJ0X2ZpbGUiLAogICAgICAicGFzc3dvcmQiCiAgIF0sCiAgICJMb2dTZXJ2ZXJDb25maWdfaW5mb18iIDogIiDml6Xlv5fmnI0iLAogICAiTG9naWNBY3RvckRCQ29uZmlnIiA6IHsKICAgICAgIl9zdHJ1Y3RfIiA6ICIiLAogICAgICAiZGF0YV9kYl9ub2RlIiA6ICIg6L+e5o6lR2F0ZeiKgueCuemFjee9rlx0IiwKICAgICAgImRhdGFfZGJfbm9kZV9fdHlwZV9fIiA6ICJVc2VyTm9kZSIsCiAgICAgICJzaGFyZV9zZXJ2ZXJfY29kZSIgOiAiIOWFseS6q+iQveWcsFNRTOWuieWFqOeggSIsCiAgICAgICJzaGFyZV9zZXJ2ZXJfcG9ydCIgOiAiIOWFseS6q+iQveWcsOacjeWKoee9kee7nElQIiwKICAgICAgInNxbF9kYiIgOiAiIE1ZU1FM5pWw5o2u5bqT6YWN572uIiwKICAgICAgInNxbF9kYl9fdHlwZV9fIiA6ICJTcWxEQiIsCiAgICAgICJ0aXRsZSIgOiAiIOeoi+W6j+i/kOihjOeahOagh+mimCIsCiAgICAgICJ3b3JrZXJfaWQiIDogIiDnur/nqIvlhoVVbml05a+56LGh5YiG6YWN55qESUQiCiAgIH0sCiAgICJMb2dpY0FjdG9yREJDb25maWdfX2xpc3RfXyIgOiBbCiAgICAgICJ0aXRsZSIsCiAgICAgICJzcWxfZGIiLAogICAgICAic2hhcmVfc2VydmVyX3BvcnQiLAogICAgICAic2hhcmVfc2VydmVyX2NvZGUiLAogICAgICAiZGF0YV9kYl9ub2RlIiwKICAgICAgIndvcmtlcl9pZCIKICAgXSwKICAgIkxvZ2ljQWN0b3JEQkNvbmZpZ19pbmZvXyIgOiAiIOmAu+i+kUFjdG9y5pyN5Yqh5Zmo6YWN572uIiwKICAgIkxvZ2ljREJDb25maWciIDogewogICAgICAiT1BFTl9USU1FIiA6ICIg5byA5pS+5pe26Ze0IiwKICAgICAgIlNFUlZFUl9JRCIgOiAiIOa4uOaIj+WMuklEIiwKICAgICAgIlNFUlZFUl9OQU1FIiA6ICIg5ri45oiP5Yy65ZCN56ewIiwKICAgICAgIlNFUlZFUl9UWVBFIiA6ICIg5pyN5Yqh5Zmo57G75Z6LIiwKICAgICAgIl9zdHJ1Y3RfIiA6ICIiLAogICAgICAiZGJfY29uZmlnIiA6ICIgTG9naWMgREIg6YWN572uXHQiLAogICAgICAiZGJfY29uZmlnX190eXBlX18iIDogIkRCQ29uZmlnIiwKICAgICAgImxvZ19zcWwiIDogIiDml6Xlv5fmnI3phY3nva4iLAogICAgICAibG9nX3NxbF9fdHlwZV9fIiA6ICJTcWxEQiIsCiAgICAgICJtYW5hZ2VyX2Nzdl9maWxlIiA6ICIg566h55CG5ZGYQ1NW6YWN572u5YiX6KGo5paH5Lu2IiwKICAgICAgInRpdGxlIiA6ICIg56iL5bqP6L+Q6KGM55qE5qCH6aKYIgogICB9LAogICAiTG9naWNEQkNvbmZpZ19fbGlzdF9fIiA6IFsKICAgICAgInRpdGxlIiwKICAgICAgImRiX2NvbmZpZyIsCiAgICAgICJsb2dfc3FsIiwKICAgICAgIlNFUlZFUl9JRCIsCiAgICAgICJTRVJWRVJfTkFNRSIsCiAgICAgICJPUEVOX1RJTUUiLAogICAgICAibWFuYWdlcl9jc3ZfZmlsZSIsCiAgICAgICJTRVJWRVJfVFlQRSIKICAgXSwKICAgIkxvZ2ljREJDb25maWdfaW5mb18iIDogIiBMb2dpY0RCIOi/m+eoi+mFjee9riIsCiAgICJMb2dpbkNvbmZpZyIgOiB7CiAgICAgICJfc3RydWN0XyIgOiAiIiwKICAgICAgImNlcnRfZmlsZSIgOiAiIHBlbeivgeS5puaWh+S7tiIsCiAgICAgICJrZXlfZmlsZSIgOiAiIHNzbCBLZXkg6K+B5LmmIiwKICAgICAgImxvZ2luX2lkIiA6ICIg6L+e5o6lRELljZXlhYPnmoRJRCAgMTAwMCAyMDAwIOS4uuWMuuWPtywg5bC+5pWw5Li655m76ZmG5pyN5Yqh5Zmo55qESUQiLAogICAgICAibG9naW5fbm9kZSIgOiAiIOi/nuaOpSBEYXRhIERCXHQiLAogICAgICAibG9naW5fbm9kZV9fdHlwZV9fIiA6ICJVc2VyTm9kZSIsCiAgICAgICJwYXNzd29yZCIgOiAiIOWvhueggSIsCiAgICAgICJ0aXRsZSIgOiAiIOeoi+W6j+i/kOihjOeahOagh+mimCIsCiAgICAgICJ3c19pcCIgOiAiIOW8gOaUvndz5Zyw5Z2AIiwKICAgICAgIndzX3BvcnQiIDogIiDlvIDmlL53c+err+WPoyIKICAgfSwKICAgIkxvZ2luQ29uZmlnX19saXN0X18iIDogWwogICAgICAidGl0bGUiLAogICAgICAibG9naW5fbm9kZSIsCiAgICAgICJsb2dpbl9pZCIsCiAgICAgICJ3c19pcCIsCiAgICAgICJ3c19wb3J0IiwKICAgICAgImtleV9maWxlIiwKICAgICAgImNlcnRfZmlsZSIsCiAgICAgICJwYXNzd29yZCIKICAgXSwKICAgIkxvZ2luQ29uZmlnX2luZm9fIiA6ICIgTG9naW5Db25maWcg6L+b56iL6YWN572uIiwKICAgIlJ1bkNvbmZpZ0RhdGEiIDogewogICAgICAiX3N0cnVjdF8iIDogIiIsCiAgICAgICJnYXRlX2NvbmZpZyIgOiAiIEdhdGHphY3nva5cdCIsCiAgICAgICJnYXRlX2NvbmZpZ19fdHlwZV9fIiA6ICJHYXRlU2VydmVyQ29uZmlnIiwKICAgICAgImxvZ2ljX2FjdG9yX2NvbmZpZyIgOiAiIOmAu+i+kUFjdG9y5pyN5Yqh5Zmo6YWN572uIiwKICAgICAgImxvZ2ljX2FjdG9yX2NvbmZpZ19fdHlwZV9fIiA6ICJMb2dpY0FjdG9yREJDb25maWciLAogICAgICAibG9naW5fY29uZmlnIiA6ICIg55m76ZmG6L+b56iL6YWN572uIiwKICAgICAgImxvZ2luX2NvbmZpZ19fdHlwZV9fIiA6ICJMb2dpbkNvbmZpZyIsCiAgICAgICJzaGFyZV9kYl9jb25maWciIDogIiDpgJrnlKhEQuWFseS6q+iQveWcsOacjeWKoeWZqCIsCiAgICAgICJzaGFyZV9kYl9jb25maWdfX3R5cGVfXyIgOiAiU2hhcmVEQkNvbmZpZyIKICAgfSwKICAgIlJ1bkNvbmZpZ0RhdGFfX2xpc3RfXyIgOiBbCiAgICAgICJzaGFyZV9kYl9jb25maWciLAogICAgICAibG9naWNfYWN0b3JfY29uZmlnIiwKICAgICAgImxvZ2luX2NvbmZpZyIsCiAgICAgICJnYXRlX2NvbmZpZyIKICAgXSwKICAgIlJ1bkNvbmZpZ0RhdGFfaW5mb18iIDogIiDlhajpg6jnqIvluo/ov5DooYzphY3nva4iLAogICAiU2hhcmVEQkNvbmZpZyIgOiB7CiAgICAgICJfc3RydWN0XyIgOiAiIiwKICAgICAgInNlcnZlcl9hZGRyZXNzIiA6ICIg5byA5pS+57uZ6YC76L6R5L2/55So6L+b56iL55qE572R57uc5pyN5YqhXHQiLAogICAgICAic2VydmVyX2FkZHJlc3NfX3R5cGVfXyIgOiAiSVBBZGRyZXNzIiwKICAgICAgInRpdGxlIiA6ICIg56iL5bqP6L+Q6KGM55qE5qCH6aKYIgogICB9LAogICAiU2hhcmVEQkNvbmZpZ19fbGlzdF9fIiA6IFsgInRpdGxlIiwgInNlcnZlcl9hZGRyZXNzIiBdLAogICAiU2hhcmVEQkNvbmZpZ19pbmZvXyIgOiAiIOmAmueUqERC5YWx5Lqr6JC95Zyw5pyN5Yqh5ZmoIiwKICAgIlNoYXJlTWVtIiA6IHsKICAgICAgIl9zdHJ1Y3RfIiA6ICIiLAogICAgICAia2V5IiA6ICIg5YWx5Lqr5YaF5a2Y5YiG6YWNS0VZLOeUqOS6juWFseS6q+WGheWtmOa2iOaBr+mAmumBkyIsCiAgICAgICJzaXplIiA6ICIg5YWx5Lqr5YaF5a2Y5YiG6YWN5aSn5bCPLOaOqOiNkOmFjee9riAyMTAwMDAwIOe6pjJNLOaUtuWPkeWQhDFNIgogICB9LAogICAiU2hhcmVNZW1EQkNvbmZpZyIgOiB7CiAgICAgICJfc3RydWN0XyIgOiAiIiwKICAgICAgInNoYXJlX2tleSIgOiAiIOWFseS6q+WGheWtmOmFjee9riIsCiAgICAgICJzaGFyZV9rZXlfX3R5cGVfXyIgOiAiU2hhcmVNZW0iLAogICAgICAic3FsX2JhY2tfZGIiIDogIiBNWVNRTOWkh+S7veW6k+i/nuaOpemFjee9riIsCiAgICAgICJzcWxfYmFja19kYl9fdHlwZV9fIiA6ICJTcWxEQiIsCiAgICAgICJzcWxfZGIiIDogIiBNWVNRTOi/nuaOpemFjee9riIsCiAgICAgICJzcWxfZGJfX3R5cGVfXyIgOiAiU3FsREIiLAogICAgICAidGl0bGUiIDogIiDnqIvluo/ov5DooYznmoTmoIfpopgiCiAgIH0sCiAgICJTaGFyZU1lbURCQ29uZmlnX19saXN0X18iIDogWyAidGl0bGUiLCAic2hhcmVfa2V5IiwgInNxbF9kYiIsICJzcWxfYmFja19kYiIgXSwKICAgIlNoYXJlTWVtREJDb25maWdfaW5mb18iIDogIiDlhbHkuqvlhoXlrZjov5vnqIvphY3nva4iLAogICAiU2hhcmVNZW1fX2xpc3RfXyIgOiBbICJrZXkiLCAic2l6ZSIgXSwKICAgIlNoYXJlTWVtX2luZm9fIiA6ICIg5YWx5Lqr5YaF5a2Y5Y+C5pWwIiwKICAgIlNxbERCIiA6IHsKICAgICAgIl9zdHJ1Y3RfIiA6ICIiLAogICAgICAibURCQkFTRSIgOiAiIERC6L+e5o6l5bqTLCDlj6/ku6XkuLrnqbosIOihqOekuui/nuaOpSB0ZXN0IiwKICAgICAgIm1EQklQIiA6ICIgTXlzcWwg5Zyw5Z2AIiwKICAgICAgIm1EQlBBU1NXT1JEIiA6ICIg6L+e5o6l5a+G56CBIiwKICAgICAgIm1EQlBPUlQiIDogIiBNeXNxbCDnq6/lj6MiLAogICAgICAibURCVVNFUiIgOiAiIE15c3Fs55So5oi35ZCNIiwKICAgICAgIm1UQUJMRV9MSVNUIiA6ICIg6KGo5qC85Yqg6L295YiX6KGoICjliJvlu7pEQuihqOagvOaXtiwg6Ieq5Yqo55Sf5oiQKSIKICAgfSwKICAgIlNxbERCX19saXN0X18iIDogWwogICAgICAibURCQkFTRSIsCiAgICAgICJtREJJUCIsCiAgICAgICJtREJQT1JUIiwKICAgICAgIm1EQlVTRVIiLAogICAgICAibURCUEFTU1dPUkQiLAogICAgICAibVRBQkxFX0xJU1QiCiAgIF0sCiAgICJTcWxEQl9pbmZvXyIgOiAiIiwKICAgIlVzZXJOb2RlIiA6IHsKICAgICAgIl9zdHJ1Y3RfIiA6ICIiLAogICAgICAiZ2F0ZSIgOiAiIOi/nuaOpeeahEdhdGXmnI3liqHlnLDlnYAiLAogICAgICAiZ2F0ZV9fdHlwZV9fIiA6ICJJUEFkZHJlc3MiLAogICAgICAibm9kZSIgOiAiIOeUqOaIt+iKgueCueW9k+WJjeWIhumFjeWcsOWdgCIsCiAgICAgICJub2RlX190eXBlX18iIDogIklQQWRkcmVzcyIKICAgfSwKICAgIlVzZXJOb2RlX19saXN0X18iIDogWyAibm9kZSIsICJnYXRlIiBdLAogICAiVXNlck5vZGVfaW5mb18iIDogIiDkupHljZXlhYPnlKjmiLfoioLngrkiCn0K";
+                "ewogICAiQWNjb3VudFNlcnZlckNvbmZpZyIgOiB7CiAgICAgICJfc3RydWN0XyIgOiAiIiwKICAgICAgImFjY291bnRfaWQiIDogIiDluJDlj7fmnI3liqHlmajnvJblj7csIOeUqOS6juWkmuW4kOWPt+acjeWKoeWZqOi0n+i9vSIsCiAgICAgICJhY3Rvcl9ub2RlIiA6ICIiLAogICAgICAiYWN0b3Jfbm9kZV9fdHlwZV9fIiA6ICJVc2VyTm9kZSIsCiAgICAgICJ0aXRsZSIgOiAiIOeoi+W6j+i/kOihjOeahOagh+mimFx0IiwKICAgICAgIndlYl9uZXQiIDogIiBXZWJIdHRwTmV05byA5pS+57uZ5a6i5oi356uv5L2/55SoaHR0cOivt+axguWIm+W7uuaIlumqjOivgeW4kOWPtyIsCiAgICAgICJ3ZWJfbmV0X190eXBlX18iIDogIkh0dHBXZWIiCiAgIH0sCiAgICJBY2NvdW50U2VydmVyQ29uZmlnX19saXN0X18iIDogWyAidGl0bGUiLCAid2ViX25ldCIsICJhY3Rvcl9ub2RlIiwgImFjY291bnRfaWQiIF0sCiAgICJBY2NvdW50U2VydmVyQ29uZmlnX2luZm9fIiA6ICIgQWNjb3VudERCIOW4kOWPt0RC6L+b56iL6YWN572uIiwKICAgIkNlbnRlclNlcnZlckNvbmZpZyIgOiB7CiAgICAgICJfc3RydWN0XyIgOiAiIiwKICAgICAgImFjY291bnRfZGIiIDogIiDluJDlj7dEQuaVsOaNrua6kCIsCiAgICAgICJhY2NvdW50X2RiX190eXBlX18iIDogIlNxbERCIiwKICAgICAgImNlbnRlcl9ub2RlIiA6ICIg6L+e5o6l5biQ5Y+3RELoioLngrnphY3nva5cdCIsCiAgICAgICJjZW50ZXJfbm9kZV9fdHlwZV9fIiA6ICJVc2VyTm9kZSIsCiAgICAgICJzaGFyZV9zZXJ2ZXJfY29kZSIgOiAiIOWFseS6q+iQveWcsFNRTOWuieWFqOeggSIsCiAgICAgICJzaGFyZV9zZXJ2ZXJfcG9ydCIgOiAiIOWFseS6q+iQveWcsOacjeWKoee9kee7nOerr+WPoyIsCiAgICAgICJ0aXRsZSIgOiAiIOeoi+W6j+i/kOihjOeahOagh+mimCIKICAgfSwKICAgIkNlbnRlclNlcnZlckNvbmZpZ19fbGlzdF9fIiA6IFsKICAgICAgInRpdGxlIiwKICAgICAgImNlbnRlcl9ub2RlIiwKICAgICAgImFjY291bnRfZGIiLAogICAgICAic2hhcmVfc2VydmVyX3BvcnQiLAogICAgICAic2hhcmVfc2VydmVyX2NvZGUiCiAgIF0sCiAgICJDZW50ZXJTZXJ2ZXJDb25maWdfaW5mb18iIDogIiBDZW50ZXJTZXJ2ZXLphY3nva4iLAogICAiREJCYWNrQ29uZmlnIiA6IHsKICAgICAgIl9zdHJ1Y3RfIiA6ICIiLAogICAgICAiY2VydF9maWxlIiA6ICIgcGVt6K+B5Lmm5paH5Lu2IiwKICAgICAgImtleV9maWxlIiA6ICIgc3NsIEtleSDor4HkuaYiLAogICAgICAicGFzc3dvcmQiIDogIiDlr4bnoIEiLAogICAgICAic3FsX2NvbmZpZyIgOiAiIE1ZU1FM6YWN572uIiwKICAgICAgInNxbF9jb25maWdfX3R5cGVfXyIgOiAiU3FsREIiLAogICAgICAidGl0bGUiIDogIiDnqIvluo/ov5DooYznmoTmoIfpophcdCIsCiAgICAgICJ3c19wb3J0IiA6ICIg5Lit6L2sd3Pnq6/lj6MiCiAgIH0sCiAgICJEQkJhY2tDb25maWdfX2xpc3RfXyIgOiBbICJ0aXRsZSIsICJzcWxfY29uZmlnIiwgIndzX3BvcnQiLCAia2V5X2ZpbGUiLCAiY2VydF9maWxlIiwgInBhc3N3b3JkIiBdLAogICAiREJCYWNrQ29uZmlnX2luZm9fIiA6ICIg5LuO5bqT5aSH5Lu96L+b56iLIiwKICAgIkRCQ29uZmlnIiA6IHsKICAgICAgIl9zdHJ1Y3RfIiA6ICIiLAogICAgICAiZGJfY29kZSIgOiAiIERC57yW5Y+3LCAw5pe25Li65Li7REIsIOaPkOS+m0RC6KGo5qC85rGH5oC75pyN5YqhIiwKICAgICAgImRiX25vZGUiIDogIiBEQuS6keiKgueCueWIhumFjeWcsOWdgCjkuI7lhbbku5bov57mjqXlnKhHYXRl5LiK55qE6IqC54K55LqS6L+eKSIsCiAgICAgICJkYl9ub2RlX190eXBlX18iIDogIlVzZXJOb2RlIiwKICAgICAgInJlY29yZF91cGRhdGVfbWlsc2Vjb25kIiA6ICIg6K6w5b2V5qOA5p+l5pu05paw6JC95Zyw55qE6Ze06ZqU5q+r56eS5pe26Ze0LCDnlKjkuo7osIPmlbREQuaVtOS9k+aAp+iDvSwg5q2k5pe26Ze06LaK5aSnLCDmgKfog73otorpq5gsIOS9huWuieWFqOiQveWcsOmjjumZqei2iuWkpyAo5o6o6I2Q5YC8OiAxMDAwfjEwMDAwKSIsCiAgICAgICJzaGFyZV9rZXkiIDogIiBEQuaVsOaNruW6k+i/nuaOpeeahOWFseS6q+WGheWtmOmFjee9riwgTXlzcWwg5L+h5oGv6YCa6L+H5raI5oGv5LuO5a+55bqU5YWx5Lqr5YaF5a2Y6L+b56iL6I635Y+WIiwKICAgICAgInNoYXJlX2tleV9fdHlwZV9fIiA6ICJTaGFyZU1lbSIsCiAgICAgICJ3b3JrZXJfaWQiIDogIiDovoXliqnlt6XlhbfljZXlhYNJRCIKICAgfSwKICAgIkRCQ29uZmlnX19saXN0X18iIDogWwogICAgICAiZGJfY29kZSIsCiAgICAgICJkYl9ub2RlIiwKICAgICAgInNoYXJlX2tleSIsCiAgICAgICJ3b3JrZXJfaWQiLAogICAgICAicmVjb3JkX3VwZGF0ZV9taWxzZWNvbmQiCiAgIF0sCiAgICJEQkNvbmZpZ19pbmZvXyIgOiAiIiwKICAgIkdhbWVTZXJ2ZXJDb25maWciIDogewogICAgICAiT1BFTl9USU1FIiA6ICIg5byA5pS+5pe26Ze0IiwKICAgICAgIlNFUlZFUl9JRCIgOiAiIOa4uOaIj+WMuklEIiwKICAgICAgIlNFUlZFUl9OQU1FIiA6ICIg5ri45oiP5Yy65ZCN56ewIiwKICAgICAgIlNFUlZFUl9UWVBFIiA6ICIg5pyN5Yqh5Zmo57G75Z6LIiwKICAgICAgIl9zdHJ1Y3RfIiA6ICIiLAogICAgICAiZGJfY29uZmlnIiA6ICIgTG9naWMgREIg6YWN572uXHQiLAogICAgICAiZGJfY29uZmlnX190eXBlX18iIDogIkRCQ29uZmlnIiwKICAgICAgImxvZ19zcWwiIDogIiDml6Xlv5fmnI3phY3nva4iLAogICAgICAibG9nX3NxbF9fdHlwZV9fIiA6ICJTcWxEQiIsCiAgICAgICJtYW5hZ2VyX2Nzdl9maWxlIiA6ICIg566h55CG5ZGYQ1NW6YWN572u5YiX6KGo5paH5Lu2IiwKICAgICAgInNlcnZlcl9ub2RlIiA6ICIiLAogICAgICAic2VydmVyX25vZGVfX3R5cGVfXyIgOiAiVXNlck5vZGUiLAogICAgICAidGl0bGUiIDogIiDnqIvluo/ov5DooYznmoTmoIfpopgiCiAgIH0sCiAgICJHYW1lU2VydmVyQ29uZmlnX19saXN0X18iIDogWwogICAgICAidGl0bGUiLAogICAgICAic2VydmVyX25vZGUiLAogICAgICAiZGJfY29uZmlnIiwKICAgICAgImxvZ19zcWwiLAogICAgICAiU0VSVkVSX0lEIiwKICAgICAgIlNFUlZFUl9OQU1FIiwKICAgICAgIk9QRU5fVElNRSIsCiAgICAgICJtYW5hZ2VyX2Nzdl9maWxlIiwKICAgICAgIlNFUlZFUl9UWVBFIgogICBdLAogICAiR2FtZVNlcnZlckNvbmZpZ19pbmZvXyIgOiAiIEdhbWVTZXJ2ZXIg6L+b56iL6YWN572uIiwKICAgIkdhdGVOb2RlIiA6IHsKICAgICAgIl9zdHJ1Y3RfIiA6ICIiLAogICAgICAiYWRkcmVzcyIgOiAiIEdhdGVOb2Rl5Zyw5Z2AICIsCiAgICAgICJhZGRyZXNzX190eXBlX18iIDogIklQQWRkcmVzcyIsCiAgICAgICJmaXhfY291bnQiIDogIiDlm7rlrppHYXRl5pWw6YePIiwKICAgICAgImdhdGVfY29kZSIgOiAiIOe8luWPtygwfmZpeF9jb3VudC0xKSIKICAgfSwKICAgIkdhdGVOb2RlX19saXN0X18iIDogWyAiZml4X2NvdW50IiwgImdhdGVfY29kZSIsICJhZGRyZXNzIiBdLAogICAiR2F0ZU5vZGVfaW5mb18iIDogIiBHYXRlTm9kZSDnlKjkuo5HYXRl5LmL6Ze057uE572RIiwKICAgIkdhdGVTZXJ2ZXJDb25maWciIDogewogICAgICAiX3N0cnVjdF8iIDogIiIsCiAgICAgICJnYXRlX25vZGUiIDogIiBHYXRlTm9kZSDnlKjkuo5HYXRl5LmL6Ze057uE572RIiwKICAgICAgImdhdGVfbm9kZV9fdHlwZV9fIiA6ICJHYXRlTm9kZSIsCiAgICAgICJnYXRlX3NlcnZlciIgOiAiIEdhdGXmjqXlj5fljZXlhYPoioLngrnov57mjqXlvIDmlL7nmoTmnI3liqHlnLDlnYAiLAogICAgICAiZ2F0ZV9zZXJ2ZXJfX3R5cGVfXyIgOiAiSVBBZGRyZXNzIiwKICAgICAgIm1haW5fZ2F0ZSIgOiAiIEdhdGXmjqXlj5fljZXlhYPoioLngrnov57mjqXlvIDmlL7nmoTmnI3liqHlnLDlnYAiLAogICAgICAibWFpbl9nYXRlX190eXBlX18iIDogIklQQWRkcmVzcyIsCiAgICAgICJ0aXRsZSIgOiAiIOeoi+W6j+i/kOihjOeahOagh+mimCIKICAgfSwKICAgIkdhdGVTZXJ2ZXJDb25maWdfX2xpc3RfXyIgOiBbICJ0aXRsZSIsICJnYXRlX25vZGUiLCAiZ2F0ZV9zZXJ2ZXIiLCAibWFpbl9nYXRlIiBdLAogICAiR2F0ZVNlcnZlckNvbmZpZ19pbmZvXyIgOiAiIENsb3VkZUdhdGUg56iL5bqP6YWN572uIiwKICAgIkh0dHBXZWIiIDogewogICAgICAiX3N0cnVjdF8iIDogIiIsCiAgICAgICJjZXJ0X2ZpbGUiIDogIiDor4Hkuabmlofku7YiLAogICAgICAiaHR0cF9hZGRyZXNzIiA6ICIg5byA5pS+SFRUUOWcsOWdgCjnlKjkuo7mj5Dkvpvnu5nov57mjqXov5vnqIspIiwKICAgICAgImtleV9maWxlIiA6ICIg6K+B5Lmma2V5LnBlbeaWh+S7tiIsCiAgICAgICJwYXNzd29yZCIgOiAiIOivgeS5puWvhueggSIsCiAgICAgICJwb3J0IiA6ICIg5byA5pS+56uv5Y+jIgogICB9LAogICAiSHR0cFdlYl9fbGlzdF9fIiA6IFsgImh0dHBfYWRkcmVzcyIsICJwb3J0IiwgImtleV9maWxlIiwgImNlcnRfZmlsZSIsICJwYXNzd29yZCIgXSwKICAgIkh0dHBXZWJfaW5mb18iIDogIiBIdHRwV2Vi5pyN5YqhIiwKICAgIklQQWRkcmVzcyIgOiB7CiAgICAgICJfc3RydWN0XyIgOiAiIiwKICAgICAgImlwIiA6ICIgSVDlnLDlnYAs5pSv5oyB5Z+f5ZCNIiwKICAgICAgInBvcnQiIDogIiDnq6/lj6MiLAogICAgICAic2FmdF9jb2RlIiA6ICIg5a6J5YWo56CBLCDnlKjkuo7pgb/lhY3nvZHnu5zov57mjqXmt7fkubHlj4rop4Tpgb/mnKrnn6Xov57mjqXmjqXlhaUiCiAgIH0sCiAgICJJUEFkZHJlc3NfX2xpc3RfXyIgOiBbICJpcCIsICJwb3J0IiwgInNhZnRfY29kZSIgXSwKICAgIklQQWRkcmVzc19pbmZvXyIgOiAiIOe9kee7nOWcsOWdgCIsCiAgICJMb2dTZXJ2ZXJDb25maWciIDogewogICAgICAiQVVUSE9SSVpBVElPTjEiIDogIiDlvIDmlL7mnYPpmZAiLAogICAgICAiQVVUSE9SSVpBVElPTjIiIDogIiAiLAogICAgICAiX3N0cnVjdF8iIDogIiIsCiAgICAgICJjZXJ0X2ZpbGUiIDogIiBwZW3or4Hkuabmlofku7YiLAogICAgICAia2V5X2ZpbGUiIDogIiBzc2wgS2V5IOivgeS5piIsCiAgICAgICJtREJJUCIgOiAiIE15c3FsIOWcsOWdgCIsCiAgICAgICJtREJOQU1FIiA6ICIg5bqT5ZCNIiwKICAgICAgIm1EQlBBU1NXT1JEIiA6ICIg6L+e5o6l5a+G56CBIiwKICAgICAgIm1EQlBPUlQiIDogIiBNeXNxbCDnq6/lj6MiLAogICAgICAibURCVVNFUiIgOiAiIE15c3Fs55So5oi35ZCNIiwKICAgICAgIm1JcCIgOiAiIFVEUOaOpeaUtuWcsOWdgCIsCiAgICAgICJtUG9ydCIgOiAiIFVEUOaOpeaUtuerr+WPoyIsCiAgICAgICJwYXNzd29yZCIgOiAiIOWvhueggSIsCiAgICAgICJ0aXRsZSIgOiAiIOeoi+W6j+i/kOihjOeahOagh+mimCIsCiAgICAgICJ3ZWJfYWRkciIgOiAiIOW8gOaUvndz5Zyw5Z2AIiwKICAgICAgIndlYl9wb3J0IiA6ICIg5byA5pS+d3Pnq6/lj6MiCiAgIH0sCiAgICJMb2dTZXJ2ZXJDb25maWdfX2xpc3RfXyIgOiBbCiAgICAgICJ0aXRsZSIsCiAgICAgICJtSXAiLAogICAgICAibVBvcnQiLAogICAgICAibURCTkFNRSIsCiAgICAgICJtREJJUCIsCiAgICAgICJtREJQT1JUIiwKICAgICAgIm1EQlVTRVIiLAogICAgICAibURCUEFTU1dPUkQiLAogICAgICAiQVVUSE9SSVpBVElPTjEiLAogICAgICAiQVVUSE9SSVpBVElPTjIiLAogICAgICAid2ViX2FkZHIiLAogICAgICAid2ViX3BvcnQiLAogICAgICAia2V5X2ZpbGUiLAogICAgICAiY2VydF9maWxlIiwKICAgICAgInBhc3N3b3JkIgogICBdLAogICAiTG9nU2VydmVyQ29uZmlnX2luZm9fIiA6ICIg5pel5b+X5pyNIiwKICAgIkxvZ2ljQWN0b3JEQkNvbmZpZyIgOiB7CiAgICAgICJfc3RydWN0XyIgOiAiIiwKICAgICAgImRhdGFfZGJfbm9kZSIgOiAiIOi/nuaOpUdhdGXoioLngrnphY3nva5cdCIsCiAgICAgICJkYXRhX2RiX25vZGVfX3R5cGVfXyIgOiAiVXNlck5vZGUiLAogICAgICAic2hhcmVfc2VydmVyX2NvZGUiIDogIiDlhbHkuqvokL3lnLBTUUzlronlhajnoIEiLAogICAgICAic2hhcmVfc2VydmVyX3BvcnQiIDogIiDlhbHkuqvokL3lnLDmnI3liqHnvZHnu5xJUCIsCiAgICAgICJzcWxfZGIiIDogIiBNWVNRTOaVsOaNruW6k+mFjee9riIsCiAgICAgICJzcWxfZGJfX3R5cGVfXyIgOiAiU3FsREIiLAogICAgICAidGl0bGUiIDogIiDnqIvluo/ov5DooYznmoTmoIfpopgiLAogICAgICAid29ya2VyX2lkIiA6ICIg57q/56iL5YaFVW5pdOWvueixoeWIhumFjeeahElEIgogICB9LAogICAiTG9naWNBY3RvckRCQ29uZmlnX19saXN0X18iIDogWwogICAgICAidGl0bGUiLAogICAgICAic3FsX2RiIiwKICAgICAgInNoYXJlX3NlcnZlcl9wb3J0IiwKICAgICAgInNoYXJlX3NlcnZlcl9jb2RlIiwKICAgICAgImRhdGFfZGJfbm9kZSIsCiAgICAgICJ3b3JrZXJfaWQiCiAgIF0sCiAgICJMb2dpY0FjdG9yREJDb25maWdfaW5mb18iIDogIiDpgLvovpFBY3RvcuacjeWKoeWZqOmFjee9riIsCiAgICJMb2dpbkNvbmZpZyIgOiB7CiAgICAgICJfc3RydWN0XyIgOiAiIiwKICAgICAgImNlcnRfZmlsZSIgOiAiIHBlbeivgeS5puaWh+S7tiIsCiAgICAgICJrZXlfZmlsZSIgOiAiIHNzbCBLZXkg6K+B5LmmIiwKICAgICAgImxvZ2luX2lkIiA6ICIg6L+e5o6lRELljZXlhYPnmoRJRCAgMTAwMCAyMDAwIOS4uuWMuuWPtywg5bC+5pWw5Li655m76ZmG5pyN5Yqh5Zmo55qESUQiLAogICAgICAibG9naW5fbm9kZSIgOiAiIOi/nuaOpSBEYXRhIERCXHQiLAogICAgICAibG9naW5fbm9kZV9fdHlwZV9fIiA6ICJVc2VyTm9kZSIsCiAgICAgICJwYXNzd29yZCIgOiAiIOWvhueggSIsCiAgICAgICJ0aXRsZSIgOiAiIOeoi+W6j+i/kOihjOeahOagh+mimCIsCiAgICAgICJ3c19pcCIgOiAiIOW8gOaUvndz5Zyw5Z2AIiwKICAgICAgIndzX3BvcnQiIDogIiDlvIDmlL53c+err+WPoyIKICAgfSwKICAgIkxvZ2luQ29uZmlnX19saXN0X18iIDogWwogICAgICAidGl0bGUiLAogICAgICAibG9naW5fbm9kZSIsCiAgICAgICJsb2dpbl9pZCIsCiAgICAgICJ3c19pcCIsCiAgICAgICJ3c19wb3J0IiwKICAgICAgImtleV9maWxlIiwKICAgICAgImNlcnRfZmlsZSIsCiAgICAgICJwYXNzd29yZCIKICAgXSwKICAgIkxvZ2luQ29uZmlnX2luZm9fIiA6ICIgTG9naW5Db25maWcg6L+b56iL6YWN572uIiwKICAgIlJ1bkNvbmZpZ0RhdGEiIDogewogICAgICAiX3N0cnVjdF8iIDogIiIsCiAgICAgICJhY2NvdW50X2NvbmZpZyIgOiAiIOW4kOWPt+acjeWKoeWZqOmFjee9riIsCiAgICAgICJhY2NvdW50X2NvbmZpZ19fdHlwZV9fIiA6ICJBY2NvdW50U2VydmVyQ29uZmlnIiwKICAgICAgImNlbnRlcl9jb25maWciIDogIiDkuJbnlYzkuK3lv4PmnI3liqHlmajphY3nva4iLAogICAgICAiY2VudGVyX2NvbmZpZ19fdHlwZV9fIiA6ICJDZW50ZXJTZXJ2ZXJDb25maWciLAogICAgICAiZ2FtZV9jb25maWciIDogIiDmuLjmiI/mnI3liqHlmajphY3nva5cdCIsCiAgICAgICJnYW1lX2NvbmZpZ19fdHlwZV9fIiA6ICJHYW1lU2VydmVyQ29uZmlnIiwKICAgICAgImdhdGVfY29uZmlnIiA6ICIgR2F0YemFjee9rlx0IiwKICAgICAgImdhdGVfY29uZmlnX190eXBlX18iIDogIkdhdGVTZXJ2ZXJDb25maWciLAogICAgICAibG9naWNfYWN0b3JfY29uZmlnIiA6ICIg6YC76L6RQWN0b3LmnI3liqHlmajphY3nva4iLAogICAgICAibG9naWNfYWN0b3JfY29uZmlnX190eXBlX18iIDogIkxvZ2ljQWN0b3JEQkNvbmZpZyIsCiAgICAgICJsb2dpbl9jb25maWciIDogIiDnmbvpmYbov5vnqIvphY3nva4iLAogICAgICAibG9naW5fY29uZmlnX190eXBlX18iIDogIkxvZ2luQ29uZmlnIiwKICAgICAgInNoYXJlX2RiX2NvbmZpZyIgOiAiIOmAmueUqERC5YWx5Lqr6JC95Zyw5pyN5Yqh5ZmoIiwKICAgICAgInNoYXJlX2RiX2NvbmZpZ19fdHlwZV9fIiA6ICJTaGFyZURCQ29uZmlnIgogICB9LAogICAiUnVuQ29uZmlnRGF0YV9fbGlzdF9fIiA6IFsKICAgICAgInNoYXJlX2RiX2NvbmZpZyIsCiAgICAgICJsb2dpY19hY3Rvcl9jb25maWciLAogICAgICAiZ2F0ZV9jb25maWciLAogICAgICAibG9naW5fY29uZmlnIiwKICAgICAgImFjY291bnRfY29uZmlnIiwKICAgICAgImNlbnRlcl9jb25maWciLAogICAgICAiZ2FtZV9jb25maWciCiAgIF0sCiAgICJSdW5Db25maWdEYXRhX2luZm9fIiA6ICIg5YWo6YOo56iL5bqP6L+Q6KGM6YWN572uIiwKICAgIlNoYXJlREJDb25maWciIDogewogICAgICAiX3N0cnVjdF8iIDogIiIsCiAgICAgICJzZXJ2ZXJfYWRkcmVzcyIgOiAiIOW8gOaUvue7memAu+i+keS9v+eUqOi/m+eoi+eahOe9kee7nOacjeWKoVx0IiwKICAgICAgInNlcnZlcl9hZGRyZXNzX190eXBlX18iIDogIklQQWRkcmVzcyIsCiAgICAgICJ0aXRsZSIgOiAiIOeoi+W6j+i/kOihjOeahOagh+mimCIKICAgfSwKICAgIlNoYXJlREJDb25maWdfX2xpc3RfXyIgOiBbICJ0aXRsZSIsICJzZXJ2ZXJfYWRkcmVzcyIgXSwKICAgIlNoYXJlREJDb25maWdfaW5mb18iIDogIiDpgJrnlKhEQuWFseS6q+iQveWcsOacjeWKoeWZqCIsCiAgICJTaGFyZU1lbSIgOiB7CiAgICAgICJfc3RydWN0XyIgOiAiIiwKICAgICAgImtleSIgOiAiIOWFseS6q+WGheWtmOWIhumFjUtFWSznlKjkuo7lhbHkuqvlhoXlrZjmtojmga/pgJrpgZMiLAogICAgICAic2l6ZSIgOiAiIOWFseS6q+WGheWtmOWIhumFjeWkp+WwjyzmjqjojZDphY3nva4gMjEwMDAwMCDnuqYyTSzmlLblj5HlkIQxTSIKICAgfSwKICAgIlNoYXJlTWVtREJDb25maWciIDogewogICAgICAiX3N0cnVjdF8iIDogIiIsCiAgICAgICJzaGFyZV9rZXkiIDogIiDlhbHkuqvlhoXlrZjphY3nva4iLAogICAgICAic2hhcmVfa2V5X190eXBlX18iIDogIlNoYXJlTWVtIiwKICAgICAgInNxbF9iYWNrX2RiIiA6ICIgTVlTUUzlpIfku73lupPov57mjqXphY3nva4iLAogICAgICAic3FsX2JhY2tfZGJfX3R5cGVfXyIgOiAiU3FsREIiLAogICAgICAic3FsX2RiIiA6ICIgTVlTUUzov57mjqXphY3nva4iLAogICAgICAic3FsX2RiX190eXBlX18iIDogIlNxbERCIiwKICAgICAgInRpdGxlIiA6ICIg56iL5bqP6L+Q6KGM55qE5qCH6aKYIgogICB9LAogICAiU2hhcmVNZW1EQkNvbmZpZ19fbGlzdF9fIiA6IFsgInRpdGxlIiwgInNoYXJlX2tleSIsICJzcWxfZGIiLCAic3FsX2JhY2tfZGIiIF0sCiAgICJTaGFyZU1lbURCQ29uZmlnX2luZm9fIiA6ICIg5YWx5Lqr5YaF5a2Y6L+b56iL6YWN572uIiwKICAgIlNoYXJlTWVtX19saXN0X18iIDogWyAia2V5IiwgInNpemUiIF0sCiAgICJTaGFyZU1lbV9pbmZvXyIgOiAiIOWFseS6q+WGheWtmOWPguaVsCIsCiAgICJTcWxEQiIgOiB7CiAgICAgICJfc3RydWN0XyIgOiAiIiwKICAgICAgIm1EQkJBU0UiIDogIiBEQui/nuaOpeW6kywg5Y+v5Lul5Li656m6LCDooajnpLrov57mjqUgdGVzdCIsCiAgICAgICJtREJJUCIgOiAiIE15c3FsIOWcsOWdgCIsCiAgICAgICJtREJQQVNTV09SRCIgOiAiIOi/nuaOpeWvhueggSIsCiAgICAgICJtREJQT1JUIiA6ICIgTXlzcWwg56uv5Y+jIiwKICAgICAgIm1EQlVTRVIiIDogIiBNeXNxbOeUqOaIt+WQjSIsCiAgICAgICJtVEFCTEVfTElTVCIgOiAiIOihqOagvOWKoOi9veWIl+ihqCAo5Yib5bu6RELooajmoLzml7YsIOiHquWKqOeUn+aIkCkiCiAgIH0sCiAgICJTcWxEQl9fbGlzdF9fIiA6IFsKICAgICAgIm1EQkJBU0UiLAogICAgICAibURCSVAiLAogICAgICAibURCUE9SVCIsCiAgICAgICJtREJVU0VSIiwKICAgICAgIm1EQlBBU1NXT1JEIiwKICAgICAgIm1UQUJMRV9MSVNUIgogICBdLAogICAiU3FsREJfaW5mb18iIDogIiIsCiAgICJVc2VyTm9kZSIgOiB7CiAgICAgICJfc3RydWN0XyIgOiAiIiwKICAgICAgImdhdGUiIDogIiDov57mjqXnmoRHYXRl5pyN5Yqh5Zyw5Z2AIiwKICAgICAgImdhdGVfX3R5cGVfXyIgOiAiSVBBZGRyZXNzIiwKICAgICAgIm5vZGUiIDogIiDnlKjmiLfoioLngrnlvZPliY3liIbphY3lnLDlnYAiLAogICAgICAibm9kZV9fdHlwZV9fIiA6ICJJUEFkZHJlc3MiCiAgIH0sCiAgICJVc2VyTm9kZV9fbGlzdF9fIiA6IFsgIm5vZGUiLCAiZ2F0ZSIgXSwKICAgIlVzZXJOb2RlX2luZm9fIiA6ICIg5LqR5Y2V5YWD55So5oi36IqC54K5Igp9Cg==";
         return gCommentString; 
     }
  };

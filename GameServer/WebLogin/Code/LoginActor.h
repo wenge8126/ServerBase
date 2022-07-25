@@ -59,7 +59,7 @@ public:
 		//Hand<tBaseEventNet> net = tcpNet->GetNet();
 		//net->GetNetProtocol()->RegisterNetPacket(MEM_NEW AsyncProcessReqeustMsgFactory<eMsg_ClientRequestServer, CS_ClientRequest, SC_ResponseMsg, LoginActor>(this));
 		////net->SetNetProtocol();`
-
+		 
 		//AddComponent("LoginNetComponect");
 	}
 
@@ -67,12 +67,12 @@ public:
 
 	void RegisterMsg(ActorManager *pActorMgr)
 	{
-		REG_COMPONENT(pActorMgr, WssWebComponent);
-		REG_COMPONENT(pActorMgr, TestNoSQLUserComponent);
-		REG_COMPONENT(pActorMgr, Test2Component);
-		REG_COMPONENT(pActorMgr, RecordNoSQLUserComponent);
-		REG_COMPONENT(pActorMgr, PlayerItemComp);
-		REG_COMPONENT(pActorMgr, LoginNetComponect);
+		REG_COMPONENT( WssWebComponent);
+		REG_COMPONENT( TestNoSQLUserComponent);
+		REG_COMPONENT( Test2Component);
+		REG_COMPONENT( RecordNoSQLUserComponent);
+		REG_COMPONENT( PlayerItemComp);
+		REG_COMPONENT( LoginNetComponect);
 	}
 };
 

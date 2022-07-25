@@ -135,7 +135,7 @@ BOOL CServerToolDlg::OnInitDialog()
 	// TODO: 在此添加额外的初始化代码
 
 	mGateIP = "127.0.0.1";
-	mGatePort = 10000;
+	mGatePort = 9001;
 	mConfigPath = "D:/ServerBase/Config";
 
 	UpdateData(FALSE);
@@ -230,7 +230,7 @@ void CServerToolDlg::AsyncCreateDB()
 {
 	ClearLog();
 	UpdateData(TRUE);
-	AString dbConfigFile = "NoSQLUser"; // "DBList";
+	AString dbConfigFile = "AccountDBList";//"NoSQLUser"; // "DBList";
 	//if (mToolConfig)
 	//	dbConfigFile = mToolConfig->GetValue("account_config", 1).c_str();
 
@@ -280,9 +280,9 @@ void CServerToolDlg::AsyncCreateDB()
 		else
 			LOG("Fail load xlsx  %s, sheet %s, index %s", record["XLSX"].c_str(), record["SHEET"].c_str(), record["INDEX"].c_str());
 	}
-	msg.mExportCodePath = "D:/Home_86/Server/GameServer/Common";
+	msg.mExportCodePath = "D:/ServerBase/GameServer/Common";
 	RS_CreateDBTable resp;
-	mToolActor->Await( { Actor_DBWorker, 1 }, msg, resp, 16000);
+	mToolActor->Await( { Actor_AccountCenter, 1 }, msg, resp, 16000);
 	auto result = &resp;
 	if (result)
 	{
@@ -460,7 +460,15 @@ void CServerToolDlg::OnBnClickedTestCreateAccount()
 }
 
 
-
+enum ExportType
+{
+	eExportConfig = 0,
+	eExportMeshProtocol,
+	eExportNoSQLProtocol,
+	eExportServerCientProtocol,
+	eExportCientMsg,
+	eExportServerMsg,
+};
 
 void CServerToolDlg::OnBnExportRunConfig()
 {
@@ -471,22 +479,70 @@ void CServerToolDlg::OnBnExportRunConfig()
 
 	AString err;
 	AutoNice info;
-	if (0)
+
+	int x = eExportServerMsg;
+
+	switch (x)
+	{
+	case eExportConfig:
 	{
 		AString fileName;
-		fileName.Format("%s/RunConfigProtocol.txt", (LPCTSTR)configPath);
+		fileName.Format("%s/RunConfig.txt", (LPCTSTR)configPath);
+		
+		info = GenerateProtocol(fileName, "", "../GameServer/Common", "RunConfigStruct", false, err, true);
+		//info = GenerateProtocol(fileName, "", "../BaseCommon/NetDll/Net", "MeshNetMsg", false, err);
+	}
+		break;
+
+	case eExportMeshProtocol:
+	{
+		AString fileName;
+		
 		fileName.Format("%s/MeshProtocol.txt", (LPCTSTR)configPath);
 		//AutoNice info = GenerateProtocol(fileName, "", "../GameServer/Common", "RunConfigStruct", false, err);
 		info = GenerateProtocol(fileName, "", "../BaseCommon/NetDll/Net", "MeshNetMsg", false, err);
 	}
-	if (1)
+	break;
+
+	case eExportNoSQLProtocol:
 	{
 		AString fileName;
-		//fileName.Format("%s/NoSQLProtocol.txt", (LPCTSTR)configPath);
-		//info = GenerateProtocol(fileName, "", "../BaseCommon/ActorDBLib/Code", "ClientMsg", false, err);
-
-		fileName.Format("%s/ClientProtocol.txt", (LPCTSTR)configPath); 
+		fileName.Format("%s/NoSQLProtocol.txt", (LPCTSTR)configPath);
+		
 		info = GenerateProtocol(fileName, "", "../GameServer/Debug", "ServerClientMsg", false, err);
+	}
+	break;
+
+	case eExportServerCientProtocol:
+	{
+		AString fileName;
+		
+		fileName.Format("%s/ClientProtocol.txt", (LPCTSTR)configPath);
+		info = GenerateProtocol(fileName, "", "../GameServer/Debug", "ServerClientMsg", true, err);
+	}
+	break;
+
+	case eExportCientMsg:
+	{
+		AString fileName;
+		
+		fileName.Format("%s/ClientMsgProtocol.txt", (LPCTSTR)configPath);
+		info = GenerateProtocol(fileName, "", "../GameServer/Common", "ClientMsg", true, err);
+	}
+	break;
+
+	case eExportServerMsg:
+	{
+		AString fileName;
+
+		fileName.Format("%s/ServerMsgProtocol.txt", (LPCTSTR)configPath);
+		info = GenerateProtocol(fileName, "", "../GameServer/Common", "ServerMsg", false, err);
+	}
+	break;
+
+
+	default:
+		break;
 	}
 
 	LOG("%s", err.c_str());

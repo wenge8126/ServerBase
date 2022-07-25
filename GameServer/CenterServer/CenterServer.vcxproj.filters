@@ -19,6 +19,12 @@
     <Filter Include="SDK">
       <UniqueIdentifier>{5d014321-6770-4085-9a57-7c42ad5c8659}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameCenter">
+      <UniqueIdentifier>{8f3c3041-fad9-4aa9-a3b4-75916e4f090c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AccountCenter">
+      <UniqueIdentifier>{7ad0d05a-8e95-4da1-9cbd-e681f5749b67}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\CenterThread.cpp">
@@ -26,6 +32,9 @@
     </ClCompile>
     <ClCompile Include="CenterServer.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\AccountCenterActor.cpp">
+      <Filter>AccountCenter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -35,10 +44,16 @@
     <ClInclude Include="Code\LoginNetProtocol.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Code\AccountCenterActor.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Code\CenterThread.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\AccountCenterActor.h">
+      <Filter>AccountCenter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\DBUser_t_account.h">
+      <Filter>AccountCenter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\CommonDefine.h">
       <Filter>Code</Filter>
     </ClInclude>
   </ItemGroup>

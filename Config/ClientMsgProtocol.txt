@@ -1,0 +1,53 @@
+
+CS_ClientRequest :RQ
+{	
+	uint64 mTargetActorID;
+	string mRequestMsgName;
+	data mRequestMsgData;
+}
+
+
+// 服务器内部Actor请求客户端消息发向ClientActor, 再通过ClientActor 请求客户端SC_ServerRequestClientMsg
+SC_ActorRequestClientMsg
+{
+	uint64 mClientActorID;
+	string mRequestMsgName;
+	data mRequestMsgData;
+}
+
+// 服务器与客户端Actor间互传通知消息
+SCS_NotifyMsg
+{
+	uint64 mActorID; // 服务器或客户端ActorID
+	string mMsgName;
+	data mNotifyMsgData;
+}
+
+CS_ResponceServerActorMsg
+{
+	data mResponseMsgData;
+}
+
+
+SC_ResponseMsg
+{
+	nicedata mResponseData;
+}
+
+SC_ResponseTest
+{
+	string mInfo;
+}
+
+CS_RequestTest :RQ
+{
+	string mInfo;
+}
+
+MSG_Test
+{
+	string mTest;
+	int mX;
+	int64 mXX;
+	float mF;
+}

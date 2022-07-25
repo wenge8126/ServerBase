@@ -96,6 +96,8 @@ enum UNIT_TYPE
 	Actor_GameServer = 1002,
 	Actor_Player = 1003,
 	Actor_Client = 1004,
+	Actor_AccountCenter,
+	Actor_GameCenter,
 };
 
 enum MSG_TYPE
@@ -147,6 +149,15 @@ enum PayServerType
 	ePayFormal = 1,	//正式
 	ePayTestServer = 2, //测试
 	ePayTiShen = 3, //苹果提审
+};
+
+enum EErrorCode
+{
+	eErrorCodeNone = 0,
+	eErrorCode_ExistAccount = 1000,
+	eErrorCode_PasswordError = 1001,
+	eErrorCode_DBCreateFail = 1002,
+	eErrorCode_NoExistAccount,
 };
 
 #endif //_INCLUDE_COMMONDEFINE_H_

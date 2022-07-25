@@ -28,7 +28,7 @@ public:
 
 	virtual void RegisterMsg(ActorManager *pActorMgr)
 	{
-		REG_COMPONENT(pActorMgr, FFComp);
+		REG_COMPONENT( FFComp);
 		//pActorMgr->RegisterComponect("FFComp", MEM_NEW Logic::EventFactory<FFComp>());
 		//pActorMgr->RegisterActorMsg(#RQ, &Actor::OnMsg<ActorClass, RQ, RS>);
 		REG_COMP_NOTIFY(FFComp, RQ_CheckAndCreateAccount);

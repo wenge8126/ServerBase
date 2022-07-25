@@ -30,7 +30,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{BC21C68C-90A9-42E9-9F4B-692287E16D4F}</ProjectGuid>
     <RootNamespace>CommonLib</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.20348.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -197,18 +197,27 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Code\ClientActor.cpp" />
     <ClCompile Include="Code\HttpClient.cpp" />
     <ClCompile Include="Code\HttpComponect.cpp" />
+    <ClCompile Include="Code\NetWorkerComponent.cpp" />
     <ClCompile Include="Code\SDK.cpp" />
+    <ClCompile Include="Code\TcpComponent.cpp" />
     <ClCompile Include="Code\WssWebComponent.cpp" />
     <ClCompile Include="dllmain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Code\ClientActor.h" />
     <ClInclude Include="Code\CommonLib.h" />
     <ClInclude Include="Code\HttpClient.h" />
     <ClInclude Include="Code\HttpComponect.h" />
+    <ClInclude Include="Code\LoginNetActor.h" />
+    <ClInclude Include="Code\NetWorkerComponent.h" />
+    <ClInclude Include="Code\SCActor.h" />
     <ClInclude Include="Code\SDK.h" />
     <ClInclude Include="Code\SendDuanXin.h" />
+    <ClInclude Include="Code\ServerClientMsg.h" />
+    <ClInclude Include="Code\TcpComponent.h" />
     <ClInclude Include="Code\WssWebComponent.h" />
   </ItemGroup>
   <ItemGroup>

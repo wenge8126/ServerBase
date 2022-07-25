@@ -30,7 +30,7 @@ Actor
 #define REG_ACTOR(pActorMgr, actorType, ActorClass) pActorMgr->RegisterActor(actorType, MEM_NEW DefineActorFactory<ActorClass>());
 
 // 注册组件
-#define REG_COMPONENT(pActorMgr, ComponentClass) pActorMgr->RegisterComponect(#ComponentClass, MEM_NEW Logic::EventFactory<ComponentClass>());
+#define REG_COMPONENT(ComponentClass) pActorMgr->RegisterComponect(#ComponentClass, MEM_NEW Logic::EventFactory<ComponentClass>());
 
 // 注册Actor消息处理
 #define REG_ACTOR_MSG(ActorClass, RQ, RS)		mActorFactory->RegisterActorMsg(#RQ, &Actor::OnMsg<ActorClass, RQ, RS>);
@@ -362,6 +362,8 @@ namespace NetCloud
 
 			return eNoneError;
 		}
+
+		virtual void ResponseHttp(const AString &requestData, AString &response, bool bPost, const AString &requestAddress) { response = "Nothing"; }
 
 		virtual bool OnReceiveProcess(NodePacket *pNodePacket) override;
 

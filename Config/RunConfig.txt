@@ -1,0 +1,219 @@
+
+// 各程序运行用到的配置协议
+// 生成协议结构后, 由JSON配置导入数据后, 根据此结构进行配置检查, 检查失败, 停止程序启动
+// 规则 结构为开关大写, 成员名称全部小写加 下划线
+
+//--------------------------------------------------------------
+// 网络地址
+IPAddress
+{
+	string ip;		// IP地址,支持域名
+	int port;		// 端口
+	int saft_code; 	// 安全码, 用于避免网络连接混乱及规避未知连接接入
+}
+
+// GateNode 用于Gate之间组网
+GateNode
+{
+	int fix_count;	// 固定Gate数量
+	int gate_code;	// 编号(0~fix_count-1)
+	IPAddress address;		// GateNode地址 
+}
+
+
+// CloudeGate 程序配置
+GateServerConfig
+{
+	string title;	// 程序运行的标题
+	GateNode gate_node; // GateNode 用于Gate之间组网
+	IPAddress gate_server; 	// Gate接受单元节点连接开放的服务地址
+	IPAddress main_gate; 		// Gate接受单元节点连接开放的服务地址
+}
+//-------------------------------------------------------------------
+
+// DB共享内存进程配置
+
+// 共享内存参数
+ShareMem
+{
+	int key;	// 共享内存分配KEY,用于共享内存消息通道
+	int size;	// 共享内存分配大小,推荐配置 2100000 约2M,收发各1M
+}
+
+SqlDB
+{
+	string mDBBASE;	// DB连接库, 可以为空, 表示连接 test
+	string mDBIP;	// Mysql 地址
+	int mDBPORT;		// Mysql 端口
+	string mDBUSER;  // Mysql用户名
+	string mDBPASSWORD; // 连接密码
+	string mTABLE_LIST; // 表格加载列表 (创建DB表格时, 自动生成)
+}
+
+// 共享内存进程配置
+ShareMemDBConfig
+{
+	string title;		// 程序运行的标题
+	ShareMem share_key; // 共享内存配置
+	SqlDB sql_db;		// MYSQL连接配置
+	SqlDB sql_back_db;	// MYSQL备份库连接配置
+}
+
+//------------------------------------------------------------------
+// AccountDB 帐号DB进程配置
+
+// 云单元用户节点
+UserNode
+{
+	IPAddress node; 		// 用户节点当前分配地址
+	IPAddress gate; 		// 连接的Gate服务地址
+}
+
+// HttpWeb服务
+HttpWeb
+{
+	string http_address;	// 开放HTTP地址(用于提供给连接进程)
+	int port;				// 开放端口
+	string key_file;		// 证书key.pem文件
+	string cert_file;		// 证书文件
+	string password;		// 证书密码
+}
+
+
+DBConfig
+{
+	int db_code;				// DB编号, 0时为主DB, 提供DB表格汇总服务
+	UserNode db_node; 			// DB云节点分配地址(与其他连接在Gate上的节点互连)
+	ShareMem share_key; 		// DB数据库连接的共享内存配置, Mysql 信息通过消息从对应共享内存进程获取
+	int worker_id;				// 辅助工具单元ID
+	int record_update_milsecond;		// 记录检查更新落地的间隔毫秒时间, 用于调整DB整体性能, 此时间越大, 性能越高, 但安全落地风险越大 (推荐值: 1000~10000)
+}
+
+//----------------------------------------------------------------------
+// AccountDB 帐号DB进程配置
+AccountServerConfig
+{
+	string title;				// 程序运行的标题	
+	HttpWeb web_net;				// WebHttpNet开放给客户端使用http请求创建或验证帐号
+	UserNode actor_node;
+	int account_id;				// 帐号服务器编号, 用于多帐号服务器负载
+}
+
+//----------------------------------------------------------------------
+// GameServer 进程配置
+GameServerConfig
+{
+	string title;				// 程序运行的标题
+	UserNode server_node;
+	DBConfig db_config;			// Logic DB 配置	
+	SqlDB	log_sql;				// 日志服配置
+
+	int SERVER_ID;				// 游戏区ID
+	string SERVER_NAME;			// 游戏区名称
+	string OPEN_TIME;				// 开放时间
+	string manager_csv_file;			// 管理员CSV配置列表文件
+	int SERVER_TYPE; 				// 服务器类型
+}
+
+//----------------------------------------------------------------------
+// CenterServer配置
+CenterServerConfig
+{
+	string title;				// 程序运行的标题
+	UserNode center_node;			// 连接帐号DB节点配置	
+	SqlDB account_db;				// 帐号DB数据源
+	int share_server_port;			// 共享落地服务网络端口
+	int share_server_code;			// 共享落地SQL安全码
+}
+
+
+//----------------------------------------------------------------------
+// 从库备份进程
+DBBackConfig
+{
+	string title;				// 程序运行的标题	
+	SqlDB sql_config;			// MYSQL配置
+	int ws_port;				// 中转ws端口
+	string key_file;			// ssl Key 证书
+	string cert_file;			// pem证书文件
+	string password;			// 密码
+}
+
+//----------------------------------------------------------------------
+// 日志服
+LogServerConfig
+{	
+	string title;	// 程序运行的标题
+	string mIp;	// UDP接收地址
+	int mPort;	// UDP接收端口
+
+	string mDBNAME;	// 库名
+	string mDBIP;	// Mysql 地址
+	int mDBPORT;		// Mysql 端口
+	string mDBUSER;  // Mysql用户名
+	string mDBPASSWORD; // 连接密码
+
+	string AUTHORIZATION1; // 开放权限
+	string AUTHORIZATION2; // 
+	
+	string web_addr;				// 开放ws地址
+	int web_port;				// 开放ws端口
+	string key_file;			// ssl Key 证书
+	string cert_file;			// pem证书文件
+	string password;			// 密码
+}
+
+//----------------------------------------------------------------------
+// 通用DB共享落地服务器
+ShareDBConfig
+{
+	string title;	// 程序运行的标题
+	IPAddress server_address;	// 开放给逻辑使用进程的网络服务	
+}
+
+//----------------------------------------------------------------------
+// 逻辑Actor服务器配置
+LogicActorDBConfig
+{
+	string title;			// 程序运行的标题
+	SqlDB sql_db;			// MYSQL数据库配置
+	int share_server_port;	// 共享落地服务网络IP
+	int share_server_code;	// 共享落地SQL安全码
+	UserNode data_db_node; 	// 连接Gate节点配置	
+	int worker_id;			// 线程内Unit对象分配的ID
+}
+//----------------------------------------------------------------------
+// LoginConfig 进程配置
+LoginConfig
+{
+	string title;				// 程序运行的标题
+	
+	UserNode login_node; 		// 连接 Data DB	
+	int login_id;				// 连接DB单元的ID  1000 2000 为区号, 尾数为登陆服务器的ID
+			
+	
+	string ws_ip;				// 开放ws地址
+	int ws_port;				// 开放ws端口
+	string key_file;			// ssl Key 证书
+	string cert_file;			// pem证书文件
+	string password;			// 密码
+	
+}
+
+//----------------------------------------------------------------------
+// 全部程序运行配置
+RunConfigData
+{
+	ShareDBConfig share_db_config;					// 通用DB共享落地服务器
+	LogicActorDBConfig logic_actor_config;					// 逻辑Actor服务器配置
+	
+	
+		
+	GateServerConfig gate_config;					// Gata配置	
+	
+	LoginConfig login_config;						// 登陆进程配置
+	AccountServerConfig account_config;					// 帐号服务器配置
+	CenterServerConfig center_config;					// 世界中心服务器配置
+	GameServerConfig game_config;					// 游戏服务器配置	
+}
+//-----------------------------------------------------------------------

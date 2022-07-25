@@ -33,10 +33,10 @@ public:
 	virtual AString GetTitle() override;
 	virtual void SetTitle(const AString &title);
 
-	static bool IsAccountWeb();
+
 	static const char* GetAppName()
 	{
-		return CRunConfig<LoginConfig>::mConfig.title.c_str();
+		return CRunConfig<AccountServerConfig>::mConfig.title.c_str();
 	}
 
 

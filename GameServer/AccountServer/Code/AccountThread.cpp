@@ -22,7 +22,7 @@
 
 #include "AsyncLoop.h"
 
-#include "AccountCenterActor.h"
+#include "AccountActor.h"
 
 using namespace uWS;
 
@@ -30,23 +30,8 @@ using namespace NetCloud;
 
 using namespace std;
 
-DEFINE_RUN_CONFIG(LoginConfig)
+DEFINE_RUN_CONFIG(AccountServerConfig)
 
-void Analysis(NiceData &msg, const AString &requestData)
-{
-	Array<AString> tempList;
-	AString::Split(requestData.c_str(), tempList, "&", 100);
-	for (int i = 0; i < tempList.size(); i++)
-	{
-		Array<AString> str;
-		AString::Split(tempList[i].c_str(), str, "=", 2);
-
-		if (str.size() == 2)
-		{
-			msg[str[0].c_str()] = str[1].c_str();
-		}
-	}
-}
 
 //-------------------------------------------------------------------------
 
@@ -79,7 +64,7 @@ AString AccountThread::GetTitle()
 	//ARecord serverRe = table->GetRecord("ServerArea");
 	//AString serverName = serverRe["STRING"];
 
-	bool bAccountLogin = IsAccountWeb(); // ((int)webWsAddrRe["VALUE"] <= 0);
+
 
 	char szDir[MAX_PATH];
 	::GetCurrentDirectory(MAX_PATH - 1, szDir);
@@ -87,15 +72,15 @@ AString AccountThread::GetTitle()
 
 	{
 		AString serverName = "AccountServer";
-		auto &config = CRunConfig<LoginConfig>::mConfig;
+		//auto &config = CRunConfig<AccountServerConfig>::mConfig;
 		title.Format("%s_%s <%d : %s>[%s://%s:%d]  v[%s] %s > "
 			, GetAppName()
 			, runMode.c_str()
 			, 0
 			, serverName.ANIS().c_str()
 			,"http"
-			, config.ws_ip.c_str()
-			, config.ws_port
+			, config.web_net.http_address.c_str()
+			, config.web_net.port
 
 			, SERVER_VERSION_FLAG
 			, szDir
@@ -108,9 +93,9 @@ void AccountThread::SetTitle(const AString &title)
 {
 	if (mbStartOk)
 	{
-		AString str;
-		str.Format("%s Login: %d", title.c_str(), 1); // CL_LoginEvent::msTotalNowLogin);
-		SetConsoleTitle(str.c_str());
+		//AString str;
+		//str.Format("%s Account: %d", title.c_str(), 1); // CL_LoginEvent::msTotalNowLogin);
+		SetConsoleTitle(title.c_str());
 	}
 	else
 	{
@@ -156,28 +141,7 @@ bool TraverseDeleteBackFiles(const std::string &path)
 }
 
 
-void _ConnectGate(AccountThread *pThread)
-{
-	//LOG("=== Connect gate start");
-	//bool re = Async::AwaitLoop(
-	//	[=]()
-	//{
-	//	bool b = pThread->mActorManager->mNetNode->AwaitConnectGate(NetAddress(config.login_node.gate.ip.c_str(), config.login_node.gate.port));
-	//	return b;
-	//}
-	//	, 10, 3000);
 
-	//LOG("=== Connect gate : %s", re ? "ok" : "fail");
-
-	//while (true)
-	//{
-	//	bool b = pThread->mActorManager->mNetNode->AwaitConnectGate(NetAddress(config.login_node.gate.ip.c_str(), config.login_node.gate.port));
-	//	if (b)
-	//		break;
-	//	tTimer::AWaitTime(3000);
-	//}
-	pThread->mbStartOk = true;
-}
 //-------------------------------------------------------------------------
 
 
@@ -192,27 +156,28 @@ void _ConnectGate(AccountThread *pThread)
 //-------------------------------------------------------------------------
 void AccountThread::OnStart(void*)
 {
-	NiceData lineParam;
+	
+	ServerThread::OnStart(NULL);
 
 
-	mActorManager = MEM_NEW AccountActorManager(this, config.login_node.node.ip.c_str(), config.login_node.node.port, config.login_node.node.saft_code, 2);
+	mActorManager = MEM_NEW AccountActorManager(this, config.actor_node.node.ip.c_str(), config.actor_node.node.port, config.actor_node.node.saft_code, 2);
 
 	// Login 启动
 	{
-		auto &config = CRunConfig<LoginConfig>::mConfig;
+		//auto &config = CRunConfig<LoginConfig>::mConfig;
 
-		SystemInfo::ReadCommandLineParam(GetCommandLine(), lineParam);
-		int addPort = lineParam["port"];
-		if (addPort != 0)
-		{
-			config.ws_port += addPort;
+		//SystemInfo::ReadCommandLineParam(GetCommandLine(), lineParam);
+		//int addPort = lineParam["port"];
+		//if (addPort != 0)
+		//{
+		//	config.ws_port += addPort;
 
-			AutoNice d = MEM_NEW NiceData();
-			config.ToData(d);
-			AString info;
-			RunConfig::ShowConfig(d, "login_config", info);
-			LOG("配置变更: %d ***************************************************************\r\n====================================\r\n%s====================================\r\n", addPort, info.ANIS().c_str());
-		}
+		//	AutoNice d = MEM_NEW NiceData();
+		//	config.ToData(d);
+		//	AString info;
+		//	RunConfig::ShowConfig(d, "login_config", info);
+		//	LOG("配置变更: %d ***************************************************************\r\n====================================\r\n%s====================================\r\n", addPort, info.ANIS().c_str());
+		//}
 		// 连接LogicDB
 
 
@@ -220,14 +185,17 @@ void AccountThread::OnStart(void*)
 		mActorManager->RegisterComponect("HttpComponect", MEM_NEW EventFactory<HttpComponect>());
 
 
-		mLoginActor = mActorManager->CreateActor(Actor_Account, config.login_id);
+		mLoginActor = mActorManager->CreateActor(Actor_Account, config.account_id);
 
 
 		
 
-		//CoroutineTool::AsyncCall(_ConnectGate, this);
+		CoroutineTool::AsyncCall([=]()
+		{
+			mbStartOk = mActorManager->mNetNode->AwaitConnectGate(config.actor_node.gate.ip.c_str(), config.actor_node.gate.port, 10000);
+		});
 
-		mActorManager->mNetNode->ConnectGate(config.login_node.gate.ip.c_str(), config.login_node.gate.port, 10000);
+		
 
 
 		//ServerThread::OnStart(NULL);
@@ -354,9 +322,4 @@ AString AccountThread::GetServerList()
 }
 
 
-
-bool AccountThread::IsAccountWeb()
-{
-	return true;
-}
 

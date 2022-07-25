@@ -25,9 +25,6 @@
     <Filter Include="Common">
       <UniqueIdentifier>{e8800f96-e102-4c50-9f43-7e7c215e3c0c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ServerClientActor">
-      <UniqueIdentifier>{559a2476-17dc-48ff-8304-08d40d58a0f1}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -68,15 +65,6 @@
     </ClCompile>
     <ClCompile Include="Code\NoSQLUserComponent.cpp">
       <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ClientActor.cpp">
-      <Filter>ServerClientActor</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\NetWorkerComponent.cpp">
-      <Filter>ServerClientActor</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\TcpComponent.cpp">
-      <Filter>ServerClientActor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -133,24 +121,6 @@
     </ClInclude>
     <ClInclude Include="Code\GenerateDBUser.h">
       <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ClientActor.h">
-      <Filter>ServerClientActor</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ServerClientMsg.h">
-      <Filter>ServerClientActor</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\SCActor.h">
-      <Filter>ServerClientActor</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\LoginNetActor.h">
-      <Filter>ServerClientActor</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\NetWorkerComponent.h">
-      <Filter>ServerClientActor</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\TcpComponent.h">
-      <Filter>ServerClientActor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

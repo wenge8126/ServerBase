@@ -16,6 +16,9 @@
     <Filter Include="Code">
       <UniqueIdentifier>{6868632f-207f-47fa-bfdf-2120bcc6b5d2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ServerClientActor">
+      <UniqueIdentifier>{468a2dcc-ffa0-4066-b461-4c29b14e351c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\HttpComponect.cpp">
@@ -32,6 +35,15 @@
     </ClCompile>
     <ClCompile Include="Code\SDK.cpp">
       <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ClientActor.cpp">
+      <Filter>ServerClientActor</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\NetWorkerComponent.cpp">
+      <Filter>ServerClientActor</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\TcpComponent.cpp">
+      <Filter>ServerClientActor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -52,6 +64,24 @@
     </ClInclude>
     <ClInclude Include="Code\SendDuanXin.h">
       <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ClientActor.h">
+      <Filter>ServerClientActor</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\LoginNetActor.h">
+      <Filter>ServerClientActor</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\NetWorkerComponent.h">
+      <Filter>ServerClientActor</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\SCActor.h">
+      <Filter>ServerClientActor</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ServerClientMsg.h">
+      <Filter>ServerClientActor</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\TcpComponent.h">
+      <Filter>ServerClientActor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

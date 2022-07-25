@@ -5,12 +5,12 @@
 
 #include "Actor.h"
 #include "ServerClientMsg.h"
-
+#include "CommonLib.h"
 //-------------------------------------------------------------------------
 // 客户端连接Actor, 用于客户端与服务器内部沟通
 // Actor 内绑定 ConnectPtr, Connect 设置数据为对应 的Actor
 //-------------------------------------------------------------------------
-class ActorDBLib_Export tClientActor : public Actor
+class CommonLib_Export tClientActor : public Actor
 {
 public:
 	tClientActor() {}

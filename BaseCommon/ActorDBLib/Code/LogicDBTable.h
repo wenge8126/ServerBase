@@ -11,6 +11,7 @@
 namespace NetCloud
 {
 	class DBTableManager;
+	class DBUserComponent;
 	//-------------------------------------------------------------------------
 	// 逻辑使用的表, 主要是提供表的记录保存读取功能, 
 	// 不再索引记录, 记录保存在Actor中
@@ -83,6 +84,7 @@ namespace NetCloud
 			return r;
 		}
 
+		// 使用MYSQL自增创建记录, 必须先设置好表结构自增
 		virtual ARecord GrowthNewRecord(DataStream *recordData = NULL) override;
 
 		virtual void InsertDBNewRecord(ARecord newRecord);
@@ -93,6 +95,8 @@ namespace NetCloud
 		}
 
 		virtual void ApplyExt(AutoNice extParam);
+
+		virtual bool LoadAllRecord(DBUserComponent *pComponent);
 
 	protected:
 		DBTableManager					*mpDB = NULL;

@@ -7,10 +7,10 @@
 #include "IOCPServerNet.h"
 #include "IOCPConnect.h"
 #include "NetWorkerComponent.h"
-
+#include "CommonLib.h"
 //-------------------------------------------------------------------------
 //网络界面组件, 继承实现网络功能 (Tcp WebSocket kcp ...)
-class ActorDBLib_Export SocketComponent : public NetCloud::ProcessComponent
+class CommonLib_Export SocketComponent : public NetCloud::ProcessComponent
 {
 public:
 	AString mServerIp;
@@ -45,7 +45,7 @@ protected:
 //-------------------------------------------------------------------------
 
 
-class ActorDBLib_Export TcpComponent : public SocketComponent
+class CommonLib_Export TcpComponent : public SocketComponent
 {
 public:
 	int		mMaxConnectCount = 16;

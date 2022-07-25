@@ -67,7 +67,7 @@ namespace uWS
 
 	public:
 		virtual void StartWeb(int port, const AString &keyPem, const AString &certPem, const AString &pass) override;
-		virtual void OnResponse(const AString &requestData, std::string_view &response, bool bPost, const AString &requestAddress) {}
+		virtual void OnResponse(const AString &requestData, AString &response, bool bPost, const AString &requestAddress) {  }
 
 	public:
 		virtual bool StartNet(const AString &wssServerIP, int serverPort, const AString &keyPemFile = "", const AString &pfxFileName = "", const AString &pfxPassword = "") override;

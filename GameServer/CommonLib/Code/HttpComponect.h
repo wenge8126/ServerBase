@@ -28,11 +28,7 @@ public:
 			mHttpNet->LowProcess(1000);
 	}
 
-	virtual void OnResponse(const AString &requestData, std::string_view &response, bool bPost, const AString &requestAddress)
-	{
-		GREEN_LOG("Now receive http request <%s>: %s", requestAddress.c_str(), requestData.c_str());
-		response = "ok";
-	}
+	virtual void OnResponse(const AString &requestData, AString &response, bool bPost, const AString &requestAddress);
 
 	virtual void OnDestory() override
 	{
@@ -57,7 +53,7 @@ public:
 	{}
 
 public:
-	virtual void OnResponse(const AString &requestData, std::string_view &response, bool bPost, const AString &requestAddress) override
+	virtual void OnResponse(const AString &requestData, AString &response, bool bPost, const AString &requestAddress) override
 	{
 		mpHttps->OnResponse(requestData, response, bPost, requestAddress);
 	}

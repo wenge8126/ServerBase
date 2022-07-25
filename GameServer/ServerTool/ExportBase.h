@@ -1480,18 +1480,18 @@ AutoNice GenerateProtocol(const AString &fileName, const AString tsPath, const A
 	tsFileName += "/";
 	tsFileName += targetName;
 	tsFileName += ".ts";
-	if (bTSCode)
-	{
-		AString tsCode = GenerateMsgProtocolTSCode(proList, proNotes, structNameList, false);
+	//if (bTSCode)
+	//{
+	//	AString tsCode = GenerateMsgProtocolTSCode(proList, proNotes, structNameList, false);
 
-		//LOG(" code > \r\n%s", tsCode.c_str());
-		FileDataStream  tsFile(tsFileName.c_str(), FILE_CREATE_UTF8);
+	//	//LOG(" code > \r\n%s", tsCode.c_str());
+	//	FileDataStream  tsFile(tsFileName.c_str(), FILE_CREATE_UTF8);
 
-		tsFile._write((void*)tsCode.c_str(), tsCode.length());
-		tsFile.close();
+	//	tsFile._write((void*)tsCode.c_str(), tsCode.length());
+	//	tsFile.close();
 
-		LOG("Genereate ts code > n%s", tsFileName.c_str());
-	}
+	//	LOG("Genereate ts code > n%s", tsFileName.c_str());
+	//}
 	//------------------------------------------------------------------------
 	{
 		// 生成C++
@@ -1510,6 +1510,7 @@ AutoNice GenerateProtocol(const AString &fileName, const AString tsPath, const A
 		LOG("Genereate c++ code > n%s", codeFileName.c_str());
 	}
 
+	if (bTSCode)
 	{
 		// 生成C#
 		AString cppCode = GenerateMsgProtocolC4Code(proList, proNotes, structNameList, exportRunHash, false, bExportComment, bIncludeMsgStruct);

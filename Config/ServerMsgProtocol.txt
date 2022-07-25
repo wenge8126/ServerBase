@@ -1,0 +1,28 @@
+
+AC_RequestCreateAccount
+{		
+	string mAccount;
+	string mPassword;
+	nicedata mInfoData;
+}
+
+CA_ResponseCreateAccount
+{	
+	int mErrorCode;	// 0表示成功
+	int64 mDBID;
+}
+
+
+AC_RequestAccountData
+{		
+	string mAccount;
+	
+}
+
+CA_ResponseAccountData
+{	
+	int mErrorCode;	// 0表示成功
+	int64 mDBID;
+	string mPassword;
+	nicedata mInfoData;
+}

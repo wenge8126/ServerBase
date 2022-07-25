@@ -24,9 +24,6 @@
     <ClCompile Include="Code\GateThread.cpp">
       <Filter>Code</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\SDK\HttpClient.cpp">
-      <Filter>Code</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\GateThread.h">
@@ -37,9 +34,6 @@
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Common\SDK\HttpClient.h">
-      <Filter>Code</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

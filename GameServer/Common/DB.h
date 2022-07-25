@@ -5,10 +5,8 @@
 #include "BaseTable.h"
 #include "BaseMemoryDB.h"
 
-#include "g_global_resourse.h" 
 #include "t_account.h" 
-#include "t_player.h" 
-#include "g_global_config.h" 
+#include "t_serverlist.h" 
 
 
 using namespace NetCloud;
@@ -21,23 +19,17 @@ public:
 	{
 		AutoTable t;
 		bool bResult = true;
-			t = mgr.find("g_global_resourse");
-			if (t && g_global_resourse::InitCheck(t, mbInitSet)) { } else { ERROR_LOG("g_global_resourse config check fail"); bResult = false; }
 			t = mgr.find("t_account");
 			if (t && t_account::InitCheck(t, mbInitSet)) { } else { ERROR_LOG("t_account config check fail"); bResult = false; }
-			t = mgr.find("t_player");
-			if (t && t_player::InitCheck(t, mbInitSet)) { } else { ERROR_LOG("t_player config check fail"); bResult = false; }
-			t = mgr.find("g_global_config");
-			if (t && g_global_config::InitCheck(t, mbInitSet)) { } else { ERROR_LOG("g_global_config config check fail"); bResult = false; }
+			t = mgr.find("t_serverlist");
+			if (t && t_serverlist::InitCheck(t, mbInitSet)) { } else { ERROR_LOG("t_serverlist config check fail"); bResult = false; }
 		return  bResult;
 	}
 
 	static void Clear()
 	{
-		g_global_resourse::table.setNull();
 		t_account::table.setNull();
-		t_player::table.setNull();
-		g_global_config::table.setNull();
+		t_serverlist::table.setNull();
 
 	}
 public:

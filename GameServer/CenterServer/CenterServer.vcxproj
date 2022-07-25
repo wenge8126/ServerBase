@@ -586,10 +586,13 @@ xcopy $(COMMON_BASE_LIB)\Bin\$(TargetName).pdb $(Server_Out_Dir)\  /y
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Code\AccountCenterActor.cpp" />
     <ClCompile Include="Code\CenterThread.cpp" />
     <ClCompile Include="CenterServer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Common\CommonDefine.h" />
+    <ClInclude Include="..\Common\DBUser_t_account.h" />
     <ClInclude Include="Code\AccountCenterActor.h" />
     <ClInclude Include="Code\LoginNetProtocol.h" />
     <ClInclude Include="Code\CenterThread.h" />

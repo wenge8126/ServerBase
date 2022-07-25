@@ -1,6 +1,7 @@
 #include "LogicDBTable.h"
 #include "DBTableManager.h"
 #include "SQLComponent.h"
+#include "DBUserComponent.h"
 
 namespace NetCloud
 {
@@ -66,5 +67,34 @@ namespace NetCloud
 		}
 	}
 	//-------------------------------------------------------------------------
+
+	bool LogicDBTable::LoadAllRecord(DBUserComponent *pComponent)
+	{
+		AString sql;
+
+		sql.Format("SELECT * from `%s`", GetTableName());
+
+		if (!mDBDataLoadSQL->mMainThreadSQLTool.exeSql(sql, true))
+		{
+			ERROR_LOG("Exe sql %s error : %s", sql.c_str(), mDBDataLoadSQL->mMainThreadSQLTool.getErrorMsg());
+			return false;
+		}
+
+		MySqlDBTool &tool = mDBDataLoadSQL->mMainThreadSQLTool;
+
+		ARecord r = NewRecord();
+		r->_alloctData(0);
+
+		while (true)
+		{
+			if (tool.LoadRecord(r))
+			{
+				pComponent->OnLoadRecord(r);
+			}
+			else
+				break;
+		}
+		return true;
+	}
 
 }

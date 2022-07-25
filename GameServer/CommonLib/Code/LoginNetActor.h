@@ -9,7 +9,7 @@
 
 #include "NoSQLComponent.h"
 
-
+#include "CommonLib.h"
 #include "DefineMsgFactory.h"
 #include "ServerClientMsg.h"
 
@@ -25,7 +25,7 @@ using namespace NetCloud;
 
 // 用于处理登陆消息组件
 
-class ActorDBLib_Export_H LoginNetComponect : public NetWorkerComponent
+class CommonLib_Export_H LoginNetComponect : public NetWorkerComponent
 {
 	virtual void _RegisterMsg(Logic::tEventCenter *pCenter) override
 	{
@@ -65,11 +65,6 @@ class ActorDBLib_Export_H LoginNetComponect : public NetWorkerComponent
 class ActorDBLib_Export_H LoginNetActor : public NetCloud::Actor
 {
 public:
-	WebLoginThread* GetLoginThread()
-	{
-		Auto<LoginActorManager> mgr = GetMgr();
-		return mgr->mpThread;
-	}
 
 	virtual void Init() override
 	{		
@@ -121,10 +116,10 @@ public:
 
 	void RegisterMsg(ActorManager *pActorMgr)
 	{
-		REG_COMPONENT(pActorMgr, TcpComponent);
-		REG_COMPONENT(pActorMgr, HttpComponect);
-		REG_COMPONENT(pActorMgr, WssWebComponent);
-		REG_COMPONENT(pActorMgr, LoginNetComponect);
+		REG_COMPONENT( TcpComponent);
+		REG_COMPONENT( HttpComponect);
+		REG_COMPONENT( WssWebComponent);
+		REG_COMPONENT( LoginNetComponect);
 	}
 };
 
