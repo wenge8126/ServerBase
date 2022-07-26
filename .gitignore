@@ -31,3 +31,10 @@ build
 /GameServer/.idea/.idea.GameServer_Actor/.idea
 /Client/.idea
 /GameServer/Debug
+/Client/Logs
+/Client/Assets/GameRun.txt
+/Client/Assets/GameRun.txt.meta
+/Client/.vsconfig
+/Client/Assembly-CSharp-Editor.csproj
+/Client/Assembly-CSharp.csproj
+/Client/Client.sln
