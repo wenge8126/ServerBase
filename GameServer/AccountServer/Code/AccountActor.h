@@ -61,7 +61,7 @@ public:
 		}
 	}
 
-
+	//ÇëÇóÊ¾Àý: http://127.0.0.1:1080/?ACCOUNT=wenge3&PASSWORD=999888
 	virtual void ResponseHttp(const AString &requestData, AString &response, bool bPost, const AString &requestAddress) override 
 	{ 
 		NiceData msg;
