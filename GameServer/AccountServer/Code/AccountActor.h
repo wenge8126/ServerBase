@@ -70,18 +70,24 @@ public:
 		NOTE_LOG("http request ********* %s", msg.dump().c_str());
 
 		AString account = msg.get("ACCOUNT");
-		if (account.length() > 0)
+		AString passWord = msg.get("PASSWORD");
+		if (account.length() >= 6 && passWord.length() >= 6)
 		{
 			AC_RequestCreateAccount req;
+			req.mAccount = account;
+			req.mPassword = passWord;
 			CA_ResponseCreateAccount resp;
 			if (Await(UnitID(Actor_AccountCenter, 1), req, resp, 10000))
 			{
 				response = resp.dump();
 				return;
 			}
+			else
+				response.Format("error=%d", eErrorCode_DBCreateFail);
 		}
-
-		response = "7788--------1 Error"; 
+		else
+			response.Format("error=%d", eErrorCode_AccountOrPasswordLengthLess);
+		//response = requestData; // "7788--------1 Error";
 	}
 
 

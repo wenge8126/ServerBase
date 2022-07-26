@@ -20,6 +20,7 @@ public:
 	AutoNice niceINFO(bool bSetUpdate=false) {  AutoNice v; if (mDataRecord) { mDataRecord->get(2, v);  if (bSetUpdate){ if (!v) {v=MEM_NEW NiceData(); mDataRecord->set(2, v); } else mDataRecord->NotifyChanged(2); } return v; } ERROR_LOG("No exist record %s", mKey.c_str()); return v; }
 
     bool SetACCOUNT(const char *nVal) { return mDataRecord->set(1, nVal); }
+    
 
 
 	virtual bool CheckTable(AutoTable t) override

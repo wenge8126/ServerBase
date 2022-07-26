@@ -9,6 +9,7 @@
 #include "MsgData.h"
 #include "DBUser_t_account.h"
 #include "ServerMsg.h"
+#include "t_account.h"
 
 using namespace NetCloud;
 
@@ -64,7 +65,7 @@ public:
 			tRecord.INFO(true) = req.mInfoData.getPtr();
 			record->SaveUpdate();
 			response.mErrorCode = eErrorCodeNone;
-			response.mDBID = mAccountDBUser->wDBID();
+			response.mDBID = record->get(0);
 			AccountData d;
 			d.mDBID = response.mDBID;
 			//??? d.mPassword = req.mPassword;

@@ -69,11 +69,11 @@ public:
         {
            if (re->GetTable()==NULL)
             {
-                ERROR("Reocrd table is NULL"); return *this;
+                ERROR_LOG("Reocrd table is NULL"); return *this;
             }
            if (re->getField()->GetCheckCode()!=1270315684)
             {
-                ERROR("Reocrd field check fail"); return *this;
+			   ERROR_LOG("Reocrd field check fail"); return *this;
             }
         }
        mRecord = re;
