@@ -33,6 +33,7 @@ namespace Logic
         eMsg_ClientRequestServer ,
         eMsg_ServerRequestClient,
         eMsg_ServerClientNotify,
+        eMsg_ClientRequestLogin,
     };
 
     public abstract class Packet

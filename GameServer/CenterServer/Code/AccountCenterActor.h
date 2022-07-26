@@ -100,7 +100,7 @@ public:
 	{
 		SCActor::Init();
 
-		mAccountDBUser = AddComponent("DBUser_t_account");
+		mAccountDBUser = AddComponent("AccountDBComponent");
 
 		if (!mAccountDBUser->InitTable("t_account"))
 		{
@@ -111,6 +111,7 @@ public:
 		// 加载所有的
 		Auto<LogicDBTable> t = mAccountDBUser->GetTable();
 		t->LoadAllRecord(mAccountDBUser.getPtr());
+		NOTE_LOG("Load total account : %d", mAccountHash.size());
 	}
 
 	virtual void OnLoadRecord(ARecord record)
@@ -128,7 +129,7 @@ public:
 	void RegisterMsg(ActorManager *pActorMgr)
 	{
 		REG_ACTOR_MSG(AccountCenterActor, RQ_CreateDBTable, RS_CreateDBTable);
-		REG_COMPONENT(DBUser_t_account);
+		REG_COMPONENT(AccountDBComponent);
 
 		REG_ACTOR_MSG(AccountCenterActor, AC_RequestCreateAccount, CA_ResponseCreateAccount);
 		REG_ACTOR_MSG(AccountCenterActor, AC_RequestAccountData, CA_ResponseAccountData);

@@ -25,7 +25,7 @@ class PlayerActor : public SCActor
 public:
 	GameThread* GetLoginThread()
 	{
-		Auto<AccountActorManager> mgr = GetMgr();
+		Auto<GameActorManager> mgr = GetMgr();
 		return mgr->mpThread;
 	}
 

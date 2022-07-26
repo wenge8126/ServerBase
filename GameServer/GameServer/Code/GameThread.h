@@ -36,7 +36,7 @@ public:
 	static bool IsAccountWeb();
 	static const char* GetAppName()
 	{
-		return CRunConfig<LoginConfig>::mConfig.title.c_str();
+		return CRunConfig<GameServerConfig>::mConfig.title.c_str();
 	}
 
 
@@ -117,11 +117,11 @@ public:
 
 //-------------------------------------------------------------------------
 
-class AccountActorManager : public NetCloud::ActorManager
+class GameActorManager : public NetCloud::DBActorManager
 {
 public:
-	AccountActorManager(GameThread *pThread, const char *szCloudNodeIp, int nCloudNodePort, int nSafeCheck, int threadNum = 2)
-		: NetCloud::ActorManager(szCloudNodeIp, nCloudNodePort, nSafeCheck, threadNum)
+	GameActorManager(GameThread *pThread, const char *szCloudNodeIp, int nCloudNodePort, int nSafeCheck, int threadNum = 2)
+		: NetCloud::DBActorManager(szCloudNodeIp, nCloudNodePort, nSafeCheck, threadNum)
 		, mpThread(pThread)
 	{
 	}

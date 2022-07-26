@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class WindowEdit : MonoBehaviour {
 
-    public string mWindowScriptPath = "Assets/_Ryu/Scripts/Logic/UI/";
+    public string mWindowScriptPath = "Assets/Scripts/UI/Generate/";
     public string mWindowLuaPath = "Assets/LuaCode/UILua/";
 	// Use this for initialization
 	void Start () {

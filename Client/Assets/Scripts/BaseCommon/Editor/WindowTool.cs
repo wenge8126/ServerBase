@@ -118,7 +118,7 @@ using Logic;";
 
         strLuaScript += memberStr;
 
-        strLuaScript += "\r\n    [IFix.Patch]\r\n    public override void OnInit()\r\n    {\r\n";
+        strLuaScript += "\r\n    public override void OnInit()\r\n    {\r\n";
 
         foreach (var vk in varList)
         {
@@ -131,7 +131,7 @@ using Logic;";
         }
         strLuaScript += "    }\r\n\r\n";
 
-        strLuaScript += "\r\n    [IFix.Patch]\r\n    public override bool InitUI()\r\n    {\r\n"; //        string parentName = GameCommon.GetFullName(mGameObjUI, mGameObjUI.name);\r\n\r\n";
+        strLuaScript += "\r\n    public override bool InitUI()\r\n    {\r\n"; //        string parentName = GameCommon.GetFullName(mGameObjUI, mGameObjUI.name);\r\n\r\n";
 
         strLuaScript += "        var rc = mGameObjUI.GetComponent<ReferenceCollector>();\r\n\r\n";
 
@@ -190,7 +190,7 @@ using Logic;";
 
         strLuaScript += "    }\r\n\r\n";
 
-        strLuaScript += "    [IFix.Patch]\r\n    protected override void OnDestroy()\r\n    {\r\n";
+        strLuaScript += "    protected override void OnDestroy()\r\n    {\r\n";
         foreach (var vk in varList)
         {
             if (vk.Value.mComType == "ButtonEvent")

@@ -19,22 +19,17 @@ int main()
 	EnableMenuItem(::GetSystemMenu(hwnd, FALSE), SC_CLOSE, MF_BYCOMMAND | MF_GRAYED);	//禁用关闭按钮
 	//SendMessage(hwnd, WM_SETICON, ICON_SMALL, (LPARAM)LoadIcon(NULL, "AccountIcon.ico"));
 
-	if (GameThread::IsAccountWeb())
+
 	{
-		SendMessage(hwnd, WM_SETICON, ICON_BIG, (LPARAM)LoadIcon(GetModuleHandle(0), MAKEINTRESOURCE(IDI_ICON_ACCOUNT_WEB)));
-		SendMessage(hwnd, WM_SETICON, ICON_SMALL, (LPARAM)LoadIcon(GetModuleHandle(0), MAKEINTRESOURCE(IDI_ICON_ACCOUNT_WEB)));
-	}
-	else
-	{
-		SendMessage(hwnd, WM_SETICON, ICON_BIG, (LPARAM)LoadIcon(GetModuleHandle(0), MAKEINTRESOURCE(IDI_ICON_CENTER_SERVER)));
-		SendMessage(hwnd, WM_SETICON, ICON_SMALL, (LPARAM)LoadIcon(GetModuleHandle(0), MAKEINTRESOURCE(IDI_ICON_CENTER_SERVER)));
+		SendMessage(hwnd, WM_SETICON, ICON_BIG, (LPARAM)LoadIcon(GetModuleHandle(0), MAKEINTRESOURCE(IDI_ICON_GAME_SERVER)));
+		SendMessage(hwnd, WM_SETICON, ICON_SMALL, (LPARAM)LoadIcon(GetModuleHandle(0), MAKEINTRESOURCE(IDI_ICON_GAME_SERVER)));
 	}
 
 	AString logFileName, logErrorFileName;
 	SYSTEMTIME nowtime;
 	GetLocalTime(&nowtime);
 
-			INIT_RUN_CONFIG(LoginConfig, "account_config")
+			INIT_RUN_CONFIG(GameServerConfig, "game_config")
 
 	logFileName.Format("./Log/%s_%4d-%02d-%02d_%02d-%02d-%02d.log", GameThread::GetAppName(),
 		nowtime.wYear, nowtime.wMonth, nowtime.wDay, nowtime.wHour, nowtime.wMinute, nowtime.wSecond);

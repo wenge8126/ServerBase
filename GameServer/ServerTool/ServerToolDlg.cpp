@@ -480,7 +480,7 @@ void CServerToolDlg::OnBnExportRunConfig()
 	AString err;
 	AutoNice info;
 
-	int x = eExportServerMsg;
+	int x = eExportCientMsg;
 
 	switch (x)
 	{
@@ -527,7 +527,7 @@ void CServerToolDlg::OnBnExportRunConfig()
 		AString fileName;
 		
 		fileName.Format("%s/ClientMsgProtocol.txt", (LPCTSTR)configPath);
-		info = GenerateProtocol(fileName, "", "../GameServer/Common", "ClientMsg", true, err);
+		info = GenerateProtocol(fileName, "", "../GameServer/Common", "ClientMsg", true, err, false, false, "../Client/Assets/Scripts/NetMsg");
 	}
 	break;
 

@@ -80,6 +80,8 @@ public class MainStart : MonoBehaviour
     // Start is called before the first frame update
     async void Start()
     {
+        DontDestroyOnLoad(gameObject);
+        
         EventCenter.Instance = new EventCenter();
         mActorMgr = new ActorManager();
         EventCenter.StaticRegister("ConnectFinishEvent", new DefineFactory<ConnectFinishEvent>());
@@ -110,10 +112,13 @@ public class MainStart : MonoBehaviour
         //await Task.Delay(3);
         //mNet.mNotifyConnectFinishEvent.Do();
 
-        bool bOk = await mNet.AsyncConnect("127.0.0.1", 4001, 3000);
-        LOG.log($"Connect {bOk.ToString()}");
-        if (bOk)
-            TestRequestMsg();
+        // bool bOk = await mNet.AsyncConnect("127.0.0.1", 4001, 3000);
+        // LOG.log($"Connect {bOk.ToString()}");
+        // if (bOk)
+        //     TestRequestMsg();
+        
+        mActorMgr.RegisterActor(new DefineActorFactory<LoginActor>((int)EActorType.ClientActor_Login));
+        mActor = mActorMgr.CreateActor((int)EActorType.ClientActor_Login, 1);
     }
 
     async void TestRequestMsg()

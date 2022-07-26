@@ -30,25 +30,9 @@ using namespace NetCloud;
 
 using namespace std;
 
-DEFINE_RUN_CONFIG(LoginConfig)
+DEFINE_RUN_CONFIG(GameServerConfig)
 
-void Analysis(NiceData &msg, const AString &requestData)
-{
-	Array<AString> tempList;
-	AString::Split(requestData.c_str(), tempList, "&", 100);
-	for (int i = 0; i < tempList.size(); i++)
-	{
-		Array<AString> str;
-		AString::Split(tempList[i].c_str(), str, "=", 2);
 
-		if (str.size() == 2)
-		{
-			msg[str[0].c_str()] = str[1].c_str();
-		}
-	}
-}
-
-//-------------------------------------------------------------------------
 
 
 
@@ -79,7 +63,7 @@ AString GameThread::GetTitle()
 	//ARecord serverRe = table->GetRecord("ServerArea");
 	//AString serverName = serverRe["STRING"];
 
-	bool bAccountLogin = IsAccountWeb(); // ((int)webWsAddrRe["VALUE"] <= 0);
+
 
 	char szDir[MAX_PATH];
 	::GetCurrentDirectory(MAX_PATH - 1, szDir);
@@ -87,15 +71,14 @@ AString GameThread::GetTitle()
 
 	{
 		AString serverName = "AccountServer";
-		auto &config = CRunConfig<LoginConfig>::mConfig;
-		title.Format("%s_%s <%d : %s>[%s://%s:%d]  v[%s] %s > "
+		auto &config = CRunConfig<GameServerConfig>::mConfig;
+		title.Format("%s_%s <%d : %s>[%s:%d]  v[%s] %s > "
 			, GetAppName()
 			, runMode.c_str()
 			, 0
-			, serverName.ANIS().c_str()
-			,"http"
-			, config.ws_ip.c_str()
-			, config.ws_port
+			, serverName.ANIS().c_str()			
+			, config.server_node.node.ip.c_str()
+			, config.server_node.node.port
 
 			, SERVER_VERSION_FLAG
 			, szDir
@@ -109,7 +92,7 @@ void GameThread::SetTitle(const AString &title)
 	if (mbStartOk)
 	{
 		AString str;
-		str.Format("%s Login: %d", title.c_str(), 1); // CL_LoginEvent::msTotalNowLogin);
+		str.Format("%s Server: %d", title.c_str(), 1); // CL_LoginEvent::msTotalNowLogin);
 		SetConsoleTitle(str.c_str());
 	}
 	else
@@ -156,30 +139,11 @@ bool TraverseDeleteBackFiles(const std::string &path)
 }
 
 
-void _ConnectGate(GameThread *pThread)
-{
-	//LOG("=== Connect gate start");
-	//bool re = Async::AwaitLoop(
-	//	[=]()
-	//{
-	//	bool b = pThread->mActorManager->mNetNode->AwaitConnectGate(NetAddress(config.login_node.gate.ip.c_str(), config.login_node.gate.port));
-	//	return b;
-	//}
-	//	, 10, 3000);
-
-	//LOG("=== Connect gate : %s", re ? "ok" : "fail");
-
-	//while (true)
-	//{
-	//	bool b = pThread->mActorManager->mNetNode->AwaitConnectGate(NetAddress(config.login_node.gate.ip.c_str(), config.login_node.gate.port));
-	//	if (b)
-	//		break;
-	//	tTimer::AWaitTime(3000);
-	//}
-	pThread->mbStartOk = true;
-}
 //-------------------------------------------------------------------------
+class GameServerActor : public SCActor
+{
 
+};
 
 //-------------------------------------------------------------------------
 // 实现客户端直接消息交互系统内所有Actor (中转Actor消息请求)
@@ -195,40 +159,46 @@ void GameThread::OnStart(void*)
 	NiceData lineParam;
 
 
-	mActorManager = MEM_NEW AccountActorManager(this, config.login_node.node.ip.c_str(), config.login_node.node.port, config.login_node.node.saft_code, 2);
+	mActorManager = MEM_NEW GameActorManager(this, config.server_node.node.ip.c_str(), config.server_node.node.port, config.server_node.node.saft_code, 2);
 
 	// Login 启动
 	{
-		auto &config = CRunConfig<LoginConfig>::mConfig;
 
-		SystemInfo::ReadCommandLineParam(GetCommandLine(), lineParam);
-		int addPort = lineParam["port"];
-		if (addPort != 0)
-		{
-			config.ws_port += addPort;
-
-			AutoNice d = MEM_NEW NiceData();
-			config.ToData(d);
-			AString info;
-			RunConfig::ShowConfig(d, "login_config", info);
-			LOG("配置变更: %d ***************************************************************\r\n====================================\r\n%s====================================\r\n", addPort, info.ANIS().c_str());
-		}
-		// 连接LogicDB
-
-
-		mActorManager->RegisterActor(Actor_Account, MEM_NEW DefineActorFactory<PlayerActor>());
-		mActorManager->RegisterComponect("HttpComponect", MEM_NEW EventFactory<HttpComponect>());
-
-
-		mLoginActor = mActorManager->CreateActor(Actor_Account, config.login_id);
-
-
+		mActorManager->RegisterActor(Actor_GameServer, MEM_NEW DefineActorFactory<GameServerActor>());
+		
+		mActorManager->RegisterActor(Actor_Player, MEM_NEW DefineActorFactory<PlayerActor>());
+	
+		mLoginActor = mActorManager->CreateActor(Actor_GameServer, config.SERVER_ID);
 		
 
 		//CoroutineTool::AsyncCall(_ConnectGate, this);
 
-		mActorManager->mNetNode->ConnectGate(config.login_node.gate.ip.c_str(), config.login_node.gate.port, 10000);
+	
+		CoroutineTool::AsyncCall([&]()
+		{
+			mbStartOk = mActorManager->mNetNode->AwaitConnectGate(config.server_node.gate.ip.c_str(), config.server_node.gate.port, 10000);
 
+			//AutoNice param = MEM_NEW NiceData();
+			//param[DBBASE] = config.db_config.mDBBASE;
+			//param[DBIP] = config.db_config.mDBIP;
+			//param[DBPASSWORD] = config.db_config.mDBPASSWORD;
+			//param[DBPORT] = config.db_config.mDBPORT;
+			//param[DBUSER] = config.db_config.mDBUSER;
+			//param[TABLE_LIST] = config.db_config.mTABLE_LIST;
+			//param[DBPACKET_SIZE] = 16 * 1024 * 1024;
+
+			//// Update共享缓存key使用 Actor_进行ID_线程ID 组成的字符串, 生成哈希的整数
+			//AString keyString;
+			//int proID = _getpid();
+			//keyString.Format("Actor_%d_%llu", proID, GetThreadID());
+
+			//bool b = mActorManager->AsyncInitSQLUpdate(param, "127.0.0.1", 0, 0, MAKE_INDEX_ID(keyString.c_str()));
+
+			//NOTE_LOG("*** DB Init result > %s\r\n", b ? "succeed" : "fail");
+			//if (b)
+				mLoginActor = mActorManager->CreateActor(Actor_GameServer, 1);
+		}
+		);
 
 		//ServerThread::OnStart(NULL);
 		//TraverseDeleteBackFiles("./");

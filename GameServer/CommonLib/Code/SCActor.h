@@ -7,6 +7,8 @@
 #include "CommonLib.h"
 #include "CommonDefine.h"
 
+
+//-------------------------------------------------------------------------
 // 具有直接与客户端Actor通讯功能
 class CommonLib_Export_H SCActor : public NetCloud::Actor
 {

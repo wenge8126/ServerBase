@@ -46,13 +46,6 @@ enum ActorMsgType
 	eActorMsg_response = 2,
 };
 
-enum CS_MSG_ID
-{
-	eMsg_RequestClientActor = PACKET_MAX + 50,
-	eMsg_ClientRequestServer,
-	eMsg_ServerRequestClient,
-	eMsg_ServerClientNotify,
-};
 
 class AsyncNode;
 

@@ -159,6 +159,8 @@ enum EErrorCode
 	eErrorCode_DBCreateFail = 1002,
 	eErrorCode_NoExistAccount,
 	eErrorCode_AccountOrPasswordLengthLess,
+	eErrorCode_DBQeuryFail,
+	eErrorCode_HttpCmdError,
 };
 
 #endif //_INCLUDE_COMMONDEFINE_H_

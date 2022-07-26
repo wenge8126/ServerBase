@@ -1,5 +1,6 @@
 #pragma once
 
+#include "NetConfig.h"
 
 #ifndef CommonLib_Export
 #ifdef STATE_COMMON_LIB
@@ -15,3 +16,14 @@
 #		endif
 #endif
 #endif
+
+
+//-------------------------------------------------------------------------
+enum CS_MSG_ID
+{
+	eMsg_RequestClientActor = PACKET_MAX + 50,
+	eMsg_ClientRequestServer,
+	eMsg_ServerRequestClient,
+	eMsg_ServerClientNotify,
+	eMsg_ClientRequestLogin,
+};

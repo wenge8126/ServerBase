@@ -1288,7 +1288,7 @@ AString GenerateMsgProtocolC4Code(AutoNice proList, AutoNice proNotes, Array<ASt
 	return cppCode;
 }
 
-AutoNice GenerateProtocol(const AString &fileName, const AString tsPath, const AString cppPath, const AString &targetName, bool bTSCode, AString error, bool bExportComment = false, bool bIncludeMsgStruct = false)
+AutoNice GenerateProtocol(const AString &fileName, const AString tsPath, const AString cppPath, const AString &targetName, bool bTSCode, AString error, bool bExportComment = false, bool bIncludeMsgStruct = false, AString clientMsgPath = "")
 {
 	FileDataStream  f(fileName.c_str(), FILE_READ);
 	AutoData  d = f.readAllData();
@@ -1516,8 +1516,11 @@ AutoNice GenerateProtocol(const AString &fileName, const AString tsPath, const A
 		AString cppCode = GenerateMsgProtocolC4Code(proList, proNotes, structNameList, exportRunHash, false, bExportComment, bIncludeMsgStruct);
 
 		//LOG("C++ ----------------------\r\n%s", proNotes->dump().c_str());
-
+		
 		AString codeFileName = cppPath;
+		if (clientMsgPath.length() > 0)
+			codeFileName = clientMsgPath;
+
 		codeFileName += "/";
 		codeFileName += targetName;
 		codeFileName += ".cs";

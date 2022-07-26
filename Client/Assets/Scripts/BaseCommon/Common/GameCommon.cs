@@ -5,11 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using LitJson;
 using Logic;
 
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Networking;
 
 
 public class GameCommon
@@ -231,7 +232,100 @@ public class GameCommon
         else
             LOG.logError("Logic start is null : " + logicName);
     }
+    
+    public static async Task<string> HttpRequest(string url)
+    {
+            try
+            {
+                using (UnityWebRequest request = UnityWebRequest.Get(url))
+                {
+                    request.certificateHandler = new UpdateResourceMgr.BypassCertificate();
 
+                    try
+                    {
+                        var op = request.SendWebRequest(); //请求下载
+                        while (!op.isDone)
+                        {
+                            await Task.Delay(10);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        LOG.logError("Downlad fail : " + url + " Error : " + e.ToString());
+                        return null;
+                    }
+
+                    // while (!request.isDone)
+                    // {
+                    //     //LOG.log(request.downloadProgress.ToString());  //下载进度
+                    //     await Task.Delay(1);
+                    // }
+                    if (request.result !=
+                        UnityWebRequest.Result
+                            .Success) // request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+                    {
+                        LOG.logError("Error = " + request.error + " : " + url); //下载出错
+                        return null;
+                    }
+                    else if (request.isDone) //下载完成
+                    {
+                        string result = request.downloadHandler.text;
+                   
+                        if (!string.IsNullOrEmpty(result))
+                            LOG.log("Download ok : " + request + " >>> url : " + url);
+                        else
+                            LOG.log("Download fail , url : " + url);
+                        return result;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                LOG.log($"Download {url} exception :\r\n{e.ToString()}");
+            }
+
+            return null;
+        }
+
+
+    static public string ToJson(NiceData scrData)
+    {
+        JsonData jsonData = new JsonData();
+
+        foreach (var kv in scrData.mDataMap)
+        {
+            if (kv.Value is NiceData)
+            {
+                jsonData[kv.Key] = ToJson(kv.Value as NiceData);
+            }
+            else
+            {
+                jsonData[kv.Key] = new JsonData(kv.Value);
+            }
+        }
+
+        return jsonData.ToJson();
+    }
+
+    static public NiceData FullJson(string jsonString)
+    {
+        NiceData d = new NiceData();
+        var x = JsonMapper.ToObject(jsonString);
+        foreach (var key in x.Keys)
+        {
+            var obj = x[key];
+            if (obj.IsInt)
+                d.set(key, (int)obj);
+            else if (obj.IsString)
+                d.set(key, (string)obj);
+            else
+            {
+                LOG.logError("No value type : "+obj.GetType().ToString());
+            }
+        }
+
+        return d;
+    }
   
     static public void SaveJson(string jsonData)
     {
