@@ -55,11 +55,14 @@ public:
 			return;
 		}
 
-		if (mAccountDBUser->GrowthNewRecord())
+		ARecord record = mAccountDBUser->GetTable()->GrowthNewRecord();
+		if (record)
 		{
-			mAccountDBUser->SetACCOUNT(req.mAccount.c_str());
-			//??? mAccountDBUser->setPASSWORD(req.mPassword.c_str());
-			mAccountDBUser->INFO(true) = req.mInfoData.getPtr();
+			t_account tRecord(record);
+			tRecord.ACCOUNT() = req.mAccount;
+			//??? tRecord.PASSWORD() = req.mPassword;
+			tRecord.INFO(true) = req.mInfoData.getPtr();
+			record->SaveUpdate();
 			response.mErrorCode = eErrorCodeNone;
 			response.mDBID = mAccountDBUser->wDBID();
 			AccountData d;
