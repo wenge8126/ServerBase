@@ -22,6 +22,7 @@
 
 #include "AsyncLoop.h"
 
+#include "GameCenterActor.h"
 #include "AccountCenterActor.h"
 #include "RunConfigStruct.h"
 
@@ -204,11 +205,7 @@ void CenterThread::OnStart(void*)
 
 
 		mActorManager->RegisterActor(Actor_AccountCenter, MEM_NEW DefineActorFactory<AccountCenterActor>());
-		
-
-		
-
-
+		mActorManager->RegisterActor(Actor_GameCenter, MEM_NEW DefineActorFactory<GameCenterActor>());
 		
 
 		//CoroutineTool::AsyncCall(_ConnectGate, this);
@@ -235,7 +232,10 @@ void CenterThread::OnStart(void*)
 
 			NOTE_LOG("*** DB Init result > %s\r\n", b ? "succeed" : "fail");
 			if (b)
+			{
 				mLoginActor = mActorManager->CreateActor(Actor_AccountCenter, 1);
+				mActorManager->CreateActor(Actor_GameCenter, 1);
+			}
 		}
 		);
 

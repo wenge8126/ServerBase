@@ -17,7 +17,7 @@
 #endif
 #endif
 
-
+#define GATE_REQUEST_OVERMILSECOND (10000)
 //-------------------------------------------------------------------------
 enum CS_MSG_ID
 {

@@ -27,6 +27,7 @@ using namespace NetCloud;
 
 class CommonLib_Export_H LoginNetComponect : public NetWorkerComponent
 {
+public:
 	virtual void _RegisterMsg(Logic::tEventCenter *pCenter) override
 	{
 		//REGISTER_EVENT(pCenter, CheckAccountMsg);
@@ -36,7 +37,9 @@ class CommonLib_Export_H LoginNetComponect : public NetWorkerComponent
 
 	virtual bool OnConnected(HandConnect connect)
 	{
-		CreateClientActor(connect, 1);
+		//CreateClientActor(connect, 1);
+		//??? 创建等待验证token事件
+		//???
 		// 启动等待登陆事件, 长时间未登陆, 则清理
 		return NetWorkerComponent::OnConnected(connect);
 	}

@@ -590,6 +590,7 @@ xcopy $(COMMON_BASE_LIB)\Bin\$(TargetName).pdb $(Server_Out_Dir)\  /y
     <ClCompile Include="GameServer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Code\GameServerActor.h" />
     <ClInclude Include="Code\PlayerActor.h" />
     <ClInclude Include="Code\LoginNetProtocol.h" />
     <ClInclude Include="Code\GameThread.h" />

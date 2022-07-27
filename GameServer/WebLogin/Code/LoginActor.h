@@ -15,7 +15,7 @@
 #include "LoginNetActor.h"
 
 #include "ClientMsg.h"
-
+#include "ServerMsg.h"
 
 using namespace NetCloud;
 
@@ -32,7 +32,7 @@ using namespace NetCloud;
 //-------------------------------------------------------------------------
 class LoginActor : public LoginNetActor
 {
-public:
+public: 
 	WebLoginThread* GetLoginThread()
 	{
 		Auto<LoginActorManager> mgr = GetMgr();
@@ -60,7 +60,7 @@ public:
 
 		//tcpNet->mSafeCode = 11;
 		Hand<tBaseEventNet> net = tcpNet->GetNet();
-		net->GetNetProtocol()->RegisterNetPacket(MEM_NEW DefaultReqeustMsgFactory<eMsg_ClientRequestLogin, CS_RequestLogin, SC_ResponseLogin, LoginActor>(this));
+		net->GetNetProtocol()->RegisterNetPacket(MEM_NEW AsyncProcessReqeustMsgFactory<eMsg_ClientRequestLogin, CS_RequestLogin, SC_ResponseLogin, LoginActor>(this));
 		////net->SetNetProtocol();`
 		 
 		//AddComponent("LoginNetComponect");
@@ -68,12 +68,35 @@ public:
 
 
 
-// 中转客户端请求服务器Actor消息
-void On(HandConnect connect, const CS_RequestLogin  &req, SC_ResponseLogin &resp)
+// 客户端连接后请求登陆服务器
+void OnAsyncRequest(HandConnect connect, const CS_RequestLogin  &req, SC_ResponseLogin &resp)
 {
 	NOTE_LOG(req.dump().c_str());
+	resp.error = eErrorCodeUnkwon;
+	if (true)		//??? req.mToken == waitLoginEvent->mToten
+	{
+		Int64 wDBID = req.mDBID; //??? waitLoginEvent->mDBID;
 
-	resp.error = 0;
+		// 请求世界中心分配游戏服务器, 并创建PlayerActor
+		LW_RequestEnterServer requestServerMsg;
+		requestServerMsg.mDBID = wDBID;
+		WL_ResponseEnterServer respServerMsg;
+		if (Await(UnitID(Actor_GameCenter, 1), requestServerMsg, respServerMsg, 10000))
+		{
+			Hand<LoginNetComponect> comp = GetComponent("LoginNetComponect");
+			if (comp)
+			{
+				comp->CreateClientActor(connect, wDBID);
+				resp.error = eErrorCodeNone;
+			}
+			else
+				resp.error = eErrorCode_ProgramError;
+		}
+		else
+			resp.error = eErrorCode_GateNetMsgOverTime;
+	}
+	else
+		resp.error = eErrorCode_TokenCheckFail;
 
 }
 

@@ -135,3 +135,68 @@ public class GC_ResponsePlayerData : BasePacket
 
 };
 
+//  游戏服务器请求客户端状态
+public class GC_RequestClientState : BasePacket
+{
+    public int mValue		
+    {
+        set { mMsgData.set("mValue",  value); }
+        get { return (int)mMsgData.getObject("mValue"); }
+    }
+
+
+
+    public GC_RequestClientState() { InitData(); }
+
+
+   public override  void Full(NiceData scrData) 
+    {
+        InitData();
+        mMsgData.set("mValue", scrData.getObject("mValue"));
+    }
+
+    public override void InitData() 
+    {
+        mValue = 0;
+    }
+
+    public override string MsgName()   { return "GC_RequestClientState"; }
+
+};
+
+public class CG_ResponseClientState : BasePacket
+{
+    public int mBeginSecond		
+    {
+        set { mMsgData.set("mBeginSecond",  value); }
+        get { return (int)mMsgData.getObject("mBeginSecond"); }
+    }
+
+    public string mInfo		
+    {
+        set { mMsgData.set("mInfo",  value); }
+        get { return (string)mMsgData.getObject("mInfo"); }
+    }
+
+
+
+    public CG_ResponseClientState() { InitData(); }
+
+
+   public override  void Full(NiceData scrData) 
+    {
+        InitData();
+        mMsgData.set("mBeginSecond", scrData.getObject("mBeginSecond"));
+        mMsgData.set("mInfo", scrData.getObject("mInfo"));
+    }
+
+    public override void InitData() 
+    {
+        mBeginSecond = 0;
+        mInfo = "";
+    }
+
+    public override string MsgName()   { return "CG_ResponseClientState"; }
+
+};
+

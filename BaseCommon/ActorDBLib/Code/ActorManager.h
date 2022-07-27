@@ -42,6 +42,12 @@ namespace NetCloud
 			return Hand<Actor>();
 		}
 
+		void RemoveActor(HandActor actor)
+		{
+			if (mNetNode)
+				mNetNode->RemoveUnit(actor);
+		}
+
 		void RegisterActor(int actorType, Auto<ActorFactory> factory)
 		{
 			factory->SetType(actorType);

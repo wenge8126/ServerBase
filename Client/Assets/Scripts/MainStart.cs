@@ -75,7 +75,8 @@ public class MainStart : MonoBehaviour
 {
     public static ActorManager mActorMgr;
     public static Logic.TcpClientNet mNet;
-
+    public static Actor mCurrentActor;
+    
     public Actor mActor;
     // Start is called before the first frame update
     async void Start()
@@ -119,6 +120,8 @@ public class MainStart : MonoBehaviour
         
         mActorMgr.RegisterActor(new DefineActorFactory<LoginActor>((int)EActorType.ClientActor_Login));
         mActor = mActorMgr.CreateActor((int)EActorType.ClientActor_Login, 1);
+        
+        mActorMgr.RegisterActor(new DefineActorFactory<ClientActor>((int)EActorType.Actor_Client));
     }
 
     async void TestRequestMsg()

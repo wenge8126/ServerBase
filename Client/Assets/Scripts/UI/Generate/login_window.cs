@@ -10,7 +10,7 @@ public class login_window : tWindow
 {
     public override string getPrefabName(){ return "login_window" ; }
 
-    protected UnityEngine.GameObject edit_account = null;
+    protected UnityEngine.UI.InputField edit_account = null;
     protected UnityEngine.GameObject but_account = null;
 
     public override void OnInit()
@@ -25,7 +25,7 @@ public class login_window : tWindow
         var rc = mGameObjUI.GetComponent<ReferenceCollector>();
 
 
-        edit_account = rc.Get<UnityEngine.GameObject>("edit_account");
+        edit_account = rc.Get<UnityEngine.UI.InputField>("edit_account");
                 if (edit_account==null) { LOG.logError("No exist : edit_account"); return false;  }
         but_account = rc.Get<UnityEngine.GameObject>("but_account");
                 if (but_account==null) { LOG.logError("No exist : but_account"); return false;  }

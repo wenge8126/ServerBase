@@ -154,6 +154,9 @@ enum PayServerType
 enum EErrorCode
 {
 	eErrorCodeNone = 0,
+	eErrorCodeUnkwon = 1,
+	eErrorCode_ProgramError = 2,	//  程序代码错误
+	eErrorCode_GateNetMsgOverTime = 3, // 服务器内部网关网络超时
 	eErrorCode_ExistAccount = 1000,
 	eErrorCode_PasswordError = 1001,
 	eErrorCode_DBCreateFail = 1002,
@@ -161,6 +164,7 @@ enum EErrorCode
 	eErrorCode_AccountOrPasswordLengthLess,
 	eErrorCode_DBQeuryFail,
 	eErrorCode_HttpCmdError,
+	eErrorCode_TokenCheckFail,
 };
 
 #endif //_INCLUDE_COMMONDEFINE_H_
