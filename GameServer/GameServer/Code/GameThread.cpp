@@ -151,8 +151,9 @@ bool TraverseDeleteBackFiles(const std::string &path)
 //-------------------------------------------------------------------------
 void GameThread::OnStart(void*)
 {
-	NiceData lineParam;
+	ServerThread::OnStart(NULL);
 
+	NiceData lineParam;
 
 	mActorManager = MEM_NEW GameActorManager(this, config.server_node.node.ip.c_str(), config.server_node.node.port, config.server_node.node.saft_code, 2);
 

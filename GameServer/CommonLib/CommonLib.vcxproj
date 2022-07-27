@@ -209,6 +209,7 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
   <ItemGroup>
     <ClInclude Include="Code\ClientActor.h" />
     <ClInclude Include="Code\CommonLib.h" />
+    <ClInclude Include="Code\GameCommon.h" />
     <ClInclude Include="Code\HttpClient.h" />
     <ClInclude Include="Code\HttpComponect.h" />
     <ClInclude Include="Code\LoginNetActor.h" />

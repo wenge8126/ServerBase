@@ -7,6 +7,7 @@
 
 #include "SCActor.h"
 #include "ServerMsg.h"
+#include "GameCommon.h"
 
 using namespace NetCloud;
 
@@ -45,21 +46,6 @@ public:
 
 	}
 
-	void Analysis(NiceData &msg, const AString &requestData)
-	{
-		Array<AString> tempList;
-		AString::Split(requestData.c_str(), tempList, "&", 100);
-		for (int i = 0; i < tempList.size(); i++)
-		{
-			Array<AString> str;
-			AString::Split(tempList[i].c_str(), str, "=", 2);
-
-			if (str.size() == 2)
-			{
-				msg[str[0].c_str()] = str[1].c_str();
-			}
-		}
-	}
 
 	//请求示例: http://127.0.0.1:1080/?CMD=CREATE&ACCOUNT=wenge3&PASSWORD=999888
 	//请求示例: http://127.0.0.1:1080/?CMD=CHECK&ACCOUNT=wenge3&PASSWORD=999888
@@ -72,7 +58,7 @@ public:
 	virtual void ResponseHttp(const AString &requestData, AString &response, bool bPost, const AString &requestAddress) override 
 	{ 
 		NiceData msg;
-		Analysis(msg, requestData);
+		GameCommon::Analysis(msg, requestData);
 
 		NOTE_LOG("http request ********* %s", msg.dump().c_str());
 		AString cmd = msg.get("CMD");
