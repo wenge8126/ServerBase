@@ -285,3 +285,142 @@ public:
 
 };
 
+//  游戏服务器请求客户端状态
+class GC_RequestClientState : public tBaseMsg
+{ 
+public:
+    int mValue;		
+
+public:
+    GC_RequestClientState() { clear(false); };
+
+
+   virtual  void Full(AutoNice scrData) override
+    {
+        clear(false);
+        CheckGet(scrData, mValue);
+    }
+
+    virtual void ToData(AutoNice &destData) override
+    {
+        destData["mValue"] = mValue;
+    }
+
+    bool serialize(DataStream *destData) const override
+    {
+        destData->write((short)1);
+
+        SAVE_MSG_VALUE(mValue, 1);
+        return true;
+    }
+
+    void clear(bool bClearBuffer=false) override 
+    {
+        mValue = 0;
+    }
+
+    void copy(const tBaseMsg &otherMsg) override 
+    {
+        if (strcmp("GC_RequestClientState", otherMsg.GetMsgName())!=0) { LOG("%s is not GC_RequestClientState", otherMsg.GetMsgName()); return; }; const GC_RequestClientState &other = *(const GC_RequestClientState*)(&otherMsg);
+        mValue = other.mValue;
+    }
+
+    virtual const char* GetMsgName() const override { return "GC_RequestClientState"; }
+
+    AData get(const char *szMember) const 
+    {
+        if (strcmp(szMember, "mValue")==0) { AData value; value = mValue; return value; }
+        return AData();
+    }
+
+    bool set(const char *szMember, AData value) 
+    {
+        if (strcmp(szMember, "mValue")==0) { mValue = value; return true; };
+        LOG("No exist > %%s", szMember);  return false;
+    }
+
+    AData operator [] (const char *szMember) const 
+    {
+        return get(szMember);
+    }
+
+    AData operator [] (const AString &member) const 
+    {
+        return get(member.c_str());
+    }
+
+};
+
+class CG_ResponseClientState : public tBaseMsg
+{ 
+public:
+    int mBeginSecond;		
+    AString mInfo;		
+
+public:
+    CG_ResponseClientState() { clear(false); };
+
+
+   virtual  void Full(AutoNice scrData) override
+    {
+        clear(false);
+        CheckGet(scrData, mBeginSecond);
+        CheckGet(scrData, mInfo);
+    }
+
+    virtual void ToData(AutoNice &destData) override
+    {
+        destData["mBeginSecond"] = mBeginSecond;
+        destData["mInfo"] = mInfo;
+    }
+
+    bool serialize(DataStream *destData) const override
+    {
+        destData->write((short)2);
+
+        SAVE_MSG_VALUE(mBeginSecond, 1);
+        SAVE_MSG_VALUE(mInfo, 4);
+        return true;
+    }
+
+    void clear(bool bClearBuffer=false) override 
+    {
+        mBeginSecond = 0;
+        mInfo.setNull();
+    }
+
+    void copy(const tBaseMsg &otherMsg) override 
+    {
+        if (strcmp("CG_ResponseClientState", otherMsg.GetMsgName())!=0) { LOG("%s is not CG_ResponseClientState", otherMsg.GetMsgName()); return; }; const CG_ResponseClientState &other = *(const CG_ResponseClientState*)(&otherMsg);
+        mBeginSecond = other.mBeginSecond;
+        mInfo = other.mInfo;
+    }
+
+    virtual const char* GetMsgName() const override { return "CG_ResponseClientState"; }
+
+    AData get(const char *szMember) const 
+    {
+        if (strcmp(szMember, "mBeginSecond")==0) { AData value; value = mBeginSecond; return value; }
+        if (strcmp(szMember, "mInfo")==0) { AData value; value = mInfo; return value; }
+        return AData();
+    }
+
+    bool set(const char *szMember, AData value) 
+    {
+        if (strcmp(szMember, "mBeginSecond")==0) { mBeginSecond = value; return true; };
+        if (strcmp(szMember, "mInfo")==0) { mInfo = value; return true; };
+        LOG("No exist > %%s", szMember);  return false;
+    }
+
+    AData operator [] (const char *szMember) const 
+    {
+        return get(szMember);
+    }
+
+    AData operator [] (const AString &member) const 
+    {
+        return get(member.c_str());
+    }
+
+};
+

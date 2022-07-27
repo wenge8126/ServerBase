@@ -22,6 +22,7 @@
 
 #include "AsyncLoop.h"
 
+#include "GameCenterActor.h"
 #include "AccountCenterActor.h"
 #include "RunConfigStruct.h"
 
@@ -33,21 +34,6 @@ using namespace std;
 
 DEFINE_RUN_CONFIG(CenterServerConfig)
 
-void Analysis(NiceData &msg, const AString &requestData)
-{
-	Array<AString> tempList;
-	AString::Split(requestData.c_str(), tempList, "&", 100);
-	for (int i = 0; i < tempList.size(); i++)
-	{
-		Array<AString> str;
-		AString::Split(tempList[i].c_str(), str, "=", 2);
-
-		if (str.size() == 2)
-		{
-			msg[str[0].c_str()] = str[1].c_str();
-		}
-	}
-}
 
 //-------------------------------------------------------------------------
 
@@ -204,11 +190,7 @@ void CenterThread::OnStart(void*)
 
 
 		mActorManager->RegisterActor(Actor_AccountCenter, MEM_NEW DefineActorFactory<AccountCenterActor>());
-		
-
-		
-
-
+		mActorManager->RegisterActor(Actor_GameCenter, MEM_NEW DefineActorFactory<GameCenterActor>());
 		
 
 		//CoroutineTool::AsyncCall(_ConnectGate, this);
@@ -235,7 +217,10 @@ void CenterThread::OnStart(void*)
 
 			NOTE_LOG("*** DB Init result > %s\r\n", b ? "succeed" : "fail");
 			if (b)
+			{
 				mLoginActor = mActorManager->CreateActor(Actor_AccountCenter, 1);
+				mActorManager->CreateActor(Actor_GameCenter, 1);
+			}
 		}
 		);
 

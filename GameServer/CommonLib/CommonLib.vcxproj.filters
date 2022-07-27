@@ -83,5 +83,8 @@
     <ClInclude Include="Code\TcpComponent.h">
       <Filter>ServerClientActor</Filter>
     </ClInclude>
+    <ClInclude Include="Code\GameCommon.h">
+      <Filter>Code</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

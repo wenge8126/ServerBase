@@ -547,8 +547,8 @@ MonoBehaviour:
   viewType: 0
   data:
   - key: edit_account
-    gameObject: {fileID: 1349847950836038800}
-    maskindex: 0
+    gameObject: {fileID: 1349847950836038802}
+    maskindex: 4
   - key: but_account
     gameObject: {fileID: 1349847950346847149}
     maskindex: 0

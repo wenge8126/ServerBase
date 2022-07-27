@@ -23,6 +23,7 @@
 #include "AsyncLoop.h"
 
 #include "PlayerActor.h"
+#include "GameServerActor.h"
 
 using namespace uWS;
 
@@ -140,12 +141,6 @@ bool TraverseDeleteBackFiles(const std::string &path)
 
 
 //-------------------------------------------------------------------------
-class GameServerActor : public SCActor
-{
-
-};
-
-//-------------------------------------------------------------------------
 // 实现客户端直接消息交互系统内所有Actor (中转Actor消息请求)
 // 连接流程, 实现逻辑与逻辑层的Actor(LogicActor)
 // 1 HTTP 验证, 是否新建, 存在准备连接验证数据
@@ -156,8 +151,9 @@ class GameServerActor : public SCActor
 //-------------------------------------------------------------------------
 void GameThread::OnStart(void*)
 {
-	NiceData lineParam;
+	ServerThread::OnStart(NULL);
 
+	NiceData lineParam;
 
 	mActorManager = MEM_NEW GameActorManager(this, config.server_node.node.ip.c_str(), config.server_node.node.port, config.server_node.node.saft_code, 2);
 
@@ -168,7 +164,7 @@ void GameThread::OnStart(void*)
 		
 		mActorManager->RegisterActor(Actor_Player, MEM_NEW DefineActorFactory<PlayerActor>());
 	
-		mLoginActor = mActorManager->CreateActor(Actor_GameServer, config.SERVER_ID);
+		mGameServerActor = mActorManager->CreateActor(Actor_GameServer, config.SERVER_ID);
 		
 
 		//CoroutineTool::AsyncCall(_ConnectGate, this);
@@ -196,7 +192,7 @@ void GameThread::OnStart(void*)
 
 			//NOTE_LOG("*** DB Init result > %s\r\n", b ? "succeed" : "fail");
 			//if (b)
-				mLoginActor = mActorManager->CreateActor(Actor_GameServer, 1);
+				mGameServerActor = mActorManager->CreateActor(Actor_GameServer, 1);
 		}
 		);
 
@@ -222,7 +218,7 @@ bool GameThread::NotifyThreadClose()
 		TimeManager::Sleep(10);
 	}
 
-	mLoginActor._free();
+	mGameServerActor._free();
 	for (int i = 0; i < 10; ++i)
 	{
 		Process(NULL);

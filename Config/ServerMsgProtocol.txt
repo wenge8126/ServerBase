@@ -26,3 +26,26 @@ CA_ResponseAccountData
 	string mPassword;
 	nicedata mInfoData;
 }
+
+// 请求分配游戏服务器, 并通知Server创建PlayerActor
+LW_RequestEnterServer
+{
+	int64 mDBID;
+}
+
+WL_ResponseEnterServer
+{
+	int error;
+	int mServerID;
+}
+
+// 世界服务器请求ServerActor创建PlayerActor
+WG_RequestCreatePlayerActor
+{
+	int64 mDBID;
+}
+
+GW_ResponseCreatePlayer
+{
+	int error;	
+}

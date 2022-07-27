@@ -33,21 +33,7 @@ using namespace std;
 
 DEFINE_RUN_CONFIG(LoginConfig)
 
-void Analysis(NiceData &msg, const AString &requestData)
-{
-	Array<AString> tempList;
-	AString::Split(requestData.c_str(), tempList, "&", 100);
-	for (int i = 0; i < tempList.size(); i++)
-	{
-		Array<AString> str;
-		AString::Split(tempList[i].c_str(), str, "=", 2);
 
-		if (str.size() == 2)
-		{
-			msg[str[0].c_str()] = str[1].c_str();
-		}
-	}
-}
 
 //-------------------------------------------------------------------------
 int g_register_login::Run(ShareMemCloudDBNode *pNode, const AString &tableName, AutoNice &paramData, AutoNice &resultData)
@@ -83,7 +69,6 @@ AString WebLoginThread::GetTitle()
 	//ARecord serverRe = table->GetRecord("ServerArea");
 	//AString serverName = serverRe["STRING"];
 
-	bool bAccountLogin = IsAccountWeb(); // ((int)webWsAddrRe["VALUE"] <= 0);
 
 	char szDir[MAX_PATH];
 	::GetCurrentDirectory(MAX_PATH - 1, szDir);
@@ -92,12 +77,11 @@ AString WebLoginThread::GetTitle()
 	{
 		AString serverName = mServerInfo.SERVER_NAME;
 		auto &config = CRunConfig<LoginConfig>::mConfig;
-		title.Format("%s_%s <%d : %s>[%s://%s:%d]  v[%s] %s > "
+		title.Format("%s_%s <%d : %s>[%s:%d]  v[%s] %s > "
 			, GetAppName()
 			, runMode.c_str()
 			, mServerInfo.SERVER_ID
-			, serverName.ANIS().c_str()
-			, IsWss() ? "wss" : "ws"
+			, serverName.ANIS().c_str()	
 			, config.ws_ip.c_str()
 			, config.ws_port
 
@@ -160,69 +144,16 @@ bool TraverseDeleteBackFiles(const std::string &path)
 }
 
 
-void _ConnectGate(WebLoginThread *pThread)
-{
-	//LOG("=== Connect gate start");
-	//bool re = Async::AwaitLoop(
-	//	[=]()
-	//{
-	//	bool b = pThread->mActorManager->mNetNode->AwaitConnectGate(NetAddress(config.login_node.gate.ip.c_str(), config.login_node.gate.port));
-	//	return b;
-	//}
-	//	, 10, 3000);
-
-	//LOG("=== Connect gate : %s", re ? "ok" : "fail");
-
-	//while (true)
-	//{
-	//	bool b = pThread->mActorManager->mNetNode->AwaitConnectGate(NetAddress(config.login_node.gate.ip.c_str(), config.login_node.gate.port));
-	//	if (b)
-	//		break;
-	//	tTimer::AWaitTime(3000);
-	//}
-	pThread->mbStartOk = true;
-}
-//-------------------------------------------------------------------------
-
 
 //-------------------------------------------------------------------------
-// 实现客户端直接消息交互系统内所有Actor (中转Actor消息请求)
-// 连接流程, 实现逻辑与逻辑层的Actor(LogicActor)
-// 1 HTTP 验证, 是否新建, 存在准备连接验证数据
-// 2 存在直接分配Actor
-// 3 新建时, 根据数据库, 新建记录, 然后以记录ID, 为UnitID 新建Actor
-// 4 Actor 内绑定 ConnectPtr, Connect 设置数据为对应 的Actor
-//class ActorNetMsgComponent : public NetWorkerComponent
-//{
-//public:
-//	virtual bool OnConnected(HandConnect connect)
-//	{
-//		NetWorkerComponent::OnConnected(connect);
-//
-//		CoroutineTool::AsyncCall(AsyncCreateConnectActor, connect);
-//		return true;
-//	}
-//
-//	static void AsyncCreateConnectActor(HandConnect connect)
-//	{
-//		Hand<NetWorkerComponent> comp = connect->GetUserData();
-//		// 验证
-//		// 获取数据
-//		// 新建记录
-//		// 新建
-//	}
-//
-//	// 注册中转需要的事件
-//	virtual void _RegisterMsg(Logic::tEventCenter *pCenter) override
-//	{
-//		REGISTER_EVENT(pCenter, CS_ActorMsg);
-//		pCenter->RegisterMsg(200, MEM_NEW Logic::EventFactory<CS_ActorMsg>());
-//	}
-//};
+
+
+
 
 //-------------------------------------------------------------------------
 void WebLoginThread::OnStart(void*)
 {
+	ServerThread::OnStart(NULL);
 	NiceData lineParam;
 
 	//mTaskSystem->RegisterTask(MEM_NEW DefineTaskFactory<BackZipMsgTask, eDBMsgTask_ZipData>());
@@ -260,10 +191,10 @@ void WebLoginThread::OnStart(void*)
 
 		mSdkMgr.InitThread();
 
-		//CoroutineTool::AsyncCall(_ConnectGate, this);
-
-		mActorManager->mNetNode->ConnectGate(config.login_node.gate.ip.c_str(), config.login_node.gate.port, 10000);
-
+		CoroutineTool::AsyncCall([&]()
+		{
+			mbStartOk = mActorManager->mNetNode->AwaitConnectGate(config.login_node.gate.ip.c_str(), config.login_node.gate.port, 10000);
+		});
 
 		//ServerThread::OnStart(NULL);
 		//TraverseDeleteBackFiles("./");

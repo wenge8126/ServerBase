@@ -100,7 +100,7 @@ public:
 
 
 public:
-	HandActor					mLoginActor;
+	HandActor					mGameServerActor;
 
 	AutoNice						mServerList;
 	AString							mServerListJson;

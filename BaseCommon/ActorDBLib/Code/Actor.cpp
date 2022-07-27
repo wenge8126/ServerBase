@@ -265,6 +265,13 @@ Logic::tEventCenter* NetCloud::Actor::GetEventCenter()
 	return GetMgr()->mEventCenter.getPtr();
 }
 
+bool NetCloud::Actor::WaitDestory(Logic::tEvent *pEvent)
+{
+	GetMgr()->RemoveActor(GetSelf());
+	GetSelf()._free();
+	return true;
+}
+
 //-------------------------------------------------------------------------
 ARecord NetCloud::DBActor::LoadRecord(const char *szTableName, const char *szKey)
 {

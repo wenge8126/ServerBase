@@ -409,6 +409,13 @@ namespace NetCloud
 			Base::Release();
 		}
 
+		virtual void Destory()
+		{
+			GetEventCenter()->WaitTime(0, EventCallBack(&Actor::WaitDestory, this));
+		}
+
+		bool WaitDestory(Logic::tEvent *pEvent);
+
 	protected:
 		Auto<ActorFactory>	mActorFactory;
 		ArrayList<ARecord> mDataRecordList;

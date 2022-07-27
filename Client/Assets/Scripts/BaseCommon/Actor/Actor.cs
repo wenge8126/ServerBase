@@ -49,7 +49,7 @@ namespace Logic
 
         public async Task<NiceData> AsyncRequestMsg(UnitID targetActorID, BasePacket requestMsg, int overMilSecond = 10000)
         {
-            var response = await MainStart.mNet.AsyncRequest(new UnitID(104, 1), requestMsg.MsgName(), requestMsg, overMilSecond);
+            var response = await MainStart.mNet.AsyncRequest(targetActorID, requestMsg.MsgName(), requestMsg, overMilSecond);
             if (response != null)
                 response.dump("ok=========");
             else
@@ -62,7 +62,7 @@ namespace Logic
         
         public async Task<NiceData> AsyncRequestMsg(UnitID targetActorID, string msgName, NiceData requestMsgData, int overMilSecond = 10000)
         {
-            var response = await MainStart.mNet.AsyncRequest(new UnitID(104, 1), msgName, requestMsgData, overMilSecond);
+            var response = await MainStart.mNet.AsyncRequest(targetActorID, msgName, requestMsgData, overMilSecond);
             if (response != null)
                 response.dump("ok=========");
             else
