@@ -579,3 +579,126 @@ public:
 
 };
 
+//  PlayerActor评测ClientActor
+class GL_RequestPingClient : public tBaseMsg
+{ 
+public:
+
+public:
+    GL_RequestPingClient() { clear(false); };
+
+
+   virtual  void Full(AutoNice scrData) override
+    {
+        clear(false);
+    }
+
+    virtual void ToData(AutoNice &destData) override
+    {
+    }
+
+    bool serialize(DataStream *destData) const override
+    {
+        destData->write((short)0);
+
+        return true;
+    }
+
+    void clear(bool bClearBuffer=false) override 
+    {
+    }
+
+    void copy(const tBaseMsg &otherMsg) override 
+    {
+        if (strcmp("GL_RequestPingClient", otherMsg.GetMsgName())!=0) { LOG("%s is not GL_RequestPingClient", otherMsg.GetMsgName()); return; }; const GL_RequestPingClient &other = *(const GL_RequestPingClient*)(&otherMsg);
+    }
+
+    virtual const char* GetMsgName() const override { return "GL_RequestPingClient"; }
+
+    AData get(const char *szMember) const 
+    {
+        return AData();
+    }
+
+    bool set(const char *szMember, AData value) 
+    {
+        LOG("No exist > %%s", szMember);  return false;
+    }
+
+    AData operator [] (const char *szMember) const 
+    {
+        return get(szMember);
+    }
+
+    AData operator [] (const AString &member) const 
+    {
+        return get(member.c_str());
+    }
+
+};
+
+class LG_ResopnsePingClient : public tBaseMsg
+{ 
+public:
+    bool mbOK;		
+
+public:
+    LG_ResopnsePingClient() { clear(false); };
+
+
+   virtual  void Full(AutoNice scrData) override
+    {
+        clear(false);
+        CheckGet(scrData, mbOK);
+    }
+
+    virtual void ToData(AutoNice &destData) override
+    {
+        destData["mbOK"] = mbOK;
+    }
+
+    bool serialize(DataStream *destData) const override
+    {
+        destData->write((short)1);
+
+        SAVE_MSG_VALUE(mbOK, 5);
+        return true;
+    }
+
+    void clear(bool bClearBuffer=false) override 
+    {
+        mbOK = false;
+    }
+
+    void copy(const tBaseMsg &otherMsg) override 
+    {
+        if (strcmp("LG_ResopnsePingClient", otherMsg.GetMsgName())!=0) { LOG("%s is not LG_ResopnsePingClient", otherMsg.GetMsgName()); return; }; const LG_ResopnsePingClient &other = *(const LG_ResopnsePingClient*)(&otherMsg);
+        mbOK = other.mbOK;
+    }
+
+    virtual const char* GetMsgName() const override { return "LG_ResopnsePingClient"; }
+
+    AData get(const char *szMember) const 
+    {
+        if (strcmp(szMember, "mbOK")==0) { AData value; value = mbOK; return value; }
+        return AData();
+    }
+
+    bool set(const char *szMember, AData value) 
+    {
+        if (strcmp(szMember, "mbOK")==0) { mbOK = value; return true; };
+        LOG("No exist > %%s", szMember);  return false;
+    }
+
+    AData operator [] (const char *szMember) const 
+    {
+        return get(szMember);
+    }
+
+    AData operator [] (const AString &member) const 
+    {
+        return get(member.c_str());
+    }
+
+};
+

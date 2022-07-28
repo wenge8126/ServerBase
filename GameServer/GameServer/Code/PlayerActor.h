@@ -8,6 +8,7 @@
 #include "SCActor.h"
 #include "ServerMsg.h"
 #include "ClientMsg.h"
+#include "PingClientComponect.h"
 
 using namespace NetCloud;
 
@@ -37,6 +38,7 @@ public:
 	
 		NOTE_LOG("Player %s init", GetID().dump().c_str());
 
+		AddComponent("PingClientComponent");
 	}
 
 	template<typename RespMsg>
@@ -75,6 +77,7 @@ public:
 
 	void RegisterMsg(ActorManager *pActorMgr)
 	{
+		REG_COMPONENT(PingClientComponent);
 		REG_ACTOR_MSG(PlayerActor, CG_RequestPlayerData, GC_ResponsePlayerData);
 
 	}

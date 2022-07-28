@@ -17,8 +17,8 @@ using namespace NetCloud;
 
 //-------------------------------------------------------------------------
 // 客户端请求或回复的消息
-// 服务器LogicActor 收到后, 使用异步等待 ClientActor 再次异步请求至目标Actor
-// ClientActor 接收到回复后, LogicAtor 构建新的回复消息, 回复至客户端
+// 服务器LogicActor 收到后, 使用异步等待 LoginClientActor 再次异步请求至目标Actor
+// LoginClientActor 接收到回复后, LogicAtor 构建新的回复消息, 回复至客户端
 // Client 再根据等待着的Actor 返回回复结果
 //-------------------------------------------------------------------------
 
@@ -46,7 +46,7 @@ public:
 
 	virtual void OnDisconnect(HandConnect connect) override
 	{
-		Hand<ClientActor> actor = connect->GetUserData();
+		Hand<LoginClientActor> actor = connect->GetUserData();
 		if (actor)
 		{
 			actor->OnDisconnected();
@@ -57,7 +57,7 @@ public:
 
 	void CreateClientActor(HandConnect connect, Int64 id)
 	{
-		Hand<ClientActor> actor = mpActor->GetMgr()->CreateActor(Actor_Client, id);
+		Hand<LoginClientActor> actor = mpActor->GetMgr()->CreateActor(Actor_LoginClient, id);
 		connect->SetUserData(actor);
 		actor->mpClientConnect = connect.getPtr();
 	}
@@ -90,7 +90,7 @@ public:
 	{
 		//NOTE_LOG(req.dump().c_str());
 
-		Hand<ClientActor> client = connect->GetUserData();
+		Hand<LoginClientActor> client = connect->GetUserData();
 		if (client)
 		{
 			AutoData msgData = req.mRequestMsgData;
@@ -107,7 +107,7 @@ public:
 	// 中转客户端发向服务器Actor 通知消息
 	void On(HandConnect connect, SCS_NotifyMsg &notifyMsg)
 	{
-		Hand<ClientActor> client = connect->GetUserData();
+		Hand<LoginClientActor> client = connect->GetUserData();
 		if (client)
 		{			
 			if (!client->SendMsg(notifyMsg, notifyMsg.mActorID))

@@ -591,6 +591,7 @@ xcopy $(COMMON_BASE_LIB)\Bin\$(TargetName).pdb $(Server_Out_Dir)\  /y
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\GameServerActor.h" />
+    <ClInclude Include="Code\PingClientComponect.h" />
     <ClInclude Include="Code\PlayerActor.h" />
     <ClInclude Include="Code\LoginNetProtocol.h" />
     <ClInclude Include="Code\GameThread.h" />

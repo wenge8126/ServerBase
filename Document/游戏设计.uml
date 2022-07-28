@@ -3143,7 +3143,7 @@
 <XPD:OBJ name="NameLabel" type="EdgeLabelView" guid="sKRG+pRX20CszgjUOsZqfAAA">
 <XPD:ATTR name="Alpha" type="real">1.5707963267949</XPD:ATTR>
 <XPD:ATTR name="Distance" type="real">10</XPD:ATTR>
-<XPD:ATTR name="Text" type="string">22 : 请求创建GameActor()</XPD:ATTR>
+<XPD:ATTR name="Text" type="string">22 : 请求创建PlayerActor()</XPD:ATTR>
 <XPD:REF name="Model">pYpGmifjrUSslT8MQdr9sgAA</XPD:REF>
 <XPD:REF name="HostEdge">8Nre5RHg0kSxjCi7VHtHWwAA</XPD:REF>
 </XPD:OBJ>
@@ -3786,7 +3786,7 @@
 <XPD:REF name="Views[3]">wmIlqnpFGkitTbyqOOCKOQAA</XPD:REF>
 </XPD:OBJ>
 <XPD:OBJ name="ParticipatingStimuli[21]" type="UMLStimulus" guid="pYpGmifjrUSslT8MQdr9sgAA">
-<XPD:ATTR name="Name" type="string">请求创建GameActor</XPD:ATTR>
+<XPD:ATTR name="Name" type="string">请求创建PlayerActor</XPD:ATTR>
 <XPD:REF name="Sender">uTXAeuQknU2jdrqFQhxHiQAA</XPD:REF>
 <XPD:REF name="Receiver">bmmqm/F2j0Kx9aZRZUe5EQAA</XPD:REF>
 <XPD:OBJ name="Action" type="UMLCallAction" guid="JGrbSBJLiEqzkImby5HwbQAA">
