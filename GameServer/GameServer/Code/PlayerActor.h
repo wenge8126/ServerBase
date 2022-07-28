@@ -39,6 +39,12 @@ public:
 
 	}
 
+	template<typename RespMsg>
+	bool RequestClient(UnitID clientActorID, tBaseMsg &requestMsg, RespMsg &responseMsg, int overMilSecond)
+	{
+		return AwaitClient(GetID().id, clientActorID, requestMsg, responseMsg, overMilSecond);
+	}
+
 public:
 	void On(CG_RequestPlayerData &request, GC_ResponsePlayerData &response, UnitID sender, int)
 	{
@@ -57,8 +63,12 @@ public:
 			GC_RequestClientState requestMsg;
 			requestMsg.mValue = 999555;
 			CG_ResponseClientState responseMsg;
-			AwaitClient(GetID().id, { Actor_Client, GetID().id }, requestMsg, responseMsg, 10000);
-			NOTE_LOG("TTTTTTT Client response : %s", responseMsg.dump().c_str());
+			if (RequestClient({ Actor_Client, GetID().id }, requestMsg, responseMsg, 10000))
+				NOTE_LOG("TTTTTTT Client response : %s", responseMsg.dump().c_str())
+			else
+			{
+				ERROR_LOG("Reqeust client fail");
+			}
 		});
 	}
 
