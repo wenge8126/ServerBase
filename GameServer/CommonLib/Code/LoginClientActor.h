@@ -6,15 +6,16 @@
 #include "Actor.h"
 #include "ServerClientMsg.h"
 #include "CommonLib.h"
+#include "ServerMsg.h"
 //-------------------------------------------------------------------------
 // 客户端连接Actor, 用于客户端与服务器内部沟通
 // Actor 内绑定 ConnectPtr, Connect 设置数据为对应 的Actor
 //-------------------------------------------------------------------------
-class CommonLib_Export tClientActor : public Actor
+class CommonLib_Export LoginClientActor : public Actor
 {
 public:
-	tClientActor() {}
-	~tClientActor()
+	LoginClientActor() {}
+	~LoginClientActor()
 	{
 		if (mpClientConnect != NULL)
 			mpClientConnect->SetUserData(AutoAny());
@@ -39,8 +40,9 @@ public:
 	// 这个只执行一次
 	void RegisterMsg(ActorManager *pActorMgr) override
 	{
-		REG_ACTOR_MSG(tClientActor, SC_ActorRequestClientMsg, CS_ResponceServerActorMsg);
-		REG_NOTIFY_MSG(tClientActor, SCS_NotifyMsg);
+		REG_ACTOR_MSG(LoginClientActor, GL_RequestPingClient, LG_ResopnsePingClient);
+		REG_ACTOR_MSG(LoginClientActor, SC_ActorRequestClientMsg, CS_ResponceServerActorMsg);
+		REG_NOTIFY_MSG(LoginClientActor, SCS_NotifyMsg);
 	}
 
 	void On(SC_ActorRequestClientMsg &reqMsg, CS_ResponceServerActorMsg &clientResponse, UnitID sender, int);
@@ -50,6 +52,12 @@ public:
 	{
 		if (mpClientConnect != NULL)
 			mpClientConnect->Send(eMsg_ServerClientNotify, &notifyMsg);
+	}
+
+	// 响应PlayerActor评测
+	void On(GL_RequestPingClient &msg, LG_ResopnsePingClient &resp, UnitID, int)
+	{
+		resp.mbOK = true;
 	}
 
 public:

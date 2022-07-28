@@ -480,7 +480,7 @@ void CServerToolDlg::OnBnExportRunConfig()
 	AString err;
 	AutoNice info;
 
-	int x = eExportCientMsg;
+	int x = eExportServerMsg;
 
 	switch (x)
 	{

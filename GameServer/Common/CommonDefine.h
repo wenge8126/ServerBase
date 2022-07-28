@@ -96,6 +96,7 @@ enum UNIT_TYPE
 	Actor_GameServer = 1002,
 	Actor_Player = 1003,
 	Actor_Client = 1004,
+	Actor_LoginClient = 1004,
 	Actor_AccountCenter,
 	Actor_GameCenter,
 };

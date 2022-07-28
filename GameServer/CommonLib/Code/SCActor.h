@@ -29,7 +29,7 @@ public:
 		// 因为异步执行, 不可重用
 		CS_ResponceServerActorMsg resp;
 
-		if (Await(UnitID(Actor_Client, clientID), msg, resp, overMilSecond) && resp.mResponseMsgData)
+		if (Await(UnitID(Actor_LoginClient, clientID), msg, resp, overMilSecond) && resp.mResponseMsgData)
 		{
 			resp.mResponseMsgData->seek(0);
 			responseMsg.restore(resp.mResponseMsgData.getPtr());
@@ -57,7 +57,7 @@ public:
 			ERROR_LOG("Save notify msg fail : %s", notifyMsg.GetMsgName());
 			return false;
 		}
-		return SendMsg(msg, UnitID(Actor_Client, clientID));
+		return SendMsg(msg, UnitID(Actor_LoginClient, clientID));
 	}
 
 	void Notify(SCS_NotifyMsg &notifyMsg, UnitID sender, int nCompValue)

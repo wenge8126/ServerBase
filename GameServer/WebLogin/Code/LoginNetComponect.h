@@ -3,14 +3,10 @@
 #include "NetWorkerComponent.h"
 #include "MsgData.h"
 #include "CommonDefine.h"
-#include "ClientActor.h"
+#include "LoginClientActor.h"
 
 using namespace NetCloud;
 
-class ClientActor : public tClientActor
-{
-
-};
 
 
 

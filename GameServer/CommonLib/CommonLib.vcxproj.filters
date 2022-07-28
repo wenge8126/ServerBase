@@ -36,13 +36,13 @@
     <ClCompile Include="Code\SDK.cpp">
       <Filter>Code</Filter>
     </ClCompile>
-    <ClCompile Include="Code\ClientActor.cpp">
-      <Filter>ServerClientActor</Filter>
-    </ClCompile>
     <ClCompile Include="Code\NetWorkerComponent.cpp">
       <Filter>ServerClientActor</Filter>
     </ClCompile>
     <ClCompile Include="Code\TcpComponent.cpp">
+      <Filter>ServerClientActor</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\LoginClientActor.cpp">
       <Filter>ServerClientActor</Filter>
     </ClCompile>
   </ItemGroup>
@@ -65,9 +65,6 @@
     <ClInclude Include="Code\SendDuanXin.h">
       <Filter>Code</Filter>
     </ClInclude>
-    <ClInclude Include="Code\ClientActor.h">
-      <Filter>ServerClientActor</Filter>
-    </ClInclude>
     <ClInclude Include="Code\LoginNetActor.h">
       <Filter>ServerClientActor</Filter>
     </ClInclude>
@@ -85,6 +82,9 @@
     </ClInclude>
     <ClInclude Include="Code\GameCommon.h">
       <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\LoginClientActor.h">
+      <Filter>ServerClientActor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

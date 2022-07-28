@@ -31,6 +31,8 @@ public:
 			LOG("Player data :%s", mData.mRecord->dump().c_str())
 		else
 			ERROR_LOG("No exist player data %s", mID.dump().c_str());
+
+		
 	}
 
 

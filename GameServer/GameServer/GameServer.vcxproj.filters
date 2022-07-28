@@ -44,6 +44,9 @@
     <ClInclude Include="Code\GameServerActor.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Code\PingClientComponect.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GameServer.rc">

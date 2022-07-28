@@ -197,7 +197,7 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Code\ClientActor.cpp" />
+    <ClCompile Include="Code\LoginClientActor.cpp" />
     <ClCompile Include="Code\HttpClient.cpp" />
     <ClCompile Include="Code\HttpComponect.cpp" />
     <ClCompile Include="Code\NetWorkerComponent.cpp" />
@@ -207,7 +207,7 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
     <ClCompile Include="dllmain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Code\ClientActor.h" />
+    <ClInclude Include="Code\LoginClientActor.h" />
     <ClInclude Include="Code\CommonLib.h" />
     <ClInclude Include="Code\GameCommon.h" />
     <ClInclude Include="Code\HttpClient.h" />

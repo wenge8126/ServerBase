@@ -49,3 +49,13 @@ GW_ResponseCreatePlayer
 {
 	int error;	
 }
+
+// PlayerActor评测ClientActor
+GL_RequestPingClient
+{
+}
+
+LG_ResopnsePingClient
+{
+	bool mbOK;
+}
