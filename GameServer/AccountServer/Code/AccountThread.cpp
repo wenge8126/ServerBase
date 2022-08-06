@@ -195,8 +195,6 @@ void AccountThread::OnStart(void*)
 			mbStartOk = mActorManager->mNetNode->AwaitConnectGate(config.actor_node.gate.ip.c_str(), config.actor_node.gate.port, 10000);
 		});
 
-		
-
 
 		//ServerThread::OnStart(NULL);
 		//TraverseDeleteBackFiles("./");

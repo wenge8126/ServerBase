@@ -112,9 +112,11 @@ void CoroutineTool::CheckFinish()
 			{
 				CoroID id = *it;
 				resumeList.erase(it);
+				
 				int err = coroutine::resume(id);
 				if (err != 0)
 					ERROR_LOG("Resume coro fail %d, error : %d", id, err);
+				
 			}
 			else
 				break;
@@ -193,8 +195,8 @@ CoroID CoroutineTool::Async(AsyncFunction fun)
 	++DebugCount();
 #endif
 	if (coroutine::current() == 0)
-	{
-		Resume(id);
+	{		
+		Resume(id);		
 	}
 	else
 		StartList().push_back(id);

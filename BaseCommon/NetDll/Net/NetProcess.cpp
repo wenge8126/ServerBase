@@ -16,14 +16,16 @@ AutoNice tNetProcess::Await(tNetConnect *pConnect, int msgID, tRequestMsg &req, 
 	req.SetRequestID(pWait->mRequestMsgID);
 	if (!pConnect->Send(msgID, &req))
 		return resp;
-	pWait->mWaitCoroID = CORO;
+	//pWait->mWaitCoroID = CORO;
 	pWait->Wait(overMilSecond);
-
-	YIELD;
+	
+	//YIELD;
+	HandPacket respPacket = pWait->mResonseWaiter.AWait(HandPacket());
+	
 	pWait->StopWait();
-	if (pWait->mResponsePacket)
+	if (respPacket)
 	{
-		Auto< ResponseMsgPacket> pResp = pWait->mResponsePacket;
+		Auto< ResponseMsgPacket> pResp = respPacket;
 		resp = MEM_NEW NiceData();
 		pResp->mData.seek(0);
 		if (!resp->restore(&pResp->mData))
@@ -50,18 +52,20 @@ Auto<ResponseMsgPacket> tNetProcess::AwaitRequest(tNetConnect *pConnect, int msg
 	req.SetRequestID(pWait->mRequestMsgID);
 	if (!pConnect->Send(msgID, &req))
 		return resp;
-	pWait->mWaitCoroID = CORO;
+	//pWait->mWaitCoroID = CORO;
 	pWait->Wait(overMilSecond);
 
-	YIELD;
+	//YIELD;
+	HandPacket respPacket = pWait->mResonseWaiter.AWait(HandPacket());
 	pWait->StopWait();
-	if (pWait->mResponsePacket)
+	if (respPacket)
 	{
-		Auto< ResponseMsgPacket> pResp = pWait->mResponsePacket;
+		Auto< ResponseMsgPacket> pResp = respPacket;
 
 		pResp->mData.seek(0);
 		resp = pResp;
 	}
+
 	protocol->FreeWaitID(pWait.getPtr());
 	return resp;
 }

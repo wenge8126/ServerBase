@@ -730,10 +730,11 @@ bool IOCPClientNet::AwaitConnect(const char *szIp, int nPort, int overmilSecond)
 		delete mWaitConnectThread;
 	}
 	mWaitConnectThread = MEM_NEW ConnectNetThread();
-	mWaitConnectThread->mConnectCoroID = CORO;
+	mWaitConnectThread->mConnectWaiter = MEM_NEW Waiter<HandConnect>();
 	mWaitConnectThread->StartConnect(szIp, nPort, overmilSecond);
 
-	YIELD;
+	//YIELD;
+	HandConnect conn = mWaitConnectThread->mConnectWaiter->AWait(HandConnect());
 
 	return IsConnected();
 }
@@ -807,15 +808,17 @@ void IOCPClientNet::Process()
 				conn->OnConnected();
 				OnAddConnect(conn.getPtr());
 				OnConnected();
+				if (mWaitConnectThread->mConnectWaiter)
+					mWaitConnectThread->mConnectWaiter->SetResult(conn);
 			}
 			else
 			{
 				Log("NET: WARN Connect fail [%s:%d]", mIp.c_str(), mPort);
 				OnConnectFail();
+				if (mWaitConnectThread->mConnectWaiter)
+					mWaitConnectThread->mConnectWaiter->SetResult(HandConnect());
 			}
 
-			if (mWaitConnectThread->mConnectCoroID != 0)
-				RESUME(mWaitConnectThread->mConnectCoroID);
 
 			if (mWaitConnectThread!=NULL)
 			{
@@ -833,8 +836,8 @@ void IOCPClientNet::Process()
 
 			OnConnectFail();
 
-			if (mWaitConnectThread->mConnectCoroID != 0)
-				RESUME(mWaitConnectThread->mConnectCoroID);
+			if (mWaitConnectThread->mConnectWaiter)
+				mWaitConnectThread->mConnectWaiter->SetResult(HandConnect());
 		}
 
 	}
@@ -935,6 +938,8 @@ void ConnectNetThread::backWorkThread( void )
 
 ConnectNetThread::~ConnectNetThread()
 {
+	if (mConnectWaiter)
+		mConnectWaiter->SetResult(HandConnect());
 	if (mSocket!=0)
 		SocketAPI::closesocket_ex(mSocket);
 	mSocket = 0;

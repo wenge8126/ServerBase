@@ -193,8 +193,7 @@ void CenterThread::OnStart(void*)
 		mActorManager->RegisterActor(Actor_GameCenter, MEM_NEW DefineActorFactory<GameCenterActor>());
 		
 
-		//CoroutineTool::AsyncCall(_ConnectGate, this);
-
+		//CoroutineTool::AsyncCall(_ConnectGate, this);		
 		CoroutineTool::AsyncCall([&]()
 		{
 			mbStartOk = mActorManager->mNetNode->AwaitConnectGate(config.center_node.gate.ip.c_str(), config.center_node.gate.port, 10000);
@@ -223,6 +222,7 @@ void CenterThread::OnStart(void*)
 			}
 		}
 		);
+		
 
 		//ServerThread::OnStart(NULL);
 		//TraverseDeleteBackFiles("./");

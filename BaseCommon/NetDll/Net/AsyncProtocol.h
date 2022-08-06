@@ -46,25 +46,33 @@ public:
 class WaitResponse : public tTimer
 {
 public:
+	~WaitResponse()
+	{
+		mResonseWaiter.SetResult(HandPacket());
+	}
+
 	void Init()
 	{
-		mResponsePacket.setNull();
-		mWaitCoroID = 0;
+		//mResponsePacket.setNull();
+		mResonseWaiter.Init(HandPacket());
+		//mWaitCoroID = 0;
 		mRequestMsgID = -1;
 	}
 
 	virtual void onTime() override
 	{
-		if (mWaitCoroID > 0)
-		{
-			RESUME(mWaitCoroID);
-			mWaitCoroID = 0;
-		}
+		//if (mWaitCoroID > 0)
+		//{
+		//	RESUME(mWaitCoroID);
+		//	mWaitCoroID = 0;
+		//}
+		mResonseWaiter.SetResult(HandPacket());
 	}
 
 public:
-	HandPacket mResponsePacket;
-	CoroID mWaitCoroID = 0;
+	//HandPacket mResponsePacket;
+	Waiter<HandPacket> mResonseWaiter;
+	//CoroID mWaitCoroID = 0;
 	MSG_ID mRequestMsgID = -1;
 };
 

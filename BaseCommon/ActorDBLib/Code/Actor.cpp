@@ -74,14 +74,15 @@ AutoNice NetCloud::Actor::Await(Auto<TransferPacket> tranPak, UnitID targetID, i
 		return AutoNice();
 	}
 
-	pWait->mWaitCoroID = CORO;
+	//pWait->mWaitCoroID = CORO;
 	pWait->Wait(overMilSecond);
 
-	YIELD;
+	HandPacket respPacket = pWait->mResonseWaiter.AWait(HandPacket());
+	//YIELD;
 	pWait->StopWait();
-	if (pWait->mResponsePacket)
+	if (respPacket)
 	{
-		Auto<TransferPacket> pResp = pWait->mResponsePacket;
+		Auto<TransferPacket> pResp = respPacket;
 
 		resp = MEM_NEW NiceData();
 		pResp->mData.seek(0);
@@ -162,8 +163,11 @@ bool NetCloud::Actor::OnReceiveProcess(NodePacket *pNodePacket)
 			auto waitResp = protocol->FindWaitResponse(pak->mRequestID);
 			if (waitResp)
 			{
-				waitResp->mResponsePacket = pak;
-				RESUME(waitResp->mWaitCoroID);
+				//waitResp->mResponsePacket = pak;
+				//RESUME(waitResp->mWaitCoroID);
+
+				waitResp->mResonseWaiter.SetResult(pak);
+
 			}
 			else
 				ERROR_LOG("No find wait request %u", pak->mRequestID);

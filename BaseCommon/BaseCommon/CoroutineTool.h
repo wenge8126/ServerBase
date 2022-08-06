@@ -102,6 +102,63 @@ public:
 #endif
 };
 
+// 协程等待对象
+template<typename T>
+class Waiter : public AutoBase
+{
+	bool mbYield = false;
+	bool mbResum = false;
+	CoroID mCoroID = 0;
+	T mResult;
+
+public:
+	T AWait(T initResult = T())
+	{
+		if (mbYield || mbResum)
+		{
+			ERROR_LOG("Already yield or resum");
+			return initResult;
+		}
+		if (CORO == 0)
+		{
+			ERROR_LOG("Await must in coro");
+			return false;
+		}
+		mbYield = true;
+		mCoroID = CORO;
+		mResult = initResult;
+		YIELD;
+		return mResult;
+	}
+
+	void SetResult(T result)
+	{
+		if (!mbYield || mbResum)
+		{
+			//WARN_LOG("Already resum or not yield");
+			return;
+		}
+
+		if (mCoroID > 0)
+		{
+			mbResum = true;
+			mResult = result;
+			RESUME(mCoroID);
+			mCoroID = 0;
+		}
+	}
+
+	void Init(T  initResult = T())
+	{
+		SetResult(initResult);
+		mbResum = false;
+		mbYield = false;
+		mCoroID = 0;
+		mResult = initResult;
+	}
+};
+
+
 
 
 #endif //_INCLUDE_COROUTINETOOL_H_

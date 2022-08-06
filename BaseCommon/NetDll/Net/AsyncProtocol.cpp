@@ -81,10 +81,13 @@ UINT ResponseMsgPacket::Execute(tNetConnect* pConnect)
 	Auto< AsyncProtocol> protocol = pConnect->GetNetHandle()->GetNetProtocol();
 	AWaitResponse pWait = protocol->FindWaitResponse(mRequestID);
 	if (pWait)
-	{
-		pWait->mResponsePacket = this;
-		if (pWait->mWaitCoroID>0)
-			RESUME(pWait->mWaitCoroID);
+	{		
+		pWait->mResonseWaiter.SetResult(this);
+		//pWait->mResponsePacket = this;
+		//if (pWait->mWaitCoroID > 0)
+		//{			
+		//	RESUME(pWait->mWaitCoroID);			
+		//}
 	}
 	else
 		WARN_LOG("Wait msg no exist : %u", mRequestID);

@@ -149,11 +149,11 @@ public:
 public:
 	SOCKET			mSocket;
 	AString			mIP;
-	int				mPort;
-	bool				mbFinish;
-	CoroID			mConnectCoroID = 0;
-	UInt64			mOverTime;
-	HandConnect mConnect;
+	int					mPort;
+	bool					mbFinish;
+	Auto<Waiter<HandConnect>>			mConnectWaiter;
+	UInt64				mOverTime;
+	HandConnect	mConnect;
 };
 
 

@@ -36,17 +36,18 @@ HandConnect IOCPClientSetNet::AwaitConnect(const char *szIp, int nPort, int over
 	}
 
 	ConnectNetThread *pWaitConnectThread = MEM_NEW ConnectNetThread();
-	pWaitConnectThread->mConnectCoroID = CORO;
+	pWaitConnectThread->mConnectWaiter = MEM_NEW Waiter<HandConnect>();
 	pWaitConnectThread->StartConnect(szIp, nPort, overmilSecond);
 	mWaitConnectThreadList.push_front(pWaitConnectThread);
 	
 	NOTE_LOG("Start connect [%s:%d] ...", szIp, nPort);
 
-	YIELD;
+	//YIELD;
+	HandConnect conn = pWaitConnectThread->mConnectWaiter->AWait(HandConnect());
 
-	NOTE_LOG("Connect to [%s:%d] %s", szIp, nPort, pWaitConnectThread->mConnect ? "OK" : "FAIL");
+	NOTE_LOG("Connect to [%s:%d] %s", szIp, nPort, conn ? "OK" : "FAIL");
 
-	return pWaitConnectThread->mConnect;
+	return conn;
 }
 
 void IOCPClientSetNet::StopNet( void )
@@ -97,15 +98,20 @@ void IOCPClientSetNet::Process()
 					//pRecConnect->OnConnected();
 					OnConnected(pRecConnect);
 					pConnectThread->mConnect = conn;
+
+					if (pConnectThread->mConnectWaiter)
+						pConnectThread->mConnectWaiter->SetResult(conn);
 				}
 				else
 				{
 					Log("NET: WARN Connect fail [%s:%d]", pConnectThread->mIP.c_str(), pConnectThread->mPort);
 					OnConnectFail( pConnectThread->mIP.c_str(), pConnectThread->mPort );
+
+					if (pConnectThread->mConnectWaiter)
+						pConnectThread->mConnectWaiter->SetResult(HandConnect());
 				}
 				pConnectThread->Close();
-				if (pConnectThread->mConnectCoroID != 0)
-					RESUME(pConnectThread->mConnectCoroID);
+				
 				delete pConnectThread;
 				pConnectThread = NULL;
 			}
@@ -116,8 +122,8 @@ void IOCPClientSetNet::Process()
 				OnConnectFail(pConnectThread->mIP.c_str(), pConnectThread->mPort);
 				Log("NET: WARN Connect over time [%s:%d]", pConnectThread->mIP.c_str(), pConnectThread->mPort);
 				pConnectThread->Close();
-				if (pConnectThread->mConnectCoroID != 0)
-					RESUME(pConnectThread->mConnectCoroID);
+				if (pConnectThread->mConnectWaiter)
+					pConnectThread->mConnectWaiter->SetResult(HandConnect());
 				delete pConnectThread;
 				pConnectThread = NULL;				
 			}
