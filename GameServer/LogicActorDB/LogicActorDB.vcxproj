@@ -307,7 +307,7 @@ xcopy $(COMMON_BASE_LIB)\Bin\$(TargetName).pdb $(Server_Out_Dir)\  /y</Command>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CONSOLE;__WINDOWS__;__SERVER__;NDEBUG;DEVELOP_MODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(CODE_COMMON_DIR)/NetDll/Net;$(CODE_COMMON_DIR)\NetNode;$(CODE_COMMON_DIR)\EventCore\Core;$(CODE_COMMON_DIR)\BaseCommon;./Code;../Common;$(CODE_COMMON_DIR)\WssNetLib\Code;./;$(CODE_COMMON_DIR)\MySQLLib\Code;../Common/SDK;$(CODE_COMMON_DIR)/curl-7.53.1/include/curl;$(CODE_COMMON_DIR)/ActorDBLib/Code;$(CODE_COMMON_DIR)/ShareSQLUpdateLib/Code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CODE_COMMON_DIR)/NetDll/Net;$(CODE_COMMON_DIR)\NetNode;$(CODE_COMMON_DIR)\EventCore\Core;$(CODE_COMMON_DIR)\BaseCommon;./Code;../Common;$(CODE_COMMON_DIR)\WssNetLib\Code;./;$(CODE_COMMON_DIR)\MySQLLib\Code;../Common/SDK;$(CODE_COMMON_DIR)/curl-7.53.1/include/curl;$(CODE_COMMON_DIR)/ActorDBLib/Code;$(CODE_COMMON_DIR)/ShareSQLUpdateLib/Code;../CommonLib/Code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
     <Link>
@@ -459,13 +459,11 @@ xcopy $(COMMON_BASE_LIB)\Bin\$(TargetName).pdb $(Server_Out_Dir)\  /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Common\SDK\HttpClient.cpp" />
     <ClCompile Include="LogicActor.cpp" />
     <ClCompile Include="LogicActorThread.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Common\MsgData.h" />
-    <ClInclude Include="..\Common\SDK\HttpClient.h" />
     <ClInclude Include="..\Common\Test2Component.h" />
     <ClInclude Include="..\Common\t_player.h" />
     <ClInclude Include="Code\AccountActor.h" />
@@ -491,6 +489,9 @@ xcopy $(COMMON_BASE_LIB)\Bin\$(TargetName).pdb $(Server_Out_Dir)\  /y</Command>
     </ProjectReference>
     <ProjectReference Include="..\..\BaseCommon\ShareSQLUpdateLib\ShareSQLUpdateLib.vcxproj">
       <Project>{8aed06af-78cf-4641-88e4-8ee0724faa15}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\CommonLib\CommonLib.vcxproj">
+      <Project>{bc21c68c-90a9-42e9-9f4b-692287e16d4f}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

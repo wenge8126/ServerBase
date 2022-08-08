@@ -54,67 +54,67 @@ public:
 
 	void On(RQ_CheckAndCreateAccount &msg, RS_CheckAndCreateAccount &resp, UnitID senderID, int)
 	{
-		t_account accountRe = mAccountList.find(msg.mAccount);
-		if (!accountRe)
-		{
-			accountRe = LoadRecord(TABLE_ACCOUNT, msg.mAccount.c_str());
-			if (accountRe)
-				mAccountList.insert(msg.mAccount, accountRe);
-		}
-		resp.mbNew = false;
-		if (!accountRe)
-		{
-			// 需要新建
-			AutoTable accountTable = GetDBMgr()->GetTable(TABLE_ACCOUNT);
-			if (!accountTable)
-			{
-				resp.mResult = eAccountCreateFail;
-				return;
-			}
+		//t_account accountRe = mAccountList.find(msg.mAccount);
+		//if (!accountRe)
+		//{
+		//	accountRe = LoadRecord(TABLE_ACCOUNT, msg.mAccount.c_str());
+		//	if (accountRe)
+		//		mAccountList.insert(msg.mAccount, accountRe);
+		//}
+		//resp.mbNew = false;
+		//if (!accountRe)
+		//{
+		//	// 需要新建
+		//	AutoTable accountTable = GetDBMgr()->GetTable(TABLE_ACCOUNT);
+		//	if (!accountTable)
+		//	{
+		//		resp.mResult = eAccountCreateFail;
+		//		return;
+		//	}
 
-			accountRe = accountTable->CreateRecord(msg.mAccount, true);
-			if (!accountRe)
-			{
-				resp.mResult = eAccountCreateFail;
-				return;
-			}
-			accountRe.PASSWORD() = msg.mPassword;
-			accountRe.CREATE_TIME() = TimeManager::Now();
-			resp.mbNew = true;
-		}
-			
-		AutoNice serverData = accountRe.niceDBID_LIST(false);
-		if (!serverData)
-			serverData = accountRe.niceDBID_LIST(true);
+		//	accountRe = accountTable->CreateRecord(msg.mAccount, true);
+		//	if (!accountRe)
+		//	{
+		//		resp.mResult = eAccountCreateFail;
+		//		return;
+		//	}
+		//	accountRe.PASSWORD() = msg.mPassword;
+		//	accountRe.CREATE_TIME() = TimeManager::Now();
+		//	resp.mbNew = true;
+		//}
+		//	
+		//AutoNice serverData = accountRe.niceDBID_LIST(false);
+		//if (!serverData)
+		//	serverData = accountRe.niceDBID_LIST(true);
 
-		Int64 playerID = serverData[STRING(msg.mServerID)];
+		//Int64 playerID = serverData[STRING(msg.mServerID)];
 
-		if (playerID<=0)
-		{
-			// 创建Player数据
-			RQ_CreatePlayerData req;
-			req.mAccount = msg.mAccount;
-			RS_CreatePlayerData resp;
-			Await({ Actor_GameServer, msg.mServerID }, req, resp, 100000);
-			auto responseMsg = &resp;
-			if (responseMsg)
-			{
-				serverData[STRING(msg.mServerID)] = responseMsg->mPlayerID;
-				accountRe.niceDBID_LIST(true);
-				playerID = responseMsg->mPlayerID;
-			}
-			else
-			{
-				//resp.mResult = eCreateDataRecordFail;
-				return;
-			}
-		}
+		//if (playerID<=0)
+		//{
+		//	// 创建Player数据
+		//	RQ_CreatePlayerData req;
+		//	req.mAccount = msg.mAccount;
+		//	RS_CreatePlayerData resp;
+		//	Await({ Actor_GameServer, msg.mServerID }, req, resp, 100000);
+		//	auto responseMsg = &resp;
+		//	if (responseMsg)
+		//	{
+		//		serverData[STRING(msg.mServerID)] = responseMsg->mPlayerID;
+		//		accountRe.niceDBID_LIST(true);
+		//		playerID = responseMsg->mPlayerID;
+		//	}
+		//	else
+		//	{
+		//		//resp.mResult = eCreateDataRecordFail;
+		//		return;
+		//	}
+		//}
 
-		resp.mID = playerID;
+		//resp.mID = playerID;
 
-		accountRe.Save();
+		//accountRe.Save();
 
-		LOG("Account %s : \r\n%s", msg.mAccount.c_str(), accountRe.mRecord->dump().c_str());
+		//LOG("Account %s : \r\n%s", msg.mAccount.c_str(), accountRe.mRecord->dump().c_str());
 	}
 
 	virtual void RegisterMsg(ActorManager *pActorMgr) 
