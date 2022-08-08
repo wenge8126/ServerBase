@@ -23,8 +23,14 @@ bool LoadSQLTask::WriteToThread(ThreadLoopData &targetData, StrLenType index)
 
 bool LoadSQLTask::AWait(SQLThread *pSQLThread)
 {
-	if (pSQLThread->AppendSQL(this))
+	if (CORO == 0)
 	{
+		ERROR_LOG("Not in coroutine");
+		return false;
+	}
+
+	if (pSQLThread->AppendSQL(this))
+	{		
 		mCoroID = CORO;
 		PRINT("Wait SQL ...")
 			YIELD

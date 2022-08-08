@@ -122,7 +122,7 @@ public:
 		if (CORO == 0)
 		{
 			ERROR_LOG("Await must in coro");
-			return false;
+			return initResult;
 		}
 		mbYield = true;
 		mCoroID = CORO;
