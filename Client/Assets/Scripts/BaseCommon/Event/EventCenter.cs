@@ -327,7 +327,7 @@ namespace Logic
         /// 添加监听事件
         /// </summary>
         /// <param name="evt"></param>
-        public void AppendListen(tEvent evt)
+        public void AppendListen(tEvent evt, bool bCheckExist = false)
         {
             string evtName = evt.GetEventName();
             List<tEvent> evtList = null;
@@ -335,6 +335,14 @@ namespace Logic
             {
                 evtList = new List<tEvent>();
                 mListenEventList.Add(evtName, evtList);
+            }
+            else if (bCheckExist)
+            {
+                foreach (var e in evtList)
+                {
+                    if (e==evt)
+                        return;
+                }
             }
 
             evtList.Add(evt);
@@ -344,7 +352,7 @@ namespace Logic
         {
             var evt = StartEvent(evtName);
             if (evt != null)
-                AppendListen(evt);
+                AppendListen(evt, false);
             return evt;
         }
 
@@ -355,6 +363,16 @@ namespace Logic
         public void RemoveListen(string evtName)
         {
             mListenEventList.Remove(evtName);
+        }
+
+        public void RemoveListen(tEvent evt)
+        {
+            string evtName = evt.GetEventName();
+            List<tEvent> evtList = null;
+            if (mListenEventList.TryGetValue(evtName, out evtList))
+            {
+                evtList.Remove(evt);
+            }
         }
         
         /// <summary>
