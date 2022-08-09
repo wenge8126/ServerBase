@@ -1036,59 +1036,70 @@ namespace Logic
 		return AutoEvent();
 	}
 
-	void tEventCenter::AppendListen(const char *szListenEventName, EventCallBack listenCall, bool bCheckExist /*= false*/)
+
+
+	void tEventCenter::AppendListen(AutoEvent event, bool bCheckExist /*= false*/)
 	{
-		AListenCallList pList = mListenCallHash.find(szListenEventName);
-		if (!pList)
+		AListenEventList evtList = mListenEventHash.find(event->GetEventName());
+		if (!evtList)
 		{
-			pList = MEM_NEW ListenCallList();
-			mListenCallHash.insert(szListenEventName, pList);
+			evtList = MEM_NEW ListenEventList();
+			mListenEventHash.insert(event->GetEventName(), evtList);
 		}
 		else if (bCheckExist)
 		{
-			for (auto it = pList->begin(); it; )
+			ListenEventList &list = *evtList;
+			for (int i = 0; i < list.size(); ++i)
 			{
-				auto &fun = *it;
-				if (fun.valid())
-				{
-					if (fun == listenCall)
-						return;
-				}
-				else
-					it = pList->erase(it);
+				if (list[i] == event)
+					return;
 			}
 		}
-
-		pList->push_back(listenCall);
+		evtList->add(event);
 	}
 
-	bool tEventCenter::RemoveListen(const char *szListenEventName, EventCallBack listenCall)
+	AutoEvent tEventCenter::AppendListen(const char *szListenEventName, bool bCheckExist /*= false*/)
 	{
-		AListenCallList pList = mListenCallHash.find(szListenEventName);
-		if (pList)
+		auto evt = StartEvent(szListenEventName);
+		if (evt)
+			AppendListen(evt, bCheckExist);
+
+		return evt;
+	}
+
+
+
+	bool tEventCenter::RemoveListen(AutoEvent event)
+	{
+		AListenEventList evtList = mListenEventHash.find(event->GetEventName());
+		if (evtList)
 		{
-			return pList->remove(listenCall);
-		}		
+			return evtList->remove(event);
+		}
 		return false;
 	}
 
-	void tEventCenter::DispatchEvent(tEvent *triggerEvent)
+	void tEventCenter::DispatchEvent(const char *szEventName, AutoNice eventData)
 	{
-		if (triggerEvent == NULL)
+		if (szEventName == NULL)
 			return;
-		AListenCallList pList = mListenCallHash.find(triggerEvent->GetEventName());
-		if (pList)
+
+
+		AListenEventList evtList = mListenEventHash.find(szEventName);
+		if (evtList)
 		{
-			for (auto it = pList->begin(); it; )
+			ListenEventList &list = *evtList;
+			// ·ÀÖ¹±éÀúÒÆ³ı»òÔö¼Ó, ½µĞò±éÀú
+			for (int i=list.size()-1; i>=0; --i)
 			{
-				auto &fun = *it;
-				if (fun.valid())
+				AutoEvent evt = list[i];
+				if (evt)
 				{
-					fun(triggerEvent);
-					++it;
+					evt->SetData(eventData);
+					evt->DoEvent(false);
 				}
 				else
-					it = pList->erase(it);
+					list.removeAt(i);
 			}
 		}
 	}

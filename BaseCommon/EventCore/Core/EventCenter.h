@@ -25,6 +25,7 @@
 #include "EventCallBack.h"
 #include "ArrayIndex.h"
 #include "DataProtocol.h"
+
 #include <string>
 
 //using namespace stdext;
@@ -49,6 +50,7 @@ namespace Logic
 	{
 		friend class CEventFactory;
 		friend class tEvent;
+		friend class BaseEvent;
 
 	public:
 		tEventCenter();
@@ -175,40 +177,50 @@ namespace Logic
 	public:
          virtual AutoEvent _Start(ushort eventID, int eventNameIndex);
 
-		 virtual void AppendListen(const char *szListenEventName, EventCallBack  listenCall, bool bCheckExist = false);
+		 // 发送投递事件
+		 virtual void DispatchEvent(const char *szEventName, AutoNice eventData);
 
-		 virtual bool RemoveListen(const char *szListenEventName, EventCallBack  listenCall);
+		 // 使用事件监听方式, 投递事件时, 监听事件已经实例且等待
+		 virtual AutoEvent AppendListen(const char *szListenEventName, bool bCheckExist = false);
+		 virtual void AppendListen(AutoEvent event, bool bCheckExist = false);
+		 virtual bool RemoveListen(AutoEvent event);
 
-		 virtual void DispatchEvent(tEvent *triggerEvent);
+		 // 移除所有对应事件名称的所有监听回调和监听事件
+		 virtual void RemoveListen(const char *szEventName)
+		 {	
+			 mListenEventHash.erase(szEventName);
+		 }
 
 	protected:
-		EventFactoryMap				mFactoryMap;
+		EventFactoryMap					mFactoryMap;
 		EasyHash<int, AutoEventFactory>	mFactoryArray;
 		Array<AutoEventFactory>		mArrayIndex;
-		int							mEnvironmentID;		
+		int											mEnvironmentID;		
 		
-		FixedTimeManager			*mFixedTimeManager;
+		FixedTimeManager				*mFixedTimeManager;
 		AutoPtr<NodePool>				mShareListPool;
 
 		PoolLoop<AutoEvent>			mEventList;		
 
 		PoolLoop<AutoEvent>			mFreeEventList;
 
-		bool						mbUseIDIndexData;
-		bool						mbNeedGenerateIndex;
-		bool						mbNowProcessing;
-		bool						mbCheckOptimizeSpeed;
-		DataBuffer					mMsgIndexData;
+		bool										mbUseIDIndexData;
+		bool										mbNeedGenerateIndex;
+		bool										mbNowProcessing;
+		bool										mbCheckOptimizeSpeed;
+		DataBuffer							mMsgIndexData;		 
 
-	public:
-		AutoEventFactory			mResponseEventFactory;
-        DataProtocol                    mProtocolMgr;
+	protected:
+		AutoEventFactory					mResponseEventFactory;
+        DataProtocol							mProtocolMgr;
+		
+		AutoPtr<NodePool>				mEventPool;
+		AObjectPtr							mOwnerPtr;
 
-		typedef EasyList<EventCallBack>	ListenCallList;
-		typedef AutoPtr<ListenCallList> AListenCallList;
-		EasyHash<AString, AListenCallList>	mListenCallHash;
-		AutoPtr<NodePool>							mEventPool;
-		AObjectPtr											mOwnerPtr;
+	protected:
+		typedef ArrayList<AutoEvent>	ListenEventList;
+		typedef AutoPtr<ListenEventList> AListenEventList;
+		EasyHash<AString, AListenEventList>	mListenEventHash;
 	};
 	//-----------------------------------------------------------------------------------
 }

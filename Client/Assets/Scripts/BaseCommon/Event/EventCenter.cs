@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 
 namespace Logic
@@ -8,14 +9,18 @@ namespace Logic
     {
         static public EventCenter Instance = null;
 
-        public TimeEventManager mTimeEventManager = new GameTimeManager();        
-      
+        public TimeEventManager mTimeEventManager = new GameTimeManager();
+
         public Dictionary<string, tEventFactory> mFactoryMap = new Dictionary<string, tEventFactory>();
-        
+
+        // 用于监听事件
+        public Dictionary<string, List<tEvent>> mListenEventList = new Dictionary<string, List<tEvent>>();
 
         uint mNowSecond;
         ushort mTimePeriod = 0;
+
         ushort mCode = 0;
+
         //-------------------------------------------------------------------------------------------
         public EventCenter()
         {
@@ -54,6 +59,7 @@ namespace Logic
                     f.Value.Destroy();
                 }
             }
+
             foreach (string key in removeList)
             {
                 mFactoryMap.Remove(key);
@@ -64,10 +70,14 @@ namespace Logic
         {
             mTimeEventManager = timeManager;
             if (mTimeEventManager != null)
-                mNowSecond = (uint)(mTimeEventManager.GetNowTime() * 1000);
+                mNowSecond = (uint) (mTimeEventManager.GetNowTime() * 1000);
         }
 
-        static public void LogError(string info) { Log(LOG_LEVEL.ERROR, info); }
+        static public void LogError(string info)
+        {
+            Log(LOG_LEVEL.ERROR, info);
+        }
+
         static public void Log(LOG_LEVEL level, string info)
         {
 
@@ -98,6 +108,7 @@ namespace Logic
                     break;
             }
         }
+
         static public tEvent Start(string eventTypeName)
         {
             return Instance.StartEvent(eventTypeName);
@@ -118,6 +129,7 @@ namespace Logic
                 waitEvt.WaitTime(waitSecond);
                 return waitEvt;
             }
+
             return null;
         }
 
@@ -130,6 +142,7 @@ namespace Logic
                 waitEvt.WaitTime(waitSecond);
                 return waitEvt;
             }
+
             return null;
         }
 
@@ -141,6 +154,7 @@ namespace Logic
                 LOG.logError("Not find fun >" + fun);
                 return null;
             }
+
             TM_WaitUpdateAction waitEvt = Start("TM_WaitUpdateAction") as TM_WaitUpdateAction;
             if (waitEvt != null)
             {
@@ -151,6 +165,7 @@ namespace Logic
                 waitEvt.Start();
                 return waitEvt;
             }
+
             return null;
         }
 
@@ -171,8 +186,10 @@ namespace Logic
                     info += "] event factory.";
                     LogError(info);
                 }
+
                 return null;
             }
+
             if (!(fact is EmptyEventFactory))
             {
                 tEvent evt = fact.NewEvent();
@@ -192,7 +209,7 @@ namespace Logic
         public override void RegisterEvent(string eventName, tEventFactory fact)
         {
             fact.SetEventName(eventName);
-            fact.SetEventCenter(this);            
+            fact.SetEventCenter(this);
 
             int id = 0;
 
@@ -214,6 +231,7 @@ namespace Logic
             fact.Init();
 
         }
+
         public override bool RemoveRegisterEvent(string eventName)
         {
             return mFactoryMap.Remove(eventName);
@@ -249,7 +267,7 @@ namespace Logic
 
         protected override void Log(string info)
         {
-              LOG.log(info);
+            LOG.log(info);
         }
 
         public override tEvent StartDefaultEvent(string eventName)
@@ -260,8 +278,10 @@ namespace Logic
                 RegisterEvent(eventName, new DefaultEventFactory());
                 evt = StartEvent(eventName, false);
                 if (null == evt)
-                    throw new Exception("Error: already register default event, but can not create event >>" + eventName);
+                    throw new Exception(
+                        "Error: already register default event, but can not create event >>" + eventName);
             }
+
             return evt;
         }
 
@@ -280,6 +300,7 @@ namespace Logic
             if (mTimeEventManager != null)
                 mTimeEventManager.RemoveWaitEvent(evt);
         }
+
         public override void StopUpdateEvent(tEvent evt)
         {
             if (mTimeEventManager != null)
@@ -288,7 +309,7 @@ namespace Logic
 
         public UInt64 AlloctEventID()
         {
-            uint nowTime = (uint)(mTimeEventManager.GetNowTime() * 1000);
+            uint nowTime = (uint) (mTimeEventManager.GetNowTime() * 1000);
             if (nowTime < mNowSecond)
                 ++mTimePeriod;
 
@@ -300,6 +321,63 @@ namespace Logic
             uint m = mTimePeriod;
             key = (mNowSecond << 32) + (m << 16) + mCode;
             return key;
+        }
+
+        /// <summary>
+        /// 添加监听事件
+        /// </summary>
+        /// <param name="evt"></param>
+        public void AppendListen(tEvent evt)
+        {
+            string evtName = evt.GetEventName();
+            List<tEvent> evtList = null;
+            if (!mListenEventList.TryGetValue(evtName, out evtList))
+            {
+                evtList = new List<tEvent>();
+                mListenEventList.Add(evtName, evtList);
+            }
+
+            evtList.Add(evt);
+        }
+
+        public tEvent AppendListen(string evtName)
+        {
+            var evt = StartEvent(evtName);
+            if (evt != null)
+                AppendListen(evt);
+            return evt;
+        }
+
+        /// <summary>
+        /// 移除监听事件
+        /// </summary>
+        /// <param name="evtName"></param>
+        public void RemoveListen(string evtName)
+        {
+            mListenEventList.Remove(evtName);
+        }
+        
+        /// <summary>
+        /// 投递事件
+        /// </summary>
+        /// <param name="evtName"></param>
+        /// <param name="eventData"></param>
+        /// <returns></returns>
+        public bool DispatchEvent(string evtName, tNiceData eventData)
+        {
+            List<tEvent> evtList = null;
+            if (!mListenEventList.TryGetValue(evtName, out evtList))
+            {
+                return false;
+            }
+
+            foreach (var evt in evtList)
+            {
+                evt.setData(eventData);
+                evt.Do();
+            }
+
+            return true;
         }
     }
 }
