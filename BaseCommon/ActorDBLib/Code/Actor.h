@@ -149,7 +149,7 @@ namespace NetCloud
 		{
 			if (CORO == 0)
 			{
-				ERROR_LOG("AwaitConnect must in coro");
+				ERROR_LOG("Await reqeust must in coro");
 				return AutoNice();
 			}
 

@@ -10,7 +10,7 @@ class PingClientComponent : public Component
 public:
 	void OnPingClientOverTime()
 	{
-		ERROR_LOG("%s LoginClient ping over time");
+		ERROR_LOG("%s LoginClient ping over time, may be client disconnect", mpActor->GetID().dump().c_str());
 	}
 
 public:
@@ -21,19 +21,23 @@ public:
 
 	bool _OnTimeOver() override
 	{
-		if (mpActor != NULL)
+		Hand<Component> self = GetSelf();
+		CoroutineTool::AsyncCall([=]()
 		{
-			GL_RequestPingClient msg;
-			LG_ResopnsePingClient resp;
-			
-			if (mpActor->Await({ Actor_LoginClient, mpActor->GetID().id }, msg, resp, PING_CLIENT_OVERTIMESECOND / 2))
+			if (self && mpActor != NULL)
 			{
-				WaitTime(PING_CLIENT_OVERTIMESECOND);
-			}
-			else
-				OnPingClientOverTime();			
+				GL_RequestPingClient msg;
+				LG_ResopnsePingClient resp;
 
-			return true;
-		}
+				if (mpActor->Await({ Actor_LoginClient, mpActor->GetID().id }, msg, resp, PING_CLIENT_OVERTIMESECOND / 2))
+				{
+					WaitTime(PING_CLIENT_OVERTIMESECOND);
+				}
+				else
+					OnPingClientOverTime();				
+			}
+		});
+
+		return true;
 	}
 };
