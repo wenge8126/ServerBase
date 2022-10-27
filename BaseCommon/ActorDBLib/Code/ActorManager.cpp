@@ -5,9 +5,12 @@
 
 void NetCloud::ActorManager::RegisterComponect(const char *szName, Hand<tEventFactory> factory)
 {
-	AComponent comp = factory->NewEvent();
-	comp->RegisterMsg(this);
 	mEventCenter->RegisterEvent(szName, factory);
+
+	AComponent comp = factory->NewEvent();
+	comp->SetFactory(factory);
+	comp->RegisterMsg();
+	
 }
 
 void NetCloud::ActorManager::LowProcess()
@@ -23,12 +26,14 @@ void NetCloud::ActorManager::LowProcess()
 	}
 }
 
+
+
 NetCloud::ActorManager::ActorManager(const char *szCloudNodeIp, int nCloudNodePort, int nSafeCheck, int threadNum)
 {
 	mSelfPtr = MEM_NEW ActorMgrPtr();
 	mSelfPtr->mpMgr = this;
 
-	mEventCenter = MEM_NEW Logic::EventCenter();
+	mEventCenter = MEM_NEW ActorEventCenter(mSelfPtr);
 
 	mNetNode = MEM_NEW AsyncNode();// MeshNetNode(szCloudNodeIp, nCloudNodePort, nSafeCheck, threadNum);
 	mNetNode->StartNode(szCloudNodeIp, nCloudNodePort, nSafeCheck);

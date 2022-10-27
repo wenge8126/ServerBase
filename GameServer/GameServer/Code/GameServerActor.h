@@ -14,7 +14,7 @@ public:
 		response.error = eErrorCodeNone;
 	}
 
-	void RegisterMsg(ActorManager *pActorMgr)
+	void RegisterMsg() override
 	{
 		REG_ACTOR_MSG(GameServerActor, WG_RequestCreatePlayerActor, GW_ResponseCreatePlayer);
 	}

@@ -36,7 +36,7 @@ namespace NetCloud
 		}
 
 	public:
-		virtual void RegisterMsg(ActorManager *pActorMgr) override
+		virtual void RegisterMsg() override
 		{
 			REG_COMPONENT( RecordNoSQLUserComponent);
 		}

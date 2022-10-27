@@ -30,14 +30,14 @@ Actor
 #define REG_ACTOR(pActorMgr, actorType, ActorClass) pActorMgr->RegisterActor(actorType, MEM_NEW DefineActorFactory<ActorClass>());
 
 // 注册组件
-#define REG_COMPONENT(ComponentClass) pActorMgr->RegisterComponect(#ComponentClass, MEM_NEW Logic::EventFactory<ComponentClass>());
+#define REG_COMPONENT(ComponentClass) GetMgr()->RegisterComponect(#ComponentClass, MEM_NEW Logic::EventFactory<ComponentClass>());
 
 // 注册Actor消息处理
 #define REG_ACTOR_MSG(ActorClass, RQ, RS)		mActorFactory->RegisterActorMsg(#RQ, &Actor::OnMsg<ActorClass, RQ, RS>);
 #define REG_NOTIFY_MSG(ActorClass, MSG)		mActorFactory->RegisterNotifyMsg(#MSG, &Actor::OnNotify<ActorClass, MSG>);
 // 注册组件消息处理
-#define REG_COMP_MSG(ComponentClass, RQ, RS)		pActorMgr->RegisterActorComMsg(#RQ, &Actor::OnComponentMsg<ComponentClass, RQ, RS>);
-#define REG_COMP_NOTIFY(ComponentClass, MSG)		pActorMgr->RegisterComNotifyMsg(#MSG, &Actor::OnComponentNotify<ComponentClass, MSG>);
+#define REG_COMP_MSG(ComponentClass, RQ, RS)		GetMgr()->RegisterActorComMsg(#RQ, &Actor::OnComponentMsg<ComponentClass, RQ, RS>);
+#define REG_COMP_NOTIFY(ComponentClass, MSG)		GetMgr()->RegisterComNotifyMsg(#MSG, &Actor::OnComponentNotify<ComponentClass, MSG>);
 //-------------------------------------------------------------------------
 enum ActorMsgType
 {
@@ -69,7 +69,7 @@ namespace NetCloud
 	public:
 		virtual AUnit NewActor() = 0;
 		//Call pActorMsr->RegisterActorMsg(msgName, fun)
-		virtual void RegisterMsg(ActorManager *pMgr) = 0;
+		virtual void RegisterMsg() = 0;
 
 		virtual AUnit _NewActor();
 
@@ -360,7 +360,7 @@ namespace NetCloud
 
 		virtual bool OnReceiveProcess(NodePacket *pNodePacket) override;
 
-		virtual void RegisterMsg(ActorManager *pActorMgr) {}
+		virtual void RegisterMsg() {}
 
 	public:
 		ActorManager* GetMgr()
@@ -469,10 +469,10 @@ class DefineActorFactory : public ActorFactory
 public:
 	virtual AUnit NewActor() { return MEM_NEW T(); }
 	//Call pActorMsr->RegisterActorMsg(msgName, fun)
-	virtual void RegisterMsg(NetCloud::ActorManager *pMgr) override
+	virtual void RegisterMsg() override
 	{
 		HandActor actor = _NewActor();
-		actor->RegisterMsg(pMgr);
+		actor->RegisterMsg();
 	}
 };
 

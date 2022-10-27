@@ -52,7 +52,7 @@ namespace NetCloud
 		{
 			factory->SetType(actorType);
 			factory->mMgr = mSelfPtr;
-			factory->RegisterMsg(this);
+			factory->RegisterMsg();
 			mFactoryList.insert(actorType, factory);
 		}
 
@@ -134,7 +134,20 @@ namespace NetCloud
 	protected:
 		ArrayList<AProcessComponect>				mProcessComponectList;	//Actor组件, 需要高速Process的列表
 	};
+	//-------------------------------------------------------------------------
+	class ActorEventCenter : public Logic::EventCenter
+	{
+	public:
+		ActorEventCenter(AutoActorMsgPtr mgrPtr)
+			: mMgrPtr(mgrPtr)
+		{
+			
+		}
 
+	public:
+		AutoActorMsgPtr	mMgrPtr;
+	};
+	//-------------------------------------------------------------------------
 	// 具有DB功能的ActorManager
 	class ActorDBLib_Export  DBActorManager : public ActorManager
 	{

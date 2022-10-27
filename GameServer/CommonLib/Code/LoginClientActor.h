@@ -38,7 +38,7 @@ public:
 	}
 
 	// 这个只执行一次
-	void RegisterMsg(ActorManager *pActorMgr) override
+	void RegisterMsg() override
 	{
 		REG_ACTOR_MSG(LoginClientActor, GL_RequestPingClient, LG_ResopnsePingClient);
 		REG_ACTOR_MSG(LoginClientActor, SC_ActorRequestClientMsg, CS_ResponceServerActorMsg);

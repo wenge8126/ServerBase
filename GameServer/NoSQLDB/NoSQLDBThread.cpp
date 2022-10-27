@@ -57,7 +57,7 @@ public:
 #endif
 	}
 
-	virtual void RegisterMsg(ActorManager *pActorMgr) override
+	virtual void RegisterMsg() override
 	{
 		//pActorMgr->RegisterActorMsg("RQ_FirstRmbReward", &Actor::OnMsg<TestActor, RQ_FirstRmbReward, RS_FirstRmbReward>);
 		REG_ACTOR_MSG(WorkerActor, RQ_CreateDBTable, RS_CreateDBTable);

@@ -18,7 +18,7 @@ public:
 		GetActor()->SendMsg(msg, senderID);
 	}
 
-	virtual void RegisterMsg(ActorManager *pActorMgr) override
+	virtual void RegisterMsg() override
 	{
 		//REG_COMP_MSG(DDCom, RQ_CheckAndCreateAccount, RS_CheckAndCreateAccount);
 	}
@@ -117,7 +117,7 @@ public:
 		//LOG("Account %s : \r\n%s", msg.mAccount.c_str(), accountRe.mRecord->dump().c_str());
 	}
 
-	virtual void RegisterMsg(ActorManager *pActorMgr) 
+	virtual void RegisterMsg() 
 	{	
 		REG_ACTOR_MSG(AccountActor, RQ_CheckAndCreateAccount, RS_CheckAndCreateAccount);
 

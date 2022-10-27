@@ -26,7 +26,7 @@ public:
 		LOG("+++++++ %s", msg.dump().c_str());
 	}
 
-	virtual void RegisterMsg(ActorManager *pActorMgr)
+	virtual void RegisterMsg()
 	{
 		REG_COMPONENT( FFComp);
 		//pActorMgr->RegisterComponect("FFComp", MEM_NEW Logic::EventFactory<FFComp>());

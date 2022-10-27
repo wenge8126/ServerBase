@@ -147,7 +147,7 @@ namespace NetCloud
 			}
 		}
 
-		virtual void RegisterMsg(ActorManager *pActorMgr)
+		virtual void RegisterMsg()
 		{
 			REG_COMP_MSG(RecordNoSQLUserComponent, SQL_RequestFieldData, SQL_ResponseFieldData);
 		}

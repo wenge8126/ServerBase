@@ -142,7 +142,7 @@ public:
 	}
 
 
-	void RegisterMsg(ActorManager *pActorMgr)
+	void RegisterMsg() override
 	{
 		
 	}

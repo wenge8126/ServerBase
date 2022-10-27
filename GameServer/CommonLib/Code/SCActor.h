@@ -75,7 +75,7 @@ public:
 			ERROR_LOG("No register process request function : %s", notifyMsg.mMsgName.c_str());
 	}
 
-	void RegisterMsg(ActorManager *pActorMgr) override
+	void RegisterMsg() override
 	{
 		REG_NOTIFY_MSG(SCActor, SCS_NotifyMsg);
 	}

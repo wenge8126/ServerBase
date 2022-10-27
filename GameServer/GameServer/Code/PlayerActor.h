@@ -75,7 +75,7 @@ public:
 	}
 
 
-	void RegisterMsg(ActorManager *pActorMgr)
+	void RegisterMsg() override
 	{
 		REG_COMPONENT(PingClientComponent);
 		REG_ACTOR_MSG(PlayerActor, CG_RequestPlayerData, GC_ResponsePlayerData);

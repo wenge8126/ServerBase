@@ -242,7 +242,7 @@ namespace NetCloud
 				WARN_LOG("No exist field data %s : %d", req.mKey.c_str(), x);
 		}
 
-		virtual void RegisterMsg(ActorManager *pActorMgr) override
+		virtual void RegisterMsg() override
 		{
 			REG_NOTIFY_MSG(NoSQLActor, SQL_SaveNoSQLData);
 			REG_ACTOR_MSG(NoSQLActor, SQL_LoadNoSQLData, SQL_ResponseNoSQLData);

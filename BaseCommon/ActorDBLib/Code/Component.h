@@ -20,6 +20,8 @@ namespace NetCloud
 		Actor* GetActor() { return mpActor; }
 		virtual void Destory();
 
+		ActorManager* GetMgr();
+
 	protected:
 		// 实例后, 加入到Actor之后即执行Awake
 		virtual void Awake() {}
@@ -38,7 +40,7 @@ namespace NetCloud
 		// 释放之前执行 OnDestory
 		virtual void OnDestory() {}
 
-		virtual void RegisterMsg(ActorManager *pActorMgr) {}
+		virtual void RegisterMsg() {}
 
 	protected:
 		virtual bool _DoEvent() override

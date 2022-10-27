@@ -117,7 +117,7 @@ public:
 			ERROR_LOG("No exist client actor");
 	}
 
-	void RegisterMsg(ActorManager *pActorMgr)
+	void RegisterMsg() override
 	{
 		REG_COMPONENT( TcpComponent);
 		REG_COMPONENT( HttpComponect);

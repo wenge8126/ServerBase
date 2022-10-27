@@ -135,7 +135,7 @@ public:
 		SendClientMsg(1, UnitID(1, 111), xx);
 	}
 
-	virtual void RegisterMsg(ActorManager *pActorMgr) override
+	virtual void RegisterMsg() override
 	{
 		//pActorMgr->RegisterActorMsg("RQ_FirstRmbReward", &Actor::OnMsg<TestActor, RQ_FirstRmbReward, RS_FirstRmbReward>);
 		REG_ACTOR_MSG(WorkerActor, RQ_CreateDBTable, RS_CreateDBTable);
@@ -144,7 +144,7 @@ public:
 		REG_ACTOR_MSG(WorkerActor, CS_RequestTest, MSG_Test);
 		REG_NOTIFY_MSG(WorkerActor, MSG_Test);
 
-		SCActor::RegisterMsg(pActorMgr);
+		SCActor::RegisterMsg();
 	}
 
 public:

@@ -8,6 +8,13 @@ void NetCloud::Component::Destory()
 	Free();
 }
 
+NetCloud::ActorManager* NetCloud::Component::GetMgr()
+{
+	Hand<ActorEventCenter> center = GetEventCenter();
+	if (center)
+		return center->mMgrPtr->mpMgr;
+}
+
 void NetCloud::Component::Start()
 {
 	ASYNC(&Component::AsyncStart, this);

@@ -126,7 +126,7 @@ public:
 public:
 	void On(RQ_CreateDBTable &msg, RS_CreateDBTable &resp, UnitID senderID, int);
 
-	void RegisterMsg(ActorManager *pActorMgr)
+	void RegisterMsg() override
 	{
 		REG_ACTOR_MSG(AccountCenterActor, RQ_CreateDBTable, RS_CreateDBTable);
 		REG_COMPONENT(AccountDBComponent);

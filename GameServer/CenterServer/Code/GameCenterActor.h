@@ -24,7 +24,7 @@ public:
 			response.error = eErrorCode_GateNetMsgOverTime;
 	}
 
-	void RegisterMsg(ActorManager *pActorMgr)
+	void RegisterMsg() override
 	{
 		REG_ACTOR_MSG(GameCenterActor, LW_RequestEnterServer, WL_ResponseEnterServer);
 	}

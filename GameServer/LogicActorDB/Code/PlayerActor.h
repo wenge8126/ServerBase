@@ -17,10 +17,10 @@ public:
 			resp.mPlayerData = mData.mRecord->ToNiceData();
 	}
 
-	virtual void RegisterMsg(ActorManager *pActorMgr)
+	virtual void RegisterMsg()
 	{
 		REG_ACTOR_MSG(PlayerActor, RQ_PlayerBaseData, RS_PlayerBaseData);
-		SCActor::RegisterMsg(pActorMgr);
+		SCActor::RegisterMsg();
 	}
 
 public:
@@ -53,7 +53,7 @@ public:
 		data.Save();
 	}
 
-	virtual void RegisterMsg(ActorManager *pActorMgr)
+	virtual void RegisterMsg()
 	{
 		REG_ACTOR_MSG(GameServerActor, RQ_CreatePlayerData, RS_CreatePlayerData);
 	}

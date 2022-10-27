@@ -101,7 +101,7 @@ void OnAsyncRequest(HandConnect connect, const CS_RequestLogin  &req, SC_Respons
 }
 
 
-	void RegisterMsg(ActorManager *pActorMgr)
+	void RegisterMsg() override
 	{
 		REG_COMPONENT( WssWebComponent);
 		REG_COMPONENT( TestNoSQLUserComponent);
