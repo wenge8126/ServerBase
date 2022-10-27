@@ -195,7 +195,7 @@
         {
             "mDBBASE" : "account_db",    // DB连接库, 可以为空, 表示连接 test
             "mDBIP" : "127.0.0.1",    // Mysql 地址
-            "mDBPORT" : 3306,    // Mysql 端口
+            "mDBPORT" : 3306,    // Mysql 端口  
             "mDBUSER" : "root",    // Mysql用户名
             "mDBPASSWORD" : "root",    // 连接密码
             "mTABLE_LIST" : "t_tablelist"    // 表格加载列表 (创建DB表格时, 自动生成)
