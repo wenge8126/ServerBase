@@ -1,12 +1,15 @@
+using HybridCLR;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using Logic;
 using UnityEngine;
 
 using Logic;
+using UnityEngine.Networking;
 
 public class NG_RequestGateInfo : RequestPacket
 {
@@ -79,7 +82,7 @@ public class MainStart : MonoBehaviour
     
     public Actor mActor;
     // Start is called before the first frame update
-    async void Start()
+    void Start()
     {
         DontDestroyOnLoad(gameObject);
         
@@ -200,6 +203,9 @@ public class MainStart : MonoBehaviour
     {
         await Task.Delay(4000);
     }
+    
+    //--------------------------------------------------
+        
 }
 
 public class TestActor : Actor
@@ -284,7 +290,7 @@ public class TestComponent : tComponent
     {
         //var req = new GN_NotifyNodeInfo();
         //req.mMsgData = reqData;
-        LOG.log( comp.GetType().Name+ " 6666888888@@@@@@@@@@@@ " + req.GetType());
+        LOG.log( comp.GetType().Name+ " 6o0O666888888@@@@@@@@@@@@ " + req.GetType());
         //(actor as TestActor).On(req);
         req.mMsgData.dump("===========");
         MSG_Test t = new MSG_Test();
@@ -302,4 +308,7 @@ public class TestComponent : tComponent
         mgr.RegisterMsg<TestComponent, GN_NotifyNodeInfo>(On);
         mgr.RegisterMsg<TestComponent, SC_ResponseTest>(Notify);
     }
+    
+    
+
 }
