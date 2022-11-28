@@ -28,9 +28,6 @@
     <Filter Include="UDP">
       <UniqueIdentifier>{ef9bb514-5572-4d3c-8142-05d8b0e3d110}</UniqueIdentifier>
     </Filter>
-    <Filter Include="WebNet">
-      <UniqueIdentifier>{8556f31d-04c0-40ea-babb-4ad77427dc11}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ServerBase">
       <UniqueIdentifier>{b24a4fb8-b9e5-4425-b489-697e41e15c16}</UniqueIdentifier>
     </Filter>
@@ -42,6 +39,9 @@
     </Filter>
     <Filter Include="MeshNet">
       <UniqueIdentifier>{12c0b30f-ae84-47fb-a6db-ad816bcdd33d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WebNet">
+      <UniqueIdentifier>{c515967b-aa96-49ac-8192-ec74d61ce8a0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -117,18 +117,6 @@
     <ClCompile Include="..\NetDll\Net\IOCPUDPNet.cpp">
       <Filter>UDP</Filter>
     </ClCompile>
-    <ClCompile Include="..\NetDll\WebSocket\sha1.cpp">
-      <Filter>WebNet</Filter>
-    </ClCompile>
-    <ClCompile Include="..\NetDll\Net\WebGameNet.cpp">
-      <Filter>WebNet</Filter>
-    </ClCompile>
-    <ClCompile Include="..\NetDll\WebSocket\WebServerProtocol.cpp">
-      <Filter>WebNet</Filter>
-    </ClCompile>
-    <ClCompile Include="..\NetDll\WebSocket\WebProtocol.cpp">
-      <Filter>WebNet</Filter>
-    </ClCompile>
     <ClCompile Include="..\NetDll\Net\BaseServer.cpp">
       <Filter>ServerBase</Filter>
     </ClCompile>
@@ -179,6 +167,9 @@
     </ClCompile>
     <ClCompile Include="..\NetNode\AsyncNode.cpp">
       <Filter>NetNode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NetDll\Net\WebNsgEvent.cpp">
+      <Filter>WebNet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -266,18 +257,6 @@
     <ClInclude Include="..\NetDll\Net\IOCPUDPNet.h">
       <Filter>UDP</Filter>
     </ClInclude>
-    <ClInclude Include="..\NetDll\WebSocket\sha1.h">
-      <Filter>WebNet</Filter>
-    </ClInclude>
-    <ClInclude Include="..\NetDll\WebSocket\WebServerProtocol.h">
-      <Filter>WebNet</Filter>
-    </ClInclude>
-    <ClInclude Include="..\NetDll\WebSocket\WebProtocol.h">
-      <Filter>WebNet</Filter>
-    </ClInclude>
-    <ClInclude Include="..\NetDll\Net\WebGameNet.h">
-      <Filter>WebNet</Filter>
-    </ClInclude>
     <ClInclude Include="..\NetDll\Net\DefinePacketFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -349,6 +328,9 @@
     </ClInclude>
     <ClInclude Include="..\NetDll\Net\MeshNetMsg.h">
       <Filter>MeshNet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NetDll\Net\WebMsgEvent.h">
+      <Filter>WebNet</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

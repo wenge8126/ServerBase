@@ -52,6 +52,8 @@ namespace HybridCLR.Editor
                 var prefabAssets = new List<string>();
                 string testPrefab = $"{Application.dataPath}/BundleResource/1.prefab";
                 prefabAssets.Add(testPrefab);
+                testPrefab = $"{Application.dataPath}/BundleResource/Logic.prefab";
+                prefabAssets.Add(testPrefab);
                 AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
                 abs.Add(new AssetBundleBuild
                 {

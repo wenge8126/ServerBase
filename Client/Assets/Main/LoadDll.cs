@@ -12,9 +12,9 @@ public class LoadDll : MonoBehaviour
     // 华佗热更
     public static List<string> AOTMetaAssemblyNames { get; } = new List<string>()
     {
-        // "mscorlib.dll",
-        // "System.dll",
-        // "System.Core.dll",
+         "mscorlib.dll",
+         "System.dll",
+         "System.Core.dll",
     };
 
     void Start()
@@ -51,7 +51,7 @@ public class LoadDll : MonoBehaviour
         var assets = new List<string>
         {
             "prefabs",
-            "Assembly-CSharp.dll",
+           // "Assembly-CSharp.dll",
             "TestDll.dll",
         }.Concat(AOTMetaAssemblyNames);
 
@@ -92,14 +92,14 @@ public class LoadDll : MonoBehaviour
 
 #if !UNITY_EDITOR
         var gameAss2 = System.Reflection.Assembly.Load(GetAssetData("TestDll.dll"));
-        var gameAss = System.Reflection.Assembly.Load(GetAssetData("Assembly-CSharp.dll"));
+      //  var gameAss = System.Reflection.Assembly.Load(GetAssetData("Assembly-CSharp.dll"));
 #else
         var gameAss2 = AppDomain.CurrentDomain.GetAssemblies().First(assembly => assembly.GetName().Name == "TestDll");
-        var gameAss = AppDomain.CurrentDomain.GetAssemblies().First(assembly => assembly.GetName().Name == "Assembly-CSharp");
+       // var gameAss = AppDomain.CurrentDomain.GetAssemblies().First(assembly => assembly.GetName().Name == "Assembly-CSharp");
 #endif
 
         AssetBundle prefabAb = AssetBundle.LoadFromMemory(GetAssetData("prefabs"));
-        GameObject testPrefab = Instantiate(prefabAb.LoadAsset<GameObject>("1.prefab"));
+        GameObject testPrefab = Instantiate(prefabAb.LoadAsset<GameObject>("Logic.prefab"));
         
         //StartLogic();
         //SceneManager.LoadScene(1);
@@ -113,13 +113,13 @@ public class LoadDll : MonoBehaviour
         }
         
         
-        var t = gameAss.GetType("MainStart");
-        if (t!=null)
-            Debug.Log("MainStart is : "+t.ToString());
-        else
-        {
-            Debug.Log("MainStart is not exist");
-        }
+        //var t = gameAss.GetType("MainStart");
+        //if (t!=null)
+        //    Debug.Log("MainStart is : "+t.ToString());
+        //else
+        //{
+        //    Debug.Log("MainStart is not exist");
+        //}
         
         // var logicObject = Resources.Load<GameObject>("Logic");
         // var t = gameAss2.GetType("TestCom");

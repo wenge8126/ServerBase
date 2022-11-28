@@ -646,7 +646,7 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y</Command>
     <ClCompile Include="..\NetDll\Net\UDPNet.cpp" />
     <ClCompile Include="..\NetDll\Net\UDPServerClientNet.cpp" />
     <ClCompile Include="..\NetDll\Net\UDPThreadNet.cpp" />
-    <ClCompile Include="..\NetDll\Net\WebGameNet.cpp" />
+    <ClCompile Include="..\NetDll\Net\WebNsgEvent.cpp" />
     <ClCompile Include="..\NetDll\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugDevelop|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='GameRelease|Win32'">Create</PrecompiledHeader>
@@ -666,9 +666,6 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y</Command>
     <ClCompile Include="..\NetDll\Net\SocketInputStream.cpp" />
     <ClCompile Include="..\NetDll\Net\SocketOutputStream.cpp" />
     <ClCompile Include="..\NetDll\Net\ServerNetThread.cpp" />
-    <ClCompile Include="..\NetDll\WebSocket\sha1.cpp" />
-    <ClCompile Include="..\NetDll\WebSocket\WebProtocol.cpp" />
-    <ClCompile Include="..\NetDll\WebSocket\WebServerProtocol.cpp" />
     <ClCompile Include="..\NetNode\AsyncGate.cpp" />
     <ClCompile Include="..\NetNode\AsyncNode.cpp" />
     <ClCompile Include="..\NetNode\NetCommon.cpp" />
@@ -721,11 +718,8 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y</Command>
     <ClInclude Include="..\NetDll\Net\SocketOutputStream.h" />
     <ClInclude Include="..\NetDll\Net\NetSafeCheck.h" />
     <ClInclude Include="..\NetDll\Net\ServerNetThread.h" />
-    <ClInclude Include="..\NetDll\Net\WebGameNet.h" />
+    <ClInclude Include="..\NetDll\Net\WebMsgEvent.h" />
     <ClInclude Include="..\NetDll\stdafx.h" />
-    <ClInclude Include="..\NetDll\WebSocket\sha1.h" />
-    <ClInclude Include="..\NetDll\WebSocket\WebProtocol.h" />
-    <ClInclude Include="..\NetDll\WebSocket\WebServerProtocol.h" />
     <ClInclude Include="..\NetNode\AsyncGate.h" />
     <ClInclude Include="..\NetNode\AsyncNode.h" />
     <ClInclude Include="..\NetNode\NetCommon.h" />

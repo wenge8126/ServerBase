@@ -194,9 +194,12 @@ public class MainStart : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        EventCenter.Instance.Process();
-        mNet.Process(0.001f);
-        mActorMgr.Process();
+        if (EventCenter.Instance!=null)
+            EventCenter.Instance.Process();
+        if (mNet!=null)
+            mNet.Process(0.001f);
+        if (mActorMgr!=null)
+         mActorMgr.Process();
     }
 
     public static async Task WaitTest()
