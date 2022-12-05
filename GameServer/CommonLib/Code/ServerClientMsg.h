@@ -613,3 +613,99 @@ public:
 
 };
 
+//  用于HttpRequestActorMsg (客户端直接请求访问服务器内部Actor)
+class HttpReqeustActorMsg : public tBaseMsg
+{ 
+public:
+    Int64 mActorID;		
+    int mActorType;		
+    AString mMsgName;		
+    AutoData mRequestMsgData;		
+    AString mToken;		
+
+public:
+    HttpReqeustActorMsg() { clear(false); };
+
+
+   virtual  void Full(AutoNice scrData) override
+    {
+        clear(false);
+        CheckGet(scrData, mActorID);
+        CheckGet(scrData, mActorType);
+        CheckGet(scrData, mMsgName);
+        mRequestMsgData = (DataStream*)scrData["mRequestMsgData"];
+        CheckGet(scrData, mToken);
+    }
+
+    virtual void ToData(AutoNice &destData) override
+    {
+        destData["mActorID"] = mActorID;
+        destData["mActorType"] = mActorType;
+        destData["mMsgName"] = mMsgName;
+        destData["mRequestMsgData"] = mRequestMsgData.getPtr();
+        destData["mToken"] = mToken;
+    }
+
+    bool serialize(DataStream *destData) const override
+    {
+        destData->write((short)5);
+
+        SAVE_MSG_VALUE(mActorID, 8);
+        SAVE_MSG_VALUE(mActorType, 1);
+        SAVE_MSG_VALUE(mMsgName, 4);
+        SAVE_MSG_DATA(mRequestMsgData);
+        SAVE_MSG_VALUE(mToken, 4);
+        return true;
+    }
+
+    void clear(bool bClearBuffer=false) override 
+    {
+        mActorID = 0;
+        mActorType = 0;
+        mMsgName.setNull();
+        if (mRequestMsgData) mRequestMsgData.setNull();
+        mToken.setNull();
+    }
+
+    void copy(const tBaseMsg &otherMsg) override 
+    {
+        if (strcmp("HttpReqeustActorMsg", otherMsg.GetMsgName())!=0) { LOG("%s is not HttpReqeustActorMsg", otherMsg.GetMsgName()); return; }; const HttpReqeustActorMsg &other = *(const HttpReqeustActorMsg*)(&otherMsg);
+        mActorID = other.mActorID;
+        mActorType = other.mActorType;
+        mMsgName = other.mMsgName;
+        COPY_MSG_DATA(other.mRequestMsgData, mRequestMsgData);
+        mToken = other.mToken;
+    }
+
+    virtual const char* GetMsgName() const override { return "HttpReqeustActorMsg"; }
+
+    AData get(const char *szMember) const 
+    {
+        if (strcmp(szMember, "mActorID")==0) { AData value; value = mActorID; return value; }
+        if (strcmp(szMember, "mActorType")==0) { AData value; value = mActorType; return value; }
+        if (strcmp(szMember, "mMsgName")==0) { AData value; value = mMsgName; return value; }
+        if (strcmp(szMember, "mToken")==0) { AData value; value = mToken; return value; }
+        return AData();
+    }
+
+    bool set(const char *szMember, AData value) 
+    {
+        if (strcmp(szMember, "mActorID")==0) { mActorID = value; return true; };
+        if (strcmp(szMember, "mActorType")==0) { mActorType = value; return true; };
+        if (strcmp(szMember, "mMsgName")==0) { mMsgName = value; return true; };
+        if (strcmp(szMember, "mToken")==0) { mToken = value; return true; };
+        LOG("No exist > %%s", szMember);  return false;
+    }
+
+    AData operator [] (const char *szMember) const 
+    {
+        return get(szMember);
+    }
+
+    AData operator [] (const AString &member) const 
+    {
+        return get(member.c_str());
+    }
+
+};
+

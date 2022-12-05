@@ -73,6 +73,8 @@ namespace uWS
 		, mpHttpApp(NULL)
 		, mpHttpListen(NULL)
 	{
+		mSelfPtr = MEM_NEW WebServerPtr();
+		mSelfPtr->mpServer = this;
 		SetNetProtocol(MEM_NEW WebNetProtocal());
 		mWebEventCenter = MEM_NEW WebNetEventCenter();
 		mWebEventCenter->_SetNetTool(0, GetSelf());
@@ -83,6 +85,7 @@ namespace uWS
 	template<bool bUSE_SSL>
 	tWssServerNet<bUSE_SSL>::~tWssServerNet()
 	{
+		mSelfPtr->mpServer = NULL;
 		_stopNet();
 		if (mpWsApp != NULL)
 			delete mpWsApp;
@@ -102,13 +105,17 @@ namespace uWS
 		void AsyncResponse()
 		{
 			AString responseStr;
-			mpNet->OnResponse(mRequestString, responseStr, mbPost, mRequestAddress);
+			if (mNet->mpServer == NULL)
+				return;
+			((tWssServerNet<bUSE_SSL>*)mNet->mpServer)->OnResponse(mRequestString, responseStr, mbPost, mRequestAddress);
+			if (mNet->mpServer == NULL)
+				return;
 			std::string_view response(responseStr.c_str(), responseStr.length());
 			mpHttpResonse->end(response);
 		}
 
 	public:
-		tWssServerNet<bUSE_SSL>		*mpNet = NULL;
+		AutoWebServer		mNet;
 		HttpResponse<bUSE_SSL>			*mpHttpResonse = NULL;
 		AString mRequestString;
 		AString mRequestAddress;
@@ -177,7 +184,7 @@ namespace uWS
 			//}
 
 			Auto<AsyncWebTool<bUSE_SSL>> tool = MEM_NEW AsyncWebTool<bUSE_SSL>();
-			tool->mpNet = this;
+			tool->mNet = mSelfPtr;
 			tool->mpHttpResonse = res;
 			tool->mRequestString = GetString(req->getQuery());
 			tool->mbPost = false;
@@ -221,7 +228,7 @@ namespace uWS
 				//res->end(response.c_str());
 
 				Auto<AsyncWebTool<bUSE_SSL>> tool = MEM_NEW AsyncWebTool<bUSE_SSL>();
-				tool->mpNet = this;
+				tool->mNet = mSelfPtr;
 				tool->mpHttpResonse = res;
 				tool->mRequestString = value;
 				tool->mbPost = true;
@@ -247,6 +254,163 @@ namespace uWS
 		mpHttpApp->listen(port, [=](auto *token) {
 			if (token) {
 				NOTE_LOG("%s listening on port > %d", bUSE_SSL ? "Https":"Http", port);
+			}
+			else
+			{
+				ERROR_LOG("%s start listen port %d fail", bUSE_SSL ? "Https" : "Http", port);
+				if (bUSE_SSL)
+					LOG("Check key file : Key %s, Cert %s, Pass %s", keyPem.c_str(), certPem.c_str(), pass.c_str());
+			}
+			mpHttpListen = token;
+		});
+
+		if (mpLoop == NULL)
+		{
+			us_loop_t *pLoop = (us_loop_t*)Loop::get();
+			us_loop_integrate(pLoop);
+
+			mpLoop = pLoop->uv_loop;
+		}
+	}
+
+	//-------------------------------------------------------------------------
+	// 异步处理二进制
+	template<bool bUSE_SSL>
+	class AsyncBytesWebTool : public AutoBase
+	{
+	public:
+		void AsyncResponse()
+		{			
+			if (mNet->mpServer == NULL)
+				return;
+			
+			DataBuffer responseData;
+			((tWssServerNet<bUSE_SSL>*)mNet->mpServer)->OnResponseBytes(mRequestMsg, responseData, mRequestAddress);
+			if (mNet->mpServer == NULL)
+				return;
+			std::string_view response((const char*)responseData.data(), responseData.size());
+			mpHttpResonse->end(response);
+		}
+
+	public:
+		AutoWebServer		mNet;
+		HttpResponse<bUSE_SSL>			*mpHttpResonse = NULL;
+		HandPacket mRequestMsg;
+		AString mRequestAddress;
+		bool mbPost = false;
+	};	
+
+
+	// 启动二进制POST web, 兼容字符串GET
+	template<bool bUSE_SSL>
+	void uWS::tWssServerNet<bUSE_SSL>::StartBytesWeb(int port, const AString &keyPem, const AString &certPem, const AString &pass)
+	{
+		mCommonConnect = CreateConnect();
+
+		if (mpHttpApp != NULL)
+		{
+			if (mpHttpListen != NULL)
+				us_listen_socket_close(bUSE_SSL ? 1 : 0, (us_listen_socket_t*)mpHttpListen);
+			mpHttpListen = NULL;
+			delete mpHttpApp;
+		}
+
+		if (bUSE_SSL)
+		{
+			mpHttpApp = new TemplatedApp<bUSE_SSL>(
+				ws_option(
+					/* there are example certificates in uwebsockets.js repo */
+					keyPem.c_str(),
+					certPem.c_str(),
+					pass.c_str()
+				)
+				);
+		}
+		else
+			mpHttpApp = new TemplatedApp<bUSE_SSL>();
+
+		mpHttpApp->get("/*", [=](auto *res, auto *req) {
+
+			// SB设计 这里处理回复时, 未提供获取POST数据, 执行此函数后, 才会调用onData
+			// 而在此函数执行后, 如果未回复, 则断言错误, 只有提供onAborted处理才可以
+			res->onAborted([]() {});
+			res->writeHeader("Access-Control-Allow-Origin", "*");
+
+			//NiceData requestParam;
+			//requestParam["PARAM"] = GetString(req->getQuery());
+			//for (auto it = req->begin(); it != req->end(); ++it)
+			//{
+			//	std::pair<std::string_view, std::string_view> str = *it;
+
+			//	requestParam[GetString(str.first)] = GetString(str.second);
+			//}
+
+			Auto<AsyncWebTool<bUSE_SSL>> tool = MEM_NEW AsyncWebTool<bUSE_SSL>();
+			tool->mNet = mSelfPtr;
+			tool->mpHttpResonse = res;
+			tool->mRequestString = GetString(req->getQuery());
+			tool->mbPost = false;
+			tool->mRequestAddress = GetRequestAddress(res->getRemoteAddress());
+
+			ASYNCAUTO(&AsyncWebTool<bUSE_SSL>::AsyncResponse, tool.getPtr());
+
+			//AString response;
+			//OnResponse(GetString(req->getQuery()), response, false);
+
+			//res->end(response.c_str());
+
+		});
+
+		mpHttpApp->post("/*", [=](auto *res, auto *req) {
+			// SB设计 这里处理回复时, 未提供获取POST数据, 执行此函数后, 才会调用onData
+			// 而在此函数执行后, 如果未回复, 则断言错误, 只有提供onAborted处理才可以
+			res->onAborted([]() {});
+			res->writeHeader("Access-Control-Allow-Origin", "*");
+
+			res->onData(
+				[=](std::string_view data, bool b)
+			{
+				
+				if (data.length() <= 0)
+				{
+					// POST 疼蛋的 expect : 100 - continue 处理
+					//	当POST发送较大参数时, 
+					// 服务器会返回 100 Continue 表示接受数据
+					//	客户端再继续发送参数, 再次回调onData
+					// 先发 100 - continue(也会触发onData此时完成回复后, 接收处理参数后onData的回复无效, 造成超时BUG),
+					if (req->getHeader("expect") != "100-continue")
+						res->end(std::string_view());
+					return;
+				}
+
+				DEBUG_LOG("Request > %llu", data.length());
+				
+				TempDataBuffer requestData((void*)data.data(), data.length());
+				HandPacket packet = GetNetProtocol()->ReadPacket(mCommonConnect.getPtr(), &requestData);
+				if (!packet)
+				{
+					ERROR_LOG("No restor msg packet");
+					res->end(std::string_view());
+					return;
+				}
+
+				Auto<AsyncBytesWebTool<bUSE_SSL>> tool = MEM_NEW AsyncBytesWebTool<bUSE_SSL>();
+				tool->mNet = mSelfPtr;
+				tool->mpHttpResonse = res;
+				tool->mRequestMsg = packet;
+				tool->mbPost = true;
+				tool->mRequestAddress = GetRequestAddress(res->getRemoteAddress());
+
+				ASYNCAUTO(&AsyncBytesWebTool<bUSE_SSL>::AsyncResponse, tool.getPtr());
+			}
+			);
+
+
+
+		});
+		mpHttpApp->listen(port, [=](auto *token) {
+			if (token) {
+				NOTE_LOG("%s listening on port > %d, *** Support POST binary and GET string", bUSE_SSL ? "Https" : "Http", port);
 			}
 			else
 			{

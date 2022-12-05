@@ -51,6 +51,15 @@ namespace uWS
 	template<bool>
 	class tWssConnect;
 
+	//-------------------------------------------------------------------------
+	class WebServerPtr : public AutoBase
+	{
+	public:
+		BaseWebServer *mpServer;
+	};
+	typedef Auto< WebServerPtr> AutoWebServer;
+
+	//-------------------------------------------------------------------------
 	template<bool bUSE_SSL>
 	class WssNet_Export tWssServerNet : public BaseWebServer
 	{
@@ -68,6 +77,10 @@ namespace uWS
 	public:
 		virtual void StartWeb(int port, const AString &keyPem, const AString &certPem, const AString &pass) override;
 		virtual void OnResponse(const AString &requestData, AString &response, bool bPost, const AString &requestAddress) {  }
+
+		// 启动二进制POST web, 兼容字符串GET
+		virtual void StartBytesWeb(int port, const AString &keyPem, const AString &certPem, const AString &pass) override;
+		virtual void OnResponseBytes(HandPacket requestMsg, DataBuffer &response, const AString &requestAddress) {  }
 
 	public:
 		virtual bool StartNet(const AString &wssServerIP, int serverPort, const AString &keyPemFile = "", const AString &pfxFileName = "", const AString &pfxPassword = "") override;
@@ -111,12 +124,14 @@ namespace uWS
 		void OnWsClose(WSS *pWs, int, const char *pMsgData, DSIZE dataLength);
 
 	public:
+		AutoWebServer				mSelfPtr;
 		WssNetInitState					mStartState = eWssStateNoStart;
 		AString mIP;
 		int mPort;
 		bool mbStop = false;
 
-		AutoEventCenter mWebEventCenter;
+		AutoEventCenter				mWebEventCenter;
+		HandConnect					mCommonConnect; // 用于二进制POST消息处理
 
 		TemplatedApp<bUSE_SSL> *mpWsApp;
 		TemplatedApp<bUSE_SSL> *mpHttpApp;
@@ -134,6 +149,8 @@ namespace uWS
 		uint										mSendSizeBySecond;
 		uint										mReceiveSizeBySecond;
 	};
+
+
 
 	//-------------------------------------------------------------------------
 

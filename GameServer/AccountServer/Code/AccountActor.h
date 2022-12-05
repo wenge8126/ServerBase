@@ -8,6 +8,7 @@
 #include "SCActor.h"
 #include "ServerMsg.h"
 #include "GameCommon.h"
+#include "ServerClientMsg.h"
 
 using namespace NetCloud;
 
@@ -139,12 +140,56 @@ public:
 		}
 		
 		//response = requestData; // "7788--------1 Error";
+
+
 	}
 
+	// 中转客户端Http请求服务器Actor消息
+	virtual void ResponseBytesHttp(HandPacket requestMsg, DataBuffer &response, const AString &requestAddress)  override
+	{
+		//NiceData x;
+		//requestData.seek(0);
+		//x.restore(&requestData);
+		//NOTE_LOG("post : %s \r\n%s", requestAddress.c_str(), x.dump().c_str());
+
+		Auto<HttpReqeustActorMsg> req = requestMsg;
+		if (req)
+		{
+			// 验证TOKEN
+			req->mToken;
+
+			// 转发请求
+			AutoData msgData = req->mRequestMsgData;
+			AutoNice respData = Await(UnitID( req->mActorType, req->mActorID ), req->mMsgName, msgData.getPtr(), 10000, 0);
+	
+			response.clear();
+			respData->serialize(&response);		
+
+			if (respData)
+			{
+				response.clear();
+				respData->serialize(&response);
+				NOTE_LOG("Actor response : \r\n%s", respData->dump().c_str());
+			}
+			return;
+		}
+
+		NiceData resp;
+		resp["RESULT"] = false;
+		resp["error"] = "Is not HttpReqeustActorMsg";
+		//for (int i = 200; i < 300; ++i)
+		//{
+		//	resp.set(STRING(i), i);
+		//}
+		resp.serialize(&response);
+
+	}
+
+	
 
 	void RegisterMsg() override
 	{
-		
+
 	}
 };
 

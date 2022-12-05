@@ -356,7 +356,9 @@ namespace NetCloud
 			return eNoneError;
 		}
 
-		virtual void ResponseHttp(const AString &requestData, AString &response, bool bPost, const AString &requestAddress) { response = "Nothing"; }
+		virtual void ResponseHttp(const AString &requestData, AString &response, bool bPost, const AString &requestAddress) { response = "Nothing"; NOTE_LOG("No code for ResponseHttp"); }
+
+		virtual void ResponseBytesHttp(HandPacket requestMsg, DataBuffer &response, const AString &requestAddress) { NOTE_LOG("No code for ResponseBytesHttp, packet : %d", requestMsg->GetFactory()->GetPacketID()); }
 
 		virtual bool OnReceiveProcess(NodePacket *pNodePacket) override;
 

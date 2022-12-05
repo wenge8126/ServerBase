@@ -39,7 +39,7 @@ public:
 	{
 		return pPacket->Write(*mSocketOutputStream) == TRUE;
 	}
-	virtual HandPacket ReadPacket(tNetConnect *pConnect, DataStream *mSocketInputStream) override { AssertNote(0, "Can not use"); return false; }
+	virtual HandPacket ReadPacket(tNetConnect *pConnect, DataStream *mSocketInputStream) override { NOTE_LOG( "ReadPacket no override"); return HandPacket(); }
 };
 
 

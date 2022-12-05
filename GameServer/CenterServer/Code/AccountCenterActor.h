@@ -92,6 +92,13 @@ public:
 		response.mErrorCode = eErrorCode_NoExistAccount;
 	}
 
+	void On(MSG_Test &req, SC_ResponseTest &response, UnitID sender, int)
+	{
+		NOTE_LOG("Http request : %s", req.dump().c_str());
+
+		response.mInfo = "OK FOR HTTP response";
+	}
+
 public:
 	CenterThread* GetLoginThread();
 
@@ -133,6 +140,8 @@ public:
 
 		REG_ACTOR_MSG(AccountCenterActor, AC_RequestCreateAccount, CA_ResponseCreateAccount);
 		REG_ACTOR_MSG(AccountCenterActor, AC_RequestAccountData, CA_ResponseAccountData);
+
+		REG_ACTOR_MSG(AccountCenterActor, MSG_Test, SC_ResponseTest);
 	}
 };
 

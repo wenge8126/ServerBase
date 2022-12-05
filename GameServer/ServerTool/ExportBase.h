@@ -706,6 +706,9 @@ AString GenerateMsgProtocolTSCode(AutoNice proList, AutoNice proNotes, Array<ASt
 			AString code;
 			code.Format("    public static msMsgName = \"%s\";\r\n\r\n", name.c_str());
 			tsCode += code;
+
+			code.Format("    public  GetMsgName():string { return  \"%s\"; }\r\n\r\n", name.c_str());
+			tsCode += code;
 		}
 
 		AString code;
@@ -833,6 +836,11 @@ AString GenerateMsgProtocolTSCode(AutoNice proList, AutoNice proNotes, Array<ASt
 			case  FIELD_NICEDATA:
 			{
 				szType.Format(": Object = {}");
+				break;
+			}
+			case FIELD_DATA:
+			{
+				szType.Format(": egret.ByteArray = null");
 				break;
 			}
 			}
@@ -1512,12 +1520,30 @@ AutoNice GenerateProtocol(const AString &fileName, const AString tsPath, const A
 
 	if (bTSCode)
 	{
+		// 生成TS
+		AString tsCode = GenerateMsgProtocolTSCode(proList, proNotes, structNameList, true);
+
+		//LOG("C++ ----------------------\r\n%s", proNotes->dump().c_str());
+
+		AString codeFileName = cppPath;
+		if (clientMsgPath.length() > 0)
+			codeFileName = clientMsgPath;
+
+		codeFileName += "/";
+		codeFileName += targetName;
+		codeFileName += ".ts";
+		FileDataStream  tsCodeFile(codeFileName.c_str(), FILE_CREATE_UTF8);
+		tsCodeFile._write((void*)tsCode.c_str(), tsCode.length());
+		tsCodeFile.close();
+
+		LOG("Genereate TS code > n%s", codeFileName.c_str());
+
 		// 生成C#
 		AString cppCode = GenerateMsgProtocolC4Code(proList, proNotes, structNameList, exportRunHash, false, bExportComment, bIncludeMsgStruct);
 
 		//LOG("C++ ----------------------\r\n%s", proNotes->dump().c_str());
 		
-		AString codeFileName = cppPath;
+		codeFileName = cppPath;
 		if (clientMsgPath.length() > 0)
 			codeFileName = clientMsgPath;
 
@@ -1528,7 +1554,7 @@ AutoNice GenerateProtocol(const AString &fileName, const AString tsPath, const A
 		cppCodeFile._write((void*)cppCode.c_str(), cppCode.length());
 		cppCodeFile.close();
 
-		LOG("Genereate c++ code > n%s", codeFileName.c_str());
+		LOG("Genereate c# code > n%s", codeFileName.c_str());
 	}
 
 	return proNotes;

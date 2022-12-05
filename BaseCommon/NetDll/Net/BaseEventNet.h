@@ -70,6 +70,7 @@ public:
 
 public:
 	virtual void StartWeb(int port, const AString &keyPem, const AString &certPem, const AString &pass) = 0;
+	virtual void StartBytesWeb(int port, const AString &keyPem, const AString &certPem, const AString &pass) = 0;
 	virtual bool StartNet(const AString &wssServerIP, int serverPort, const AString &keyPemFile = "", const AString &pfxFileName = "", const AString &pfxPassword = "") = 0;
 	virtual bool AsyncStart(const AString &wssServerIP, int serverPort, const AString &keyPemFile = "", const AString &pfxFileName = "", const AString &pfxPassword = "") = 0;
 	
