@@ -16,14 +16,43 @@ namespace NetCloud
 	class ActorDBLib_Export_H DBUserComponent : public Component
 	{
 	public:
+		virtual const char* GetTableName() const { return "None"; }
 		virtual bool CheckTable(AutoTable t) = 0;
 		virtual void OnLoadRecord(ARecord record){}
 
+		virtual void Awake() override
+		{
+			if (!InitTable(GetTableName()))
+				ERROR_LOG("DB component init table fail : %s", GetTableName());
+		}
+
 	public:
+		bool ResetRecord(const char *szKey)
+		{
+			LowUpdate();
+			mDataRecord = LoadRecord(szKey);
+			return mDataRecord;
+		}
+
+		bool ResetRecord(Int64 key)
+		{
+			LowUpdate();
+			mDataRecord = LoadRecord(key);
+			return mDataRecord;
+		}
+
+		bool ResetRecord(ARecord record)
+		{
+			LowUpdate();
+			mDataRecord = record;
+			return mDataRecord;
+		}
+
 		bool InitTable(const char *szTableName)
 		{
 			AutoTable t = GetDBMgr()->GetTable(szTableName);
-			if (CheckTable(t))
+			
+			if (t && CheckTable(t))
 			{
 				mDBTable = t;
 				return true;

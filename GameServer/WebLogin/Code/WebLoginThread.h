@@ -22,6 +22,7 @@
 #include "Test2Component.h"
 #include "ItemDataComponent.h"
 #include "LoginNetComponect.h"
+#include "HttpPostNet.h"
 
 using namespace NetCloud;
 
@@ -50,11 +51,9 @@ public:
 	static bool IsWss();
 
 public:
-#if _DEBUG
-	virtual int OnceTime(void) const { return 100; }
-#else
-	virtual int OnceTime(void) const { return 100; }
-#endif
+
+	virtual int OnceTime(void) const { return LOGIC_PROCESS_ONCE_TIME; }
+
 	virtual int OnceLowTime() const { return 100000; }
 
 
@@ -121,11 +120,13 @@ public:
 	UInt64							mOpenTime = 0;
 	bool								mbStartOk = false;
 	bool								mbNeedRestart = false;
-	int								mDBWorkerID = 0;
+	int									mDBWorkerID = 0;
 	StateDataType				mLogicDBState = 0;
 
 	Hand<TaskSystem>	mTaskSystem;
 	Auto<NetCloud::ActorManager>		mActorManager;
+
+	HttpPostNet					mHttpClientNet;
 };
 
 //-------------------------------------------------------------------------

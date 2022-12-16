@@ -8,6 +8,8 @@
 #pragma comment(lib, "wldap32.lib")
 //#pragma comment(lib, "libcurld.lib")
 
+#include "DataStream.h"
+
 CHttpClient::CHttpClient(void) : 
 m_bDebug(false)
 {
@@ -183,6 +185,61 @@ int CHttpClient::Gets(const std::string & strUrl, std::string & strResponse, con
 	}
 	curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 3);
 	curl_easy_setopt(curl, CURLOPT_TIMEOUT, 3);
+	res = curl_easy_perform(curl);
+	curl_easy_cleanup(curl);
+	return res;
+}
+
+static size_t OnWriteBytesData(void* buffer, size_t size, size_t nmemb, void* lpVoid)
+{
+	DataStream *responseData = (DataStream*)lpVoid;
+	if (responseData == NULL || NULL == buffer)
+	{
+		return -1;
+	}
+
+	responseData->_write(buffer, size*nmemb);
+
+	return nmemb;
+}
+
+int CHttpClient::PostBytes(const char *strUrl, DataStream *postData, DataStream *responseData, int connectOverSecond, int overSecond, const char * pCaPath /*= NULL*/)
+{
+	responseData->clear(false);
+
+	CURLcode res;
+	CURL* curl = curl_easy_init();
+	if (NULL == curl)
+	{
+		return CURLE_FAILED_INIT;
+	}
+	if (m_bDebug)
+	{
+		curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
+		curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, OnDebug);
+	}
+	curl_easy_setopt(curl, CURLOPT_URL, strUrl);
+	curl_easy_setopt(curl, CURLOPT_POST, 1);
+	curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, postData->dataSize());
+	curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postData->data());
+	curl_easy_setopt(curl, CURLOPT_READFUNCTION, NULL);
+	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, OnWriteBytesData);
+	curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)responseData);
+	curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
+	if (NULL == pCaPath)
+	{
+		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
+		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, false);
+	}
+	else
+	{
+		//缺省情况就是PEM，所以无需设置，另外支持DER
+		//curl_easy_setopt(curl,CURLOPT_SSLCERTTYPE,"PEM");
+		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, true);
+		curl_easy_setopt(curl, CURLOPT_CAINFO, pCaPath);
+	}
+	curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, connectOverSecond);
+	curl_easy_setopt(curl, CURLOPT_TIMEOUT, overSecond);
 	res = curl_easy_perform(curl);
 	curl_easy_cleanup(curl);
 	return res;

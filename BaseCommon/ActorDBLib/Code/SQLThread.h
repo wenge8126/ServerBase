@@ -9,6 +9,7 @@
 #include "LoopDataBuffer.h"
 #include "MySqlDBTool.h"
 #include "EasyStack.h"
+#include "TimeManager.h"
 
 #define SQL_STRING_MAX		(1024)
 
@@ -67,11 +68,7 @@ public:
 	bool WriteToThread(ThreadLoopData &targetData, StrLenType index)
 	{
 		DSIZE len = mSQLString.length()+1;
-		if (len > SQL_STRING_MAX)
-		{
-			ERROR_LOG("SQL string %d > %d", len, SQL_STRING_MAX);
-			return false;
-		}
+		
 
 		int totalSize = sizeof(short);
 		short dataCount = mArrayData.mNowCount;
@@ -81,9 +78,15 @@ public:
 		}
 
 		TaskDataHead head;
-		head.mIndex = len;
+		head.mIndex = len;			// 特别注意, 保存时, mIndex 为查询字符串的长度
 		head.mDataLength = len + totalSize;
 		head.mType = eSQL_SaveRecord;
+
+		if (len  > SQL_STRING_MAX)
+		{
+			ERROR_LOG("SQL string %d > %d", len, SQL_STRING_MAX);
+			return false;
+		}
 
 		targetData.Write((const char*)&head, sizeof(head));
 		targetData.Write(mSQLString.c_str(), mSQLString.length()+1);
@@ -217,19 +220,22 @@ public:
 		{
 			mReadData.ProcessSendData();
 			if (!mWriteData.peek(&head, lenSize))
+			{
+				TimeManager::Sleep(1);
 				continue;
-			AssertNote(head.mDataLength <= SQL_STRING_MAX, "SQL string length %d > %d", head.mDataLength, SQL_STRING_MAX);
+			}			
 
 			if (head.mType == eSQL_SaveRecord)
 			{
 				if (mWriteData.dataSize()<lenSize+head.mDataLength)
-					continue;
+					continue;				
+
 				if (!mWriteData.peek(szSQLString, lenSize + head.mIndex))
 				{
 					AssertNote(0, "Must read sql string");
 					continue;
 				}
-				szSQLString[lenSize + head.mDataLength] = '\0';
+				szSQLString[lenSize + head.mIndex] = '\0';
 				
 				mWriteData.skip(lenSize+head.mIndex);
 				short dataSize = 0;
@@ -275,10 +281,10 @@ public:
 								continue;
 							}
 							else
-								ERROR_LOG("Record date save fail");
+								ERROR_LOG("Record date save fail : %s", szSQLString + lenSize);
 						}
 						else
-							ERROR_LOG("SQL load record fail");
+							ERROR_LOG("SQL load record fail : %s", szSQLString + lenSize);
 					}
 					else if (head.mType == SQLTaskType::eSQL_GrowRecond)
 					{

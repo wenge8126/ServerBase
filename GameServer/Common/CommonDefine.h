@@ -97,8 +97,9 @@ enum UNIT_TYPE
 	Actor_Player = 1003,
 	Actor_Client = 1004,
 	Actor_LoginClient = 1004,
-	Actor_AccountCenter,
-	Actor_GameCenter,
+	Actor_AccountCenter = 1005,
+	Actor_GameCenter = 1006,
+	Actor_DataActor = 1007,
 };
 
 enum MSG_TYPE

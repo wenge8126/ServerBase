@@ -25,6 +25,7 @@
 #include "GameCenterActor.h"
 #include "AccountCenterActor.h"
 #include "RunConfigStruct.h"
+#include "DataActor.h"
 
 using namespace uWS;
 
@@ -191,7 +192,7 @@ void CenterThread::OnStart(void*)
 
 		mActorManager->RegisterActor(Actor_AccountCenter, MEM_NEW DefineActorFactory<AccountCenterActor>());
 		mActorManager->RegisterActor(Actor_GameCenter, MEM_NEW DefineActorFactory<GameCenterActor>());
-		
+		mActorManager->RegisterActor(Actor_DataActor, MEM_NEW DefineActorFactory<DataActor>());
 
 		//CoroutineTool::AsyncCall(_ConnectGate, this);		
 		CoroutineTool::AsyncCall([&]()
@@ -219,6 +220,8 @@ void CenterThread::OnStart(void*)
 			{
 				mLoginActor = mActorManager->CreateActor(Actor_AccountCenter, 1);
 				mActorManager->CreateActor(Actor_GameCenter, 1);
+
+				mActorManager->CreateActor(Actor_DataActor, 1);
 			}
 		}
 		);
@@ -301,9 +304,45 @@ void TestCoro(CenterThread *)
 
 }
 
+class  TestWaitTimer : public tTimer
+{
+	
+
+public:
+	virtual void onTime()
+	{
+		NOTE_LOG("Start wait %llu, wait %llu", mStartMilSecond, mMilSecond);
+	}
+
+	virtual void Wait(Int64 milSecond) override
+	{		
+		tTimer::Wait(milSecond);		
+	}
+};
+
 void CenterThread::DoCommand(const AString &commandString, StringArray &paramArray)
 {
+	static ATimer mTestTime;
+	if (commandString == "t")
+	{
+		
+		if (!mTestTime)
+			mTestTime = MEM_NEW TestWaitTimer();
+		NOTE_LOG("Wait : %llu", TimeManager::GetMe().NowTick());
+		mTestTime->Wait(10000);
 
+		ATimer t = MEM_NEW TestWaitTimer();
+		t->Wait(6000);
+	}
+	if (commandString == "t2")
+	{
+		
+		if (mTestTime)
+		{
+			NOTE_LOG("Modify wait : %llu", TimeManager::GetMe().NowTick());
+			mTestTime->Wait(3000);
+		}
+	}
 }
 
 void CenterThread::OnLoginDBStart(int dbCode)

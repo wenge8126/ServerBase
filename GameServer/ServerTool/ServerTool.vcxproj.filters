@@ -30,9 +30,6 @@
     <ClInclude Include="Resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="XlsxTableLoader.h">
-      <Filter>Code</Filter>
-    </ClInclude>
     <ClInclude Include="ToolActor.h">
       <Filter>Code</Filter>
     </ClInclude>
@@ -42,15 +39,18 @@
     <ClInclude Include="ServerToolDlg.h">
       <Filter>Code</Filter>
     </ClInclude>
+    <ClInclude Include="..\Common\XlsxTableLoader.h">
+      <Filter>Code</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ServerTool.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="XlsxTableLoader.cpp">
+    <ClCompile Include="ServerToolDlg.cpp">
       <Filter>Code</Filter>
     </ClCompile>
-    <ClCompile Include="ServerToolDlg.cpp">
+    <ClCompile Include="..\Common\XlsxTableLoader.cpp">
       <Filter>Code</Filter>
     </ClCompile>
   </ItemGroup>

@@ -38,3 +38,6 @@ build
 /Client/Assembly-CSharp-Editor.csproj
 /Client/Assembly-CSharp.csproj
 /Client/Client.sln
+StandaloneWindows64
+EmbedRuntime
+HybridCLRData

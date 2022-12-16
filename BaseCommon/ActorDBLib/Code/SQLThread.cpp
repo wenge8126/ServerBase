@@ -5,16 +5,18 @@
 bool LoadSQLTask::WriteToThread(ThreadLoopData &targetData, StrLenType index)
 {
 	DSIZE len = mSQLString.length()+1;
-	if (len > SQL_STRING_MAX)
+
+
+	TaskDataHead head;
+	head.mIndex = index;  // 特别注意,  读取时, mIndex 为执行列表中的索引, 用于返回结果
+	head.mDataLength = len; // 特别注意,  读取时, mDataLength 为查询字符串的长度
+	head.mType = mLoadSQLType;
+
+	if (len  > SQL_STRING_MAX)
 	{
 		ERROR_LOG("SQL string %d > %d", len, SQL_STRING_MAX);
 		return false;
 	}
-
-	TaskDataHead head;
-	head.mIndex = index;
-	head.mDataLength = len;
-	head.mType = mLoadSQLType;
 
 	targetData.Write((const char*)&head, sizeof(head));
 	targetData.Write(mSQLString.c_str(), mSQLString.length()+1);

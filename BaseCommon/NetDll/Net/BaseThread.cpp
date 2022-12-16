@@ -113,6 +113,7 @@ VOID BaseThread::run( void )
 	UInt64 endTime = 0;
 
 	bool bNeedLimitLoop = OnceTime() > 0;
+
 #if DEVELOP_MODE
 	uint limitInitCount = -1;
 #else

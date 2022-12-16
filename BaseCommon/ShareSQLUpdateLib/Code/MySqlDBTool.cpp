@@ -1601,25 +1601,27 @@ bool MySqlDBTool::_MakeSaveSqlData( AString &resultSQLString, SQLDataArray &resu
 			case FIELD_STRING:
 			case FIELD_CHAR_STRING:
 			{
-				if (i > 0 || bInsert)
+				const char *szData = scrRecord->get(i).c_str();
+				if (szData == NULL)
+					szData = "";
+				DSIZE len = (DSIZE)strlen(szData);
+				// 特别注意: 字符串使用数据方式保存, 长度必须大于0, 否则SQL错误为不合法的字符串
+				if ( (i > 0 || bInsert) && len>0)
 				{
 					AutoData bufferData = resultData.NextData();
 					// 由于编码乱码转义等问题, 所以使用二进制方式写入, 一般能彻底解决
 
 					szBuffer[nowBufferPos] = '?';
 					++nowBufferPos;
-
-					const char *szData = scrRecord->get(i).c_str();
-					DSIZE len = (DSIZE)strlen(szData);
 					
 					bufferData->_write((void*)szData, len);
 					
 				}
 				else
 				{
-					const char *szData = scrRecord->get(i).c_str();
-					if (szData == NULL)
-						szData = "";
+					//const char *szData = scrRecord->get(i).c_str();
+					//if (szData == NULL)
+					//	szData = "";
 #if __LINUX__		
 					sprintf_s(szBuffer + nowBufferPos, SQL_CHAR_BUFFER - nowBufferPos, "'%s'", szData);
 					nowBufferPos = strlen(szBuffer);

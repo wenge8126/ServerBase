@@ -378,6 +378,11 @@ public:
 		return temp->dump();
 	}
 
+	void DumpLog()
+	{
+		NOTE_LOG("--------------%s---------------\r\n%s\r\n----------------------------------", GetMsgName(), dump().c_str());
+	}
+
 public:
 	virtual UINT		GetState() const { return 0; }
 	virtual VOID		SetState(UINT stateData) {}

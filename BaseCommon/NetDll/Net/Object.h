@@ -7,7 +7,7 @@
 //#include "TableRecord.h"
 #include "NetHead.h"
 
-class tComponent;
+
 class tScene;
 class tObjectFactory;
 

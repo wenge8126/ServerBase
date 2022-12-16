@@ -23,7 +23,7 @@ public:
 
 public:
 	// √ø√Î1ÕÚ¥ŒLoop
-	virtual int OnceTime(void) const { return 10; }
+	virtual int OnceTime(void) const { return 1000; }
 	virtual int OnceLowTime() const { return 100000; }
 
 	virtual void OnStart(void*);

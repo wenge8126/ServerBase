@@ -8,7 +8,7 @@
 //#include "NetNode.h"
 #include "BaseThread.h"
 
-#include "SDK/SDK.h"
+#include "SDK.h"
 
 #include "CRunConfig.h"
 #include "TaskSystem.h"
@@ -41,11 +41,9 @@ public:
 
 
 public:
-#if _DEBUG
-	virtual int OnceTime(void) const { return 100; }
-#else
-	virtual int OnceTime(void) const { return 100; }
-#endif
+
+	virtual int OnceTime(void) const { return LOGIC_PROCESS_ONCE_TIME; }
+
 	virtual int OnceLowTime() const { return 100000; }
 
 

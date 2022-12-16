@@ -51,6 +51,7 @@ BEGIN_MESSAGE_MAP(CServerToolDlg, CDialogEx)
 	ON_WM_TIMER()
 	ON_BN_CLICKED(IDC_BUTTON3, &CServerToolDlg::OnBnClickedTestCreateAccount)
 	ON_BN_CLICKED(IDC_BUTTON_EXPORT_RUN_CONFIG, &CServerToolDlg::OnBnExportRunConfig)	
+	ON_BN_CLICKED(IDC_BUTTON_CREATE_DB2, &CServerToolDlg::OnBnExportToolProtocol)
 END_MESSAGE_MAP()
 
 CServerToolDlg *gpToolDlg = NULL;
@@ -565,4 +566,25 @@ void CServerToolDlg::OnBnExportRunConfig()
 	//	AString infoString = info->ToJSON();
 	//	f._write((void*)infoString.c_str(), infoString.length());
 	//}
+}
+
+
+void CServerToolDlg::OnBnExportToolProtocol()
+{
+	ClearLog();
+
+	CString configPath = mConfigPath;
+	//mEditConfigPath.GetWindowText(configPath);
+
+	AString err;
+	AutoNice info;
+	AString fileName;
+
+	fileName.Format("%s/ServerToolProtocol.txt", (LPCTSTR)configPath);
+	info = GenerateProtocol(fileName, "D:/Business/Business/assets/scripts/Game", "../GameServer/Common", "ServerToolMsg", true, err);
+
+	LOG("%s", err.c_str());
+
+	if (info)
+		MessageBox("成功生成运行ServerTool协议");
 }

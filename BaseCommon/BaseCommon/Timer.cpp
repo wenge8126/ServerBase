@@ -93,15 +93,30 @@ void TimerCenter::Start(tTimer *pTimer, Int64 milSecond)
 void TimerCenter::_append(tTimer *pTimer, UInt64 time)
 {
 	bool bInserted = false;
-	for (auto it = mWaitEventList.begin(); it; ++it)
+	bool bDelete = false;
+	for (auto it = mWaitEventList.begin(); it;  )
 	{
 		ATimer &t = *it;
-		if (t->mStartMilSecond + t->mMilSecond > time)
+		if (t.getPtr() == pTimer)
 		{
-			mWaitEventList.insert(it, pTimer);
-			bInserted = true;
-			break;
+			// 移除已经存在的等待
+			mWaitEventList.erase(it);
+			NOTE_LOG("Remove now exist wait");
+			bDelete = true;
+			continue;
 		}
+		
+		if (bInserted && bDelete)
+			break;
+
+		if (!bInserted && t->mStartMilSecond + t->mMilSecond > time)
+		{
+			// 由于增加到当前位置的前面, 所以可以正确判断之后的为之前的等待,继续删除
+			mWaitEventList.insert(it, pTimer);
+			bInserted = true;			
+		}
+		
+		++it;
 	}
 
 	if (!bInserted)

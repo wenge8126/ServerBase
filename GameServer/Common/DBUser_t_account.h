@@ -9,6 +9,8 @@ class DBUser_t_account : public DBUserComponent
 public:
 	DBUser_t_account(){}
 
+    virtual const char* GetTableName() const override { return "t_account"; }
+
 	Data DBID(/*INT64*/) { if (mDataRecord) return mDataRecord->get(0); ERROR_LOG("No exist record %s", mKey.c_str()); return Data(); }
 	Data ACCOUNT(/*STRING*/) { if (mDataRecord) return mDataRecord->get(1); ERROR_LOG("No exist record %s", mKey.c_str()); return Data(); }
 	Data INFO(bool bSetUpdate=false) /*NICEDATA*/ { if (mDataRecord){ if (bSetUpdate) mDataRecord->NotifyChanged(2); return mDataRecord->get(2); } ERROR_LOG("No exist record %s", mKey.c_str()); return Data(); }
@@ -20,7 +22,7 @@ public:
 	AutoNice niceINFO(bool bSetUpdate=false) {  AutoNice v; if (mDataRecord) { mDataRecord->get(2, v);  if (bSetUpdate){ if (!v) {v=MEM_NEW NiceData(); mDataRecord->set(2, v); } else mDataRecord->NotifyChanged(2); } return v; } ERROR_LOG("No exist record %s", mKey.c_str()); return v; }
 
     bool SetACCOUNT(const char *nVal) { return mDataRecord->set(1, nVal); }
-    
+
 
 
 	virtual bool CheckTable(AutoTable t) override

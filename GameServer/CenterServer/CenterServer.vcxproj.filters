@@ -25,6 +25,9 @@
     <Filter Include="AccountCenter">
       <UniqueIdentifier>{7ad0d05a-8e95-4da1-9cbd-e681f5749b67}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DataServer">
+      <UniqueIdentifier>{26d8cec2-84dd-441e-8c2e-e5126e79df28}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\CenterThread.cpp">
@@ -58,6 +61,15 @@
     </ClInclude>
     <ClInclude Include="Code\GameCenterActor.h">
       <Filter>GameCenter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\DBUser_t_resources.h">
+      <Filter>AccountCenter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ServerToolMsg.h">
+      <Filter>AccountCenter</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\DataActor.h">
+      <Filter>DataServer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

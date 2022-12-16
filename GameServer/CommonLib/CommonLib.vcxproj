@@ -197,6 +197,8 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Code\GenerateCodeTS.cpp" />
+    <ClCompile Include="Code\HttpPostNet.cpp" />
     <ClCompile Include="Code\LoginClientActor.cpp" />
     <ClCompile Include="Code\HttpClient.cpp" />
     <ClCompile Include="Code\HttpComponect.cpp" />
@@ -207,6 +209,11 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
     <ClCompile Include="dllmain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Common\ConfigEnum.h" />
+    <ClInclude Include="Code\BigMsgComponent.h" />
+    <ClInclude Include="Code\ExportBase.h" />
+    <ClInclude Include="Code\GenerateCodeTS.h" />
+    <ClInclude Include="Code\HttpPostNet.h" />
     <ClInclude Include="Code\LoginClientActor.h" />
     <ClInclude Include="Code\CommonLib.h" />
     <ClInclude Include="Code\GameCommon.h" />
@@ -219,6 +226,7 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
     <ClInclude Include="Code\SendDuanXin.h" />
     <ClInclude Include="Code\ServerClientMsg.h" />
     <ClInclude Include="Code\TcpComponent.h" />
+    <ClInclude Include="Code\UserClientNet.h" />
     <ClInclude Include="Code\WssWebComponent.h" />
   </ItemGroup>
   <ItemGroup>

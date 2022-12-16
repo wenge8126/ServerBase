@@ -4,8 +4,11 @@
 #define BUILDING_LIBCURL
 //#define HTTP_ONLY
 
-#include <string>
+
 #include "CommonLib.h"
+#include <string>
+
+class DataStream;
 
 class CommonLib_Export CHttpClient
 {
@@ -49,6 +52,9 @@ public:
 	* @return 返回是否Post成功
 	*/
 	int Gets(const std::string & strUrl, std::string & strResponse, const char * pCaPath = NULL);
+
+
+	int PostBytes(const char *strUrl, DataStream *postData, DataStream *responseData, int connectOverSecond, int overSecond, const char * pCaPath = NULL);
 
 public:
 	void SetDebug(bool bDebug);

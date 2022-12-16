@@ -40,6 +40,9 @@ public:
 		AString setCode;
 		AString setTemp;
 
+		temp.Format("    virtual const char* GetTableName() const override { return \"%s\"; }\r\n\r\n", table->GetTableName());
+		mCodeString += temp;
+
 		AString fieldNameList;
 		AutoField f = mTable->GetField();
 		for (int i = 0; i < f->getCount(); ++i)
@@ -71,6 +74,9 @@ public:
 		{
 			FieldInfo info = f->getFieldInfo(i);
 			AString name = info->getName();
+
+			setTemp.setNull();
+			temp.setNull();
 
 			switch (info->getType())
 			{

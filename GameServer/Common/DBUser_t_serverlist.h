@@ -9,6 +9,8 @@ class DBUser_t_serverlist : public DBUserComponent
 public:
 	DBUser_t_serverlist(){}
 
+    virtual const char* GetTableName() const override { return "t_serverlist"; }
+
 	Data ID(/*INT*/) { if (mDataRecord) return mDataRecord->get(0); ERROR_LOG("No exist record %s", mKey.c_str()); return Data(); }
 	Data NICEDATA(bool bSetUpdate=false) /*NICEDATA*/ { if (mDataRecord){ if (bSetUpdate) mDataRecord->NotifyChanged(1); return mDataRecord->get(1); } ERROR_LOG("No exist record %s", mKey.c_str()); return Data(); }
 
@@ -16,7 +18,7 @@ public:
 	int nID() const { int v = 0; if (mDataRecord) {  mDataRecord->get(0, v); return v; } ERROR_LOG("No exist record %s", mKey.c_str()); return v; }
 	AutoNice niceNICEDATA(bool bSetUpdate=false) {  AutoNice v; if (mDataRecord) { mDataRecord->get(1, v);  if (bSetUpdate){ if (!v) {v=MEM_NEW NiceData(); mDataRecord->set(1, v); } else mDataRecord->NotifyChanged(1); } return v; } ERROR_LOG("No exist record %s", mKey.c_str()); return v; }
 
-    bool SetID(int nVal) { return mDataRecord->set(0, nVal); }
+
 
 
 	virtual bool CheckTable(AutoTable t) override

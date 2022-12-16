@@ -98,21 +98,28 @@ public:
 				CA_ResponseAccountData resp;
 				if (Await(UnitID(Actor_AccountCenter, 1), req, resp, 10000))
 				{
-
-					if (true) //???  resp.mPassword==passWord
+					if (resp.mErrorCode == 0)
 					{
-						// 生成token, 并请求世界服务器分配LoginServer
-						respNice["TOKEN"] = "OK";
-						respNice["LOGIN_IP"] = "127.0.0.1";
-						respNice["PORT"] = 4001;
-						respNice["DBID"] = resp.mDBID;
-						respNice["error"] = 0;
-						response = respNice.ToJSON();
+						if (true) //???  resp.mPassword==passWord
+						{
+							// 生成token, 并请求世界服务器分配LoginServer
+							respNice["TOKEN"] = "OK";
+							respNice["LOGIN_IP"] = "127.0.0.1";
+							respNice["PORT"] = 4001;
+							respNice["DBID"] = resp.mDBID;
+							respNice["error"] = 0;
+							response = respNice.ToJSON();
+						}
+						else
+						{
+
+							respNice["error"] = eErrorCode_PasswordError;
+							response = respNice.ToJSON();
+						}
 					}
 					else
 					{
-						
-						respNice["error"] = eErrorCode_PasswordError;
+						respNice["error"] = resp.mErrorCode;
 						response = respNice.ToJSON();
 					}
 					return;
@@ -161,15 +168,19 @@ public:
 			// 转发请求
 			AutoData msgData = req->mRequestMsgData;
 			AutoNice respData = Await(UnitID( req->mActorType, req->mActorID ), req->mMsgName, msgData.getPtr(), 10000, 0);
-	
-			response.clear();
-			respData->serialize(&response);		
-
+					
 			if (respData)
 			{
 				response.clear();
 				respData->serialize(&response);
 				NOTE_LOG("Actor response : \r\n%s", respData->dump().c_str());
+			}
+			else
+			{
+				NiceData resp;
+				resp["RESULT"] = false;
+				resp["error"] = "Request target actor fail";
+				resp.serialize(&response);
 			}
 			return;
 		}

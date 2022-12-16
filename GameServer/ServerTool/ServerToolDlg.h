@@ -62,4 +62,5 @@ public:
 	CEdit mEditInfo;
 	afx_msg void OnBnClickedTestCreateAccount();
 	afx_msg void OnBnExportRunConfig();
+	afx_msg void OnBnExportToolProtocol();
 };

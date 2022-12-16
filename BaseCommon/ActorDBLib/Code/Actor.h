@@ -367,7 +367,7 @@ namespace NetCloud
 	public:
 		ActorManager* GetMgr()
 		{
-			if (mActorFactory)
+			if (mActorFactory && mActorFactory->mMgr!=NULL)
 				return mActorFactory->mMgr->mpMgr;
 			return NULL;
 		}

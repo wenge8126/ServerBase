@@ -41,7 +41,7 @@ public:
 
     }
 	// 每秒1万次Loop
-    virtual int OnceTime(void) const { return 100; }
+    virtual int OnceTime(void) const { return LOGIC_PROCESS_ONCE_TIME; }
 	// 低速每秒约100次
     virtual int OnceLowTime() const { return 10000; }
 

@@ -25,6 +25,10 @@
 #include "TimeManager.h"
 #include "CallBack.h"
 
+//-------------------------------------------------------------------------
+#define LOGIC_PROCESS_ONCE_TIME		(10000)
+
+//-------------------------------------------------------------------------
 namespace Logic
 {
 	class tEventCenterManager;
@@ -63,7 +67,7 @@ public:
 	virtual void OnStart(void*) = 0;
 	virtual void OnStop(void*) = 0;
 
-    virtual int OnceTime(void) const { return 100;  }
+    virtual int OnceTime(void) const { return LOGIC_PROCESS_ONCE_TIME;  }
 	virtual int OnceLowTime() const { return 10000; }
 
 	virtual StateDataType GetRunStateInfo(tNiceData &infoData) { return 0; }

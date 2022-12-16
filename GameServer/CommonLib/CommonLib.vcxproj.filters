@@ -19,6 +19,9 @@
     <Filter Include="ServerClientActor">
       <UniqueIdentifier>{468a2dcc-ffa0-4066-b461-4c29b14e351c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{ca165e42-c8a0-45d2-abd3-0226bd230272}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\HttpComponect.cpp">
@@ -44,6 +47,12 @@
     </ClCompile>
     <ClCompile Include="Code\LoginClientActor.cpp">
       <Filter>ServerClientActor</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\HttpPostNet.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\GenerateCodeTS.cpp">
+      <Filter>Code</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +94,24 @@
     </ClInclude>
     <ClInclude Include="Code\LoginClientActor.h">
       <Filter>ServerClientActor</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\UserClientNet.h">
+      <Filter>ServerClientActor</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\HttpPostNet.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\GenerateCodeTS.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ExportBase.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ConfigEnum.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\BigMsgComponent.h">
+      <Filter>Code</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

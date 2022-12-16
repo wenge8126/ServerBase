@@ -25,6 +25,10 @@
 #include "DBUserComponent.h"
 #include "LoginActor.h"
 
+#include "HttpClient.h"
+#include "HttpPostNet.h"
+#include "ServerToolMsg.h"
+
 using namespace uWS;
 
 using namespace NetCloud;
@@ -156,6 +160,7 @@ void WebLoginThread::OnStart(void*)
 	ServerThread::OnStart(NULL);
 	NiceData lineParam;
 
+	mHttpClientNet.InitThread();
 	//mTaskSystem->RegisterTask(MEM_NEW DefineTaskFactory<BackZipMsgTask, eDBMsgTask_ZipData>());
 
 	mActorManager = MEM_NEW LoginActorManager(this, config.login_node.node.ip.c_str(), config.login_node.node.port, config.login_node.node.saft_code, 2);
@@ -210,6 +215,8 @@ bool WebLoginThread::NotifyThreadClose()
 
 	mSdkMgr.Close();
 
+	mHttpClientNet.Close();
+
 
 	for (int i = 0; i < 100; ++i)
 	{
@@ -246,6 +253,8 @@ void WebLoginThread::Process(void*)
 
 	mTaskSystem->Process();
 	mActorManager->Process();
+
+	mHttpClientNet.Process();
 }
 Array<int> coroList;
 class TT : public AutoBase
@@ -307,9 +316,90 @@ void TestCoro(WebLoginThread *)
 
 }
 
+
+
 void WebLoginThread::DoCommand(const AString &commandString, StringArray &paramArray)
 {
-	if (commandString == "d")
+	if (commandString == "http")
+	{
+		CHttpClient h;
+		std::string url = "http://127.0.0.1:1080";
+
+		std::string name = "ddd5555";
+		std::string password = "123456";
+		std::string reqestString = url + "/?CMD=CHECK&ACCOUNT=" + name + "&PASSWORD=" + password;
+
+		std::string re;
+		int x = h.Gets(reqestString, re, NULL);
+		NOTE_LOG("--- Http : ----- %d \r\n %s", x, re.c_str());
+
+		//std::string resp;
+		////h.Posts(url, "ddd", resp);
+
+		//CHttpClient *p2 = new CHttpClient();
+		//p2->Post(url, "ddd", resp, 3);
+
+		//DataBuffer	sendData;
+		DataBuffer responseData;
+
+		Auto<HttpReqeustActorMsg> msg  = MEM_NEW HttpReqeustActorMsg();
+		msg->mActorID = 1;
+		msg->mActorType = Actor_AccountCenter;
+
+		Auto<MSG_Test> sendMsg = MEM_NEW MSG_Test();
+		sendMsg->mF = 999.23f;
+		sendMsg->mTest = "jjjzzz";
+		sendMsg->mX = 55;
+
+
+		AutoData d = MEM_NEW DataBuffer();
+		sendMsg->serialize(d.getPtr());
+
+		msg->mMsgName = sendMsg->GetMsgName();
+		msg->mRequestMsgData = d;
+
+		AutoData sendData = MEM_NEW DataBuffer();
+
+		EventNetProtocol  pro;
+		pro.WritePacket(eMsg_ClientRequestServer, msg.getPtr(), sendData.getPtr());
+
+		
+
+		if (h.PostBytes(url.c_str(), sendData.getPtr(), &responseData, 6, 30, NULL) == 0)
+		{
+
+		}
+		responseData.seek(0);
+		NiceData  r;
+		r.restore(&responseData);
+
+		NOTE_LOG("YYYY :  \r\n%s", r.dump().c_str());
+
+	}
+	else if (commandString == "ht")
+	{
+
+
+		CoroutineTool::AsyncCall([=]()
+		{
+			Auto<MSG_Test> sendMsg = MEM_NEW MSG_Test();
+			sendMsg->mF = 999.23f;
+			sendMsg->mTest = "jjjzzz";
+			sendMsg->mX = 55;
+
+			TR_UpdateSaveResource x;
+			x.mIndexName = "kkk";
+			x.mResourceData = MEM_NEW DataBuffer();
+
+			AutoNice re = mHttpClientNet.AwaitRequest("127.0.0.1:1080", Actor_AccountCenter, 1,  &x, 6, 30);
+			if (re)
+				NOTE_LOG("Reqeuest ok : %s", re->dump().c_str())
+			else
+				ERROR_LOG("Request fail %s", sendMsg->GetMsgName());
+		}
+		);
+	}
+	else if (commandString == "d")
 	{
 		//Auto<TT> test = MEM_NEW TT();
 		//test->mpThread = this;

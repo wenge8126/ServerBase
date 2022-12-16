@@ -385,6 +385,7 @@ xcopy $(COMMON_BASE_LIB)\Bin\$(TargetName).pdb $(Server_Out_Dir)\  /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Common\XlsxTableLoader.h" />
     <ClInclude Include="ExportBase.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -392,12 +393,11 @@ xcopy $(COMMON_BASE_LIB)\Bin\$(TargetName).pdb $(Server_Out_Dir)\  /y</Command>
     <ClInclude Include="ServerToolDlg.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="ToolActor.h" />
-    <ClInclude Include="XlsxTableLoader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Common\XlsxTableLoader.cpp" />
     <ClCompile Include="ServerTool.cpp" />
     <ClCompile Include="ServerToolDlg.cpp" />
-    <ClCompile Include="XlsxTableLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ServerTool.rc" />

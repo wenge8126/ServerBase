@@ -28,9 +28,14 @@ void AccountCenterActor::On(RQ_CreateDBTable &msg, RS_CreateDBTable &resp, UnitI
 				
 			}
 			AutoTable t = GetDBMgr()->GetTable(it.key().c_str());
-			AString compName = "DBUser_";
-			compName += it.key();
-			GenerateDBUser::generate(compName, t, "../GameServer/Common/", false);
+			if (t)
+			{
+				AString compName = "DBUser_";
+				compName += it.key();
+				GenerateDBUser::generate(compName, t, "../GameServer/Common/", false);
+			}
+			else
+				ERROR_LOG("产生表对应DBUser组件时, 表格不存在 %s", it.key().c_str());
 		}
 		else
 		{
