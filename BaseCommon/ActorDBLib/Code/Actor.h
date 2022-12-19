@@ -142,6 +142,17 @@ namespace NetCloud
 			return Hand<T>();
 		}
 
+		template<typename T>
+		void GetComponents(EasyList<Hand<T>> &list)
+		{			
+			for (int i = 0; i < mComponentList.size(); ++i)
+			{
+				Hand<T> comp = mComponentList.get(i);
+				if (comp)
+					list.insert(comp);					
+			}			
+		}
+
 	public:
 		// RPC request msg
 		template<typename RespMsg>
@@ -390,6 +401,8 @@ namespace NetCloud
 		virtual ARecord LoadRecord(const char *szTableName, Int64 nKey) { AssertNote(0, "Must inherit DBActor"); return ARecord(); }
 
 		virtual Logic::tEventCenter* GetEventCenter() override;
+
+		virtual AComponent GetDBUserComponent(const char *szTableIndex) { NOTE_LOG("GetDBUserComponent no override"); return AComponent(); }
 
 	public:
 		Actor() {}

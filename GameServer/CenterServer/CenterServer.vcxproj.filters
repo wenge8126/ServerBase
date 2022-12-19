@@ -28,6 +28,9 @@
     <Filter Include="DataServer">
       <UniqueIdentifier>{26d8cec2-84dd-441e-8c2e-e5126e79df28}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{22cd39f2-81ef-410a-b86a-bac9b5eb7f32}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\CenterThread.cpp">
@@ -70,6 +73,18 @@
     </ClInclude>
     <ClInclude Include="Code\DataActor.h">
       <Filter>DataServer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\DBUser_t_userdata.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\DBUser_t_data.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\DBUser_t_manager.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\DBUser_t_commodity.h">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -88,7 +88,6 @@ public:
 	bool set(int col, tBaseTable *data);
 
 	bool set(const char *szField, const Data &scrData){ return set (getFieldCol(szField), scrData); }
-	bool set(int col,  const Data &scrData);
 
 	bool set(const AString &key, AutoNice val){ return set(key.c_str(), val); }
 	bool set(const AString &key, tBaseTable *val){ return set(key.c_str(), val); }
@@ -106,6 +105,7 @@ public:
 	virtual bool set(int col, const char *szVal){ return _set(col, szVal); }
 	virtual bool set(int col, const AString &strVal){ return _set(col, strVal); }
 	virtual bool set(int col, void *obj, const type_info &typeInfo){ return _set(col, obj, typeInfo); }
+	virtual bool set(int col, const Data &scrData);
 
 public:
 	virtual bool _set(int col, Int64 nVal);

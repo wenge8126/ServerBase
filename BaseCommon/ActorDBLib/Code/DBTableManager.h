@@ -12,6 +12,7 @@
 //#include "NetNode.h"
 #include "ActorDBLib.h"
 #include "IOCPServerNet.h"
+#include "CoroutineTool.h"
 
 namespace NetCloud
 {
@@ -72,7 +73,7 @@ namespace NetCloud
 		}
 
 		// 异步初始连接SQL更新进程
-		bool AsyncInitSQLUpdate(AutoNice sqlParam, const char *szShareDBServerIP, int nShareDBServerPort, int nShareNetSaftCode, int updateShareKey);
+		bool AsyncInitSQLUpdate(AutoNice sqlParam, const char *szShareDBServerIP, int nShareDBServerPort, int nShareNetSaftCode, int updateShareKey, bool bUseShareSQL);
 
 		static AutoEvent AwaitRequestMemDB(AutoNet mShareSQLNet, const char *szRequestEventName, tNiceData *pParamData, int waitMilSecond);
 

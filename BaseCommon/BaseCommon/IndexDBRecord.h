@@ -69,6 +69,8 @@ public:
 	virtual bool set(int col, const AString &strVal) override;
 	virtual bool set(int col, void *obj, const type_info &typeInfo) override;
 
+	virtual bool set(int col, const Data &scrData) override;
+
 public:
 	// 序列增量变化数据 只保存或还原修改数据部分 
 	virtual bool saveUpdateData( DataStream *destData );

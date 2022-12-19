@@ -116,7 +116,7 @@ namespace NetCloud
 
 		virtual Auto<ActorDBMgr> GetDBMgr() { AssertNote(0, "This is not DBActorManager"); return Auto<ActorDBMgr>(); }
 
-		virtual bool AsyncInitSQLUpdate(AutoNice sqlParam, const char *szShareDBServerIP, int nShareDBServerPort, int nShareNetSaftCode, int updateShareKey)
+		virtual bool AsyncInitSQLUpdate(AutoNice sqlParam, const char *szShareDBServerIP, int nShareDBServerPort, int nShareNetSaftCode, int updateShareKey, bool bUseShareSQL)
 		{
 			ERROR_LOG("Is not DBActorManager, can not call AsyncInitSQLUpdate");
 			return false;
@@ -184,9 +184,9 @@ namespace NetCloud
 
 		virtual Auto<ActorDBMgr> GetDBMgr() override { return mShareDBManager; }
 
-		bool AsyncInitSQLUpdate(AutoNice sqlParam, const char *szShareDBServerIP, int nShareDBServerPort, int nShareNetSaftCode, int updateShareKey) override
+		bool AsyncInitSQLUpdate(AutoNice sqlParam, const char *szShareDBServerIP, int nShareDBServerPort, int nShareNetSaftCode, int updateShareKey, bool bUseShareSQL) override
 		{
-			return mShareDBManager->AsyncInitSQLUpdate(sqlParam, szShareDBServerIP, nShareDBServerPort, nShareNetSaftCode, updateShareKey);
+			return mShareDBManager->AsyncInitSQLUpdate(sqlParam, szShareDBServerIP, nShareDBServerPort, nShareNetSaftCode, updateShareKey, bUseShareSQL);
 		}
 
 	public:

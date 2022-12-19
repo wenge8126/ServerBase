@@ -115,7 +115,7 @@ namespace Logic
 	bool tServerEvent::DoTimeOver()
 	{
 #if DEVELOP_MODE
-		DEBUG_LOG("%s SeverEvent %s over time\r\n", TimeManager::ToTimeString(TimeManager::Now()).c_str(), name.c_str());
+		DEBUG_LOG("%s SeverEvent %s over time\r\n", TimeManager::ToTimeString(TimeManager::Now()).c_str(), GetEventName());
 #endif 
 		bool re = parent::DoTimeOver();
 #if NEED_RESEND_ONTIMEOVER

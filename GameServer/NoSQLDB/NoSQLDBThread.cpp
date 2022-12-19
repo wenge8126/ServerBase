@@ -165,7 +165,7 @@ void AsyncReadyDB(NoSQLDBThread *pThread)
 	int proID = _getpid();
 	keyString.Format("Actor_%d_%llu", proID, pThread->GetThreadID());
 
-	bool b = pThread->mActorManager->mShareDBManager->AsyncInitSQLUpdate(param, "127.0.0.1", config.share_server_port, config.share_server_code, MAKE_INDEX_ID(keyString.c_str()));
+	bool b = pThread->mActorManager->mShareDBManager->AsyncInitSQLUpdate(param, "127.0.0.1", config.share_server_port, config.share_server_code, MAKE_INDEX_ID(keyString.c_str()), false);
 
 	NOTE_LOG("*** DB Init result > %s\r\n", b ? "succeed" : "fail");
 

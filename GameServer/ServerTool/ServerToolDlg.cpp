@@ -225,7 +225,35 @@ void CServerToolDlg::OnBnCreateDB()
 	CoroutineTool::AsyncCall(_RunCreateDB, this);
 }
 
+AutoTable GenerateTableByDBConfig(AutoTable configDBTable)
+{
+		AutoTable table = tBaseTable::NewBaseTable();
+		table->SetTableName(configDBTable->GetTableName());
+		int i = 0;
+		while (true)
+		{
+			ARecord fieldInfoRe = configDBTable->GetRecord(i++);
+			if (!fieldInfoRe)
+				break;
 
+			FieldInfo info = table->AppendField(fieldInfoRe["NAME"].c_str(), fieldInfoRe["TYPE"].c_str());
+			if (info != NULL)
+			{
+				int maxLen = fieldInfoRe["MAX_LENGTH"];
+				if (maxLen > 0)
+					info->setMaxLength(maxLen);
+
+			}
+			else
+			{
+				ERROR_LOG("%s Field %s type [%s] error", configDBTable->GetTableName(), fieldInfoRe["NAME"].c_str(), fieldInfoRe["TYPE"].c_str());
+				return AutoTable();
+			}
+		}
+		return table;
+}
+
+#include "GenerateCodeTS.h"
 
 void CServerToolDlg::AsyncCreateDB()
 {
@@ -260,6 +288,8 @@ void CServerToolDlg::AsyncCreateDB()
 	if (bOK != IDOK)
 		return;
 
+	AString tsCode = "//Auto generate by DB table\r\nimport BaseTable, { BaseRecord } from \"../Base/BaseTable\";\r\n\r\n";
+
 	RQ_CreateDBTable	msg;
 	msg.mDBConfigData = MEM_NEW NiceData();
 	for (auto it = configListTable->GetRecordIt(); *it; ++(*it))
@@ -277,10 +307,22 @@ void CServerToolDlg::AsyncCreateDB()
 
 			msg.mDBConfigData[szTableName] = table.getPtr();
 
+			// 生成TS表格结构
+			AutoTable dbStructTable = GenerateTableByDBConfig(table);
+			if (dbStructTable)
+			{
+				AString code = GenerateCodeTS::GenerateConfigTS(dbStructTable);
+				tsCode += code;
+			}
 		}
 		else
 			LOG("Fail load xlsx  %s, sheet %s, index %s", record["XLSX"].c_str(), record["SHEET"].c_str(), record["INDEX"].c_str());
 	}
+
+	FileDataStream f("D:/Business/Business/assets/scripts/Game/DBTableStrut.ts", FILE_CREATE_UTF8);
+	f._write((void*)tsCode.c_str(), tsCode.length());
+	f.close();
+
 	msg.mExportCodePath = "D:/ServerBase/GameServer/Common";
 	RS_CreateDBTable resp;
 	mToolActor->Await( { Actor_AccountCenter, 1 }, msg, resp, 16000);

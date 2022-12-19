@@ -197,6 +197,26 @@ bool AString::getU64(UInt64  &uResult)
 }
 
 
+Int64 AString::toInt64() const
+{
+	return TOINT64(c_str());
+}
+
+int AString::toInt() const
+{
+	return TOINT(c_str());
+}
+
+float AString::toFloat() const
+{
+	return TOFLOAT(c_str());
+}
+
+double AString::toDouble() const
+{
+	return StringTool::Double(c_str());
+}
+
 AString AString::operator+( const char *szString )
 {
 	AString temp = c_str();

@@ -21,7 +21,7 @@ public:
 	const AString& strACCOUNT() const { if (mDataRecord)  return  mDataRecord->getAString(1); ERROR_LOG("No exist record %s", mKey.c_str()); static AString s; return s; }
 	AutoNice niceINFO(bool bSetUpdate=false) {  AutoNice v; if (mDataRecord) { mDataRecord->get(2, v);  if (bSetUpdate){ if (!v) {v=MEM_NEW NiceData(); mDataRecord->set(2, v); } else mDataRecord->NotifyChanged(2); } return v; } ERROR_LOG("No exist record %s", mKey.c_str()); return v; }
 
-    bool SetACCOUNT(const char *nVal) { return mDataRecord->set(1, nVal); }
+    bool SetACCOUNT(const char *nVal) { if (!mDataRecord) return false; return mDataRecord->set(1, nVal); }
 
 
 

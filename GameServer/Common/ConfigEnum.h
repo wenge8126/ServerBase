@@ -12,5 +12,6 @@ enum EnumErrorCode
     eLoginError_PasswordError = 5,    //密码错误
     eError_Resource_NoExist = 6,    //资源不存在
     eError_Resource_TooLarge = 7,    //资源太大了
+    eError_ResourceCheckFail = 8,    //资源验证失败
 };
 

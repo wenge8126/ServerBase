@@ -207,6 +207,16 @@ bool IndexDBRecord::set( int col, void *obj, const type_info &typeInfo )
 }
 
 
+bool IndexDBRecord::set(int col, const Data &scrData)
+{
+	if (BaseRecord::set(col, scrData))
+	{
+		_setNeedUpdate(col);
+		return true;
+	}
+	return false;
+}
+
 void IndexDBRecord::FullAllUpdate( bool bNeed )
 {
 	char *pData = _getStateData();

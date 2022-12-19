@@ -27,7 +27,7 @@ namespace NetCloud
 		~LogicDBTable()
 		{}
 
-		virtual void Process() override { mDBDataLoadSQL->Process(); }
+		//virtual void Process() override { mDBDataLoadSQL->Process(); }
 		virtual void LowProcess()  { mDBDataLoadSQL->LowProcess(); }
 
 	public:

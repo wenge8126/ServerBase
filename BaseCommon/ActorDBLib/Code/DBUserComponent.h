@@ -20,6 +20,69 @@ namespace NetCloud
 		virtual bool CheckTable(AutoTable t) = 0;
 		virtual void OnLoadRecord(ARecord record){}
 
+		virtual bool GetDataInfo(const char *szKey, const AString &checkMD5, Int64 &size, AString &md5) { NOTE_LOG("GetDataInfo no override"); return false; }
+
+		virtual AutoData GetData(const char *szKey, const AString &checkMD5, Int64 position, int size) { NOTE_LOG("GetData no override"); return false; }
+
+		virtual ARecord ReadyRecord(const char *szKey)
+		{
+			ARecord re;
+			if (IsValid(szKey))
+				re = mDataRecord;
+			else
+				re = LoadRecord(szKey);
+			return re;
+		}
+
+		virtual AutoData GetRecordData(const char *szKey)
+		{
+			ARecord re = ReadyRecord(szKey);
+
+			if (re)
+			{
+				AutoData d = MEM_NEW DataBuffer();
+				if (re->saveData(d.getPtr()))
+					return d;
+
+				ERROR_LOG("Save record fail : %s", szKey);
+			}
+			else
+				WARN_LOG("No exist record :  %s", szKey);
+			return AutoData();
+		}		
+
+		virtual bool SaveRecordByData(const char *szKey, AutoData d)
+		{
+			if (!mDBTable ||!d)
+				return false;
+
+			ARecord re = mDBTable->NewRecord();
+			re->_alloctData(0);
+			d->seek(0);
+			if (!re->restoreData(d.getPtr()))
+			{
+				ERROR_LOG("Restore record fail : %s", szKey);
+				return false;
+			}
+			ARecord existRe = ReadyRecord(szKey);
+			if (!existRe)
+				mDBTable->InsertDBNewRecord(re);
+			else
+			{
+				for (int i = 1; i < mDBTable->GetField()->getCount(); ++i)
+				{
+					existRe->set(i, re->get(i));
+				}
+				existRe->SaveUpdate();
+			}
+			return true;
+		}
+
+		AutoData GetTableFieldData()
+		{
+			return mFieldData;
+		}
+
 		virtual void Awake() override
 		{
 			if (!InitTable(GetTableName()))
@@ -27,6 +90,13 @@ namespace NetCloud
 		}
 
 	public:
+		bool IsValid() { return mDataRecord; }
+		bool IsValid(const char *szKey)
+		{
+			if (mDataRecord && mDataRecord[0].string() == szKey)
+				return true;
+			return false;
+		}
 		bool ResetRecord(const char *szKey)
 		{
 			LowUpdate();
@@ -43,6 +113,9 @@ namespace NetCloud
 
 		bool ResetRecord(ARecord record)
 		{
+			if (mDataRecord == record)
+				return record;
+
 			LowUpdate();
 			mDataRecord = record;
 			return mDataRecord;
@@ -55,6 +128,8 @@ namespace NetCloud
 			if (t && CheckTable(t))
 			{
 				mDBTable = t;
+				mFieldData = MEM_NEW DataBuffer();
+				mDBTable->GetField()->saveToData(mFieldData.getPtr());
 				return true;
 			}
 			return false;
@@ -123,6 +198,7 @@ namespace NetCloud
 		AString		mKey;
 		ARecord	mDataRecord;
 		AutoTable mDBTable;
+		AutoData  mFieldData;
 	};
 
 }

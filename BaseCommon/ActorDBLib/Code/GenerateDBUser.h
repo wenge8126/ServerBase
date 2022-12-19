@@ -84,33 +84,33 @@ public:
 			case FIELD_SHORT:
 			case FIELD_INT:
 				temp.Format("	int n%s() const { int v = 0; if (mDataRecord) {  mDataRecord->get(%d, v); return v; } ERROR_LOG(\"No exist record %%s\", mKey.c_str()); return v; }\r\n", name.c_str(), i);
-				setTemp.Format("    bool Set%s(int nVal) { return mDataRecord->set(%d, nVal); }", name.c_str(), i);
+				setTemp.Format("    bool Set%s(int nVal) { if (!mDataRecord) return false; return mDataRecord->set(%d, nVal); }", name.c_str(), i);
 				break;
 
 			case FIELD_UINT64:
 				temp.Format("	UInt64 u%s() const { UInt64 v = 0; if (mDataRecord) {  mDataRecord->get(%d, v); return v; } ERROR_LOG(\"No exist record %%s\", mKey.c_str()); return v; }\r\n", name.c_str(), i);
-				setTemp.Format("    bool Set%s(UInt64 nVal) { return mDataRecord->set(%d, (Int64)nVal); }", name.c_str(), i);
+				setTemp.Format("    bool Set%s(UInt64 nVal) { if (!mDataRecord) return false; return mDataRecord->set(%d, (Int64)nVal); }", name.c_str(), i);
 				break;
 
 			case FIELD_INT64:
 				temp.Format("	Int64 w%s() const { Int64 v = 0; if (mDataRecord) {  mDataRecord->get(%d, v); return v; } ERROR_LOG(\"No exist record %%s\", mKey.c_str()); return v; }\r\n", name.c_str(), i);
-				setTemp.Format("    bool Set%s(Int64 nVal) { return mDataRecord->set(%d, nVal); }", name.c_str(), i);
+				setTemp.Format("    bool Set%s(Int64 nVal) { if (!mDataRecord) return false; return mDataRecord->set(%d, nVal); }", name.c_str(), i);
 				break;
 
 			case FIELD_FLOAT:
 				temp.Format("	float f%s() const { float v = 0; if (mDataRecord) {  mDataRecord->get(%d, v); return v; } ERROR_LOG(\"No exist record %%s\", mKey.c_str()); return v; }\r\n", name.c_str(), i);
-				setTemp.Format("    bool Set%s(float nVal) { return mDataRecord->set(%d, nVal); }", name.c_str(), i);
+				setTemp.Format("    bool Set%s(float nVal) { if (!mDataRecord) return false; return mDataRecord->set(%d, nVal); }", name.c_str(), i);
 				break;
 
 			case FIELD_STRING:
 			case FIELD_CHAR_STRING:
 				temp.Format("	const char* sz%s() const { if (mDataRecord)  return  mDataRecord->getString(%d); ERROR_LOG(\"No exist record %%s\", mKey.c_str()); return \"\"; }\r\n", name.c_str(), i);
-				setTemp.Format("    bool Set%s(const char *nVal) { return mDataRecord->set(%d, nVal); }", name.c_str(), i);
+				setTemp.Format("    bool Set%s(const char *nVal) { if (!mDataRecord) return false; return mDataRecord->set(%d, nVal); }", name.c_str(), i);
 				break;
 
 			case FIELD_BOOL:
 				temp.Format("	bool b%s() const { int v = 0; if (mDataRecord) {  mDataRecord->get(%d, v); return v!=0; } ERROR_LOG(\"No exist record %%s\", mKey.c_str()); return false; }\r\n", name.c_str(), i);
-				setTemp.Format("    bool Set%s(bool nVal) { return mDataRecord->set(%d, nVal?1:0); }", name.c_str(), i);
+				setTemp.Format("    bool Set%s(bool nVal) { if (!mDataRecord) return false; return mDataRecord->set(%d, nVal?1:0); }", name.c_str(), i);
 				break;
 
 			case FIELD_NICEDATA:

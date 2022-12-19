@@ -43,6 +43,8 @@ public:
 
 	virtual bool IsLoopBuffer() const { return false; }
 
+	virtual AString md5();
+
 public:
 	virtual DSIZE tell(void) const = 0;
 	virtual bool seek(DSIZE absolutePosition) = 0;

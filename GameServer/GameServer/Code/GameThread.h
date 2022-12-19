@@ -8,7 +8,7 @@
 //#include "NetNode.h"
 #include "BaseThread.h"
 
-#include "SDK/SDK.h"
+#include "SDK.h"
 
 #include "CRunConfig.h"
 #include "TaskSystem.h"

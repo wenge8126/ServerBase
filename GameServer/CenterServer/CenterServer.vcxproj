@@ -593,7 +593,11 @@ xcopy $(COMMON_BASE_LIB)\Bin\$(TargetName).pdb $(Server_Out_Dir)\  /y
   <ItemGroup>
     <ClInclude Include="..\Common\CommonDefine.h" />
     <ClInclude Include="..\Common\DBUser_t_account.h" />
+    <ClInclude Include="..\Common\DBUser_t_commodity.h" />
+    <ClInclude Include="..\Common\DBUser_t_data.h" />
+    <ClInclude Include="..\Common\DBUser_t_manager.h" />
     <ClInclude Include="..\Common\DBUser_t_resources.h" />
+    <ClInclude Include="..\Common\DBUser_t_userdata.h" />
     <ClInclude Include="..\Common\ServerToolMsg.h" />
     <ClInclude Include="Code\AccountCenterActor.h" />
     <ClInclude Include="Code\DataActor.h" />

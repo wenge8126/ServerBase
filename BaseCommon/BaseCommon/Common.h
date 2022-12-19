@@ -32,7 +32,7 @@
 #ifndef DEBUG_LOG
 #	if DEVELOP_MODE
 #		
-#		define DEBUG_LOG(logInfo, ...) {} //	{ TableTool::Log(logInfo, ##__VA_ARGS__); }
+#		define DEBUG_LOG(logInfo, ...) 	{ TableTool::Log(logInfo, ##__VA_ARGS__); }
 #		define INFO_LOG(logInfo, ...) {} //	{ TableTool::blue(); TableTool::Log(logInfo, ##__VA_ARGS__); TableTool::white(); }
 
 #		define LOG_GREEN	TableTool::green();

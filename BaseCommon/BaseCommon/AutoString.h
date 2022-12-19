@@ -158,6 +158,11 @@ public:
 	bool getU64(UInt64  &uResult);
 	UInt64 getU64(void){ UInt64 v; if (!getU64(v)) v = 0;  return v; }
 
+	Int64 toInt64() const;
+	int toInt() const;
+	float toFloat() const;
+	double toDouble() const;
+
 	bool operator < (const AString &other) const
 	{
 		return strcmp(c_str(),other.c_str())<0;

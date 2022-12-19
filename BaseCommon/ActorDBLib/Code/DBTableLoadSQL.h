@@ -28,19 +28,19 @@ namespace NetCloud
 		// 如果在协程内自动启动异步加载, 否则同步加载
 		virtual bool AwaitLoadRecord(const char *szKey, ARecord targetRecord)
 		{
-			if (IN_CORO)
-			{
-				ALoadTask	task = MEM_NEW LoadSQLTask();
+			//if (IN_CORO)
+			//{
+			//	ALoadTask	task = MEM_NEW LoadSQLTask();
 
-				if (mbStringKey)
-					task->mSQLString.Format("Select * from `%s` where `%s`='%s'", mTableName.c_str(), mKeyFieldName.c_str(), szKey);
-				else
-					task->mSQLString.Format("Select * from `%s` where `%s`=%s", mTableName.c_str(), mKeyFieldName.c_str(), szKey);
-				task->mTargetRecord = targetRecord;
-				task->mLoadSQLType = eSQL_LoadRecord;
-				return task->AWait(&mLoadSQLThread);
-			}
-			else
+			//	if (mbStringKey)
+			//		task->mSQLString.Format("Select * from `%s` where `%s`='%s'", mTableName.c_str(), mKeyFieldName.c_str(), szKey);
+			//	else
+			//		task->mSQLString.Format("Select * from `%s` where `%s`=%s", mTableName.c_str(), mKeyFieldName.c_str(), szKey);
+			//	task->mTargetRecord = targetRecord;
+			//	task->mLoadSQLType = eSQL_LoadRecord;
+			//	return task->AWait(&mLoadSQLThread);
+			//}
+			//else
 			{
 				AString sqlString;
 				if (mbStringKey)
@@ -58,20 +58,20 @@ namespace NetCloud
 
 		bool AwaitGrowRecondID(ARecord targetRecord)
 		{
-			if (IN_CORO)
-			{
-				ALoadTask	task = MEM_NEW LoadSQLTask();
-				task->mSQLString.Format("insert into `%s` set `%s`=DEFAULT; select max(`%s`) as LAST from `%s`;"
-					, mTableName.c_str()
-					, mKeyFieldName.c_str()				
-					, mKeyFieldName.c_str()					
-					, mTableName
-				);
-				task->mTargetRecord = targetRecord;
-				task->mLoadSQLType = eSQL_GrowRecond;
-				return task->AWait(&mLoadSQLThread);
-			}
-			else
+			//if (IN_CORO)
+			//{
+			//	ALoadTask	task = MEM_NEW LoadSQLTask();
+			//	task->mSQLString.Format("insert into `%s` set `%s`=DEFAULT; select max(`%s`) as LAST from `%s`;"
+			//		, mTableName.c_str()
+			//		, mKeyFieldName.c_str()				
+			//		, mKeyFieldName.c_str()					
+			//		, mTableName
+			//	);
+			//	task->mTargetRecord = targetRecord;
+			//	task->mLoadSQLType = eSQL_GrowRecond;
+			//	return task->AWait(&mLoadSQLThread);
+			//}
+			//else
 			{
 				AString sqlString;
 				sqlString.Format("insert into `%s` set `%s`=DEFAULT; Select * from `%s` where `%s`=(select max(`%s`) from `%s`);"
@@ -93,10 +93,10 @@ namespace NetCloud
 
 	public:
 
-		virtual void Process()
-		{
-			mLoadSQLThread.Process();
-		}
+		//virtual void Process()
+		//{
+		//	mLoadSQLThread.Process();
+		//}
 
 		virtual void LowProcess()
 		{
@@ -104,7 +104,7 @@ namespace NetCloud
 		}
 
 	public:
-		bool InitStart(tBaseTable *pTable, tNiceData *pSQLParam)
+		virtual bool InitStart(tBaseTable *pTable, tNiceData *pSQLParam)
 		{
 			mSQLParam.append(*pSQLParam, true);
 
@@ -115,11 +115,11 @@ namespace NetCloud
 			}
 
 
-			if (!mLoadSQLThread.InitReady(pTable, pSQLParam))
-			{
-				ERROR_LOG("SQL load thread ready fail");
-				return false;
-			}
+			//if (!mLoadSQLThread.InitReady(pTable, pSQLParam))
+			//{
+			//	ERROR_LOG("SQL load thread ready fail");
+			//	return false;
+			//}
 
 			mTableName = pTable->GetTableName();
 			FieldInfo info = pTable->GetField()->getFieldInfo(0);
@@ -137,7 +137,7 @@ namespace NetCloud
 		AString					mKeyFieldName;
 		bool						mbStringKey;
 
-		SQLThread			mLoadSQLThread;
+		//SQLThread			mLoadSQLThread;
 	};
 	//-------------------------------------------------------------------------
 

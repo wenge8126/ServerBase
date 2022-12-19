@@ -1,10 +1,20 @@
 
 #include "DataStream.h"
+#include "Md5Tool.h"
 
 void DataStream::Release(void)
 {
 	delete this;
 } 
+
+AString DataStream::md5()
+{
+	if (data() == NULL)
+		return AString();
+
+	MD5 md(data(), dataSize());
+	return md.toString();
+}
 
 bool DataStream::readText( AString &resultString )
 {

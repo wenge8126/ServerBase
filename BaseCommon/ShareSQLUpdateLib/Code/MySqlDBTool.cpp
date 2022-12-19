@@ -1475,6 +1475,8 @@ bool MySqlDBTool::CreateDBTable( const char *szTableName, AutoField tableField, 
 
 		if (i==0)
 		{			
+			if (info->getType() != FIELD_STRING && info->getType() != FIELD_CHAR_STRING)
+				sql += " AUTO_INCREMENT ";
 			sql += " NOT NULL ";
 		}
 #if SAVE_FIELD_COMMENT
@@ -1538,6 +1540,7 @@ bool MySqlDBTool::_MakeSaveSqlData( AString &resultSQLString, SQLDataArray &resu
 
 	AString indexString;
 	AString dataSQLString;
+	AString temp;
 
 	AutoField field = scrRecord->getField();
 	int count = field->getCount();
@@ -1605,6 +1608,16 @@ bool MySqlDBTool::_MakeSaveSqlData( AString &resultSQLString, SQLDataArray &resu
 				if (szData == NULL)
 					szData = "";
 				DSIZE len = (DSIZE)strlen(szData);
+				
+				// 检验长度如果超过字符约定长度, 则截取
+				if (len > info->getMaxLength())
+				{
+					temp.set(szData, info->getMaxLength());
+					WARN_LOG("String field [%s] max length %d, now %d too lang : \r\n%s\r\nCut out =>%s", info->getName().c_str(), info->getMaxLength(), len, szData, temp.c_str());
+					szData = temp.c_str();
+					len = info->getMaxLength();					
+				}
+
 				// 特别注意: 字符串使用数据方式保存, 长度必须大于0, 否则SQL错误为不合法的字符串
 				if ( (i > 0 || bInsert) && len>0)
 				{
@@ -1639,12 +1652,18 @@ bool MySqlDBTool::_MakeSaveSqlData( AString &resultSQLString, SQLDataArray &resu
 				//dataSQL += "=?";
 				szBuffer[nowBufferPos] = '?';
 				++nowBufferPos;
-			
+				
 				AutoData bufferData = resultData.NextData();
 				AutoData d;
 				scrRecord->get(i, &d, typeid(d));
 				if (d)
 				{
+					// 检验长度如果超过字符约定长度, 则截取
+					if (d->dataSize() > info->getMaxLength())
+					{						
+						ERROR_LOG("DATA field [%s] max length %d, now %d too lang, then return fail.", info->getName().c_str(), info->getMaxLength(), d->dataSize());
+						return false;
+					}
 					bufferData->_write(d->data(), d->dataSize());
 				}
 			}

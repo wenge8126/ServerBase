@@ -333,8 +333,9 @@ namespace NetCloud
 		mShareDBClientNet->LowProcess(10);
 	}
 
-	bool DBTableManager::AsyncInitSQLUpdate(AutoNice sqlParam, const char *szShareDBServerIP, int nShareDBServerPort, int nShareNetSaftCode, int updateShareKey)
+	bool DBTableManager::AsyncInitSQLUpdate(AutoNice sqlParam, const char *szShareDBServerIP, int nShareDBServerPort, int nShareNetSaftCode, int updateShareKey, bool bUseShareSQL)
 	{
+		mbUseShareSQL = bUseShareSQL;
 		mInitParam = sqlParam;
 
 		// 加载所有的DB表格
