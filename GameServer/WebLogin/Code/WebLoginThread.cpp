@@ -399,6 +399,35 @@ void WebLoginThread::DoCommand(const AString &commandString, StringArray &paramA
 		}
 		);
 	}
+	else if (commandString == "ttt")
+	{
+		static int mRequestCount = 0;
+		static int mOkCount = 0;
+		char sz[1024];
+		for (int i = 0; i < 10; ++i)
+		{
+			CoroutineTool::AsyncCall([=]()
+			{
+				Auto<TEST_BigHttpMsg> sendMsg = MEM_NEW TEST_BigHttpMsg();
+				sendMsg->mBigData = MEM_NEW DataBuffer();
+				for (int i = 0; i < 512; ++i)
+				{
+					sendMsg->mBigData->_write((void*)sz, 1024);
+				}
+				++mRequestCount;
+				AutoNice re = mHttpClientNet.AwaitRequest("127.0.0.1:1080", Actor_VideoFile, 1, sendMsg.getPtr(), 6, 30);
+				if (re)
+				{
+					++mOkCount;
+					AutoData d = (DataStream*)re["mResponseData"];
+					NOTE_LOG("=== %d Reqeuest ok %d , data  > %d : %s, ", mRequestCount, mOkCount, d?d->dataSize():0, re->dump().c_str());
+				}
+				else
+					ERROR_LOG("**** Request fail %s", sendMsg->GetMsgName());
+			}
+			);
+		}
+	}
 	else if (commandString == "d")
 	{
 		//Auto<TT> test = MEM_NEW TT();

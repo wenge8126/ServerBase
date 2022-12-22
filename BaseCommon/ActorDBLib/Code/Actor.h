@@ -13,7 +13,7 @@
 #include "EasyMap.h"
 #include "AsyncNode.h"
 #include "AsyncProtocol.h"
-
+#include "NetUnit.h"
 /*/-------------------------------------------------------------------------
 Actor
 1 异步请求消息RPC
@@ -51,7 +51,9 @@ class AsyncNode;
 
 namespace NetCloud
 {
+
 	class ActorManager;
+
 	class ActorMgrPtr : public AutoBase
 	{
 	public:
@@ -124,7 +126,7 @@ namespace NetCloud
 			for (int i = 0; i < mComponentList.size(); ++i)
 			{
 				AComponent comp = mComponentList.get(i);
-				if (comp && comp->GetEventFactory()->GetNameIndex()==nCompNameIndex)
+				if (comp && comp->GetEventFactory()->GetNameIndex() == nCompNameIndex)
 					return comp;
 			}
 			return AComponent();
@@ -133,7 +135,7 @@ namespace NetCloud
 		template<typename T>
 		Hand<T> GetComponent()
 		{
-			for (int i=0; i<mComponentList.size(); ++i)
+			for (int i = 0; i < mComponentList.size(); ++i)
 			{
 				Hand<T> comp = mComponentList.get(i);
 				if (comp)
@@ -144,19 +146,19 @@ namespace NetCloud
 
 		template<typename T>
 		void GetComponents(EasyList<Hand<T>> &list)
-		{			
+		{
 			for (int i = 0; i < mComponentList.size(); ++i)
 			{
 				Hand<T> comp = mComponentList.get(i);
 				if (comp)
-					list.insert(comp);					
-			}			
+					list.insert(comp);
+			}
 		}
 
 	public:
 		// RPC request msg
 		template<typename RespMsg>
-		bool Await(UnitID targetID, tBaseMsg &reqestMsg, RespMsg &respMsg,  int waitMilSecond)
+		bool Await(UnitID targetID, tBaseMsg &reqestMsg, RespMsg &respMsg, int waitMilSecond)
 		{
 			if (CORO == 0)
 			{
@@ -187,8 +189,8 @@ namespace NetCloud
 			}
 			return false;
 		}
-	
-	
+
+
 		AutoNice Await(UnitID targetID, const AString &requestMsgName, tNiceData &reqestMsg, int waitMilSecond, int nCompIndex)
 		{
 			if (CORO == 0)
@@ -204,7 +206,7 @@ namespace NetCloud
 				return AutoNice();
 			}
 
-			Auto< AsyncProtocol> protocol = pNetNode->mNodeNet->GetNetProtocol();		
+			Auto< AsyncProtocol> protocol = pNetNode->mNodeNet->GetNetProtocol();
 
 			Auto<TransferPacket> tranPak = protocol->CreatePacket(eNGN_TransferMsg);
 			tranPak->mData.clear(false);
@@ -238,7 +240,7 @@ namespace NetCloud
 			tranPak->mData.write(nCompIndex);
 			tranPak->mData.writeString(requestMsgName);
 			tranPak->mData._write(pRequestMsgData->data(), pRequestMsgData->dataSize());
-			
+
 			return Await(tranPak, targetID, waitMilSecond);
 		}
 
@@ -258,8 +260,8 @@ namespace NetCloud
 		// 已经在协程内处理
 		template<typename T, typename ReqMsg, typename RespMsg>
 		static int OnMsg(Actor *pActor, DataStream *pReqestMsgData, TransferPacket *pResponse, int nCompIndex)
-		{			
-			ReqMsg pMsg;			
+		{
+			ReqMsg pMsg;
 			//pReqestMsgData->seek(0);
 			if (!pMsg.restore(pReqestMsgData))
 			{
@@ -300,7 +302,7 @@ namespace NetCloud
 				ERROR_LOG("%s parent class is not Actor", typeid(T).name());
 				return;
 			}
-			p->Notify(pMsg, senderID, nCompIndex);			
+			p->Notify(pMsg, senderID, nCompIndex);
 		}
 
 		// 注册 pActorMgr->RegisterActorMsg(#RQ, &Actor::OnComponentNotify<ComponentClass, RQ>);
@@ -369,7 +371,7 @@ namespace NetCloud
 
 		virtual void ResponseHttp(const AString &requestData, AString &response, bool bPost, const AString &requestAddress) { response = "Nothing"; NOTE_LOG("No code for ResponseHttp"); }
 
-		virtual void ResponseBytesHttp(HandPacket requestMsg, DataBuffer &response, const AString &requestAddress) { NOTE_LOG("No code for ResponseBytesHttp, packet : %d", requestMsg->GetFactory()->GetPacketID()); }
+		virtual AutoNice ResponseBytesHttp(HandPacket requestMsg, const AString &requestAddress) { NOTE_LOG("No code for ResponseBytesHttp, packet : %d", requestMsg->GetFactory()->GetPacketID()); return AutoNice(); }
 
 		virtual bool OnReceiveProcess(NodePacket *pNodePacket) override;
 
@@ -378,7 +380,7 @@ namespace NetCloud
 	public:
 		ActorManager* GetMgr()
 		{
-			if (mActorFactory && mActorFactory->mMgr!=NULL)
+			if (mActorFactory && mActorFactory->mMgr != NULL)
 				return mActorFactory->mMgr->mpMgr;
 			return NULL;
 		}
@@ -415,7 +417,7 @@ namespace NetCloud
 		{
 			if (!mComponentList.empty())
 			{
-				int lastPos = mComponentList.size()-1;
+				int lastPos = mComponentList.size() - 1;
 				AComponent comp = mComponentList.get(lastPos);
 				mComponentList._remove(lastPos);
 				comp._free();
@@ -437,58 +439,26 @@ namespace NetCloud
 		UInt64						mLastUpdateDataTimeSec = 0;
 
 		EasyMap<AString, AComponent> mComponentList;
-		
+
 	};
 
 	typedef Hand<Actor>		HandActor;
 
 	//-------------------------------------------------------------------------
-	class ActorDBLib_Export DBActor : public Actor
+
+	template<typename T>
+	class DefineActorFactory : public ActorFactory
 	{
 	public:
-		virtual ARecord LoadRecord(const char *szTableName, const char *szKey) override;
-		virtual ARecord LoadRecord(const char *szTableName, Int64 nKey) override;
-
-		virtual AutoDBManager GetDBMgr() override;
-
-	public:
-		DBActor() {}
-		~DBActor()
+		virtual AUnit NewActor() { return MEM_NEW T(); }
+		//Call pActorMsr->RegisterActorMsg(msgName, fun)
+		virtual void RegisterMsg() override
 		{
-
+			HandActor actor = _NewActor();
+			actor->RegisterMsg();
 		}
-
-		virtual void LowProcess() override
-		{
-			Actor::LowProcess();
-			if (TimeManager::Now() - mLastUpdateDataTimeSec >= ACTOR_UPDATE_DATA_SECOND)
-			{
-				mLastUpdateDataTimeSec = TimeManager::Now();
-				for (int i = 0; i < mDataRecordList.size(); ++i)
-				{
-					mDataRecordList[i]->SaveUpdate();
-				}
-			}
-		}
-
-	protected:
-		ArrayList<ARecord> mDataRecordList;
-
 	};
-	//-------------------------------------------------------------------------
-}
 
-template<typename T>
-class DefineActorFactory : public ActorFactory
-{
-public:
-	virtual AUnit NewActor() { return MEM_NEW T(); }
-	//Call pActorMsr->RegisterActorMsg(msgName, fun)
-	virtual void RegisterMsg() override
-	{
-		HandActor actor = _NewActor();
-		actor->RegisterMsg();
-	}
-};
+}
 
 #endif //_INCLUDE_ACTOR_H_

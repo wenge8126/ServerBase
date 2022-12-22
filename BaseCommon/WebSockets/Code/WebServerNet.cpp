@@ -370,6 +370,10 @@ namespace uWS
 			res->onData(
 				[=](std::string_view data, bool b)
 			{
+				static int msSize = 0;
+				msSize += data.length();
+				DEBUG_LOG("*** [%llu] [%s] Request > %llu, all %d", (UInt64)res, GetRequestAddress(res->getRemoteAddress()).c_str(), data.length(), msSize);
+
 				
 				if (data.length() <= 0)
 				{
@@ -383,16 +387,46 @@ namespace uWS
 					return;
 				}
 
-				DEBUG_LOG("Request > %llu", data.length());
-				
-				TempDataBuffer requestData((void*)data.data(), data.length());
-				HandPacket packet = GetNetProtocol()->ReadPacket(mCommonConnect.getPtr(), &requestData);
-				if (!packet)
+				AutoData msgData;
+
+				//  如果没有接受完全, 则直接返回
+				if (b)
 				{
-					ERROR_LOG("No restor msg packet");
-					res->end(std::string_view());
+					AutoData reData = mReceiveDataBufferList.find((UInt64)res);
+					if (reData && reData->dataSize() > 0)
+					{
+						reData->_write((void*)data.data(), data.length());
+						msgData = reData;
+					}
+					else
+						msgData = MEM_NEW TempDataBuffer((void*)data.data(), data.length());
+				}
+				else
+				{
+					if (data.length() > 0)
+					{
+						AutoData reData = mReceiveDataBufferList.find((UInt64)res);
+						if (!reData)
+						{
+							reData = MEM_NEW DataBuffer();
+							mReceiveDataBufferList.insert((UInt64)res, reData);
+						}
+						reData->_write((void*)data.data(), data.length());
+					}
 					return;
 				}
+
+				msgData->seek(0);
+				//TempDataBuffer requestData((void*)data.data(), data.length());
+				HandPacket packet = GetNetProtocol()->ReadPacket(mCommonConnect.getPtr(), msgData.getPtr());
+				if (!packet)
+				{
+					//ERROR_LOG(" xxxxxxxxxxxxxxxxxx No restor msg packet  <<<%s>>>", b?"TRUE":"FALSE");
+					res->end(std::string_view());
+					msgData->clear();
+					return;
+				}
+				msgData->clear();
 
 				Auto<AsyncBytesWebTool<bUSE_SSL>> tool = MEM_NEW AsyncBytesWebTool<bUSE_SSL>();
 				tool->mNet = mSelfPtr;
@@ -507,7 +541,11 @@ namespace uWS
 		app.ws<PerSocketData>("/*", (typename TemplatedApp<bUSE_SSL>::WebSocketBehavior&&)wsWsBehavior);
 		app.listen(mPort, [=](auto *token) {
 			if (token) {
-				std::cout << "Wss listening on port " << serverPort << std::endl;
+				if (bUSE_SSL)
+					NOTE_LOG("*** Wss listening on port %s : %d", wssServerIP.c_str(), serverPort)
+				else
+					NOTE_LOG("*** Ws listening on port %s :  %d", wssServerIP.c_str(), serverPort)
+
 				mStartState = eWssStateStartSucceed;
 			}
 			else

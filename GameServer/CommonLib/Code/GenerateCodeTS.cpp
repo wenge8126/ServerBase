@@ -18,6 +18,7 @@ AString GenerateCodeTS::GenerateCode(TableMap &tableList, AString path, const ch
 	tsCode += "import { tEvent, tEventFactory, CEvent, EventCenter, tServerEvent, tClientEvent, AsyncServerEvent, AsyncServerEventFactory } from \"../Base/Event\"\r\n";
 	tsCode += "import {BaseManager, BaseFactory} from \"../Base/BaseManager\"\r\n";
 	tsCode += "import {UIManager, RegisterWindow} from \"./UIManager\"\r\n";
+	tsCode += "import GlobalData from \"../Data/GlobalData\"\r\n";
 
 	tsCode += "\r\n";
 
@@ -60,6 +61,7 @@ AString GenerateCodeTS::GenerateCode(TableMap &tableList, AString path, const ch
 	tsCode += "	public static RegisterBase = RegisterBase\r\n";
 	tsCode += "	public static BaseManager = BaseManager;\r\n";
 	tsCode += "	public static UIManager = UIManager;\r\n";
+	tsCode += "	public static GlobalData = GlobalData.Instance;\r\n";
 	tsCode += "	public static RegisterWindow = RegisterWindow;\r\n\r\n";
 	
 	tsCode += "	// All Config\r\n";

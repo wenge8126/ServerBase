@@ -2,6 +2,11 @@
 //#include "MeshNetNode.h"
 #include "Component.h"
 
+int NetCloud::ActorDBMgr::NeedCacheTable(const AString &tableName)
+{
+	return mpActorMgr->NeedCacheTable(tableName);
+}
+
 
 void NetCloud::ActorManager::RegisterComponect(const char *szName, Hand<tEventFactory> factory)
 {
@@ -40,3 +45,4 @@ NetCloud::ActorManager::ActorManager(const char *szCloudNodeIp, int nCloudNodePo
 
 	RegisterMsg();
 }
+

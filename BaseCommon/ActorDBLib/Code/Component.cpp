@@ -13,6 +13,8 @@ NetCloud::ActorManager* NetCloud::Component::GetMgr()
 	Hand<ActorEventCenter> center = GetEventCenter();
 	if (center)
 		return center->mMgrPtr->mpMgr;
+
+	return NULL;
 }
 
 void NetCloud::Component::Start()

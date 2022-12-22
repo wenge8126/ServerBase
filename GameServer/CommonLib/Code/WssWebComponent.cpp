@@ -1,5 +1,12 @@
 #include "WssWebComponent.h"
+#include "CommonDefine.h"
+#include "WebMsgEvent.h"
 
+void WssWebComponent::RegisterMsg(int msgIndex, AutoEventFactory msgFactory)
+{
+	Hand< WebNetEventCenter> center = mWebNet->GetEventCenter();
+	center->RegisterMsg(msgIndex, msgFactory);
+}
 
 //-------------------------------------------------------------------------
 //-------------------------------------------------------------------------
@@ -11,6 +18,9 @@ void WssWebComponent::Start()
 		mWebNet = MEM_NEW WssWebNet<false>(this);
 	Hand<BaseWebServer> net = mWebNet;
 	net->StartNet(mServerIp, mServerPort, mKeyFile, mCertFile, mPassword);
+
+	RegisterMsg(CL_RequestActorMsg, MEM_NEW Logic::EventFactory<WssReqeustActorMsgEvent>());
+
 }
 
 void WssWebComponent::LowUpdate()

@@ -121,6 +121,20 @@ public:
 	{
 	}
 
+	virtual int NeedCacheTable(const AString &tableName) override
+	{
+		if (tableName == "t_account" 
+			|| tableName == "t_user" 
+			|| tableName == "t_userdata" 
+			|| tableName == "t_goods" 
+			|| tableName=="t_commodity"
+			|| tableName=="t_commodity_data1"
+			)
+			return 10;
+
+		return 0;
+	}
+
 public:
 	CenterThread  *mpThread = NULL;
 };

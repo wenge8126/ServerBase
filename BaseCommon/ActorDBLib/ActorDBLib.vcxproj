@@ -340,6 +340,7 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
     <ClInclude Include="Code\ActorDBLib.h" />
     <ClInclude Include="Code\ActorGate.h" />
     <ClInclude Include="Code\ActorManager.h" />
+    <ClInclude Include="Code\CacheDBTable.h" />
     <ClInclude Include="Code\Component.h" />
     <ClInclude Include="Code\DBTableLoadSQL.h" />
     <ClInclude Include="Code\DBTable.h" />

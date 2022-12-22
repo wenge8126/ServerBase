@@ -200,8 +200,8 @@
             "mDBPASSWORD" : "root",    // 连接密码
             "mTABLE_LIST" : "t_tablelist"    // 表格加载列表 (创建DB表格时, 自动生成)
         },
-        "share_server_port" : 0,    // 共享落地服务网络端口
-        "share_server_code" : 0    // 共享落地SQL安全码
+        "share_server_port" : 1001,    // 共享落地服务网络端口
+        "share_server_code" : -11    // 共享落地SQL安全码
     },
     //___________________________________________________________________
     // 游戏服务器配置	

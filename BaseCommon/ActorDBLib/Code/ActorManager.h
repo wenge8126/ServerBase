@@ -19,6 +19,8 @@ namespace NetCloud
 	public:
 		ActorDBMgr(ActorManager *pThread)
 			: mpActorMgr(pThread) {}
+
+		virtual int NeedCacheTable(const AString &tableName) override;
 	};
 
 	class ActorDBLib_Export  ActorManager : public AutoBase
@@ -26,6 +28,8 @@ namespace NetCloud
 		friend class ProcessComponent;
 
 	public:
+		virtual int NeedCacheTable(const AString &tableName) { return 0; }
+
 		Hand<Actor> CreateActor(int actorType, Int64 id)
 		{
 			Auto<ActorFactory> fact = mFactoryList.find(actorType);
@@ -152,6 +156,8 @@ namespace NetCloud
 	class ActorDBLib_Export  DBActorManager : public ActorManager
 	{
 	public:
+		virtual int NeedCacheTable(const AString &tableName) override { return 0; }
+
 		void Close()
 		{
 			if (mShareDBManager)

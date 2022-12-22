@@ -29,10 +29,25 @@ namespace NetCloud
 	{
 		ARecord r = _NewRecord();
 		r->_alloctData(0);
-
+		
 		if (mDBDataLoadSQL->AwaitGrowRecondID(r))
+		{
+			AString key = r[0].string();
+			if (recordData != NULL)
+			{
+				if (!r->restoreData(recordData))
+				{
+					ERROR_LOG("Restor recond fail");
+					r[0] = key;
+					return r;
+				}
+				r[0] = key;
+				r->FullAllUpdate(true);
+				r->SaveUpdate();
+			}
 			return r;
-
+		}
+		
 		return ARecord();
 	}
 

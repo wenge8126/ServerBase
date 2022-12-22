@@ -9,6 +9,7 @@
 #include "ServerMsg.h"
 #include "GameCommon.h"
 #include "ServerClientMsg.h"
+#include "WssWebComponent.h"
 
 using namespace NetCloud;
 
@@ -45,6 +46,13 @@ public:
 		comp->mKeyFile = config.web_net.key_file;
 		comp->mPassword = config.web_net.password;
 
+		Hand<WssWebComponent> wss = AddComponent("WssWebComponent");
+		wss->mServerIp = config.web_net.http_address;
+		wss->mServerPort = config.web_net.port+1;
+
+		wss->mCertFile = config.web_net.cert_file;		
+		wss->mKeyFile = config.web_net.key_file;
+		wss->mPassword = config.web_net.password;
 	}
 
 
@@ -152,7 +160,7 @@ public:
 	}
 
 	// 中转客户端Http请求服务器Actor消息
-	virtual void ResponseBytesHttp(HandPacket requestMsg, DataBuffer &response, const AString &requestAddress)  override
+	virtual AutoNice ResponseBytesHttp(HandPacket requestMsg, const AString &requestAddress)  override
 	{
 		//NiceData x;
 		//requestData.seek(0);
@@ -169,30 +177,16 @@ public:
 			AutoData msgData = req->mRequestMsgData;
 			AutoNice respData = Await(UnitID( req->mActorType, req->mActorID ), req->mMsgName, msgData.getPtr(), 10000, 0);
 					
-			if (respData)
-			{
-				response.clear();
-				respData->serialize(&response);
-				NOTE_LOG("Actor response : \r\n%s", respData->dump().c_str());
-			}
-			else
-			{
-				NiceData resp;
-				resp["RESULT"] = false;
-				resp["error"] = "Request target actor fail";
-				resp.serialize(&response);
-			}
-			return;
+			if (!respData)
+				ERROR_LOG("Reqeust actor %d msg fail : %s", req->mActorType, req->mMsgName.c_str());
+			return respData;
 		}
 
-		NiceData resp;
+		AutoNice resp = MEM_NEW NiceData();
 		resp["RESULT"] = false;
 		resp["error"] = "Is not HttpReqeustActorMsg";
-		//for (int i = 200; i < 300; ++i)
-		//{
-		//	resp.set(STRING(i), i);
-		//}
-		resp.serialize(&response);
+		
+		return resp;
 
 	}
 
@@ -200,7 +194,7 @@ public:
 
 	void RegisterMsg() override
 	{
-
+		REG_COMPONENT(WssWebComponent);
 	}
 };
 

@@ -100,6 +100,8 @@ enum UNIT_TYPE
 	Actor_AccountCenter = 1005,
 	Actor_GameCenter = 1006,
 	Actor_DataActor = 1007,
+	Actor_VideoFile = 1008,
+	Actor_GoodsLogic = 2000,
 };
 
 enum MSG_TYPE
@@ -115,6 +117,7 @@ enum MSG_TYPE
 	LC_RequestEventMsg = 109, // 请求客户端消息事件, 如JS工具功能操作(JSzip)
 	CL_CodeActive = 110, // 激活码激活
 	CL_TestLogin = 111, // 压力测试登陆
+	CL_RequestActorMsg = 200,		// 中转请求Actor 消息
 };
 
 enum NotifyMsgType

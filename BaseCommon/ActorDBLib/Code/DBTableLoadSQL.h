@@ -91,6 +91,30 @@ namespace NetCloud
 			return false;
 		}
 
+		// 获取表格当前最大的KEY值
+		bool GetMaxKey(AString &maxKey)
+		{			
+				AString sqlString;
+				sqlString.Format("Select %s from `%s` where `%s`=(select max(`%s`) from `%s`);"
+					, mKeyFieldName.c_str()
+					, mTableName.c_str()
+					, mKeyFieldName.c_str()
+					, mKeyFieldName.c_str()
+					, mTableName.c_str()
+				);
+
+				AutoNice result = mMainThreadSQLTool.ExeSqlFunction(sqlString, true);
+				if (result)
+				{					
+					maxKey = result->get(mKeyFieldName);
+					return true;
+				}
+				else
+					ERROR_LOG("SQL run fail > %s \r\n %s", sqlString.c_str(), mMainThreadSQLTool._getErrorMsg());
+			
+			return false;
+		}
+
 	public:
 
 		//virtual void Process()

@@ -28,7 +28,7 @@
 #endif
 #endif
 
-
+//-------------------------------------------------------------------------
 struct uv_loop_s;
 
 
@@ -41,7 +41,7 @@ namespace uWS
 		eWssStateStartFail = 2,
 		eWssStartIniting = 3,
 	};
-
+	//-------------------------------------------------------------------------
 	template<bool, bool >
 	struct WebSocket;
 
@@ -131,7 +131,8 @@ namespace uWS
 		bool mbStop = false;
 
 		AutoEventCenter				mWebEventCenter;
-		HandConnect					mCommonConnect; // 用于二进制POST消息处理
+		HandConnect					mCommonConnect;  // 用于二进制POST消息处理
+		EasyHash<UInt64, AutoData>		mReceiveDataBufferList;	 //  用于HTTP接收二进制时分段接收 (POST上传此http, 有可能不是一次接收成功, 必须使用些缓存接收完整
 
 		TemplatedApp<bUSE_SSL> *mpWsApp;
 		TemplatedApp<bUSE_SSL> *mpHttpApp;

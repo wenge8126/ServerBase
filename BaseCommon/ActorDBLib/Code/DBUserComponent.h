@@ -51,19 +51,28 @@ namespace NetCloud
 			return AutoData();
 		}		
 
-		virtual bool SaveRecordByData(const char *szKey, AutoData d)
+		virtual bool SaveRecordByData(const char *szKey, AutoData d, bool bGrowthKey, AString &resultKey)
 		{
 			if (!mDBTable ||!d)
 				return false;
 
+			d->seek(0);
+			if (bGrowthKey)
+			{
+				ARecord newRe = mDBTable->GrowthNewRecord(d.getPtr());
+				if (newRe)
+					resultKey = newRe[0].string();
+				return newRe;
+			}
+
 			ARecord re = mDBTable->NewRecord();
 			re->_alloctData(0);
-			d->seek(0);
 			if (!re->restoreData(d.getPtr()))
 			{
 				ERROR_LOG("Restore record fail : %s", szKey);
 				return false;
 			}
+
 			ARecord existRe = ReadyRecord(szKey);
 			if (!existRe)
 				mDBTable->InsertDBNewRecord(re);
@@ -75,6 +84,7 @@ namespace NetCloud
 				}
 				existRe->SaveUpdate();
 			}
+			resultKey = szKey;
 			return true;
 		}
 
@@ -87,6 +97,15 @@ namespace NetCloud
 		{
 			if (!InitTable(GetTableName()))
 				ERROR_LOG("DB component init table fail : %s", GetTableName());
+		}
+
+		virtual bool LoadMaxKey(AString &maxKey)
+		{
+			Auto<LogicDBTable> t = mDBTable;
+			if (t)
+				return  t-> LoadMaxKey(maxKey);
+			ERROR_LOG("Table no exist : %s", GetTableName());
+			return false;
 		}
 
 	public:
@@ -189,7 +208,7 @@ namespace NetCloud
 
 	public:
 		virtual void LowUpdate() override
-		{
+		{			
 			if (mDataRecord)
 				mDataRecord->SaveUpdate();
 		}

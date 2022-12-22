@@ -3,6 +3,7 @@
 #include "IOCPServerNet.h"
 #include "DBTable.h"
 #include "Timer.h"
+#include "CacheDBTable.h"
 
 using namespace Logic;
 
@@ -31,7 +32,13 @@ namespace NetCloud
 			return AutoTable();
 		}
 
-		Auto<LogicDBTable> table = MEM_NEW LogicDBTable(mbUseShareSQL);
+		Auto<LogicDBTable> table;
+		int second = NeedCacheTable(tableName);
+		if (second>0)
+			table = MEM_NEW CacheDBTable(mbUseShareSQL, second);
+		else
+			table = MEM_NEW LogicDBTable(mbUseShareSQL);
+
 		table->SetTableName(tableName.c_str());
 		bool b = table->GetField()->FullFromString(tableInfo["FIELD_INFO"].string());
 		table->GetField()->_updateInfo();

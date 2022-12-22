@@ -26,6 +26,7 @@
 #include "AccountCenterActor.h"
 #include "RunConfigStruct.h"
 #include "DataActor.h"
+#include "ExVideoFileActor.h"
 
 using namespace uWS;
 
@@ -193,6 +194,7 @@ void CenterThread::OnStart(void*)
 		mActorManager->RegisterActor(Actor_AccountCenter, MEM_NEW DefineActorFactory<AccountCenterActor>());
 		mActorManager->RegisterActor(Actor_GameCenter, MEM_NEW DefineActorFactory<GameCenterActor>());
 		mActorManager->RegisterActor(Actor_DataActor, MEM_NEW DefineActorFactory<DataActor>());
+		mActorManager->RegisterActor(Actor_VideoFile, MEM_NEW DefineActorFactory<ExVideoFileActor>());
 
 		//CoroutineTool::AsyncCall(_ConnectGate, this);		
 		CoroutineTool::AsyncCall([&]()
@@ -222,6 +224,8 @@ void CenterThread::OnStart(void*)
 				mActorManager->CreateActor(Actor_GameCenter, 1);
 
 				mActorManager->CreateActor(Actor_DataActor, 1);
+
+				mActorManager->CreateActor(Actor_VideoFile, 1);
 			}
 		}
 		);

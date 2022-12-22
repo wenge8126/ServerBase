@@ -835,6 +835,71 @@ public class DB_ResponseRecord : BasePacket
 
 };
 
+//  获取当前所有记录的最大KEY值(查询SQL)
+public class DB_LoadMaxKey : BasePacket
+{
+    public string mTableName		
+    {
+        set { mMsgData.set("mTableName",  value); }
+        get { return (string)mMsgData.getObject("mTableName"); }
+    }
+
+
+
+    public DB_LoadMaxKey() { InitData(); }
+
+
+   public override  void Full(NiceData scrData) 
+    {
+        InitData();
+        mMsgData.set("mTableName", scrData.getObject("mTableName"));
+    }
+
+    public override void InitData() 
+    {
+        mTableName = "";
+    }
+
+    public override string MsgName()   { return "DB_LoadMaxKey"; }
+
+};
+
+public class DB_ResponseMaxkey : BasePacket
+{
+    public int mError		
+    {
+        set { mMsgData.set("mError",  value); }
+        get { return (int)mMsgData.getObject("mError"); }
+    }
+
+    public string mMaxKey		
+    {
+        set { mMsgData.set("mMaxKey",  value); }
+        get { return (string)mMsgData.getObject("mMaxKey"); }
+    }
+
+
+
+    public DB_ResponseMaxkey() { InitData(); }
+
+
+   public override  void Full(NiceData scrData) 
+    {
+        InitData();
+        mMsgData.set("mError", scrData.getObject("mError"));
+        mMsgData.set("mMaxKey", scrData.getObject("mMaxKey"));
+    }
+
+    public override void InitData() 
+    {
+        mError = 0;
+        mMaxKey = "";
+    }
+
+    public override string MsgName()   { return "DB_ResponseMaxkey"; }
+
+};
+
 //  上传更新保存记录
 public class DB_RequestSaveRecord : BasePacket
 {
@@ -856,6 +921,12 @@ public class DB_RequestSaveRecord : BasePacket
         get { return (string)mMsgData.getObject("mTableName"); }
     }
 
+    public bool mbGrowthKey		//  是否自增加Key插入
+    {
+        set { mMsgData.set("mbGrowthKey",  value); }
+        get { return (bool)mMsgData.getObject("mbGrowthKey"); }
+    }
+
 
 
     public DB_RequestSaveRecord() { InitData(); }
@@ -867,6 +938,7 @@ public class DB_RequestSaveRecord : BasePacket
         mMsgData.set("mKey", scrData.getObject("mKey"));
         mMsgData.set("mRecordData", scrData.getObject("mRecordData"));
         mMsgData.set("mTableName", scrData.getObject("mTableName"));
+        mMsgData.set("mbGrowthKey", scrData.getObject("mbGrowthKey"));
     }
 
     public override void InitData() 
@@ -874,6 +946,7 @@ public class DB_RequestSaveRecord : BasePacket
         mKey = "";
         if (mRecordData!=null) mRecordData.clear(true);
         mTableName = "";
+        mbGrowthKey = false;
     }
 
     public override string MsgName()   { return "DB_RequestSaveRecord"; }
@@ -882,6 +955,12 @@ public class DB_RequestSaveRecord : BasePacket
 
 public class DB_ResponseSaveRecord : BasePacket
 {
+    public string mDBKey		
+    {
+        set { mMsgData.set("mDBKey",  value); }
+        get { return (string)mMsgData.getObject("mDBKey"); }
+    }
+
     public int mError		
     {
         set { mMsgData.set("mError",  value); }
@@ -896,15 +975,265 @@ public class DB_ResponseSaveRecord : BasePacket
    public override  void Full(NiceData scrData) 
     {
         InitData();
+        mMsgData.set("mDBKey", scrData.getObject("mDBKey"));
         mMsgData.set("mError", scrData.getObject("mError"));
     }
 
     public override void InitData() 
     {
+        mDBKey = "";
         mError = 0;
     }
 
     public override string MsgName()   { return "DB_ResponseSaveRecord"; }
+
+};
+
+//  上传外部视频(先上传到缓存中), DB保存到视频网站内 (Python启动http), 由对应目录中的索引文件记录信息(如:最大值)
+public class EX_SaveVideoData : BasePacket
+{
+    public int mCacheID		
+    {
+        set { mMsgData.set("mCacheID",  value); }
+        get { return (int)mMsgData.getObject("mCacheID"); }
+    }
+
+    public Int64 mKey		
+    {
+        set { mMsgData.set("mKey",  value); }
+        get { return (Int64)mMsgData.getObject("mKey"); }
+    }
+
+    public string mType		//  分类, 用于子目录名
+    {
+        set { mMsgData.set("mType",  value); }
+        get { return (string)mMsgData.getObject("mType"); }
+    }
+
+    public bool mbGrowth		
+    {
+        set { mMsgData.set("mbGrowth",  value); }
+        get { return (bool)mMsgData.getObject("mbGrowth"); }
+    }
+
+
+
+    public EX_SaveVideoData() { InitData(); }
+
+
+   public override  void Full(NiceData scrData) 
+    {
+        InitData();
+        mMsgData.set("mCacheID", scrData.getObject("mCacheID"));
+        mMsgData.set("mKey", scrData.getObject("mKey"));
+        mMsgData.set("mType", scrData.getObject("mType"));
+        mMsgData.set("mbGrowth", scrData.getObject("mbGrowth"));
+    }
+
+    public override void InitData() 
+    {
+        mCacheID = 0;
+        mKey = 0;
+        mType = "";
+        mbGrowth = false;
+    }
+
+    public override string MsgName()   { return "EX_SaveVideoData"; }
+
+};
+
+public class EX_ResponseSaveVideo : BasePacket
+{
+    public int mError		
+    {
+        set { mMsgData.set("mError",  value); }
+        get { return (int)mMsgData.getObject("mError"); }
+    }
+
+    public Int64 mIndexKey		
+    {
+        set { mMsgData.set("mIndexKey",  value); }
+        get { return (Int64)mMsgData.getObject("mIndexKey"); }
+    }
+
+
+
+    public EX_ResponseSaveVideo() { InitData(); }
+
+
+   public override  void Full(NiceData scrData) 
+    {
+        InitData();
+        mMsgData.set("mError", scrData.getObject("mError"));
+        mMsgData.set("mIndexKey", scrData.getObject("mIndexKey"));
+    }
+
+    public override void InitData() 
+    {
+        mError = 0;
+        mIndexKey = 0;
+    }
+
+    public override string MsgName()   { return "EX_ResponseSaveVideo"; }
+
+};
+
+//  请求主地址
+public class EX_RequestVideoMainAddress : BasePacket
+{
+
+
+    public EX_RequestVideoMainAddress() { InitData(); }
+
+
+   public override  void Full(NiceData scrData) 
+    {
+        InitData();
+    }
+
+    public override void InitData() 
+    {
+    }
+
+    public override string MsgName()   { return "EX_RequestVideoMainAddress"; }
+
+};
+
+public class EX_ResponsetVideoMainAddress : BasePacket
+{
+    public int mError		
+    {
+        set { mMsgData.set("mError",  value); }
+        get { return (int)mMsgData.getObject("mError"); }
+    }
+
+    public string mMainAddress		
+    {
+        set { mMsgData.set("mMainAddress",  value); }
+        get { return (string)mMsgData.getObject("mMainAddress"); }
+    }
+
+
+
+    public EX_ResponsetVideoMainAddress() { InitData(); }
+
+
+   public override  void Full(NiceData scrData) 
+    {
+        InitData();
+        mMsgData.set("mError", scrData.getObject("mError"));
+        mMsgData.set("mMainAddress", scrData.getObject("mMainAddress"));
+    }
+
+    public override void InitData() 
+    {
+        mError = 0;
+        mMainAddress = "";
+    }
+
+    public override string MsgName()   { return "EX_ResponsetVideoMainAddress"; }
+
+};
+
+//  索引文件结构(NiceData)
+public class EX_VideoFileIndex : BasePacket
+{
+    public NiceData mExData		
+    {
+        set { mMsgData.set("mExData",  value); }
+        get { return mMsgData.getObject("mExData") as NiceData; }
+    }
+
+    public Int64 mMaxKey		
+    {
+        set { mMsgData.set("mMaxKey",  value); }
+        get { return (Int64)mMsgData.getObject("mMaxKey"); }
+    }
+
+    public string mType		
+    {
+        set { mMsgData.set("mType",  value); }
+        get { return (string)mMsgData.getObject("mType"); }
+    }
+
+
+
+    public EX_VideoFileIndex() { InitData(); }
+
+
+   public override  void Full(NiceData scrData) 
+    {
+        InitData();
+        mMsgData.set("mExData", scrData.getObject("mExData"));
+        mMsgData.set("mMaxKey", scrData.getObject("mMaxKey"));
+        mMsgData.set("mType", scrData.getObject("mType"));
+    }
+
+    public override void InitData() 
+    {
+        if (mExData!=null) mExData.clear();
+        mMaxKey = 0;
+        mType = "";
+    }
+
+    public override string MsgName()   { return "EX_VideoFileIndex"; }
+
+};
+
+// -------------------------------------------------------
+public class TEST_BigHttpMsg : BasePacket
+{
+    public DataBuffer mBigData		
+    {
+        set { mMsgData.set("mBigData",  value); }
+        get { return mMsgData.getObject("mBigData") as DataBuffer; }
+    }
+
+
+
+    public TEST_BigHttpMsg() { InitData(); }
+
+
+   public override  void Full(NiceData scrData) 
+    {
+        InitData();
+        mMsgData.set("mBigData", scrData.getObject("mBigData"));
+    }
+
+    public override void InitData() 
+    {
+        if (mBigData!=null) mBigData.clear(true);
+    }
+
+    public override string MsgName()   { return "TEST_BigHttpMsg"; }
+
+};
+
+public class TEST_ResponseBigHttp : BasePacket
+{
+    public DataBuffer mResponseData		
+    {
+        set { mMsgData.set("mResponseData",  value); }
+        get { return mMsgData.getObject("mResponseData") as DataBuffer; }
+    }
+
+
+
+    public TEST_ResponseBigHttp() { InitData(); }
+
+
+   public override  void Full(NiceData scrData) 
+    {
+        InitData();
+        mMsgData.set("mResponseData", scrData.getObject("mResponseData"));
+    }
+
+    public override void InitData() 
+    {
+        if (mResponseData!=null) mResponseData.clear(true);
+    }
+
+    public override string MsgName()   { return "TEST_ResponseBigHttp"; }
 
 };
 

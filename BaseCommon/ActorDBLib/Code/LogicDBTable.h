@@ -98,6 +98,11 @@ namespace NetCloud
 
 		virtual bool LoadAllRecord(DBUserComponent *pComponent);
 
+		virtual bool LoadMaxKey(AString &maxKey)
+		{
+			return mDBDataLoadSQL->GetMaxKey(maxKey);
+		}
+
 	protected:
 		DBTableManager					*mpDB = NULL;
 		AutoNice								mSQLParam;

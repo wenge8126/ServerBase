@@ -20,7 +20,7 @@ using namespace NetCloud;
 DEFINE_RUN_CONFIG(LogicActorDBConfig)
 //-------------------------------------------------------------------------
 
-class WorkerActor : public DBActor
+class WorkerActor : public Actor
 {
 public:
 	void On(RQ_CreateDBTable &msg, RS_CreateDBTable &resp, UnitID senderID, int)

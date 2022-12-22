@@ -31,6 +31,9 @@
     <Filter Include="Common">
       <UniqueIdentifier>{22cd39f2-81ef-410a-b86a-bac9b5eb7f32}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Goods">
+      <UniqueIdentifier>{7a51c652-11db-4b7f-ac96-2cee33a2041d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\CenterThread.cpp">
@@ -85,6 +88,12 @@
     </ClInclude>
     <ClInclude Include="..\Common\DBUser_t_commodity.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ExVideoFileActor.h">
+      <Filter>DataServer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\GoodsLogicActor.h">
+      <Filter>Goods</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

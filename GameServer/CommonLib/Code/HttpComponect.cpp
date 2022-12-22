@@ -26,5 +26,20 @@ void HttpComponect::OnResponse(const AString &requestData, AString &response, bo
 void HttpComponect::OnResponseBytes(HandPacket requestMsg, DataBuffer &response, const AString &requestAddress)
 {
 	if (mpActor != NULL)
-		mpActor->ResponseBytesHttp(requestMsg, response, requestAddress);
+	{
+		AutoNice respData = mpActor->ResponseBytesHttp(requestMsg, requestAddress);
+		if (respData)
+		{
+			response.clear();
+			respData->serialize(&response);
+			NOTE_LOG("Actor response : \r\n%s", respData->dump().c_str());
+		}
+		else
+		{
+			NiceData resp;
+			resp["RESULT"] = false;
+			resp["error"] = "Request target actor fail";
+			resp.serialize(&response);
+		}
+	}
 }

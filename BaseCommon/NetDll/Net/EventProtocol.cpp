@@ -308,6 +308,7 @@ HandPacket EventNetProtocol::ReadPacket( tNetConnect *pConnect, DataStream *mSoc
 		info.Format("[%s:%d] Read packet %d fail", pConnect->GetIp(), pConnect->GetPort(), uID);
 		ERROR_LOG(info.c_str());
 		OnReadPacketError(info);
+		return HandPacket();
 	}
 #if _DEBUG_NET_
 	DSIZE now = mSocketInputStream->dataSize();

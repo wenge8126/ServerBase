@@ -25,6 +25,7 @@ class UploadCacheComponent : public Component
 	typedef Auto<BigDataCache> ADataCache;
 
 protected:
+	int mMaxDataSize = SAFE_DATA_MAX_SIZE;
 	EasyHash<MSG_ID, ADataCache>		mDataCacheList;
 
 	EasyStack<int> mFreeIDList;
@@ -46,6 +47,7 @@ protected:
 	}
 
 public:
+	virtual void SetDataMaxSize(int limitSize) { mMaxDataSize = limitSize; }
 	// 取出数据, 返回数据, 并清除缓存
 	AutoData TakeOutData(int nCacheID)
 	{
@@ -91,7 +93,7 @@ public:
 public:
 	void On(DB_ReqeustBigDataUpload &req, DB_ResponseBigDataCacheID &response, UnitID, int)
 	{
-		if (req.mSize > SAFE_DATA_MAX_SIZE)
+		if (req.mSize > mMaxDataSize)
 		{
 			response.mCacheID = 0;
 			response.mError = eError_Resource_TooLarge;
@@ -111,7 +113,7 @@ public:
 		if (cache)
 		{
 			DSIZE size = req.mPartData->dataSize();
-			if (cache->mBigData->dataSize()+size > SAFE_DATA_MAX_SIZE)
+			if (cache->mBigData->dataSize()+size > mMaxDataSize)
 			{
 				// 安全检查, 资源太大, 会被移除
 				OnCacheDestory(cache);
@@ -147,6 +149,15 @@ public:
 	Hand<UploadCacheComponent> mBigDataCacheComponent;
 
 public:
+	void Start()
+	{
+		DBUser_t_data::Start();
+
+		AString key;
+		bool b = LoadMaxKey(key);
+		NOTE_LOG("%s load : %s Now max key : %s", b?"OK":"Fail", GetTableName(), key.c_str());
+	}
+
 	bool CheckLoadRecord(Int64 key, const AString &checkMd5)
 	{
 		ARecord existRe = mResourcesList.find(key);
@@ -405,7 +416,7 @@ public:
 	{
 		// 需要增加安全检验码
 		Hand<DBUserComponent> comp = GetActor()->GetDBUserComponent(req.mTableName.c_str());
-		if (!comp->SaveRecordByData(req.mKey.c_str(), req.mRecordData))
+		if (!comp->SaveRecordByData(req.mKey.c_str(), req.mRecordData, req.mbGrowthKey, resp.mDBKey))
 		{			
 			resp.mError = eError_Resource_NoExist;
 		}
@@ -438,20 +449,33 @@ public:
 		{
 			resp.mFieldData = comp->GetTableFieldData();
 		}
+		
+	}
+
+	void On(DB_LoadMaxKey &req, DB_ResponseMaxkey &resp, UnitID, int)
+	{
+		Hand<DBUserComponent> comp = GetActor()->GetDBUserComponent(req.mTableName.c_str());
+		if (!comp->LoadMaxKey(resp.mMaxKey))
+		{
+			resp.mError = eLoginError_ProgramError;
+		}		
 	}
 
 public:
 	virtual void RegisterMsg() override
 	{
 		REG_COMP_MSG(LoadRecordComponent, DB_RequestLoadRecord, DB_ResponseRecord);
+		REG_COMP_MSG(LoadRecordComponent, DB_LoadMaxKey, DB_ResponseMaxkey);
 	}
 };
+
+
 //-------------------------------------------------------------------------
 // 主要用来保存提供动态数据仓库
 // 可手动配置此对象的ID, 用于分库 [ 设定共有ID 0~N, HASH = DBID % (N+1) ]
 //-------------------------------------------------------------------------
 
-class DataActor : public DBActor
+class DataActor : public Actor
 {
 	AComponent mDataComponent;
 	AComponent mCommodity;
@@ -501,6 +525,8 @@ public:
 		REG_COMPONENT(DBUser_t_commodity);
 		REG_COMPONENT(DBUser_t_commodity_data1);
 		REG_COMPONENT(DBUser_t_commodity_data2);
+		
+		
 	}
 };
 

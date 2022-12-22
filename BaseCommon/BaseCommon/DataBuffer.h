@@ -237,6 +237,17 @@ public:
 	}
 
 	Buffer& GetBuffer(){ return mData; }
+
+	virtual void clear(bool bFreeBuffer = false) override
+	{
+		//if (bFreeBuffer)
+		//	mData._free();
+		//else
+		//	memset(data(), 0, size());
+
+		mCurrent = 0;
+		mDataSize = 0;
+	}
 };
 
 

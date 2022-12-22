@@ -23,6 +23,10 @@ namespace NetCloud
 	class ActorDBLib_Export DBTableManager : public AutoBase
 	{
 	public:
+		// 返回激活检查时间(秒), >0 使用缓存表
+		virtual int NeedCacheTable(const AString &tableName) { return 0; }
+
+	public:
 		AutoTable GetTable(const AString &tableName)
 		{
 			return mTableList.find(tableName);

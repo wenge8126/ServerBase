@@ -61,7 +61,7 @@ int PostBytes(const char *strUrl, DataStream *postData, DataStream *responseData
 	{
 		return CURLE_FAILED_INIT;
 	}
-	if (true)
+	if (false)
 	{
 		curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
 		curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, OnDebug);
