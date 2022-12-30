@@ -88,6 +88,46 @@ namespace NetCloud
 			return true;
 		}
 
+		virtual bool SaveRecordByNiceData(const char *szKey, AutoNice d, bool bGrowthKey, AString &resultKey)
+		{
+			if (!mDBTable || !d)
+				return false;
+
+			ARecord record;
+			
+			if (bGrowthKey)
+			{
+				record = mDBTable->GrowthNewRecord(NULL);
+				if (record)
+					resultKey = record[0].string();
+				else
+					return false;
+			}
+
+			if (!record)
+				record = ReadyRecord(szKey);
+
+			if (!record)
+				return false;
+			
+			for (auto it = d->begin(); it; ++it)
+			{
+				AString key = it.key();
+
+				FieldInfo info = mDBTable->GetField()->getFieldInfo(key.c_str());
+				if (info != NULL && info != mDBTable->GetField()->getFieldInfo(0))
+				{
+					record->set(key.c_str(), Data(&it.get()));
+				}
+			}
+
+		
+			record->SaveUpdate();
+					
+			return true;
+		}
+
+
 		AutoData GetTableFieldData()
 		{
 			return mFieldData;

@@ -404,7 +404,7 @@ namespace NetCloud
 
 		virtual Logic::tEventCenter* GetEventCenter() override;
 
-		virtual AComponent GetDBUserComponent(const char *szTableIndex) { NOTE_LOG("GetDBUserComponent no override"); return AComponent(); }
+		virtual AComponent GetDBUserComponent(const AString &tableIndex) { NOTE_LOG("GetDBUserComponent no override"); return AComponent(); }
 
 	public:
 		Actor() {}

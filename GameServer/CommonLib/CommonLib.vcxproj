@@ -211,6 +211,7 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
   <ItemGroup>
     <ClInclude Include="..\Common\ConfigEnum.h" />
     <ClInclude Include="Code\BigMsgComponent.h" />
+    <ClInclude Include="Code\DownloadComponent.h" />
     <ClInclude Include="Code\ExportBase.h" />
     <ClInclude Include="Code\GenerateCodeTS.h" />
     <ClInclude Include="Code\HttpPostNet.h" />
@@ -221,11 +222,13 @@ xcopy $(COMMON_BASE_LIB)\$(TargetName).pdb $(Server_Out_Dir)\  /y
     <ClInclude Include="Code\HttpComponect.h" />
     <ClInclude Include="Code\LoginNetActor.h" />
     <ClInclude Include="Code\NetWorkerComponent.h" />
+    <ClInclude Include="Code\RecordComponent.h" />
     <ClInclude Include="Code\SCActor.h" />
     <ClInclude Include="Code\SDK.h" />
     <ClInclude Include="Code\SendDuanXin.h" />
     <ClInclude Include="Code\ServerClientMsg.h" />
     <ClInclude Include="Code\TcpComponent.h" />
+    <ClInclude Include="Code\UploadCacheComponent.h" />
     <ClInclude Include="Code\UserClientNet.h" />
     <ClInclude Include="Code\WssWebComponent.h" />
   </ItemGroup>

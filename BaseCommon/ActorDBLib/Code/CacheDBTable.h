@@ -227,7 +227,7 @@ namespace NetCloud
 				Auto<CachaDBRecord> re = nowIt->second;
 				if (!re || re->CheckOver(nowTime, mActiveOverSecond))
 				{
-					NOTE_LOG("%s : %s recond cool %llu, then free", GetTableName(), re[0].c_str(), re->mActiveTime);
+					NOTE_LOG("%s : %s recond cool %llu - %llu = %llu, then free", GetTableName(), re[0].c_str(), nowTime, re->mActiveTime, nowTime-re->mActiveTime);
 					if (re)
 						re->SaveUpdate();
 					nowIt = list.erase(nowIt);

@@ -1859,6 +1859,94 @@ public:
 
 };
 
+//  上传更新保存记录
+class DB_RequestSaveRecordByNice : public tBaseMsg
+{ 
+public:
+    AString mKey;		
+    AutoNice mRecordData;		
+    AString mTableName;		
+    bool mbGrowthKey;		//  是否自增加Key插入
+
+public:
+    DB_RequestSaveRecordByNice() { clear(false); };
+
+
+   virtual  void Full(AutoNice scrData) override
+    {
+        clear(false);
+        CheckGet(scrData, mKey);
+        mRecordData = (tNiceData*)scrData["mRecordData"];
+        CheckGet(scrData, mTableName);
+        CheckGet(scrData, mbGrowthKey);
+    }
+
+    virtual void ToData(AutoNice &destData) override
+    {
+        destData["mKey"] = mKey;
+        destData["mRecordData"] = mRecordData.getPtr();
+        destData["mTableName"] = mTableName;
+        destData["mbGrowthKey"] = mbGrowthKey;
+    }
+
+    bool serialize(DataStream *destData) const override
+    {
+        destData->write((short)4);
+
+        SAVE_MSG_VALUE(mKey, 4);
+        SAVE_MSG_NICE(mRecordData);
+        SAVE_MSG_VALUE(mTableName, 4);
+        SAVE_MSG_VALUE(mbGrowthKey, 5);
+        return true;
+    }
+
+    void clear(bool bClearBuffer=false) override 
+    {
+        mKey.setNull();
+        if (mRecordData) mRecordData.setNull();
+        mTableName.setNull();
+        mbGrowthKey = false;
+    }
+
+    void copy(const tBaseMsg &otherMsg) override 
+    {
+        if (strcmp("DB_RequestSaveRecordByNice", otherMsg.GetMsgName())!=0) { LOG("%s is not DB_RequestSaveRecordByNice", otherMsg.GetMsgName()); return; }; const DB_RequestSaveRecordByNice &other = *(const DB_RequestSaveRecordByNice*)(&otherMsg);
+        mKey = other.mKey;
+        COPY_MSG_NICE(other.mRecordData, mRecordData);
+        mTableName = other.mTableName;
+        mbGrowthKey = other.mbGrowthKey;
+    }
+
+    virtual const char* GetMsgName() const override { return "DB_RequestSaveRecordByNice"; }
+
+    AData get(const char *szMember) const 
+    {
+        if (strcmp(szMember, "mKey")==0) { AData value; value = mKey; return value; }
+        if (strcmp(szMember, "mTableName")==0) { AData value; value = mTableName; return value; }
+        if (strcmp(szMember, "mbGrowthKey")==0) { AData value; value = mbGrowthKey; return value; }
+        return AData();
+    }
+
+    bool set(const char *szMember, AData value) 
+    {
+        if (strcmp(szMember, "mKey")==0) { mKey = value; return true; };
+        if (strcmp(szMember, "mTableName")==0) { mTableName = value; return true; };
+        if (strcmp(szMember, "mbGrowthKey")==0) { mbGrowthKey = value; return true; };
+        LOG("No exist > %%s", szMember);  return false;
+    }
+
+    AData operator [] (const char *szMember) const 
+    {
+        return get(szMember);
+    }
+
+    AData operator [] (const AString &member) const 
+    {
+        return get(member.c_str());
+    }
+
+};
+
 //  上传外部视频(先上传到缓存中), DB保存到视频网站内 (Python启动http), 由对应目录中的索引文件记录信息(如:最大值)
 class EX_SaveVideoData : public tBaseMsg
 { 

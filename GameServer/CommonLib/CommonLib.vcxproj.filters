@@ -22,6 +22,9 @@
     <Filter Include="Common">
       <UniqueIdentifier>{ca165e42-c8a0-45d2-abd3-0226bd230272}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DBComponent">
+      <UniqueIdentifier>{0483975c-e286-4ed4-acd4-d046641c9fc4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\HttpComponect.cpp">
@@ -112,6 +115,15 @@
     </ClInclude>
     <ClInclude Include="Code\BigMsgComponent.h">
       <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\UploadCacheComponent.h">
+      <Filter>DBComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\DownloadComponent.h">
+      <Filter>DBComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\RecordComponent.h">
+      <Filter>DBComponent</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

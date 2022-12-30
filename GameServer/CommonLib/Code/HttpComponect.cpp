@@ -1,6 +1,7 @@
 #include "HttpComponect.h"
 #include "Actor.h"
 #include "ServerClientMsg.h"
+#include "ConfigEnum.h"
 
 void HttpComponect::Start()
 {
@@ -37,8 +38,8 @@ void HttpComponect::OnResponseBytes(HandPacket requestMsg, DataBuffer &response,
 		else
 		{
 			NiceData resp;
-			resp["RESULT"] = false;
-			resp["error"] = "Request target actor fail";
+			resp["mError"] = eError_ActorNoexsit;
+			//resp["error"] = "Request target actor fail";
 			resp.serialize(&response);
 		}
 	}

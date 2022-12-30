@@ -132,7 +132,9 @@ namespace NetCloud
 			if (mRecordData == NULL)
 				_alloctData(0);
 			Auto<LogicDBTable> t = GetTable();
-			return (t->mDBDataLoadSQL->AwaitLoadRecord(szIndex, this));
+			bool b = (t->mDBDataLoadSQL->AwaitLoadRecord(szIndex, this));
+			FullAllUpdate(false);
+			return b;
 		}
 
 		virtual void SaveUpdate() override;

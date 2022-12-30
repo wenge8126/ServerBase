@@ -6,138 +6,10 @@
 #include "DBUser_t_commodity_data1.h"
 #include "DBUser_t_commodity_data2.h"
 #include "ServerToolMsg.h"
-//-------------------------------------------------------------------------
-#define SAFE_DATA_MAX_SIZE			(1*1024*1024)
-#define WAIT_DESTORY_CACHE_OVERTIME		(30)	// 缓存等待消毁时间, 被使用后, 会从新开始计时
-
-//-------------------------------------------------------------------------
-// 大数据上传缓存组件
-//-------------------------------------------------------------------------
-class UploadCacheComponent : public Component
-{
-	class BigDataCache : public AutoBase
-	{
-	public:
-		int mActiveSecond = TimeManager::Now();
-		int mCacheID = 0;
-		AutoData	mBigData;
-	};
-	typedef Auto<BigDataCache> ADataCache;
-
-protected:
-	int mMaxDataSize = SAFE_DATA_MAX_SIZE;
-	EasyHash<MSG_ID, ADataCache>		mDataCacheList;
-
-	EasyStack<int> mFreeIDList;
-
-	int mMaxID = 0;
-
-	int AlloctID()
-	{
-		if (!mFreeIDList.empty())
-		{
-			return mFreeIDList.pop();
-		}
-		return ++mMaxID;
-	}
-
-	void FreeID(int id)
-	{
-		mFreeIDList.push(id);
-	}
-
-public:
-	virtual void SetDataMaxSize(int limitSize) { mMaxDataSize = limitSize; }
-	// 取出数据, 返回数据, 并清除缓存
-	AutoData TakeOutData(int nCacheID)
-	{
-		auto data = mDataCacheList.find(nCacheID);
-		if (data)
-		{
-			OnCacheDestory(data);
-			mDataCacheList.erase(nCacheID);
-			return data->mBigData;
-		}
-		else
-			ERROR_LOG("No exist cache data %d", nCacheID);
-		
-		return AutoData();
-	}
-
-	void OnCacheDestory(ADataCache d)
-	{
-		FreeID(d->mCacheID);
-	}
-
-	Hand<DBUserComponent> GetDBUserComponent(const AString &tableName)
-	{
-		return Hand<DBUserComponent>();
-	}
-
-	virtual void LowUpdate() override
-	{
-		auto now = TimeManager::Now();
-		for (auto it = mDataCacheList.begin(); it; )
-		{
-			auto cache = *it;
-			if (cache->mActiveSecond + WAIT_DESTORY_CACHE_OVERTIME < now)
-			{
-				OnCacheDestory(cache);
-				it.erase();
-				continue;
-			}
-			++it;
-		}
-	}
-
-public:
-	void On(DB_ReqeustBigDataUpload &req, DB_ResponseBigDataCacheID &response, UnitID, int)
-	{
-		if (req.mSize > mMaxDataSize)
-		{
-			response.mCacheID = 0;
-			response.mError = eError_Resource_TooLarge;
-		}
-
-		ADataCache cache = MEM_NEW BigDataCache();
-		cache->mCacheID = AlloctID();
-		cache->mBigData = MEM_NEW DataBuffer();
-		mDataCacheList.insert(cache->mCacheID, cache);
-
-		response.mCacheID = cache->mCacheID;
-	}
-
-	void On(DB_UploadPartData &req, DB_ResponseUploadPartDataResult &response, UnitID, int)
-	{
-		auto cache = mDataCacheList.find(req.mCacheID);
-		if (cache)
-		{
-			DSIZE size = req.mPartData->dataSize();
-			if (cache->mBigData->dataSize()+size > mMaxDataSize)
-			{
-				// 安全检查, 资源太大, 会被移除
-				OnCacheDestory(cache);
-				mDataCacheList.erase(req.mCacheID);
-				WARN_LOG("Upload %d cache data size too large %d > %d, then remove", req.mCacheID, cache->mBigData->dataSize()+size, SAFE_DATA_MAX_SIZE);				
-				response.mError = eError_Resource_TooLarge;
-				return;
-			}
-
-			cache->mActiveSecond = TimeManager::Now();
-			cache->mBigData->_write(req.mPartData->data(), req.mPartData->dataSize());
-			response.mError = 0;
-		}
-		else
-			response.mError = eError_Resource_NoExist;
-	}
-
-public:
-	virtual void RegisterMsg() override
-	{
-		REG_COMP_MSG(UploadCacheComponent, DB_ReqeustBigDataUpload, DB_ResponseBigDataCacheID);
-		REG_COMP_MSG(UploadCacheComponent, DB_UploadPartData, DB_ResponseUploadPartDataResult);
-	}
-};
+#include "DBUser_t_template.h"
+#include "UploadCacheComponent.h"
+#include "DownloadComponent.h"
+#include "RecordComponent.h"
 
 //-------------------------------------------------------------------------
 // 可动态更新的数据组件, 如 图片, 用户数据等
@@ -375,100 +247,6 @@ public:
 
 
 
-//-------------------------------------------------------------------------
-// 大数据下载服务组件, 主要提供分段数据
-//-------------------------------------------------------------------------
-class DownloadComponent : public Component
-{
-public:
-	void On(DB_RequestDownloadData &req, DB_ResponseDataInfo &resp, UnitID, int)
-	{
-		Hand<DBUserComponent> comp = GetActor()->GetDBUserComponent(req.mTableName.c_str());
-		if (!comp->GetDataInfo(req.mKey.c_str(), req.mCheckMD5, resp.mSize, resp.mMD5))
-		{
-			resp.mMD5.setNull();
-			resp.mError = eError_Resource_NoExist;
-		}
-	}
-
-	void On(DB_RequestDownloadPartData &req, DB_ResponsePartData &resp, UnitID, int)
-	{
-		Hand<DBUserComponent> comp = GetActor()->GetDBUserComponent(req.mTableName.c_str());
-		resp.mPartData = comp->GetData(req.mKey.c_str(), "", req.mPosition, req.mRequestSize);		
-		if (!resp.mPartData)
-			resp.mError = eError_Resource_NoExist;
-	}
-
-public:
-	virtual void RegisterMsg() override
-	{
-		REG_COMP_MSG(DownloadComponent, DB_RequestDownloadData, DB_ResponseDataInfo);
-		REG_COMP_MSG(DownloadComponent, DB_RequestDownloadPartData, DB_ResponsePartData);
-	}
-};
-
-//-------------------------------------------------------------------------
-// 直接更新或获取记录
-class SaveRecordComponent : public Component
-{
-public:
-	void On(DB_RequestSaveRecord &req, DB_ResponseSaveRecord &resp, UnitID, int)
-	{
-		// 需要增加安全检验码
-		Hand<DBUserComponent> comp = GetActor()->GetDBUserComponent(req.mTableName.c_str());
-		if (!comp->SaveRecordByData(req.mKey.c_str(), req.mRecordData, req.mbGrowthKey, resp.mDBKey))
-		{			
-			resp.mError = eError_Resource_NoExist;
-		}
-	}
-
-public:
-	virtual void RegisterMsg() override
-	{
-		REG_COMP_MSG(SaveRecordComponent, DB_RequestSaveRecord, DB_ResponseSaveRecord);
-	}
-};
-//-------------------------------------------------------------------------
-// 直接获取记录
-class LoadRecordComponent : public Component
-{
-public:
-	void On(DB_RequestLoadRecord &req, DB_ResponseRecord &resp, UnitID, int)
-	{
-		Hand<DBUserComponent> comp = GetActor()->GetDBUserComponent(req.mTableName.c_str());
-		AutoData d = comp->GetRecordData(req.mKey.c_str());
-		if (!d)
-		{
-			resp.mError = eError_Resource_NoExist;
-		}
-		else
-		{
-			resp.mRecordData = d;			
-		}
-		if (req.mbNeedField)
-		{
-			resp.mFieldData = comp->GetTableFieldData();
-		}
-		
-	}
-
-	void On(DB_LoadMaxKey &req, DB_ResponseMaxkey &resp, UnitID, int)
-	{
-		Hand<DBUserComponent> comp = GetActor()->GetDBUserComponent(req.mTableName.c_str());
-		if (!comp->LoadMaxKey(resp.mMaxKey))
-		{
-			resp.mError = eLoginError_ProgramError;
-		}		
-	}
-
-public:
-	virtual void RegisterMsg() override
-	{
-		REG_COMP_MSG(LoadRecordComponent, DB_RequestLoadRecord, DB_ResponseRecord);
-		REG_COMP_MSG(LoadRecordComponent, DB_LoadMaxKey, DB_ResponseMaxkey);
-	}
-};
-
 
 //-------------------------------------------------------------------------
 // 主要用来保存提供动态数据仓库
@@ -482,6 +260,7 @@ class DataActor : public Actor
 
 	AComponent mCommodityData1;
 	AComponent mCommodityData2;
+	AComponent mTemplate;
 
 public:
 	virtual void Init() override
@@ -496,20 +275,28 @@ public:
 			mCommodity = AddComponent("DBUser_t_commodity");
 			mCommodityData1 = AddComponent("DBUser_t_commodity_data1");
 			mCommodityData2 = AddComponent("DBUser_t_commodity_data2");
+			mTemplate = AddComponent("DBUser_t_template");
 	}
 
-	virtual AComponent GetDBUserComponent(const char *szTableIndex) override
+	virtual AComponent GetDBUserComponent(const AString &tableIndex) override
 	{
-		if (strcmp(szTableIndex, "t_commodity")==0)
+		if (tableIndex == "t_commodity")
 			return mCommodity;
 		
-		if (strcmp(szTableIndex, "t_commodity_data1") == 0)
+		if (tableIndex == "t_commodity_data1")
 			return mCommodityData1;
 
-		if (strcmp(szTableIndex, "t_commodity_data2") == 0)
+		if (tableIndex == "t_commodity_data2")
 			return mCommodityData2;
 
-		return mDataComponent;
+		if (tableIndex=="t_data")
+			return mDataComponent;
+
+		if (tableIndex=="t_template")
+			return mTemplate;
+
+		ERROR_LOG("No exist table %s component", tableIndex.c_str());
+		return AComponent();
 	}
 
 public:
@@ -525,7 +312,7 @@ public:
 		REG_COMPONENT(DBUser_t_commodity);
 		REG_COMPONENT(DBUser_t_commodity_data1);
 		REG_COMPONENT(DBUser_t_commodity_data2);
-		
+		REG_COMPONENT(DBUser_t_template);
 		
 	}
 };

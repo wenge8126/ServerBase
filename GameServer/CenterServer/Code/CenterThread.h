@@ -129,8 +129,9 @@ public:
 			|| tableName == "t_goods" 
 			|| tableName=="t_commodity"
 			|| tableName=="t_commodity_data1"
+			|| tableName=="t_template"
 			)
-			return 10;
+			return 60;
 
 		return 0;
 	}

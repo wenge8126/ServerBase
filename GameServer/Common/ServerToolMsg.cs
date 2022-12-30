@@ -989,6 +989,59 @@ public class DB_ResponseSaveRecord : BasePacket
 
 };
 
+//  上传更新保存记录
+public class DB_RequestSaveRecordByNice : BasePacket
+{
+    public string mKey		
+    {
+        set { mMsgData.set("mKey",  value); }
+        get { return (string)mMsgData.getObject("mKey"); }
+    }
+
+    public NiceData mRecordData		
+    {
+        set { mMsgData.set("mRecordData",  value); }
+        get { return mMsgData.getObject("mRecordData") as NiceData; }
+    }
+
+    public string mTableName		
+    {
+        set { mMsgData.set("mTableName",  value); }
+        get { return (string)mMsgData.getObject("mTableName"); }
+    }
+
+    public bool mbGrowthKey		//  是否自增加Key插入
+    {
+        set { mMsgData.set("mbGrowthKey",  value); }
+        get { return (bool)mMsgData.getObject("mbGrowthKey"); }
+    }
+
+
+
+    public DB_RequestSaveRecordByNice() { InitData(); }
+
+
+   public override  void Full(NiceData scrData) 
+    {
+        InitData();
+        mMsgData.set("mKey", scrData.getObject("mKey"));
+        mMsgData.set("mRecordData", scrData.getObject("mRecordData"));
+        mMsgData.set("mTableName", scrData.getObject("mTableName"));
+        mMsgData.set("mbGrowthKey", scrData.getObject("mbGrowthKey"));
+    }
+
+    public override void InitData() 
+    {
+        mKey = "";
+        if (mRecordData!=null) mRecordData.clear();
+        mTableName = "";
+        mbGrowthKey = false;
+    }
+
+    public override string MsgName()   { return "DB_RequestSaveRecordByNice"; }
+
+};
+
 //  上传外部视频(先上传到缓存中), DB保存到视频网站内 (Python启动http), 由对应目录中的索引文件记录信息(如:最大值)
 public class EX_SaveVideoData : BasePacket
 {
