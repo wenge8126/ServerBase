@@ -112,6 +112,8 @@ namespace NetCloud
 	public:
 		virtual void Init() {}
 
+		virtual void NotifyComponentReadyFail(Component *pComponent) {}
+
 		AComponent AddComponent(const AString &compName);
 
 		bool RemoveComponent(const AString &compName);

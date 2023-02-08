@@ -4,6 +4,7 @@
 #include "DBTable.h"
 #include "Timer.h"
 #include "CacheDBTable.h"
+#include "DBIndexTable.h"
 
 using namespace Logic;
 
@@ -34,8 +35,10 @@ namespace NetCloud
 
 		Auto<LogicDBTable> table;
 		int second = NeedCacheTable(tableName);
-		if (second>0)
+		if (second > 0)
 			table = MEM_NEW CacheDBTable(mbUseShareSQL, second);
+		else if (second < 0)
+			table = MEM_NEW DBIndexTable(mbUseShareSQL);
 		else
 			table = MEM_NEW LogicDBTable(mbUseShareSQL);
 
@@ -118,6 +121,14 @@ namespace NetCloud
 				err.Format("List field error or Create table list fail >%s", sqlTool->getErrorMsg());
 				return err;
 			}
+		}
+		else
+		{
+			AutoField field = mTableListDBTable->GetField();
+			field->getFieldInfo("ID")->setMaxLength(64);
+			field->getFieldInfo("DATA")->setMaxLength(6 * 1024);
+	
+			field->getFieldInfo("DB_INFO")->setMaxLength(6 * 1024);
 		}
 
 		return LoadAllDBTable();

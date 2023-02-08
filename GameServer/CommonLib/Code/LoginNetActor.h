@@ -96,8 +96,8 @@ public:
 			AutoData msgData = req.mRequestMsgData;
 			AutoNice respData = client->Await(req.mTargetActorID, req.mRequestMsgName, msgData.getPtr(), 10000, 0);
 			resp.mResponseData = respData;
-			if (respData)
-				NOTE_LOG("Actor response : \r\n%s", respData->dump().c_str());
+			//if (respData)
+			//	NOTE_LOG("Actor response : \r\n%s", respData->dump().c_str());
 		}
 		else
 			ERROR_LOG("No exist client actor");

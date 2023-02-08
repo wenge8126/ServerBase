@@ -6,7 +6,7 @@
 #include "NetAddress.h"
 #include "NetHead.h"
 
-#define DEBUG_CLOUD_NET			1
+#define DEBUG_CLOUD_NET			0
 
 #define GATE_HASH_KEY_MAX			1103				// 网关最大哈希KEY, NOTE: 网关数量不可大于此值
 

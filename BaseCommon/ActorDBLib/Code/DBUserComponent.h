@@ -34,6 +34,16 @@ namespace NetCloud
 			return re;
 		}
 
+		virtual ARecord ReadyRecord(Int64 wKey)
+		{
+			ARecord re;
+			if (IsValid(wKey))
+				re = mDataRecord;
+			else
+				re = LoadRecord(wKey);
+			return re;
+		}
+
 		virtual AutoData GetRecordData(const char *szKey)
 		{
 			ARecord re = ReadyRecord(szKey);
@@ -99,7 +109,10 @@ namespace NetCloud
 			{
 				record = mDBTable->GrowthNewRecord(NULL);
 				if (record)
+				{
+					mDataRecord = record;
 					resultKey = record[0].string();
+				}
 				else
 					return false;
 			}
@@ -110,6 +123,8 @@ namespace NetCloud
 			if (!record)
 				return false;
 			
+			resultKey = szKey;
+
 			for (auto it = d->begin(); it; ++it)
 			{
 				AString key = it.key();
@@ -136,7 +151,10 @@ namespace NetCloud
 		virtual void Awake() override
 		{
 			if (!InitTable(GetTableName()))
+			{
 				ERROR_LOG("DB component init table fail : %s", GetTableName());
+				GetActor()->NotifyComponentReadyFail(this);
+			}
 		}
 
 		virtual bool LoadMaxKey(AString &maxKey)
@@ -148,8 +166,22 @@ namespace NetCloud
 			return false;
 		}
 
+		AComponent GetDBUser(const AString &tableName)
+		{
+			if (GetActor() != NULL)
+				return GetActor()->GetDBUserComponent(tableName);
+			return AComponent();
+		}
+
 	public:
+		ARecord Record() { return mDataRecord; }
 		bool IsValid() { return mDataRecord; }
+		bool IsValid(Int64 wKey)
+		{
+			if (mDataRecord && (Int64)mDataRecord[0] == wKey)
+				return true;
+			return false;
+		}
 		bool IsValid(const char *szKey)
 		{
 			if (mDataRecord && mDataRecord[0].string() == szKey)
@@ -216,7 +248,7 @@ namespace NetCloud
 				mDataRecord = re;
 				return re;
 			}
-			ERROR_LOG("No exist %s in table %s", szKey, mDBTable->GetTableName());
+			//ERROR_LOG("No exist %s in table %s", szKey, mDBTable->GetTableName());
 
 			return ARecord();
 		}
@@ -235,16 +267,29 @@ namespace NetCloud
 				mDataRecord = re;
 				return re;
 			}
-			ERROR_LOG("No exist %s in table %s", STRING(nKey), mDBTable->GetTableName());
+			//ERROR_LOG("No exist %s in table %s", STRING(nKey), mDBTable->GetTableName());
 
 			return ARecord();
 		}
 
 		virtual ARecord GrowthNewRecord()
 		{
+			LowUpdate();
 			mDataRecord = mDBTable->GrowthNewRecord();
 			return mDataRecord;
 		}
+
+		bool DeleteRecord(ARecord record)
+		{
+			if (mDBTable && mDBTable->DeleteRecord(record))
+			{
+				if (record == mDataRecord)
+					mDataRecord.setNull();
+				return true;
+			}
+			return false;
+		}
+
 
 	public:
 		virtual void LowUpdate() override

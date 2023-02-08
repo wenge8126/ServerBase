@@ -7,7 +7,7 @@
 #include "AutoString.h"
 
 /* Type define */
-typedef unsigned char byte;
+//typedef unsigned char byte;
 typedef unsigned long ulong;
 
 using std::string;

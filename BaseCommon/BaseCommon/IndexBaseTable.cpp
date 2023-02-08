@@ -320,7 +320,9 @@ int BaseFieldIndex::_generateCode() const
 		return 0;
 	}
 
-	return MAKE_INDEX_ID(str.c_str());
+	int checkCode = MAKE_INDEX_ID(str.c_str());
+	//DEBUG_LOG("[%d]=>\r\n%s", checkCode, str.c_str());
+	return checkCode;
 }
 //-------------------------------------------------------------------------
 // 不会组合保存在表格中的记录, 可以自由使用

@@ -24,7 +24,7 @@ namespace NetCloud
 			if (existComp)
 			{
 				// 不会立即释放, 支持循环执行此处
-				WARN_LOG("Now already exist componect <%s>", compName);
+				WARN_LOG("Now already exist componect <%s>", compName.c_str());
 				existComp->Free();
 			}
 
@@ -34,7 +34,7 @@ namespace NetCloud
 			comp->DoEvent(false);
 		}
 		else
-			ERROR_LOG("No register componect <%s>", compName);
+			ERROR_LOG("No register componect <%s>", compName.c_str());
 
 		return comp;
 	}

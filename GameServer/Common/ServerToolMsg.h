@@ -5,6 +5,100 @@
 #include "Array.h"
 #include "ArrayList.h"
 
+//  用于HttpRequestActorMsg (客户端直接请求访问服务器内部Actor)
+class HttpReqeustActorMsg : public tBaseMsg
+{ 
+public:
+    Int64 mActorID;		
+    int mActorType;		
+    AString mMsgName;		
+    AutoData mRequestMsgData;		
+    AutoData mToken;		
+
+public:
+    HttpReqeustActorMsg() { clear(false); };
+
+
+   virtual  void Full(AutoNice scrData) override
+    {
+        clear(false);
+        CheckGet(scrData, mActorID);
+        CheckGet(scrData, mActorType);
+        CheckGet(scrData, mMsgName);
+        mRequestMsgData = (DataStream*)scrData["mRequestMsgData"];
+        mToken = (DataStream*)scrData["mToken"];
+    }
+
+    virtual void ToData(AutoNice &destData) override
+    {
+        destData["mActorID"] = mActorID;
+        destData["mActorType"] = mActorType;
+        destData["mMsgName"] = mMsgName;
+        destData["mRequestMsgData"] = mRequestMsgData.getPtr();
+        destData["mToken"] = mToken.getPtr();
+    }
+
+    bool serialize(DataStream *destData) const override
+    {
+        destData->write((short)5);
+
+        SAVE_MSG_VALUE(mActorID, 8);
+        SAVE_MSG_VALUE(mActorType, 1);
+        SAVE_MSG_VALUE(mMsgName, 4);
+        SAVE_MSG_DATA(mRequestMsgData);
+        SAVE_MSG_DATA(mToken);
+        return true;
+    }
+
+    void clear(bool bClearBuffer=false) override 
+    {
+        mActorID = 0;
+        mActorType = 0;
+        mMsgName.setNull();
+        if (mRequestMsgData) mRequestMsgData.setNull();
+        if (mToken) mToken.setNull();
+    }
+
+    void copy(const tBaseMsg &otherMsg) override 
+    {
+        if (strcmp("HttpReqeustActorMsg", otherMsg.GetMsgName())!=0) { LOG("%s is not HttpReqeustActorMsg", otherMsg.GetMsgName()); return; }; const HttpReqeustActorMsg &other = *(const HttpReqeustActorMsg*)(&otherMsg);
+        mActorID = other.mActorID;
+        mActorType = other.mActorType;
+        mMsgName = other.mMsgName;
+        COPY_MSG_DATA(other.mRequestMsgData, mRequestMsgData);
+        COPY_MSG_DATA(other.mToken, mToken);
+    }
+
+    virtual const char* GetMsgName() const override { return "HttpReqeustActorMsg"; }
+
+    AData get(const char *szMember) const 
+    {
+        if (strcmp(szMember, "mActorID")==0) { AData value; value = mActorID; return value; }
+        if (strcmp(szMember, "mActorType")==0) { AData value; value = mActorType; return value; }
+        if (strcmp(szMember, "mMsgName")==0) { AData value; value = mMsgName; return value; }
+        return AData();
+    }
+
+    bool set(const char *szMember, AData value) 
+    {
+        if (strcmp(szMember, "mActorID")==0) { mActorID = value; return true; };
+        if (strcmp(szMember, "mActorType")==0) { mActorType = value; return true; };
+        if (strcmp(szMember, "mMsgName")==0) { mMsgName = value; return true; };
+        LOG("No exist > %%s", szMember);  return false;
+    }
+
+    AData operator [] (const char *szMember) const 
+    {
+        return get(szMember);
+    }
+
+    AData operator [] (const AString &member) const 
+    {
+        return get(member.c_str());
+    }
+
+};
+
 //  工具更新保存资源 > ResourcesActor
 class TR_UpdateSaveResource : public tBaseMsg
 { 
@@ -1559,6 +1653,158 @@ public:
 
 };
 
+//  保存记录对应的字段数据
+class DB_RequestLoadRecordData : public tBaseMsg
+{ 
+public:
+    ArrayList<AString> mFieldList;	
+    AString mKey;		
+    AString mTableName;		
+
+public:
+    DB_RequestLoadRecordData() { clear(false); };
+
+
+   virtual  void Full(AutoNice scrData) override
+    {
+        clear(false);
+        FullArray(scrData, mFieldList, "mFieldList");
+        CheckGet(scrData, mKey);
+        CheckGet(scrData, mTableName);
+    }
+
+    virtual void ToData(AutoNice &destData) override
+    {
+        ArrayToData(destData, mFieldList, "mFieldList");
+        destData["mKey"] = mKey;
+        destData["mTableName"] = mTableName;
+    }
+
+    bool serialize(DataStream *destData) const override
+    {
+        destData->write((short)3);
+
+        SaveArray("mFieldList", mFieldList, destData);
+        SAVE_MSG_VALUE(mKey, 4);
+        SAVE_MSG_VALUE(mTableName, 4);
+        return true;
+    }
+
+    void clear(bool bClearBuffer=false) override 
+    {
+        mFieldList.clear(false);
+        mKey.setNull();
+        mTableName.setNull();
+    }
+
+    void copy(const tBaseMsg &otherMsg) override 
+    {
+        if (strcmp("DB_RequestLoadRecordData", otherMsg.GetMsgName())!=0) { LOG("%s is not DB_RequestLoadRecordData", otherMsg.GetMsgName()); return; }; const DB_RequestLoadRecordData &other = *(const DB_RequestLoadRecordData*)(&otherMsg);
+        mFieldList = other.mFieldList;
+        mKey = other.mKey;
+        mTableName = other.mTableName;
+    }
+
+    virtual const char* GetMsgName() const override { return "DB_RequestLoadRecordData"; }
+
+    AData get(const char *szMember) const 
+    {
+        if (strcmp(szMember, "mKey")==0) { AData value; value = mKey; return value; }
+        if (strcmp(szMember, "mTableName")==0) { AData value; value = mTableName; return value; }
+        return AData();
+    }
+
+    bool set(const char *szMember, AData value) 
+    {
+        if (strcmp(szMember, "mKey")==0) { mKey = value; return true; };
+        if (strcmp(szMember, "mTableName")==0) { mTableName = value; return true; };
+        LOG("No exist > %%s", szMember);  return false;
+    }
+
+    AData operator [] (const char *szMember) const 
+    {
+        return get(szMember);
+    }
+
+    AData operator [] (const AString &member) const 
+    {
+        return get(member.c_str());
+    }
+
+};
+
+//  回复对应的字段数据
+class DB_ResponseRecordData : public tBaseMsg
+{ 
+public:
+    AutoNice mData;		
+    int mError;		
+
+public:
+    DB_ResponseRecordData() { clear(false); };
+
+
+   virtual  void Full(AutoNice scrData) override
+    {
+        clear(false);
+        mData = (tNiceData*)scrData["mData"];
+        CheckGet(scrData, mError);
+    }
+
+    virtual void ToData(AutoNice &destData) override
+    {
+        destData["mData"] = mData.getPtr();
+        destData["mError"] = mError;
+    }
+
+    bool serialize(DataStream *destData) const override
+    {
+        destData->write((short)2);
+
+        SAVE_MSG_NICE(mData);
+        SAVE_MSG_VALUE(mError, 1);
+        return true;
+    }
+
+    void clear(bool bClearBuffer=false) override 
+    {
+        if (mData) mData.setNull();
+        mError = 0;
+    }
+
+    void copy(const tBaseMsg &otherMsg) override 
+    {
+        if (strcmp("DB_ResponseRecordData", otherMsg.GetMsgName())!=0) { LOG("%s is not DB_ResponseRecordData", otherMsg.GetMsgName()); return; }; const DB_ResponseRecordData &other = *(const DB_ResponseRecordData*)(&otherMsg);
+        COPY_MSG_NICE(other.mData, mData);
+        mError = other.mError;
+    }
+
+    virtual const char* GetMsgName() const override { return "DB_ResponseRecordData"; }
+
+    AData get(const char *szMember) const 
+    {
+        if (strcmp(szMember, "mError")==0) { AData value; value = mError; return value; }
+        return AData();
+    }
+
+    bool set(const char *szMember, AData value) 
+    {
+        if (strcmp(szMember, "mError")==0) { mError = value; return true; };
+        LOG("No exist > %%s", szMember);  return false;
+    }
+
+    AData operator [] (const char *szMember) const 
+    {
+        return get(szMember);
+    }
+
+    AData operator [] (const AString &member) const 
+    {
+        return get(member.c_str());
+    }
+
+};
+
 //  获取当前所有记录的最大KEY值(查询SQL)
 class DB_LoadMaxKey : public tBaseMsg
 { 
@@ -1952,6 +2198,7 @@ class EX_SaveVideoData : public tBaseMsg
 { 
 public:
     int mCacheID;		
+    AString mExtName;		
     Int64 mKey;		
     AString mType;		//  分类, 用于子目录名
     bool mbGrowth;		
@@ -1964,6 +2211,7 @@ public:
     {
         clear(false);
         CheckGet(scrData, mCacheID);
+        CheckGet(scrData, mExtName);
         CheckGet(scrData, mKey);
         CheckGet(scrData, mType);
         CheckGet(scrData, mbGrowth);
@@ -1972,6 +2220,7 @@ public:
     virtual void ToData(AutoNice &destData) override
     {
         destData["mCacheID"] = mCacheID;
+        destData["mExtName"] = mExtName;
         destData["mKey"] = mKey;
         destData["mType"] = mType;
         destData["mbGrowth"] = mbGrowth;
@@ -1979,9 +2228,10 @@ public:
 
     bool serialize(DataStream *destData) const override
     {
-        destData->write((short)4);
+        destData->write((short)5);
 
         SAVE_MSG_VALUE(mCacheID, 1);
+        SAVE_MSG_VALUE(mExtName, 4);
         SAVE_MSG_VALUE(mKey, 8);
         SAVE_MSG_VALUE(mType, 4);
         SAVE_MSG_VALUE(mbGrowth, 5);
@@ -1991,6 +2241,7 @@ public:
     void clear(bool bClearBuffer=false) override 
     {
         mCacheID = 0;
+        mExtName.setNull();
         mKey = 0;
         mType.setNull();
         mbGrowth = false;
@@ -2000,6 +2251,7 @@ public:
     {
         if (strcmp("EX_SaveVideoData", otherMsg.GetMsgName())!=0) { LOG("%s is not EX_SaveVideoData", otherMsg.GetMsgName()); return; }; const EX_SaveVideoData &other = *(const EX_SaveVideoData*)(&otherMsg);
         mCacheID = other.mCacheID;
+        mExtName = other.mExtName;
         mKey = other.mKey;
         mType = other.mType;
         mbGrowth = other.mbGrowth;
@@ -2010,6 +2262,7 @@ public:
     AData get(const char *szMember) const 
     {
         if (strcmp(szMember, "mCacheID")==0) { AData value; value = mCacheID; return value; }
+        if (strcmp(szMember, "mExtName")==0) { AData value; value = mExtName; return value; }
         if (strcmp(szMember, "mKey")==0) { AData value; value = mKey; return value; }
         if (strcmp(szMember, "mType")==0) { AData value; value = mType; return value; }
         if (strcmp(szMember, "mbGrowth")==0) { AData value; value = mbGrowth; return value; }
@@ -2019,6 +2272,7 @@ public:
     bool set(const char *szMember, AData value) 
     {
         if (strcmp(szMember, "mCacheID")==0) { mCacheID = value; return true; };
+        if (strcmp(szMember, "mExtName")==0) { mExtName = value; return true; };
         if (strcmp(szMember, "mKey")==0) { mKey = value; return true; };
         if (strcmp(szMember, "mType")==0) { mType = value; return true; };
         if (strcmp(szMember, "mbGrowth")==0) { mbGrowth = value; return true; };
@@ -2433,6 +2687,137 @@ public:
 
     bool set(const char *szMember, AData value) 
     {
+        LOG("No exist > %%s", szMember);  return false;
+    }
+
+    AData operator [] (const char *szMember) const 
+    {
+        return get(szMember);
+    }
+
+    AData operator [] (const AString &member) const 
+    {
+        return get(member.c_str());
+    }
+
+};
+
+//  请求WSS地址
+class EX_ReqeustWssAddress : public tBaseMsg
+{ 
+public:
+
+public:
+    EX_ReqeustWssAddress() { clear(false); };
+
+
+   virtual  void Full(AutoNice scrData) override
+    {
+        clear(false);
+    }
+
+    virtual void ToData(AutoNice &destData) override
+    {
+    }
+
+    bool serialize(DataStream *destData) const override
+    {
+        destData->write((short)0);
+
+        return true;
+    }
+
+    void clear(bool bClearBuffer=false) override 
+    {
+    }
+
+    void copy(const tBaseMsg &otherMsg) override 
+    {
+        if (strcmp("EX_ReqeustWssAddress", otherMsg.GetMsgName())!=0) { LOG("%s is not EX_ReqeustWssAddress", otherMsg.GetMsgName()); return; }; const EX_ReqeustWssAddress &other = *(const EX_ReqeustWssAddress*)(&otherMsg);
+    }
+
+    virtual const char* GetMsgName() const override { return "EX_ReqeustWssAddress"; }
+
+    AData get(const char *szMember) const 
+    {
+        return AData();
+    }
+
+    bool set(const char *szMember, AData value) 
+    {
+        LOG("No exist > %%s", szMember);  return false;
+    }
+
+    AData operator [] (const char *szMember) const 
+    {
+        return get(szMember);
+    }
+
+    AData operator [] (const AString &member) const 
+    {
+        return get(member.c_str());
+    }
+
+};
+
+class EX_ResponseWssAddress : public tBaseMsg
+{ 
+public:
+    AString mAddress;		
+    bool mbWss;		
+
+public:
+    EX_ResponseWssAddress() { clear(false); };
+
+
+   virtual  void Full(AutoNice scrData) override
+    {
+        clear(false);
+        CheckGet(scrData, mAddress);
+        CheckGet(scrData, mbWss);
+    }
+
+    virtual void ToData(AutoNice &destData) override
+    {
+        destData["mAddress"] = mAddress;
+        destData["mbWss"] = mbWss;
+    }
+
+    bool serialize(DataStream *destData) const override
+    {
+        destData->write((short)2);
+
+        SAVE_MSG_VALUE(mAddress, 4);
+        SAVE_MSG_VALUE(mbWss, 5);
+        return true;
+    }
+
+    void clear(bool bClearBuffer=false) override 
+    {
+        mAddress.setNull();
+        mbWss = false;
+    }
+
+    void copy(const tBaseMsg &otherMsg) override 
+    {
+        if (strcmp("EX_ResponseWssAddress", otherMsg.GetMsgName())!=0) { LOG("%s is not EX_ResponseWssAddress", otherMsg.GetMsgName()); return; }; const EX_ResponseWssAddress &other = *(const EX_ResponseWssAddress*)(&otherMsg);
+        mAddress = other.mAddress;
+        mbWss = other.mbWss;
+    }
+
+    virtual const char* GetMsgName() const override { return "EX_ResponseWssAddress"; }
+
+    AData get(const char *szMember) const 
+    {
+        if (strcmp(szMember, "mAddress")==0) { AData value; value = mAddress; return value; }
+        if (strcmp(szMember, "mbWss")==0) { AData value; value = mbWss; return value; }
+        return AData();
+    }
+
+    bool set(const char *szMember, AData value) 
+    {
+        if (strcmp(szMember, "mAddress")==0) { mAddress = value; return true; };
+        if (strcmp(szMember, "mbWss")==0) { mbWss = value; return true; };
         LOG("No exist > %%s", szMember);  return false;
     }
 

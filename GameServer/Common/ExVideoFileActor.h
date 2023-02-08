@@ -16,9 +16,10 @@ public:
 public:
 	EasyHash<AString, AEX_VideoFileIndex>	mVideoFileInfoList;
 
-	AString mMainAddress = "http://127.0.0.1/";
+	// 注意跨域问题
+	AString mMainAddress = "nice177.com/Data/";
 
-	AString mFileDirectory = "E:/Video/";
+	AString mFileDirectory = "D:/xampp/htdocs/Data/";
 
 	Hand<UploadCacheComponent> mBigDataCacheComponent;
 
@@ -135,7 +136,8 @@ public:
 		// 保存到目录 
 		AString fileName = GetVideoFileName(index, req.mKey, req.mbGrowth, response.mIndexKey);
 
-		fileName += ".mp4";
+		fileName += ".";
+		fileName += req.mExtName;
 
 		FileDataStream f(fileName.c_str(), FILE_CREATE);
 		f._write(d->data(), d->dataSize());

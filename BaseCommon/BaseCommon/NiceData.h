@@ -161,6 +161,12 @@ public:
 		return d.set(kVal);
 	}
 
+	bool set(const char* key, Int64 nValU64)
+	{
+		AData &d = getOrCreate(key);
+		return d.set(nValU64);
+	}
+
 	bool set(const char* key, UInt64 nValU64)
 	{
 		AData &d = getOrCreate(key);

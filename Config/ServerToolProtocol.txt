@@ -1,0 +1,279 @@
+
+// 用于HttpRequestActorMsg (客户端直接请求访问服务器内部Actor)
+HttpReqeustActorMsg
+{
+	data mToken;
+	int mActorType;
+	int64 mActorID;
+	string mMsgName;
+	data mRequestMsgData;
+}
+
+
+// 工具更新保存资源 > ResourcesActor
+TR_UpdateSaveResource
+{
+	string mIndexName;
+	string mMD5;
+	data mResourceData;	
+}
+
+RT_ReponseSaveResult
+{
+	int mErrorCode;
+	string mInfo;
+}
+
+
+// 请求获取资源数据
+CR_LoadResource
+{
+	string mIndexName;
+	string mMD5;
+}
+
+RC_ResponseResource
+{
+	int mErrorCode;
+	data mResourceData;
+	string mMD5;
+}
+
+//-------------------------------------------------
+// DataComponent
+// 数据更新保存
+DB_UpdateSaveData
+{
+	string mIndexName;
+	string mMD5;
+	data mData;	
+}
+
+DB_ReponseSaveResult
+{
+	int mErrorCode;
+	string mInfo;
+}
+
+
+//--------------------------------------------------
+// 请求获取DB数据
+DB_LoadData
+{
+	string mIndexName;
+	string mCheckMD5;
+}
+
+DB_ResponseData
+{
+	int mErrorCode;
+	data mData;
+	string mMD5;
+}
+
+
+//-------------------------------------------------
+// class UploadCacheComponent 大数据上传下载功能
+
+// 请求分包上传
+DB_ReqeustBigDataUpload
+{
+	string mTableName;
+	int64 mSize;
+	int mPartSize;	
+}
+
+// 回复缓存ID
+DB_ResponseBigDataCacheID
+{
+	int64 mCacheID;
+	int mError;
+}
+
+// 分包上传
+DB_UploadPartData
+{
+	int64 mCacheID;
+	data mPartData;
+	int mPartIndex;	
+}
+
+DB_ResponseUploadPartDataResult
+{
+	int mError;
+}
+
+// 完成处理
+DB_UpdateSaveCacheBigData
+{
+	string mKey;	// 如果为空, 则自增
+	int64 mCacheID;
+	string mCheckMD5;
+}
+
+// 处理结果
+DB_ResponseUpdateSaveCacheDataResult
+{
+	int mError;
+	string mDBKey;
+}
+
+//----------------------------------------------------
+// DownloadComponent
+// 请求下载, 回复的MD5可用于检验本地缓存的数据是否有效
+DB_RequestDownloadData
+{
+	string mTableName;
+	string mKey;	
+	string mCheckMD5;
+}
+
+// 回复数据信息
+DB_ResponseDataInfo
+{
+	int64 mSize;
+	string mMD5;
+	int mError;
+}
+
+// 分包下载
+DB_RequestDownloadPartData
+{
+	string mTableName;
+	string mKey;
+	int64 mPosition;
+	int mRequestSize;
+}
+
+// 回复分包数据
+DB_ResponsePartData
+{
+	int mError;
+	data mPartData;
+}
+//---------------------------------------------------------
+// 通用请求获取DB记录
+DB_RequestLoadRecord
+{
+ 	string mTableName;
+	string mKey;
+	bool mbNeedField;	
+}
+
+DB_ResponseRecord
+{
+	int mError;
+	data mRecordData;
+	data mFieldData;	
+}
+
+// 保存记录对应的字段数据
+DB_RequestLoadRecordData
+{
+	string mTableName;
+	string mKey;
+	arraydata<string> mFieldList;
+}
+
+// 回复对应的字段数据
+DB_ResponseRecordData
+{
+	int mError;
+	nicedata mData;
+}
+
+
+// 获取当前所有记录的最大KEY值(查询SQL)
+DB_LoadMaxKey
+{
+	string mTableName;
+
+}
+
+DB_ResponseMaxkey
+{
+	int mError;
+	string mMaxKey;
+}
+
+// 上传更新保存记录
+DB_RequestSaveRecord
+{	
+	bool mbGrowthKey;  // 是否自增加Key插入
+	string mTableName;
+	string mKey;
+	data mRecordData;
+}
+
+DB_ResponseSaveRecord
+{
+	int mError;
+	string mDBKey;
+}
+
+// 上传更新保存记录
+DB_RequestSaveRecordByNice
+{	
+	bool mbGrowthKey;  // 是否自增加Key插入
+	string mTableName;
+	string mKey;
+	nicedata mRecordData;
+}
+//-------------------------------------------------------
+// 上传外部视频(先上传到缓存中), DB保存到视频网站内 (Python启动http), 由对应目录中的索引文件记录信息(如:最大值)
+EX_SaveVideoData
+{
+	string mType; // 分类, 用于子目录名
+	int mCacheID;
+	int64 mKey;	
+	bool mbGrowth;
+	string mExtName;
+}
+
+EX_ResponseSaveVideo
+{
+	int mError;
+	int64 mIndexKey;
+}
+
+// 请求主地址
+EX_RequestVideoMainAddress
+{
+		
+}
+EX_ResponsetVideoMainAddress
+{
+	int mError;
+	string mMainAddress;
+}
+//------------------------------------------------------
+// 索引文件结构(NiceData)
+EX_VideoFileIndex
+{
+	int64 mMaxKey;
+	string mType;
+	nicedata mExData;	
+}
+//-------------------------------------------------------
+TEST_BigHttpMsg
+{
+	data mBigData;
+}
+
+TEST_ResponseBigHttp
+{
+	data mResponseData;
+}
+
+//-----------------------------------------------------
+// 请求WSS地址
+EX_ReqeustWssAddress
+{
+	
+}
+EX_ResponseWssAddress
+{
+	string mAddress;
+	bool mbWss;
+}
+//-----------------------------------------------------

@@ -191,7 +191,7 @@ public:
 	bool UnZipData(AutoData &resultBuffer, DSIZE resultBeginPosition, DSIZE destSize=0, DSIZE zipDataPos = 0, DSIZE zipSize = 0 );
 
 public:
-	static DSIZE Zip(void *scrData, DSIZE scrSize, void* resultZipDataBuffer, DSIZE resultSize);
+	static DSIZE Zip(void *scrData, DSIZE scrSize, void* resultZipDataBuffer, DSIZE resultSize, ZIP_OPTION op = STANDARD);
 	static bool UnZip( void *scrZipData, int scrZipSize, void *resultData, int resultDataSize );
 
 

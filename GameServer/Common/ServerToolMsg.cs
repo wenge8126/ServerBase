@@ -5,6 +5,67 @@ using System.Collections.Generic;
 using Logic;
 
 
+//  用于HttpRequestActorMsg (客户端直接请求访问服务器内部Actor)
+public class HttpReqeustActorMsg : BasePacket
+{
+    public Int64 mActorID		
+    {
+        set { mMsgData.set("mActorID",  value); }
+        get { return (Int64)mMsgData.getObject("mActorID"); }
+    }
+
+    public int mActorType		
+    {
+        set { mMsgData.set("mActorType",  value); }
+        get { return (int)mMsgData.getObject("mActorType"); }
+    }
+
+    public string mMsgName		
+    {
+        set { mMsgData.set("mMsgName",  value); }
+        get { return (string)mMsgData.getObject("mMsgName"); }
+    }
+
+    public DataBuffer mRequestMsgData		
+    {
+        set { mMsgData.set("mRequestMsgData",  value); }
+        get { return mMsgData.getObject("mRequestMsgData") as DataBuffer; }
+    }
+
+    public DataBuffer mToken		
+    {
+        set { mMsgData.set("mToken",  value); }
+        get { return mMsgData.getObject("mToken") as DataBuffer; }
+    }
+
+
+
+    public HttpReqeustActorMsg() { InitData(); }
+
+
+   public override  void Full(NiceData scrData) 
+    {
+        InitData();
+        mMsgData.set("mActorID", scrData.getObject("mActorID"));
+        mMsgData.set("mActorType", scrData.getObject("mActorType"));
+        mMsgData.set("mMsgName", scrData.getObject("mMsgName"));
+        mMsgData.set("mRequestMsgData", scrData.getObject("mRequestMsgData"));
+        mMsgData.set("mToken", scrData.getObject("mToken"));
+    }
+
+    public override void InitData() 
+    {
+        mActorID = 0;
+        mActorType = 0;
+        mMsgName = "";
+        if (mRequestMsgData!=null) mRequestMsgData.clear(true);
+        if (mToken!=null) mToken.clear(true);
+    }
+
+    public override string MsgName()   { return "HttpReqeustActorMsg"; }
+
+};
+
 //  工具更新保存资源 > ResourcesActor
 public class TR_UpdateSaveResource : BasePacket
 {
@@ -835,6 +896,83 @@ public class DB_ResponseRecord : BasePacket
 
 };
 
+//  保存记录对应的字段数据
+public class DB_RequestLoadRecordData : BasePacket
+{
+    ArrayList<AString> mFieldList;	
+    public string mKey		
+    {
+        set { mMsgData.set("mKey",  value); }
+        get { return (string)mMsgData.getObject("mKey"); }
+    }
+
+    public string mTableName		
+    {
+        set { mMsgData.set("mTableName",  value); }
+        get { return (string)mMsgData.getObject("mTableName"); }
+    }
+
+
+
+    public DB_RequestLoadRecordData() { InitData(); }
+
+
+   public override  void Full(NiceData scrData) 
+    {
+        InitData();
+        FullArray(scrData, mFieldList, "mFieldList");
+        mMsgData.set("mKey", scrData.getObject("mKey"));
+        mMsgData.set("mTableName", scrData.getObject("mTableName"));
+    }
+
+    public override void InitData() 
+    {
+        mFieldList.clear(false);
+        mKey = "";
+        mTableName = "";
+    }
+
+    public override string MsgName()   { return "DB_RequestLoadRecordData"; }
+
+};
+
+//  回复对应的字段数据
+public class DB_ResponseRecordData : BasePacket
+{
+    public NiceData mData		
+    {
+        set { mMsgData.set("mData",  value); }
+        get { return mMsgData.getObject("mData") as NiceData; }
+    }
+
+    public int mError		
+    {
+        set { mMsgData.set("mError",  value); }
+        get { return (int)mMsgData.getObject("mError"); }
+    }
+
+
+
+    public DB_ResponseRecordData() { InitData(); }
+
+
+   public override  void Full(NiceData scrData) 
+    {
+        InitData();
+        mMsgData.set("mData", scrData.getObject("mData"));
+        mMsgData.set("mError", scrData.getObject("mError"));
+    }
+
+    public override void InitData() 
+    {
+        if (mData!=null) mData.clear();
+        mError = 0;
+    }
+
+    public override string MsgName()   { return "DB_ResponseRecordData"; }
+
+};
+
 //  获取当前所有记录的最大KEY值(查询SQL)
 public class DB_LoadMaxKey : BasePacket
 {
@@ -1051,6 +1189,12 @@ public class EX_SaveVideoData : BasePacket
         get { return (int)mMsgData.getObject("mCacheID"); }
     }
 
+    public string mExtName		
+    {
+        set { mMsgData.set("mExtName",  value); }
+        get { return (string)mMsgData.getObject("mExtName"); }
+    }
+
     public Int64 mKey		
     {
         set { mMsgData.set("mKey",  value); }
@@ -1078,6 +1222,7 @@ public class EX_SaveVideoData : BasePacket
     {
         InitData();
         mMsgData.set("mCacheID", scrData.getObject("mCacheID"));
+        mMsgData.set("mExtName", scrData.getObject("mExtName"));
         mMsgData.set("mKey", scrData.getObject("mKey"));
         mMsgData.set("mType", scrData.getObject("mType"));
         mMsgData.set("mbGrowth", scrData.getObject("mbGrowth"));
@@ -1086,6 +1231,7 @@ public class EX_SaveVideoData : BasePacket
     public override void InitData() 
     {
         mCacheID = 0;
+        mExtName = "";
         mKey = 0;
         mType = "";
         mbGrowth = false;
@@ -1287,6 +1433,63 @@ public class TEST_ResponseBigHttp : BasePacket
     }
 
     public override string MsgName()   { return "TEST_ResponseBigHttp"; }
+
+};
+
+//  请求WSS地址
+public class EX_ReqeustWssAddress : BasePacket
+{
+
+
+    public EX_ReqeustWssAddress() { InitData(); }
+
+
+   public override  void Full(NiceData scrData) 
+    {
+        InitData();
+    }
+
+    public override void InitData() 
+    {
+    }
+
+    public override string MsgName()   { return "EX_ReqeustWssAddress"; }
+
+};
+
+public class EX_ResponseWssAddress : BasePacket
+{
+    public string mAddress		
+    {
+        set { mMsgData.set("mAddress",  value); }
+        get { return (string)mMsgData.getObject("mAddress"); }
+    }
+
+    public bool mbWss		
+    {
+        set { mMsgData.set("mbWss",  value); }
+        get { return (bool)mMsgData.getObject("mbWss"); }
+    }
+
+
+
+    public EX_ResponseWssAddress() { InitData(); }
+
+
+   public override  void Full(NiceData scrData) 
+    {
+        InitData();
+        mMsgData.set("mAddress", scrData.getObject("mAddress"));
+        mMsgData.set("mbWss", scrData.getObject("mbWss"));
+    }
+
+    public override void InitData() 
+    {
+        mAddress = "";
+        mbWss = false;
+    }
+
+    public override string MsgName()   { return "EX_ResponseWssAddress"; }
 
 };
 

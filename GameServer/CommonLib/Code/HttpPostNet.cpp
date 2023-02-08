@@ -4,7 +4,7 @@
 #include "PacketFactory.h"
 #include "EventProtocol.h"
 #include "BaseMsg.h"
-#include "ServerClientMsg.h"
+#include "ServerToolMsg.h"
 
 #include "curl.h"
 #include <string>
@@ -190,13 +190,13 @@ public:
 	{
 		int re = 0;
 		if (mbPost)
-			re = Posts(mUrl.c_str(), mReuestParam, mResponseString, true, NULL);
+			re = Posts(mUrl.c_str(), mReuestParam, mResponseString, false, NULL);
 		else
 		{
 			AString str = mUrl;
 			str += "/?";
-			str += mResponseString;
-			re = Gets(str.c_str(), mResponseString, true, NULL);
+			str += mReuestParam;
+			re = Gets(str.c_str(), mResponseString, false, NULL);
 		}
 		 
 		mbSucceed = re == 0 || re == 56;
@@ -272,7 +272,7 @@ HttpPostNet::HttpPostNet()
 }
 
 
-AutoNice HttpPostNet::AwaitRequest(const char *szUrl, int actorType, Int64 actorID, tBaseMsg *packet, int connectOverSecond, int overSecond, const char *pCaPath)
+AutoNice HttpPostNet::AwaitRequest(AutoData token, const char *szUrl, int actorType, Int64 actorID, tBaseMsg *packet, int connectOverSecond, int overSecond, const char *pCaPath)
 {
 	Auto<TaskRequestBytes> task = StartTask(eTaskReqeustPostBytesMsg);
 	task->mRequestData.clear();
@@ -280,7 +280,7 @@ AutoNice HttpPostNet::AwaitRequest(const char *szUrl, int actorType, Int64 actor
 	Auto<HttpReqeustActorMsg> msg = MEM_NEW HttpReqeustActorMsg();
 	msg->mActorID = actorID;
 	msg->mActorType = actorType;
-
+	msg->mToken = token;
 
 	msg->mMsgName = packet->GetMsgName();
 	msg->mRequestMsgData = MEM_NEW DataBuffer();
@@ -315,4 +315,22 @@ AutoNice HttpPostNet::AwaitRequest(const char *szUrl, int actorType, Int64 actor
 		ERROR_LOG("Reqeust bytes data restore fail : %s", szUrl);
 	}
 	return AutoNice();
+}
+
+AString HttpPostNet::AwaitRequestGet(const char *szUrl, const AString &paramString, int connectOverSecond, int overSecond, const char *pCaPath)
+{
+	Auto<TaskRequestString> task = StartTask(eTaskRequestString);
+
+	task->mUrl = szUrl;
+	task->mReuestParam = paramString;
+	//task->mConnectOverSecond = connectOverSecond;
+	//task->mOverSecond = overSecond;
+	task->mbPost = false;
+
+	task->AWait();
+	if (task->mbSucceed)
+	{
+		return task->mResponseString;
+	}
+	return AString();
 }

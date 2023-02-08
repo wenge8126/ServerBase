@@ -101,7 +101,7 @@ void TimerCenter::_append(tTimer *pTimer, UInt64 time)
 		{
 			// 移除已经存在的等待
 			mWaitEventList.erase(it);
-			NOTE_LOG("Remove now exist wait");
+			//NOTE_LOG("Remove now exist wait");
 			bDelete = true;
 			continue;
 		}

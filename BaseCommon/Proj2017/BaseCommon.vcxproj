@@ -395,7 +395,7 @@ xcopy $(CODE_COMMON_DIR)\BaseCommon\*.inl $(INCLUDE_DIR)\  /y</Command>
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>__WINDOWS__;BASECOMMON_EXPORTS;__SERVER__;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BASECOMMON_EXPORTS;NDEBUG;__WINDOWS__;__SERVER__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <MinimalRebuild>false</MinimalRebuild>
       <AdditionalIncludeDirectories>$(CODE_COMMON_DIR)/BaseCommon/json;$(CODE_COMMON_DIR)/BaseCommon/json/src;$(CODE_COMMON_DIR)/BaseCommon;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

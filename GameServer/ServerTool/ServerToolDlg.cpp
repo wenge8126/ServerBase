@@ -52,6 +52,7 @@ BEGIN_MESSAGE_MAP(CServerToolDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON3, &CServerToolDlg::OnBnClickedTestCreateAccount)
 	ON_BN_CLICKED(IDC_BUTTON_EXPORT_RUN_CONFIG, &CServerToolDlg::OnBnExportRunConfig)	
 	ON_BN_CLICKED(IDC_BUTTON_CREATE_DB2, &CServerToolDlg::OnBnExportToolProtocol)
+	ON_BN_CLICKED(IDC_BUTTON_CREATE_DB3, &CServerToolDlg::OnBnExportLogicProtocol)
 END_MESSAGE_MAP()
 
 CServerToolDlg *gpToolDlg = NULL;
@@ -629,4 +630,25 @@ void CServerToolDlg::OnBnExportToolProtocol()
 
 	if (info)
 		MessageBox("成功生成运行ServerTool协议");
+}
+
+
+void CServerToolDlg::OnBnExportLogicProtocol()
+{
+	ClearLog();
+
+	CString configPath = mConfigPath;
+	//mEditConfigPath.GetWindowText(configPath);
+
+	AString err;
+	AutoNice info;
+	AString fileName;
+
+	fileName.Format("%s/LogicProtocol.txt", (LPCTSTR)configPath);
+	info = GenerateProtocol(fileName, "D:/Business/Business/assets/scripts/Game", "../GameServer/Common", "LogicMsg", true, err);
+
+	LOG("%s", err.c_str());
+
+	if (info)
+		MessageBox("成功生成运行Logic协议");
 }

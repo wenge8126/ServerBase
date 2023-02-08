@@ -118,11 +118,18 @@ bool DataBuffer::UnZipData( AutoData &resultBuffer, DSIZE resultBeginPosition, D
 	return false;
 }
 
-DSIZE DataBuffer::Zip( void *scrData, DSIZE scrSize, void* resultZipDataBuffer, DSIZE resultSize )
+DSIZE DataBuffer::Zip( void *scrData, DSIZE scrSize, void* resultZipDataBuffer, DSIZE resultSize, ZIP_OPTION op)
 {
 #if __WINDOWS__
+
+	int zOption = Z_BEST_SPEED;
+	if (op == STANDARD)
+		zOption = Z_DEFAULT_COMPRESSION;
+	else if (op = MAX_ZIP_RATE)
+		zOption = Z_BEST_COMPRESSION;
+
 	uLongf resultZipSize = (uLongf)resultSize;
-	int re = compress2( (unsigned char*)resultZipDataBuffer, &resultZipSize, (unsigned char*)scrData, (unsigned long)scrSize, Z_BEST_SPEED );
+	int re = compress2( (unsigned char*)resultZipDataBuffer, &resultZipSize, (unsigned char*)scrData, (unsigned long)scrSize, zOption );
 	if ( re==Z_OK )
 		return resultZipSize;
 #else

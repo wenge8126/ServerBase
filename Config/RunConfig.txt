@@ -95,6 +95,7 @@ AccountServerConfig
 {
 	string title;				// 程序运行的标题	
 	HttpWeb web_net;				// WebHttpNet开放给客户端使用http请求创建或验证帐号
+	HttpWeb wss_address;			// Wss 网络地址
 	UserNode actor_node;
 	int account_id;				// 帐号服务器编号, 用于多帐号服务器负载
 }

@@ -134,7 +134,7 @@
         // WebHttpNet开放给客户端使用http请求创建或验证帐号
         "web_net" : 
         {
-            "http_address" : "127.0.0.1",    // 开放HTTP地址(用于提供给连接进程)
+            "http_address" : "0.0.0.0",    // 开放HTTP地址(用于提供给连接进程)
             "port" : 1080,    // 开放端口
             "key_file" : "",    // 证书key.pem文件
             "cert_file" : "",    // 证书文件

@@ -105,8 +105,8 @@ public:
 		temp.Format(
 			"	%s& operator = (ARecord re)\r\n	{\r\n"
 			"       if (re)\r\n        {\r\n"
-			"           if (re->GetTable()==NULL)\r\n            {\r\n                ERROR(\"Reocrd table is NULL\"); return *this;\r\n            }\r\n"
-			"           if (re->getField()->GetCheckCode()!=%d)\r\n            {\r\n                ERROR(\"Reocrd field check fail\"); return *this;\r\n            }\r\n"
+			"           if (re->GetTable()==NULL)\r\n            {\r\n                ERROR_LOG(\"Reocrd table is NULL\"); return *this;\r\n            }\r\n"
+			"           if (re->getField()->GetCheckCode()!=%d)\r\n            {\r\n                ERROR_LOG(\"Reocrd field check fail\"); return *this;\r\n            }\r\n"
 			"        }\r\n"
 			"       mRecord = re;\r\n"
 			"		if (mRecord) mKey = mRecord[0]; else mKey = 0;\r\n"
@@ -427,10 +427,10 @@ public:
 			"#ifndef _%s_H_\r\n"
 			"#define _%s_H_\r\n"
 			"\r\n"
-            "#include \"BaseTable.h\"\r\n"
-			"#include \"BaseMemoryDB.h\"\r\n\r\n"
+            "#include \"TableManager.h\"\r\n\r\n"
+			//"#include \"BaseMemoryDB.h\"\r\n\r\n"
 			"%s\r\n"
-			"\r\nusing namespace NetCloud;\r\n\r\n"
+			//"\r\nusing namespace NetCloud;\r\n\r\n"
 			"class %s\r\n{\r\npublic:\r\n	static bool mbInitSet;"						
 			, name.c_str()
 			, name.c_str()
@@ -477,7 +477,9 @@ public:
             cppVarString += temp;
 
 			temp.Format("			t = mgr.find(\"%s\");\r\n"
+				"			if (!t) ERROR_LOG(\"%s config table no exist\");\r\n"
                 "			if (t && %s::InitCheck(t, mbInitSet)) { } else { ERROR_LOG(\"%s config check fail\"); bResult = false; }\r\n"
+				, indexName.c_str()
 				, indexName.c_str()
 				, indexName.c_str()
 				//, indexName.c_str()

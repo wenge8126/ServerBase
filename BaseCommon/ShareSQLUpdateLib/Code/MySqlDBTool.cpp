@@ -311,7 +311,7 @@ bool MySqlDBTool::InitField( AutoField &hField, bool bMustAllField, Array<AStrin
 			info->setLength(length);
 
 		if (fields[i].max_length > 0)
-			info->setLength(fields[i].max_length);
+			info->setMaxLength(fields[i].max_length);
 	}
 	hField->_updateInfo();
 	return hField->check();

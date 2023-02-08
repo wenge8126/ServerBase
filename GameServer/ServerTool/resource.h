@@ -16,6 +16,7 @@
 #define IDC_BUTTON2                     1009
 #define IDC_BUTTON_EXPORT_MESH_MSG      1010
 #define IDC_BUTTON_CREATE_DB2           1011
+#define IDC_BUTTON_CREATE_DB3           1012
 
 // Next default values for new objects
 // 

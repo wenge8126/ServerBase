@@ -91,6 +91,7 @@ namespace NetCloud
 
 		virtual bool DeleteRecord(ARecord record) override
 		{
+			ERROR_LOG("Can not call DeleteRecord");
 			return false;
 		}
 
@@ -122,6 +123,10 @@ namespace NetCloud
 		LogicDBRecord(tBaseTable *pTable)
 		{
 			mOwnerTable = pTable->GetTablePtr();
+		}
+		~LogicDBRecord()
+		{
+			SaveUpdate();
 		}
 
 	public:

@@ -6,7 +6,7 @@
 #include "TcpComponent.h"
 #include "WebServerNet.h"
 #include "CommonLib.h"
-#include "ServerClientMsg.h"
+#include "ServerToolMsg.h"
 //-------------------------------------------------------------------------
 class CommonLib_Export  WssWebComponent : public SocketComponent
 {

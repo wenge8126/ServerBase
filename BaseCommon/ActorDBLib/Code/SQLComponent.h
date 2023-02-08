@@ -125,12 +125,13 @@ namespace NetCloud
 			{
 				ERROR_LOG("Make sql fail");
 
-				return true;
+				return false;
 			}
 			else
 				DEBUG_LOG("Save update sql data ok : \r\n <%s>", pData->mSQLString.c_str());
 
 			mBackSaveThread.AppendSave(pData);
+			return true;
 		}
 	};
 	//-------------------------------------------------------------------------

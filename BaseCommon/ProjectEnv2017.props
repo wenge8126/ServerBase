@@ -5,7 +5,7 @@
     <PROJECT_ROOT>D:\ServerBase</PROJECT_ROOT>
     <LIB_DIR>$(PROJECT_ROOT)\BaseCommon</LIB_DIR>
     <CODE_COMMON_DIR>$(PROJECT_ROOT)\BaseCommon</CODE_COMMON_DIR>
-    <Server_Out_Dir>$(PROJECT_ROOT)\ServerRun</Server_Out_Dir>
+    <Server_Out_Dir>$(PROJECT_ROOT)\MatchmakerRun</Server_Out_Dir>
     <Server_Int_Dir>E:\Build</Server_Int_Dir>
     <COMMON_BASE_LIB>$(Server_Int_Dir)\BaseLib</COMMON_BASE_LIB>
     <GAME_SERVER_RUN>$(Server_Out_Dir)</GAME_SERVER_RUN>

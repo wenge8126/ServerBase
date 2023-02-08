@@ -17,7 +17,10 @@ void WssWebComponent::Start()
 	else
 		mWebNet = MEM_NEW WssWebNet<false>(this);
 	Hand<BaseWebServer> net = mWebNet;
-	net->StartNet(mServerIp, mServerPort, mKeyFile, mCertFile, mPassword);
+	if (net->StartNet(mServerIp, mServerPort, mKeyFile, mCertFile, mPassword))
+		NOTE_LOG("成功启动Wss 网络服务 : %s://%s:%d", mCertFile.length() > 0 ? "Wss" : "Ws", mServerIp.c_str(), mServerPort)
+	else
+		ERROR_LOG("启动失败Wss 网络服务 : %s://%s:%d", mCertFile.length() > 0 ? "Wss" : "Ws", mServerIp.c_str(), mServerPort);
 
 	RegisterMsg(CL_RequestActorMsg, MEM_NEW Logic::EventFactory<WssReqeustActorMsgEvent>());
 

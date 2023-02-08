@@ -10,8 +10,12 @@
 
 typedef Int64  ID;
 
+#define TABLE_GOODS				"t_goods"
+#define TABLE_BUY_RECORD		"t_buy_record"
+
 #define TABLE_PLAYER					"t_player"
 #define TABLE_ACCOUNT				"t_account"
+#define TABLE_RESOURCES				"t_resources"
 #define CONFIG_LIST_INDEX			"ConfigList"
 #define TEMP_CONFIG_PACKET		"_config_packet_data_"
 
@@ -19,6 +23,9 @@ typedef Int64  ID;
 #define GOLBAL_DBLIST_KEY			"0"		// 全局DB创建列表, 用于部署运行环境
 
 #define SERVER_RUN_RESOURCE "1"		// 运行文件资源
+
+#define RETURN_ERROR(errorCode)	{ response.mError = errorCode; return;  }
+#define SET_ERROR(errorCode) response.mError = errorCode;
 
 // 使用DataBuffer 回复消息体数据, 优化序列, Login在中转时不必反序列回复消息体
 template<typename T>
@@ -102,6 +109,7 @@ enum UNIT_TYPE
 	Actor_DataActor = 1007,
 	Actor_VideoFile = 1008,
 	Actor_GoodsLogic = 2000,
+	Actor_Logic = 2001,
 };
 
 enum MSG_TYPE

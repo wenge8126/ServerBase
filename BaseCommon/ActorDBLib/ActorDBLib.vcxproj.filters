@@ -66,6 +66,9 @@
     <ClCompile Include="Code\NoSQLUserComponent.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Code\DBIndexTable.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\LogicDBTable.h">
@@ -123,6 +126,9 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="Code\CacheDBTable.h">
+      <Filter>DBCode</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\DBIndexTable.h">
       <Filter>DBCode</Filter>
     </ClInclude>
   </ItemGroup>

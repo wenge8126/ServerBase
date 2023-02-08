@@ -1,6 +1,6 @@
 #include "HttpComponect.h"
 #include "Actor.h"
-#include "ServerClientMsg.h"
+#include "ServerToolMsg.h"
 #include "ConfigEnum.h"
 
 void HttpComponect::Start()
@@ -33,7 +33,7 @@ void HttpComponect::OnResponseBytes(HandPacket requestMsg, DataBuffer &response,
 		{
 			response.clear();
 			respData->serialize(&response);
-			NOTE_LOG("Actor response : \r\n%s", respData->dump().c_str());
+			//NOTE_LOG("Actor response : \r\n%s", respData->dump().c_str());
 		}
 		else
 		{

@@ -1,0 +1,14 @@
+
+// 请求加入到购物车
+CG_RequestAddCart
+{
+	int64 mGoodsID;
+	int mCount;
+	nicedata mParam;
+}
+
+CG_ReponseAddCart
+{
+	int mError;
+	int64 mBuyID;
+}
