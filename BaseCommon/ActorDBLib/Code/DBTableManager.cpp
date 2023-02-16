@@ -136,78 +136,21 @@ namespace NetCloud
 
 	bool DBTableManager::CreateDBTable(const char *szTableName, AutoTable configTable, AString &errorInfo)
 	{
-		ARecord  infoRe = configTable->GetRecord(-1);
-
-		AutoNice extParam = MEM_NEW NiceData();
-		extParam["SLOT"] = infoRe["SLOT"];
-		extParam["IS_ORDER"] = infoRe["IS_ORDER"];
-		extParam["COOL_SECOND"] = infoRe["COOL_SECOND"];		// 扩展数据冷却时长
-
-		AString type = infoRe["TYPE"];
-
-		AutoTable table = tBaseTable::NewBaseTable();
-
-		AString indexFieldList;
-
-		int i = 0;
-		while (true)
+		AutoNice extParam;
+		AutoTable table = GenerateDBTable(szTableName, configTable, extParam, errorInfo);
+		if (!table)
 		{
-			ARecord fieldInfoRe = configTable->GetRecord(i++);
-			if (!fieldInfoRe)
-				break;
-
-			FieldInfo info = table->AppendField(fieldInfoRe["NAME"].c_str(), fieldInfoRe["TYPE"].c_str());
-			if (info != NULL)
-			{
-				int maxLen = fieldInfoRe["MAX_LENGTH"];
-				if (maxLen > 0)
-					info->setMaxLength(maxLen);
-				if (fieldInfoRe["IS_INDEX"])
-				{
-					if (!indexFieldList.empty())
-						indexFieldList += " ";
-					indexFieldList += fieldInfoRe["NAME"].string();
-				}
-			}
-			else
-			{
-				errorInfo.Format("%s Field %s type [%s] error", szTableName, fieldInfoRe["NAME"].c_str(), fieldInfoRe["TYPE"].c_str());
-				return false;
-			}
+			AString info;
+			info.Format("New create DB table [%s] fail >%s", szTableName, errorInfo.c_str());
+			errorInfo = info;
+			return false;
 		}
-
-		extParam["INDEX_FIELD"] = indexFieldList;
-
-		// 自增字段
-		if (configTable->GetField()->existField(INCREMENT))
-		{
-			if (infoRe[INCREMENT].string() == "YES")
-			{
-				ARecord fieldInfoRe = configTable->GetRecord(0);
-				if (fieldInfoRe)
-				{
-					int keyType = table->GetField()->getFieldInfo(0)->getType();
-					if (keyType != FIELD_INT && keyType != FIELD_INT64)
-					{
-						errorInfo.Format("No set 0 Field  is not int or Int64: %s, can not use auto INCREMENT", szTableName);
-						return false;
-					}
-					extParam[INCREMENT] = fieldInfoRe[INCREMENT];
-				}
-				else
-				{
-					errorInfo.Format("No set 0 Field : %s", szTableName);
-					return false;
-				}
-			}
-		}
-
-		if (type.length() <= 0)
-			type = indexFieldList.empty() ? SHARE_MEMORY_TABLE : SHARE_MEM_INDEX_TABLE;
 
 		if (!CreateDBTable(szTableName, table, extParam))
 		{
-			errorInfo.Format("New create DB table fail >%s", szTableName);
+			AString info;
+			info.Format("New create DB table [%s] fail >%s", szTableName, errorInfo.c_str());
+			errorInfo = info;
 			return false;
 		}
 		return true;
@@ -322,6 +265,225 @@ namespace NetCloud
 			return false;
 		}
 		return true;
+	}
+
+	AutoTable DBTableManager::ModifyDBTable(const char *szTableName, AutoTable structConfigTable, AString &errorInfo)
+	{
+		AutoNice extParam;
+
+		AutoTable resultTable = GenerateDBTable(szTableName, structConfigTable, extParam, errorInfo);
+		if (!resultTable)
+		{
+			return AutoTable();
+		}
+
+		Auto<LogicDBTable> existTable = GetTable(szTableName);
+		if (!existTable)
+		{
+			errorInfo.Format("Modify table struct fail : No exist table %s", szTableName);
+			return AutoTable();
+		}
+		{
+			bool bHaveNeedDelete = false;
+			// 自动新增
+			AutoField field = existTable->GetField();
+
+			for (int i = 0; i < field->getCount(); ++i)
+			{
+				FieldInfo pField = field->getFieldInfo(i);
+				if (!resultTable->GetField()->existField(pField->getName().c_str()))
+				{
+					AString error;
+					error.Format("\r\nDB %s find need remove field %s , but now can delete field", szTableName, pField->getName().c_str());
+					errorInfo += error;
+					bHaveNeedDelete = true;
+				}
+			}
+			if (bHaveNeedDelete)
+				return AutoTable();
+		}
+
+		{
+			bool bHaveAddField = false;
+			// 找出需要新增字段
+			AutoField field = resultTable->GetField();
+			
+			for (int i = 0; i < field->getCount(); ++i)
+			{
+				FieldInfo pField = field->getFieldInfo(i);
+				if (!existTable->GetField()->existField(pField->getName().c_str()))
+				{
+					AString info;
+					info.Format("\r\nDB %s find need add field %s ,  Now add field : ", szTableName, pField->getName().c_str());
+					errorInfo += info;
+
+					// 执行新增
+					info.setNull();
+					if (!existTable->mDBDataLoadSQL->mMainThreadSQLTool.DBTableAddField(szTableName, field, pField->getName().c_str(), info))
+					{
+						errorInfo += "\r\n";
+						errorInfo += info;
+						return AutoTable();
+					}
+					errorInfo += "\r\n";
+					errorInfo += info;
+
+					bHaveAddField = true;
+				}
+			}
+
+			if (!bHaveAddField)
+			{
+				errorInfo.Format("[%s] not need add field", szTableName);
+				return AutoTable();
+			}
+			AutoField tableField = resultTable->GetField();
+			AString fieldData = tableField->ToString();
+			if (fieldData.empty())
+			{
+				AString info;
+				info.Format("\r\n序列字段数据失败[%s]", szTableName);
+				errorInfo += info;
+				return AutoTable();
+			}
+
+			// 表格信息组成结构{节点ID分段信息}{字段校验码}{字段信息序列字符串}
+			NiceData tableInfo;
+			tableInfo["FIELD_CODE"] = (int)tableField->GetCheckCode();
+			tableInfo["FIELD_INFO"] = fieldData.c_str();
+			tableInfo["VER"] = DB_CODE_VER;
+
+			tableInfo["EXT_PARAM"] = extParam.getPtr();
+
+
+			AString tableInfoData = tableInfo.ToJSON();
+
+			if (tableInfoData.empty() || tableInfoData == "")
+			{
+				AString error;
+				error.Format("\r\n[%s] 信息转换至JSON字符串失败 >%s", tableInfo.dump().c_str());
+				ERROR_LOG(error.c_str());
+				errorInfo += error;
+				return AutoTable();
+			}			
+
+			// NOTE: 修改使用DBTable直接保存					
+			Auto<MySqlDBTool> tool = MEM_NEW MySqlDBTool();
+			if (!tool->InitStart(*mInitParam))
+			{				
+				errorInfo.Format("SQL init fail : %s\r\n%s", tool->getErrorMsg(), mInitParam->dump().c_str());
+				return AutoTable();
+			}			
+
+			ARecord re = mTableListDBTable->GetRecord(szTableName);
+			if (!re)
+			{
+				AString info;
+				info.Format("Append %s to list DB fail", szTableName);
+				errorInfo += info;
+				return AutoTable();
+			}
+			re["DATA"] = tableInfoData;
+
+			//re->FullAllUpdate(true);
+
+			Auto<DBTable> t = mTableListDBTable;
+
+			t->SetDBTool(tool);
+			if (!t->SaveTable(true))
+			{
+				AString info;
+				info.Format("ERROR: [%s] Save db list fail >%s", szTableName, t->GetDBTool()->getErrorMsg());
+				NOTE_LOG(info.c_str());
+				errorInfo += info;
+				return AutoTable();
+			}
+
+		}
+		return resultTable;
+	}
+
+	AutoTable DBTableManager::GenerateDBTable(const char *szTableName, AutoTable structConfigTable, AutoNice &extParam, AString &errorInfo)
+	{
+		ARecord  infoRe = structConfigTable->GetRecord(-1);
+
+		extParam = MEM_NEW NiceData();
+		extParam["SLOT"] = infoRe["SLOT"];
+		extParam["IS_ORDER"] = infoRe["IS_ORDER"];
+		extParam["COOL_SECOND"] = infoRe["COOL_SECOND"];		// 扩展数据冷却时长
+
+		AString type = infoRe["TYPE"];
+
+		AutoTable table = tBaseTable::NewBaseTable();
+
+		AString indexFieldList;
+
+		int i = 0;
+		while (true)
+		{
+			ARecord fieldInfoRe = structConfigTable->GetRecord(i++);
+			if (!fieldInfoRe)
+				break;
+
+			FieldInfo info = table->AppendField(fieldInfoRe["NAME"].c_str(), fieldInfoRe["TYPE"].c_str());
+			if (info != NULL)
+			{
+				int maxLen = fieldInfoRe["MAX_LENGTH"];
+				if (maxLen > 0)
+					info->setMaxLength(maxLen);
+				if (fieldInfoRe["IS_INDEX"])
+				{
+					if (!indexFieldList.empty())
+						indexFieldList += " ";
+					indexFieldList += fieldInfoRe["NAME"].string();
+				}
+			}
+			else
+			{
+				errorInfo.Format("%s Field %s type [%s] error", szTableName, fieldInfoRe["NAME"].c_str(), fieldInfoRe["TYPE"].c_str());
+				return AutoTable();
+			}
+		}
+
+		extParam["INDEX_FIELD"] = indexFieldList;
+
+		// 自增字段
+		if (structConfigTable->GetField()->existField(INCREMENT))
+		{
+			if (infoRe[INCREMENT].string() == "YES")
+			{
+				ARecord fieldInfoRe = structConfigTable->GetRecord(0);
+				if (fieldInfoRe)
+				{
+					int keyType = table->GetField()->getFieldInfo(0)->getType();
+					if (keyType != FIELD_INT && keyType != FIELD_INT64)
+					{
+						errorInfo.Format("No set 0 Field  is not int or Int64: %s, can not use auto INCREMENT", szTableName);
+						return AutoTable();
+					}
+					extParam[INCREMENT] = fieldInfoRe[INCREMENT];
+				}
+				else
+				{
+					errorInfo.Format("No set 0 Field : %s", szTableName);
+					return AutoTable();
+				}
+			}
+		}
+
+		if (type.length() <= 0)
+			type = indexFieldList.empty() ? SHARE_MEMORY_TABLE : SHARE_MEM_INDEX_TABLE;
+
+		AutoField tableField = table->GetField();
+		// 检查字段是否符合要求
+		tableField->_updateInfo();
+		if (tableField->getCount()<=0 || !tableField->check())
+		{
+			errorInfo.Format("Generate DB table %s Field check fail", szTableName);
+			return AutoTable();
+		}
+		table->SetTableName(szTableName);
+		return table;
 	}
 
 	//-------------------------------------------------------------------------

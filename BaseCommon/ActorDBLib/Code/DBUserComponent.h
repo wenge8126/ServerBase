@@ -20,6 +20,9 @@ namespace NetCloud
 		virtual bool CheckTable(AutoTable t) = 0;
 		virtual void OnLoadRecord(ARecord record){}
 
+		// 是否允许客户端直接调取指定的字段数据, 用于保护重要字段数据
+		virtual bool AllowClientLoad(const char *szField) { return true; }
+
 		virtual bool GetDataInfo(const char *szKey, const AString &checkMD5, Int64 &size, AString &md5) { NOTE_LOG("GetDataInfo no override"); return false; }
 
 		virtual AutoData GetData(const char *szKey, const AString &checkMD5, Int64 position, int size) { NOTE_LOG("GetData no override"); return false; }

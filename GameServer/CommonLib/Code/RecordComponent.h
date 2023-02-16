@@ -99,9 +99,12 @@ public:
 		for (int i=0; i<req.mFieldList.size(); ++i)
 		{
 			AString key = req.mFieldList[i];
-			Data d = re->get(key.c_str());
-			if (!d.empty())
-				response.mData->set(key.c_str(), d);
+			if (comp->AllowClientLoad(key.c_str()))
+			{
+				Data d = re->get(key.c_str());
+				if (!d.empty())
+					response.mData->set(key.c_str(), d);
+			}
 		}
 	}
 

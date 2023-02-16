@@ -105,7 +105,7 @@ public:
 
 	void On(DB_UploadPartData &req, DB_ResponseUploadPartDataResult &response, UnitID, int)
 	{
-		auto cache = mDataCacheList.find(req.mCacheID);
+		auto cache = mDataCacheList.find((MSG_ID)req.mCacheID);
 		if (cache)
 		{
 			DSIZE size = req.mPartData->dataSize();
@@ -113,7 +113,7 @@ public:
 			{
 				// 安全检查, 资源太大, 会被移除
 				OnCacheDestory(cache);
-				mDataCacheList.erase(req.mCacheID);
+				mDataCacheList.erase((MSG_ID)req.mCacheID);
 				WARN_LOG("Upload %d cache data size too large %d > %d, then remove", req.mCacheID, cache->mBigData->dataSize() + size, SAFE_DATA_MAX_SIZE);
 				response.mError = eError_Resource_TooLarge;
 				return;

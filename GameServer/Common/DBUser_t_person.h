@@ -32,6 +32,9 @@ public:
 	Data TOTAL_RMB(/*INT*/) { if (mDataRecord) return mDataRecord->get(18); ERROR_LOG("No exist record %s", mKey.c_str()); return Data(); }
 	Data NEWSDATA(bool bSetUpdate=false) /*NICEDATA*/ { if (mDataRecord){ if (bSetUpdate) mDataRecord->NotifyChanged(19); return mDataRecord->get(19); } ERROR_LOG("No exist record %s", mKey.c_str()); return Data(); }
 	Data SUCCEED(bool bSetUpdate=false) /*NICEDATA*/ { if (mDataRecord){ if (bSetUpdate) mDataRecord->NotifyChanged(20); return mDataRecord->get(20); } ERROR_LOG("No exist record %s", mKey.c_str()); return Data(); }
+	Data USERTYPE(/*INT*/) { if (mDataRecord) return mDataRecord->get(21); ERROR_LOG("No exist record %s", mKey.c_str()); return Data(); }
+	Data HONGNIANG(bool bSetUpdate=false) /*NICEDATA*/ { if (mDataRecord){ if (bSetUpdate) mDataRecord->NotifyChanged(22); return mDataRecord->get(22); } ERROR_LOG("No exist record %s", mKey.c_str()); return Data(); }
+	Data KEFU_DATA(bool bSetUpdate=false) /*NICEDATA*/ { if (mDataRecord){ if (bSetUpdate) mDataRecord->NotifyChanged(23); return mDataRecord->get(23); } ERROR_LOG("No exist record %s", mKey.c_str()); return Data(); }
 
 
 	Int64 wDBID() const { Int64 v = 0; if (mDataRecord) {  mDataRecord->get(0, v); return v; } ERROR_LOG("No exist record %s", mKey.c_str()); return v; }
@@ -56,6 +59,9 @@ public:
 	int nTOTAL_RMB() const { int v = 0; if (mDataRecord) {  mDataRecord->get(18, v); return v; } ERROR_LOG("No exist record %s", mKey.c_str()); return v; }
 	AutoNice niceNEWSDATA(bool bSetUpdate=false) {  AutoNice v; if (mDataRecord) { mDataRecord->get(19, v);  if (bSetUpdate){ if (!v) {v=MEM_NEW NiceData(); mDataRecord->set(19, v); } else mDataRecord->NotifyChanged(19); } return v; } ERROR_LOG("No exist record %s", mKey.c_str()); return v; }
 	AutoNice niceSUCCEED(bool bSetUpdate=false) {  AutoNice v; if (mDataRecord) { mDataRecord->get(20, v);  if (bSetUpdate){ if (!v) {v=MEM_NEW NiceData(); mDataRecord->set(20, v); } else mDataRecord->NotifyChanged(20); } return v; } ERROR_LOG("No exist record %s", mKey.c_str()); return v; }
+	int nUSERTYPE() const { int v = 0; if (mDataRecord) {  mDataRecord->get(21, v); return v; } ERROR_LOG("No exist record %s", mKey.c_str()); return v; }
+	AutoNice niceHONGNIANG(bool bSetUpdate=false) {  AutoNice v; if (mDataRecord) { mDataRecord->get(22, v);  if (bSetUpdate){ if (!v) {v=MEM_NEW NiceData(); mDataRecord->set(22, v); } else mDataRecord->NotifyChanged(22); } return v; } ERROR_LOG("No exist record %s", mKey.c_str()); return v; }
+	AutoNice niceKEFU_DATA(bool bSetUpdate=false) {  AutoNice v; if (mDataRecord) { mDataRecord->get(23, v);  if (bSetUpdate){ if (!v) {v=MEM_NEW NiceData(); mDataRecord->set(23, v); } else mDataRecord->NotifyChanged(23); } return v; } ERROR_LOG("No exist record %s", mKey.c_str()); return v; }
 
     bool SetPHONE(Int64 nVal) { if (!mDataRecord) return false; return mDataRecord->set(1, nVal); }
     bool SetVIP(int nVal) { if (!mDataRecord) return false; return mDataRecord->set(2, nVal); }
@@ -77,19 +83,22 @@ public:
     bool SetTOTAL_RMB(int nVal) { if (!mDataRecord) return false; return mDataRecord->set(18, nVal); }
 
 
+    bool SetUSERTYPE(int nVal) { if (!mDataRecord) return false; return mDataRecord->set(21, nVal); }
+
+
 
 
 	virtual bool CheckTable(AutoTable t) override
 	{
 		AutoField f = t->GetField();
-		if (!f || !f->CheckSame(2129192012))
+		if (!f || !f->CheckSame(-2124042787))
 		{
 			ERROR_LOG("No same check code of %s", t->GetTableName());
            return false;
        }
 
 		Array<AString> fieldNameList(f->getCount());
-		fieldNameList[0] = "DBID"; fieldNameList[1] = "PHONE"; fieldNameList[2] = "VIP"; fieldNameList[3] = "INVITE_CODE"; fieldNameList[4] = "INTRODUCER"; fieldNameList[5] = "REGISTER_TIME"; fieldNameList[6] = "USERDATA"; fieldNameList[7] = "SHOWDATA"; fieldNameList[8] = "GET_GIFT"; fieldNameList[9] = "STATE"; fieldNameList[10] = "LIKE"; fieldNameList[11] = "EXTDATA"; fieldNameList[12] = "TALK"; fieldNameList[13] = "VIDEO"; fieldNameList[14] = "BTJ_REWARD"; fieldNameList[15] = "TJ_REWARD"; fieldNameList[16] = "TOTAL_REWARD"; fieldNameList[17] = "RMB"; fieldNameList[18] = "TOTAL_RMB"; fieldNameList[19] = "NEWSDATA"; fieldNameList[20] = "SUCCEED"; 
+		fieldNameList[0] = "DBID"; fieldNameList[1] = "PHONE"; fieldNameList[2] = "VIP"; fieldNameList[3] = "INVITE_CODE"; fieldNameList[4] = "INTRODUCER"; fieldNameList[5] = "REGISTER_TIME"; fieldNameList[6] = "USERDATA"; fieldNameList[7] = "SHOWDATA"; fieldNameList[8] = "GET_GIFT"; fieldNameList[9] = "STATE"; fieldNameList[10] = "LIKE"; fieldNameList[11] = "EXTDATA"; fieldNameList[12] = "TALK"; fieldNameList[13] = "VIDEO"; fieldNameList[14] = "BTJ_REWARD"; fieldNameList[15] = "TJ_REWARD"; fieldNameList[16] = "TOTAL_REWARD"; fieldNameList[17] = "RMB"; fieldNameList[18] = "TOTAL_RMB"; fieldNameList[19] = "NEWSDATA"; fieldNameList[20] = "SUCCEED"; fieldNameList[21] = "USERTYPE"; fieldNameList[22] = "HONGNIANG"; fieldNameList[23] = "KEFU_DATA"; 
 		if (fieldNameList.size()!=f->getCount()) { ERROR_LOG("%s field count is error.",  t->GetTableName()); return false; }
 		for (int i=0; i<f->getCount(); ++i)
 		{

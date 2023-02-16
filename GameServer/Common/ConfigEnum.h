@@ -66,3 +66,11 @@ enum EnumFunction
     eFunctionTalk = 2,    //聊天
 };
 
+enum EnumUserType
+{
+    eUserTypeTest = 0,    //测试帐号
+    eUserTypeUser = 1,    //真实一般用户
+    eUserTypeHongNiang = 2,    //红娘
+    eUserTypeKeFu = 3,    //客服
+};
+

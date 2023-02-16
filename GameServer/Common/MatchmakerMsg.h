@@ -353,6 +353,7 @@ public:
     int mError;		
     AutoData mToken;		//  Token数据
     Int64 mUserID;		
+    bool mbNewUser;		//  是否为新用户
 
 public:
     CS_RespCreateUserResult() { clear(false); };
@@ -364,6 +365,7 @@ public:
         CheckGet(scrData, mError);
         mToken = (DataStream*)scrData["mToken"];
         CheckGet(scrData, mUserID);
+        CheckGet(scrData, mbNewUser);
     }
 
     virtual void ToData(AutoNice &destData) override
@@ -371,15 +373,17 @@ public:
         destData["mError"] = mError;
         destData["mToken"] = mToken.getPtr();
         destData["mUserID"] = mUserID;
+        destData["mbNewUser"] = mbNewUser;
     }
 
     bool serialize(DataStream *destData) const override
     {
-        destData->write((short)3);
+        destData->write((short)4);
 
         SAVE_MSG_VALUE(mError, 1);
         SAVE_MSG_DATA(mToken);
         SAVE_MSG_VALUE(mUserID, 8);
+        SAVE_MSG_VALUE(mbNewUser, 5);
         return true;
     }
 
@@ -388,6 +392,7 @@ public:
         mError = 0;
         if (mToken) mToken.setNull();
         mUserID = 0;
+        mbNewUser = false;
     }
 
     void copy(const tBaseMsg &otherMsg) override 
@@ -396,6 +401,7 @@ public:
         mError = other.mError;
         COPY_MSG_DATA(other.mToken, mToken);
         mUserID = other.mUserID;
+        mbNewUser = other.mbNewUser;
     }
 
     virtual const char* GetMsgName() const override { return "CS_RespCreateUserResult"; }
@@ -404,6 +410,7 @@ public:
     {
         if (strcmp(szMember, "mError")==0) { AData value; value = mError; return value; }
         if (strcmp(szMember, "mUserID")==0) { AData value; value = mUserID; return value; }
+        if (strcmp(szMember, "mbNewUser")==0) { AData value; value = mbNewUser; return value; }
         return AData();
     }
 
@@ -411,6 +418,7 @@ public:
     {
         if (strcmp(szMember, "mError")==0) { mError = value; return true; };
         if (strcmp(szMember, "mUserID")==0) { mUserID = value; return true; };
+        if (strcmp(szMember, "mbNewUser")==0) { mbNewUser = value; return true; };
         LOG("No exist > %%s", szMember);  return false;
     }
 
@@ -786,7 +794,7 @@ public:
 
 };
 
-//  请求加入到购物车
+//  请求加入到喜欢关注列表
 class CS_RequestAddLike : public tBaseMsg
 { 
 public:
@@ -2305,6 +2313,7 @@ public:
 class CS_ResponseMainListData : public tBaseMsg
 { 
 public:
+    int mError;		
     ArrayList<Int64> mMainList;	
 
 public:
@@ -2314,30 +2323,35 @@ public:
    virtual  void Full(AutoNice scrData) override
     {
         clear(false);
+        CheckGet(scrData, mError);
         FullArray(scrData, mMainList, "mMainList");
     }
 
     virtual void ToData(AutoNice &destData) override
     {
+        destData["mError"] = mError;
         ArrayToData(destData, mMainList, "mMainList");
     }
 
     bool serialize(DataStream *destData) const override
     {
-        destData->write((short)1);
+        destData->write((short)2);
 
+        SAVE_MSG_VALUE(mError, 1);
         SaveArray("mMainList", mMainList, destData);
         return true;
     }
 
     void clear(bool bClearBuffer=false) override 
     {
+        mError = 0;
         mMainList.clear(false);
     }
 
     void copy(const tBaseMsg &otherMsg) override 
     {
         if (strcmp("CS_ResponseMainListData", otherMsg.GetMsgName())!=0) { LOG("%s is not CS_ResponseMainListData", otherMsg.GetMsgName()); return; }; const CS_ResponseMainListData &other = *(const CS_ResponseMainListData*)(&otherMsg);
+        mError = other.mError;
         mMainList = other.mMainList;
     }
 
@@ -2345,11 +2359,13 @@ public:
 
     AData get(const char *szMember) const 
     {
+        if (strcmp(szMember, "mError")==0) { AData value; value = mError; return value; }
         return AData();
     }
 
     bool set(const char *szMember, AData value) 
     {
+        if (strcmp(szMember, "mError")==0) { mError = value; return true; };
         LOG("No exist > %%s", szMember);  return false;
     }
 
@@ -2945,6 +2961,80 @@ public:
 
 };
 
+//  上传应用客户端
+class MS_UploadApplyManagerClient : public tBaseMsg
+{ 
+public:
+    int mUploadCacheID;		
+    int mVersion;		
+
+public:
+    MS_UploadApplyManagerClient() { clear(false); };
+
+
+   virtual  void Full(AutoNice scrData) override
+    {
+        clear(false);
+        CheckGet(scrData, mUploadCacheID);
+        CheckGet(scrData, mVersion);
+    }
+
+    virtual void ToData(AutoNice &destData) override
+    {
+        destData["mUploadCacheID"] = mUploadCacheID;
+        destData["mVersion"] = mVersion;
+    }
+
+    bool serialize(DataStream *destData) const override
+    {
+        destData->write((short)2);
+
+        SAVE_MSG_VALUE(mUploadCacheID, 1);
+        SAVE_MSG_VALUE(mVersion, 1);
+        return true;
+    }
+
+    void clear(bool bClearBuffer=false) override 
+    {
+        mUploadCacheID = 0;
+        mVersion = 0;
+    }
+
+    void copy(const tBaseMsg &otherMsg) override 
+    {
+        if (strcmp("MS_UploadApplyManagerClient", otherMsg.GetMsgName())!=0) { LOG("%s is not MS_UploadApplyManagerClient", otherMsg.GetMsgName()); return; }; const MS_UploadApplyManagerClient &other = *(const MS_UploadApplyManagerClient*)(&otherMsg);
+        mUploadCacheID = other.mUploadCacheID;
+        mVersion = other.mVersion;
+    }
+
+    virtual const char* GetMsgName() const override { return "MS_UploadApplyManagerClient"; }
+
+    AData get(const char *szMember) const 
+    {
+        if (strcmp(szMember, "mUploadCacheID")==0) { AData value; value = mUploadCacheID; return value; }
+        if (strcmp(szMember, "mVersion")==0) { AData value; value = mVersion; return value; }
+        return AData();
+    }
+
+    bool set(const char *szMember, AData value) 
+    {
+        if (strcmp(szMember, "mUploadCacheID")==0) { mUploadCacheID = value; return true; };
+        if (strcmp(szMember, "mVersion")==0) { mVersion = value; return true; };
+        LOG("No exist > %%s", szMember);  return false;
+    }
+
+    AData operator [] (const char *szMember) const 
+    {
+        return get(szMember);
+    }
+
+    AData operator [] (const AString &member) const 
+    {
+        return get(member.c_str());
+    }
+
+};
+
 //  创建DB
 class TS_CreateDBTable : public tBaseMsg
 { 
@@ -3075,6 +3165,288 @@ public:
     {
         if (strcmp(szMember, "mError")==0) { mError = value; return true; };
         if (strcmp(szMember, "mResultInfo")==0) { mResultInfo = value; return true; };
+        LOG("No exist > %%s", szMember);  return false;
+    }
+
+    AData operator [] (const char *szMember) const 
+    {
+        return get(szMember);
+    }
+
+    AData operator [] (const AString &member) const 
+    {
+        return get(member.c_str());
+    }
+
+};
+
+//  获取推荐
+class CS_RequestTuiJianShowList : public tBaseMsg
+{ 
+public:
+    Int64 mUserID;		//  当前用户的DBID, 根据此用户信息获取推荐	
+
+public:
+    CS_RequestTuiJianShowList() { clear(false); };
+
+
+   virtual  void Full(AutoNice scrData) override
+    {
+        clear(false);
+        CheckGet(scrData, mUserID);
+    }
+
+    virtual void ToData(AutoNice &destData) override
+    {
+        destData["mUserID"] = mUserID;
+    }
+
+    bool serialize(DataStream *destData) const override
+    {
+        destData->write((short)1);
+
+        SAVE_MSG_VALUE(mUserID, 8);
+        return true;
+    }
+
+    void clear(bool bClearBuffer=false) override 
+    {
+        mUserID = 0;
+    }
+
+    void copy(const tBaseMsg &otherMsg) override 
+    {
+        if (strcmp("CS_RequestTuiJianShowList", otherMsg.GetMsgName())!=0) { LOG("%s is not CS_RequestTuiJianShowList", otherMsg.GetMsgName()); return; }; const CS_RequestTuiJianShowList &other = *(const CS_RequestTuiJianShowList*)(&otherMsg);
+        mUserID = other.mUserID;
+    }
+
+    virtual const char* GetMsgName() const override { return "CS_RequestTuiJianShowList"; }
+
+    AData get(const char *szMember) const 
+    {
+        if (strcmp(szMember, "mUserID")==0) { AData value; value = mUserID; return value; }
+        return AData();
+    }
+
+    bool set(const char *szMember, AData value) 
+    {
+        if (strcmp(szMember, "mUserID")==0) { mUserID = value; return true; };
+        LOG("No exist > %%s", szMember);  return false;
+    }
+
+    AData operator [] (const char *szMember) const 
+    {
+        return get(szMember);
+    }
+
+    AData operator [] (const AString &member) const 
+    {
+        return get(member.c_str());
+    }
+
+};
+
+class CS_ResponseTuiJainShowList : public tBaseMsg
+{ 
+public:
+    int mError;		
+    ArrayList<Int64> mMainList;	
+
+public:
+    CS_ResponseTuiJainShowList() { clear(false); };
+
+
+   virtual  void Full(AutoNice scrData) override
+    {
+        clear(false);
+        CheckGet(scrData, mError);
+        FullArray(scrData, mMainList, "mMainList");
+    }
+
+    virtual void ToData(AutoNice &destData) override
+    {
+        destData["mError"] = mError;
+        ArrayToData(destData, mMainList, "mMainList");
+    }
+
+    bool serialize(DataStream *destData) const override
+    {
+        destData->write((short)2);
+
+        SAVE_MSG_VALUE(mError, 1);
+        SaveArray("mMainList", mMainList, destData);
+        return true;
+    }
+
+    void clear(bool bClearBuffer=false) override 
+    {
+        mError = 0;
+        mMainList.clear(false);
+    }
+
+    void copy(const tBaseMsg &otherMsg) override 
+    {
+        if (strcmp("CS_ResponseTuiJainShowList", otherMsg.GetMsgName())!=0) { LOG("%s is not CS_ResponseTuiJainShowList", otherMsg.GetMsgName()); return; }; const CS_ResponseTuiJainShowList &other = *(const CS_ResponseTuiJainShowList*)(&otherMsg);
+        mError = other.mError;
+        mMainList = other.mMainList;
+    }
+
+    virtual const char* GetMsgName() const override { return "CS_ResponseTuiJainShowList"; }
+
+    AData get(const char *szMember) const 
+    {
+        if (strcmp(szMember, "mError")==0) { AData value; value = mError; return value; }
+        return AData();
+    }
+
+    bool set(const char *szMember, AData value) 
+    {
+        if (strcmp(szMember, "mError")==0) { mError = value; return true; };
+        LOG("No exist > %%s", szMember);  return false;
+    }
+
+    AData operator [] (const char *szMember) const 
+    {
+        return get(szMember);
+    }
+
+    AData operator [] (const AString &member) const 
+    {
+        return get(member.c_str());
+    }
+
+};
+
+//  获取消息
+class CS_LoadMsgList : public tBaseMsg
+{ 
+public:
+    Int64 mDBID;		
+    int mTalkType;		//  0  好友 1 红娘  2 其他
+
+public:
+    CS_LoadMsgList() { clear(false); };
+
+
+   virtual  void Full(AutoNice scrData) override
+    {
+        clear(false);
+        CheckGet(scrData, mDBID);
+        CheckGet(scrData, mTalkType);
+    }
+
+    virtual void ToData(AutoNice &destData) override
+    {
+        destData["mDBID"] = mDBID;
+        destData["mTalkType"] = mTalkType;
+    }
+
+    bool serialize(DataStream *destData) const override
+    {
+        destData->write((short)2);
+
+        SAVE_MSG_VALUE(mDBID, 8);
+        SAVE_MSG_VALUE(mTalkType, 1);
+        return true;
+    }
+
+    void clear(bool bClearBuffer=false) override 
+    {
+        mDBID = 0;
+        mTalkType = 0;
+    }
+
+    void copy(const tBaseMsg &otherMsg) override 
+    {
+        if (strcmp("CS_LoadMsgList", otherMsg.GetMsgName())!=0) { LOG("%s is not CS_LoadMsgList", otherMsg.GetMsgName()); return; }; const CS_LoadMsgList &other = *(const CS_LoadMsgList*)(&otherMsg);
+        mDBID = other.mDBID;
+        mTalkType = other.mTalkType;
+    }
+
+    virtual const char* GetMsgName() const override { return "CS_LoadMsgList"; }
+
+    AData get(const char *szMember) const 
+    {
+        if (strcmp(szMember, "mDBID")==0) { AData value; value = mDBID; return value; }
+        if (strcmp(szMember, "mTalkType")==0) { AData value; value = mTalkType; return value; }
+        return AData();
+    }
+
+    bool set(const char *szMember, AData value) 
+    {
+        if (strcmp(szMember, "mDBID")==0) { mDBID = value; return true; };
+        if (strcmp(szMember, "mTalkType")==0) { mTalkType = value; return true; };
+        LOG("No exist > %%s", szMember);  return false;
+    }
+
+    AData operator [] (const char *szMember) const 
+    {
+        return get(szMember);
+    }
+
+    AData operator [] (const AString &member) const 
+    {
+        return get(member.c_str());
+    }
+
+};
+
+class CS_ResponseMsgList : public tBaseMsg
+{ 
+public:
+    int mError;		
+    AutoNice mMsgData;		
+
+public:
+    CS_ResponseMsgList() { clear(false); };
+
+
+   virtual  void Full(AutoNice scrData) override
+    {
+        clear(false);
+        CheckGet(scrData, mError);
+        mMsgData = (tNiceData*)scrData["mMsgData"];
+    }
+
+    virtual void ToData(AutoNice &destData) override
+    {
+        destData["mError"] = mError;
+        destData["mMsgData"] = mMsgData.getPtr();
+    }
+
+    bool serialize(DataStream *destData) const override
+    {
+        destData->write((short)2);
+
+        SAVE_MSG_VALUE(mError, 1);
+        SAVE_MSG_NICE(mMsgData);
+        return true;
+    }
+
+    void clear(bool bClearBuffer=false) override 
+    {
+        mError = 0;
+        if (mMsgData) mMsgData.setNull();
+    }
+
+    void copy(const tBaseMsg &otherMsg) override 
+    {
+        if (strcmp("CS_ResponseMsgList", otherMsg.GetMsgName())!=0) { LOG("%s is not CS_ResponseMsgList", otherMsg.GetMsgName()); return; }; const CS_ResponseMsgList &other = *(const CS_ResponseMsgList*)(&otherMsg);
+        mError = other.mError;
+        COPY_MSG_NICE(other.mMsgData, mMsgData);
+    }
+
+    virtual const char* GetMsgName() const override { return "CS_ResponseMsgList"; }
+
+    AData get(const char *szMember) const 
+    {
+        if (strcmp(szMember, "mError")==0) { AData value; value = mError; return value; }
+        return AData();
+    }
+
+    bool set(const char *szMember, AData value) 
+    {
+        if (strcmp(szMember, "mError")==0) { mError = value; return true; };
         LOG("No exist > %%s", szMember);  return false;
     }
 

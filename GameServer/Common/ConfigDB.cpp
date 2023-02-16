@@ -6,3 +6,4 @@
 	AutoTable WindowConfig::table;
 	AutoTable ErrorCode::table;
 	AutoTable GlobalValue::table;
+	AutoTable UserType::table;

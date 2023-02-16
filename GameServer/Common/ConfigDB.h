@@ -9,6 +9,7 @@
 #include "WindowConfig.h" 
 #include "ErrorCode.h" 
 #include "GlobalValue.h" 
+#include "UserType.h" 
 
 class ConfigDB
 {
@@ -33,6 +34,9 @@ public:
 			t = mgr.find("GlobalValue");
 			if (!t) ERROR_LOG("GlobalValue config table no exist");
 			if (t && GlobalValue::InitCheck(t, mbInitSet)) { } else { ERROR_LOG("GlobalValue config check fail"); bResult = false; }
+			t = mgr.find("UserType");
+			if (!t) ERROR_LOG("UserType config table no exist");
+			if (t && UserType::InitCheck(t, mbInitSet)) { } else { ERROR_LOG("UserType config check fail"); bResult = false; }
 		return  bResult;
 	}
 
@@ -43,6 +47,7 @@ public:
 		WindowConfig::table.setNull();
 		ErrorCode::table.setNull();
 		GlobalValue::table.setNull();
+		UserType::table.setNull();
 
 	}
 public:

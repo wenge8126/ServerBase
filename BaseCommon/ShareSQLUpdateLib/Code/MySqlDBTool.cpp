@@ -1521,6 +1521,141 @@ bool MySqlDBTool::CreateDBTable( const char *szTableName, AutoField tableField, 
 	return false;
 }
 
+
+
+bool MySqlDBTool::DBTableAddField(const char *szTableName, AutoField tableField, const char *szAddFieldName, AString &resultInfo)
+{
+	AString sql;
+
+	int count = tableField->getCount();
+	if (count <= 0)
+	{
+		ERROR_LOG("字段数量为零");
+		return false;
+	}
+
+	FieldInfo pAddField = tableField->getFieldInfo(szAddFieldName);
+	if (pAddField == NULL)
+	{
+		ERROR_LOG("%s 字段不存在 [%s]", szTableName, szAddFieldName);
+		resultInfo.Format("%s 字段不存在 [%s]", szTableName, szAddFieldName);
+		return false;
+	}
+
+	if (pAddField == tableField->getFieldInfo(0))
+	{
+		ERROR_LOG("%s 不可新增加第0列字段 [%s]", szTableName, szAddFieldName);
+		resultInfo.Format("%s 不可新增加第0列字段 [%s]", szTableName, szAddFieldName);
+		return false;
+	}
+
+	const char *szType = "int";
+	int nLen = 4;
+	switch (pAddField->getType())
+	{
+	case FIELD_BOOL:
+	case FIELD_BYTE:
+		szType = "tinyint";
+		nLen = 4;
+		break;
+
+	case FIELD_SHORT:
+		szType = "smallint";
+		nLen = 6;
+		break;
+
+	case FIELD_INT:
+		szType = "int";
+		nLen = 11;
+		break;
+
+	case FIELD_INT64:
+	case FIELD_UINT64:
+		szType = "bigint";
+		nLen = 20;
+		break;
+
+	case FIELD_FLOAT:
+		szType = "float";
+		nLen = 16;
+		break;
+
+	case FIELD_STRING:
+	case FIELD_CHAR_STRING:
+	{
+		szType = "char";
+		//StringFieldInfo *p = dynamic_cast<StringFieldInfo*>(info);
+		//AssertEx(p!=NULL, "Must is StringFieldInfo");
+		nLen = pAddField->getMaxLength();
+		if (nLen > 0xFF)
+			szType = "varchar";
+	}
+	break;
+
+	case FIELD_DATA:
+	case FIELD_TABLE:
+	case FIELD_DB_TABLE:
+		//		case FIELD_BINARY:
+	case FIELD_NICEDATA:
+	case FIELD_ARRAYDATA:
+	case FIELD_DBNICE:
+	case FIELD_SQLDATA:
+		nLen = pAddField->getMaxLength();
+		szType = "blob";
+		break;
+
+	default:
+		ERROR_LOG("不支持MYSQL DB 表格字段类型 >[%s]", pAddField->getTypeString());
+		return false;
+	}
+
+	sql += szType;
+	sql += "(";
+	sql += nLen;
+	sql += ") ";
+
+	// 使用大小写区分比对
+	if (pAddField->getType() == FIELD_STRING || pAddField->getType() == FIELD_CHAR_STRING)
+		sql += " binary";
+
+
+#if SAVE_FIELD_COMMENT
+	sql += " comment '";
+	sql += info->getTypeString();
+	AString ext = info->getTypeParam();
+	if (ext.length() > 0)
+	{
+		sql += "-{";
+		sql += ext;
+		sql += "}'";
+	}
+	else
+		sql += "'";
+#endif
+
+	// alter table 表名 ADD 字段 类型 NOT NULL Default 0	
+
+	// NOTE :  ENGINE=MyISAM 必须此选项时, 才不会出现 错误: Row size too large (> 8126)
+	AString sqlString;
+
+	sqlString.Format("alter table `%s` ADD `%s` %s"
+		, szTableName
+		, szAddFieldName
+		, sql.c_str()
+	);
+
+
+	if (exeSql(sqlString, false))
+	{
+		resultInfo.Format("%s 成功增加字段 [%s]", szTableName, szAddFieldName);
+		return true;
+	}
+	else
+		resultInfo.Format("%s 增加字段 [%s] 失败: %s", szTableName, szAddFieldName, _getErrorMsg());
+
+	return false;
+}
+
 void MySqlDBTool::Process()
 {
 	if (TimeManager::Now()-mLastCheckTime>MYSQL_TRY_RUN_TIME)

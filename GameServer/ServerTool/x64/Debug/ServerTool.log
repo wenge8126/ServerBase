@@ -1,0 +1,7 @@
+﻿  ServerTool.cpp
+d:\serverbase\gameserver\servertool\servertool.cpp(110): fatal error C1010: 在查找预编译头时遇到意外的文件结尾。是否忘记了向源中添加“#include "pch.h"”?
+  ServerToolDlg.cpp
+d:\serverbase\gameserver\servertool\servertooldlg.cpp(569): fatal error C1010: 在查找预编译头时遇到意外的文件结尾。是否忘记了向源中添加“#include "pch.h"”?
+  XlsxTableLoader.cpp
+d:\serverbase\gameserver\servertool\xlsxtableloader.cpp(301): fatal error C1010: 在查找预编译头时遇到意外的文件结尾。是否忘记了向源中添加“#include "pch.h"”?
+  正在生成代码...

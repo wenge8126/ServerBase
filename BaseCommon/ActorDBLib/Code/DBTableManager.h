@@ -49,9 +49,13 @@ namespace NetCloud
 		0,ID,INT64,,,主键,,
 		1,NAME,FIELD_CHAR_STRING,127,1,,,
 		*/
-		virtual bool CreateDBTable(const char *szTableName, AutoTable configTable, AString &errorInfo);
+		virtual bool CreateDBTable(const char *szTableName, AutoTable structConfigTable, AString &errorInfo);
 		virtual bool CreateDBTable(const AString &tableName, AutoTable table, AutoNice  extParam);
 
+		virtual AutoTable ModifyDBTable(const char *szTableName, AutoTable structConfigTable, AString &errorInfo);
+
+		// 根据DB配置结构表, 生成DB表格
+		virtual AutoTable GenerateDBTable(const char *szTableName, AutoTable structConfigTable, AutoNice &extParam, AString &errorInfo);
 
 	public:
 		DBTableManager();

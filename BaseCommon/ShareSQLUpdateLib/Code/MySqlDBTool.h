@@ -85,6 +85,9 @@ public:
 	AutoTable LoadDBTable(const char *szTableName, bool bLoadAllRecord = true);
 	bool CreateDBTable(const char *szTableName, AutoField tableField, const char *szInfoData = "NONE");
 
+	// 增加修改DB表结构
+	bool DBTableAddField(const char *szTableName, AutoField tableField, const char *szAddFieldName, AString &resultInfo);
+
 	//防止长时间无操作断开, NOTE: 必须保证在MYSQL使用线程Process, 否则会出现异常DUMP
 	virtual void Process() override;
 

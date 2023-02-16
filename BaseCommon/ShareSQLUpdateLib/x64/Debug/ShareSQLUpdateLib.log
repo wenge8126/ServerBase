@@ -1,0 +1,7 @@
+﻿  MySqlDBTool.cpp
+d:\serverbase\basecommon\sharesqlupdatelib\code\sharesqlupdatelib.h(3): fatal error C1083: 无法打开包括文件: “BaseCommon.h”: No such file or directory
+  SQLUpdateManager.cpp
+d:\serverbase\basecommon\sharesqlupdatelib\code\sharesqlupdate.h(6): fatal error C1083: 无法打开包括文件: “DynamicLoopBuffer.h”: No such file or directory
+  dllmain.cpp
+d:\serverbase\basecommon\sharesqlupdatelib\dllmain.cpp(4): fatal error C1083: 无法打开包括文件: “SQLUpdateManager.h”: No such file or directory
+  正在生成代码...
